@@ -114,6 +114,7 @@ class Music extends App {
 				$c->query('UserId'),
 				$c->query('L10N'),
 				$c->query('UserFolder'),
+				$c->query('Config'),
 				$c->query('Logger')
 			);
 		});

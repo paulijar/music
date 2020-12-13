@@ -20,7 +20,9 @@ use \OCP\AppFramework\Http\DataDisplayResponse;
 use \OCP\AppFramework\Http\JSONResponse;
 use \OCP\AppFramework\Http\RedirectResponse;
 use \OCP\AppFramework\Http\Response;
+use \OCP\AppFramework\Http\StreamResponse;
 use \OCP\Files\Folder;
+use \OCP\IConfig;
 use \OCP\IL10N;
 use \OCP\IRequest;
 use \OCP\IURLGenerator;
@@ -74,6 +76,8 @@ class ApiController extends Controller {
 	private $urlGenerator;
 	/** @var Folder */
 	private $userFolder;
+	/** @var IConfig */
+	private $config;
 	/** @var Logger */
 	private $logger;
 
@@ -90,9 +94,10 @@ class ApiController extends Controller {
 								DetailsHelper $detailsHelper,
 								LastfmService $lastfmService,
 								Maintenance $maintenance,
-								?string $userId, // null if this gets called after the user has logged out
+								?string $userId, // null if this gets called without a logged in user
 								IL10N $l10n,
-								?Folder $userFolder, // null if this gets called after the user has logged out
+								?Folder $userFolder, // null if this gets called without a logged in user
+								IConfig $config,
 								Logger $logger) {
 		parent::__construct($appname, $request);
 		$this->l10n = $l10n;
@@ -109,6 +114,7 @@ class ApiController extends Controller {
 		$this->userId = $userId;
 		$this->urlGenerator = $urlGenerator;
 		$this->userFolder = $userFolder;
+		$this->config = $config;
 		$this->logger = $logger;
 	}
 
@@ -407,7 +413,11 @@ class ApiController extends Controller {
 		$nodes = $this->userFolder->getById($fileId);
 		$node = $nodes[0] ?? null;
 		if ($node instanceof \OCP\Files\File) {
-			return new FileResponse($node);
+			if (\filter_var($this->config->getSystemValue('music.experimental.streaming'), FILTER_VALIDATE_BOOLEAN)) {
+				return new StreamResponse($node->fopen('r'));
+			} else {
+				return new FileResponse($node);
+			}
 		}
 
 		return new ErrorResponse(Http::STATUS_NOT_FOUND, 'file not found');
