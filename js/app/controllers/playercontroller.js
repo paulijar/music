@@ -10,6 +10,7 @@
  * @copyright Pauli Järvinen 2017 - 2021
  */
 
+import logoIcon from '../../../img/logo/music_logo.svg';
 import radioIcon from '../../../img/radio-file.svg';
 
 angular.module('Music').controller('PlayerController', [
@@ -396,6 +397,16 @@ function ($scope, $rootScope, playlistService, Audio, gettextCatalog, $timeout, 
 		coverArtToken = token;
 	});
 
+	function getCoverUrl(track) {
+		if ('stream_url' in track) {
+			return OC.filePath('music', 'dist', radioIcon);
+		} else if (track.album.cover) {
+			return track.album.cover + (coverArtToken ? ('?coverToken=' + coverArtToken) : '');
+		} else {
+			return OC.filePath('music', 'dist', logoIcon);
+		}
+	}
+
 	/**
 	 * Integration to the media control panel available on Chrome starting from version 73 and Edge from
 	 * version 83. In Firefox, the API is enabled by default at least in the version 83, although at least
@@ -423,29 +434,16 @@ function ($scope, $rootScope, playlistService, Audio, gettextCatalog, $timeout, 
 
 		$scope.$watch('currentTrack', function(track) {
 			if (track) {
-				if ('stream_url' in track) {
-					navigator.mediaSession.metadata = new MediaMetadata({
-						title: track.name,
-						artist: track.stream_url,
-						artwork: [{
-							sizes: '190x190',
-							src: OC.filePath('music', 'dist', radioIcon),
-							type: 'image/svg+xml'
-						}]
-					});
-				}
-				else {
-					navigator.mediaSession.metadata = new MediaMetadata({
-						title: track.title,
-						artist: track.artistName,
-						album: track.album.name,
-						artwork: [{
-							sizes: '190x190',
-							src: track.album.cover + (coverArtToken ? ('?coverToken=' + coverArtToken) : ''),
-							type: ''
-						}]
-					});
-				}
+				navigator.mediaSession.metadata = new MediaMetadata({
+					title: track.title ?? track.name,
+					artist: track.artistName ?? track.stream_url,
+					album: track?.album?.name,
+					artwork: [{
+						sizes: '190x190',
+						src: getCoverUrl(track),
+						type: ''
+					}]
+				});
 			}
 		});
 	}
@@ -462,14 +460,11 @@ function ($scope, $rootScope, playlistService, Audio, gettextCatalog, $timeout, 
 				notification = null;
 			}
 
-			let args = {silent: true};
-			if ('stream_url' in track) {
-				args.body = track.stream_url;
-				args.icon = OC.filePath('music', 'dist', radioIcon);
-			} else {
-				args.body = track.artistName + '\n' + track.album.name;
-				args.icon = track.album.cover + (coverArtToken ? ('?coverToken=' + coverArtToken) : '');
-			}
+			let args = {
+				silent: true,
+				body: track.stream_url ?? (track.artistName + '\n' + track.album.name),
+				icon: getCoverUrl(track)
+			};
 			notification = new Notification(track.title ?? track.name, args);
 			notification.onclick = $scope.scrollToCurrentTrack;
 		}, 500);
