@@ -23,11 +23,7 @@ use \OCA\Music\Db\TrackMapper;
 use \OCA\Music\Utility\Util;
 
 /**
- * Base class functions with actually used inherited types to help IDE and Scrutinizer:
- * @method Playlist find(int $playlistId, string $userId)
- * @method Playlist[] findAll(string $userId, int $sortBy=SortBy::None, int $limit=null, int $offset=null)
- * @method Playlist[] findAllByName(string $name, string $userId, bool $fuzzy=false, int $limit=null, int $offset=null)
- * @phpstan-extends BusinessLayer<Playlist>
+ * @extends BusinessLayer<Playlist>
  */
 class PlaylistBusinessLayer extends BusinessLayer {
 	protected $mapper; // eclipse the definition from the base class, to help IDE and Scrutinizer to know the actual type

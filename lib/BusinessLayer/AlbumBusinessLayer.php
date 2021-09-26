@@ -28,7 +28,7 @@ use \OCA\Music\Utility\Util;
 
 /**
  * Base class functions with the actually used inherited types to help IDE and Scrutinizer:
- * @phpstan-extends BusinessLayer<Album>
+ * @extends BusinessLayer<Album>
  */
 class AlbumBusinessLayer extends BusinessLayer {
 	protected $mapper; // eclipse the definition from the base class, to help IDE and Scrutinizer to know the actual type

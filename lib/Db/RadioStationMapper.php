@@ -15,8 +15,7 @@ namespace OCA\Music\Db;
 use \OCP\IDBConnection;
 
 /**
- * @method RadioStation findEntity(string $sql, array $params)
- * @phpstan-extends BaseMapper<RadioStation>
+ * @extends BaseMapper<RadioStation>
  */
 class RadioStationMapper extends BaseMapper {
 	public function __construct(IDBConnection $db) {

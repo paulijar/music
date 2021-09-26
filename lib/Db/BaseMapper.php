@@ -22,19 +22,19 @@ use \OCA\Music\Utility\Util;
 
 /**
  * Common base class for data access classes of the Music app
- * @phpstan-template EntityType of Entity
- * @phpstan-method EntityType findEntity(string $sql, array $params)
- * @phpstan-method EntityType[] findEntities(string $sql, array $params, ?int $limit=null, ?int $offset=null)
+ * @template EntityType of Entity
+ * @method EntityType findEntity(string $sql, array $params)
+ * @method EntityType[] findEntities(string $sql, array $params, ?int $limit=null, ?int $offset=null)
  */
 abstract class BaseMapper extends Mapper {
 	const SQL_DATE_FORMAT = 'Y-m-d H:i:s.v';
 
 	protected $nameColumn;
-	/** @phpstan-var class-string<EntityType> $entityClass */
+	/** @var class-string<EntityType> $entityClass */
 	protected $entityClass;
 
 	/**
-	 * @phpstan-param class-string<EntityType> $entityClass
+	 * @param class-string<EntityType> $entityClass
 	 */
 	public function __construct(IDBConnection $db, string $tableName, string $entityClass, string $nameColumn) {
 		parent::__construct($db, $tableName, $entityClass);
@@ -45,7 +45,7 @@ abstract class BaseMapper extends Mapper {
 
 	/**
 	 * Create an empty object of the entity class bound to this mapper
-	 * @phpstan-return EntityType
+	 * @return EntityType
 	 */
 	public function createEntity() : Entity {
 		return new $this->entityClass();
@@ -55,7 +55,7 @@ abstract class BaseMapper extends Mapper {
 	 * Find a single entity by id and user_id
 	 * @throws DoesNotExistException if the entity does not exist
 	 * @throws MultipleObjectsReturnedException if more than one entity exists
-	 * @phpstan-return EntityType
+	 * @return EntityType
 	 */
 	public function find(int $id, string $userId) : Entity {
 		$sql = $this->selectUserEntities("`{$this->getTableName()}`.`id` = ?");
@@ -66,8 +66,7 @@ abstract class BaseMapper extends Mapper {
 	 * Find all entities matching the given IDs. Specifying the owning user is optional.
 	 * @param integer[] $ids  IDs of the entities to be found
 	 * @param string|null $userId
-	 * @return Entity[]
-	 * @phpstan-return EntityType[]
+	 * @return EntityType[]
 	 */
 	public function findById(array $ids, string $userId=null) : array {
 		$count = \count($ids);
@@ -89,8 +88,7 @@ abstract class BaseMapper extends Mapper {
 	 * @param string|null $createdMax Optional maximum `created` timestamp.
 	 * @param string|null $updatedMin Optional minimum `updated` timestamp.
 	 * @param string|null $updatedMax Optional maximum `updated` timestamp.
-	 * @return Entity[]
-	 * @phpstan-return EntityType[]
+	 * @return EntityType[]
 	 */
 	public function findAll(string $userId, int $sortBy=SortBy::None, int $limit=null, int $offset=null,
 							?string $createdMin=null, ?string $createdMax=null, ?string $updatedMin=null, ?string $updatedMax=null) : array {
@@ -107,8 +105,7 @@ abstract class BaseMapper extends Mapper {
 	 * @param string|null $createdMax Optional maximum `created` timestamp.
 	 * @param string|null $updatedMin Optional minimum `updated` timestamp.
 	 * @param string|null $updatedMax Optional maximum `updated` timestamp.
-	 * @return Entity[]
-	 * @phpstan-return EntityType[]
+	 * @return EntityType[]
 	 */
 	public function findAllByName(
 		?string $name, string $userId, bool $fuzzy=false, int $limit=null, int $offset=null,
@@ -139,8 +136,7 @@ abstract class BaseMapper extends Mapper {
 
 	/**
 	 * Find all user's starred entities
-	 * @return Entity[]
-	 * @phpstan-return EntityType[]
+	 * @return EntityType[]
 	 */
 	public function findAllStarred(string $userId, int $limit=null, int $offset=null) : array {
 		$sql = $this->selectUserEntities(
@@ -223,8 +219,8 @@ abstract class BaseMapper extends Mapper {
 	/**
 	 * {@inheritDoc}
 	 * @see \OCP\AppFramework\Db\Mapper::insert()
-	 * @phpstan-param EntityType $entity
-	 * @phpstan-return EntityType
+	 * @param EntityType $entity
+	 * @return EntityType
 	 */
 	public function insert(\OCP\AppFramework\Db\Entity $entity) : \OCP\AppFramework\Db\Entity {
 		$now = new \DateTime();
@@ -249,8 +245,8 @@ abstract class BaseMapper extends Mapper {
 	/**
 	 * {@inheritDoc}
 	 * @see \OCP\AppFramework\Db\Mapper::update()
-	 * @phpstan-param EntityType $entity
-	 * @phpstan-return EntityType
+	 * @param EntityType $entity
+	 * @return EntityType
 	 */
 	public function update(\OCP\AppFramework\Db\Entity $entity) : \OCP\AppFramework\Db\Entity {
 		$now = new \DateTime();
@@ -263,9 +259,8 @@ abstract class BaseMapper extends Mapper {
 	 * update the existing entity.
 	 * Note: The functions insertOrUpate and updateOrInsert get the exactly same thing done. The only difference is
 	 * that the former is optimized for cases where the entity doens't exist and the latter for cases where it does exist.
-	 * @return Entity The inserted or updated entity, containing also the id field
-	 * @phpstan-param EntityType $entity
-	 * @phpstan-return EntityType
+	 * @param EntityType $entity
+	 * @return EntityType The inserted or updated entity, containing also the id field
 	 */
 	public function insertOrUpdate(Entity $entity) : Entity {
 		try {
@@ -287,9 +282,8 @@ abstract class BaseMapper extends Mapper {
 	 * a new entity is inserted.
 	 * Note: The functions insertOrUpate and updateOrInsert get the exactly same thing done. The only difference is
 	 * that the former is optimized for cases where the entity doens't exist and the latter for cases where it does exist.
-	 * @return Entity The inserted or updated entity, containing also the id field
-	 * @phpstan-param EntityType $entity
-	 * @phpstan-return EntityType
+	 * @param EntityType $entity
+	 * @return EntityType The inserted or updated entity, containing also the id field
 	 */
 	public function updateOrInsert(Entity $entity) : Entity {
 		try {
@@ -313,8 +307,8 @@ abstract class BaseMapper extends Mapper {
 	}
 
 	/**
-	 * @phpstan-param EntityType $oldData
-	 * @phpstan-param EntityType $newData
+	 * @param EntityType $oldData
+	 * @param EntityType $newData
 	 */
 	protected static function entityNeedsUpdate(Entity $oldData, Entity $newData) : bool {
 		$fields = $newData->getUpdatedFields();
@@ -465,8 +459,8 @@ abstract class BaseMapper extends Mapper {
 	/**
 	 * Find an entity which has the same identity as the supplied entity.
 	 * How the identity of the entity is defined, depends on the derived concrete class.
-	 * @phpstan-param EntityType $entity
-	 * @phpstan-return EntityType
+	 * @param EntityType $entity
+	 * @return EntityType
 	 */
 	abstract protected function findUniqueEntity(Entity $entity) : Entity;
 }

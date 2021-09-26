@@ -24,12 +24,7 @@ use \OCA\Music\Db\SortBy;
 use \OCA\Music\Utility\Util;
 
 /**
- * Base class functions with the actually used inherited types to help IDE and Scrutinizer:
- * @method Artist find(int $trackId, string $userId)
- * @method Artist[] findAll(string $userId, int $sortBy=SortBy::None, int $limit=null, int $offset=null)
- * @method Artist[] findAllByName(string $name, string $userId, bool $fuzzy=false, int $limit=null, int $offset=null)
- * @method Artist[] findById(int[] $ids, string $userId=null)
- * @phpstan-extends BusinessLayer<Artist>
+ * @extends BusinessLayer<Artist>
  */
 class ArtistBusinessLayer extends BusinessLayer {
 	protected $mapper; // eclipse the definition from the base class, to help IDE and Scrutinizer to know the actual type

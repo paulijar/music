@@ -17,7 +17,7 @@ namespace OCA\Music\Db;
 use \OCP\IDBConnection;
 
 /**
- * @phpstan-extends BaseMapper<Track>
+ * @extends BaseMapper<Track>
  */
 class TrackMapper extends BaseMapper {
 	public function __construct(IDBConnection $db) {

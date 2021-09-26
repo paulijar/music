@@ -19,7 +19,7 @@ use \OCA\Music\Utility\Util;
 use \OCP\IDBConnection;
 
 /**
- * @phpstan-extends BaseMapper<Artist>
+ * @extends BaseMapper<Artist>
  */
 class ArtistMapper extends BaseMapper {
 	public function __construct(IDBConnection $db) {
