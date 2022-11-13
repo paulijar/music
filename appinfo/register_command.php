@@ -67,3 +67,6 @@ $application->add(new OCA\Music\Command\PlaylistImport(
 		$c->query('PlaylistBusinessLayer'),
 		$c->query('PlaylistFileService')
 ));
+$application->add(new OCA\Music\Command\Test(
+	$c->query('RootFolder')
+));
