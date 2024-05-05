@@ -17,8 +17,6 @@ angular.module('Music').controller('PlaylistViewController', [
 
 		const THIS_VIEW_ID = $scope.getCurrentViewId();
 
-		const INCREMENTAL_LOAD_STEP = 1000;
-		$scope.incrementalLoadLimit = INCREMENTAL_LOAD_STEP;
 		$scope.tracks = null;
 
 		$scope.getCurrentTrackIndex = function() {
@@ -26,22 +24,22 @@ angular.module('Music').controller('PlaylistViewController', [
 		};
 
 		// Remove chosen track from the list
-		$scope.removeTrack = function(trackIndex) {
+		$scope.removeTrack = function(entry) {
 			let listId = $scope.playlist.id;
 
 			// Remove the element first from our internal array, without recreating the whole array.
 			// Doing this before the HTTP request improves the perceived performance.
-			libraryService.removeFromPlaylist(listId, trackIndex);
+			libraryService.removeFromPlaylist(listId, entry.index);
 
 			if (listIsPlaying()) {
 				let playingIndex = $scope.getCurrentTrackIndex();
-				if (trackIndex <= playingIndex) {
+				if (entry.index <= playingIndex) {
 					--playingIndex;
 				}
 				playQueueService.onPlaylistModified($scope.tracks, playingIndex);
 			}
 
-			Restangular.one('playlists', listId).all('remove').post({index: trackIndex}).then(function (result) {
+			Restangular.one('playlists', listId).all('remove').post({index: entry.index}).then(function (result) {
 				$scope.playlist.updated = result.updated;
 			});
 		};
@@ -58,14 +56,14 @@ angular.module('Music').controller('PlaylistViewController', [
 		};
 
 		// Play the list, starting from a specific track
-		$scope.onTrackClick = function(trackIndex) {
+		$scope.onTrackClick = function(track) {
 			// play/pause if currently playing list item clicked
-			if ($scope.getCurrentTrackIndex() === trackIndex) {
+			if ($scope.getCurrentTrackIndex() === track.index) {
 				playQueueService.publish('togglePlayback');
 			}
 			// on any other list item, start playing the list from this item
 			else {
-				play(trackIndex);
+				play(track.index);
 			}
 		};
 
@@ -146,7 +144,7 @@ angular.module('Music').controller('PlaylistViewController', [
 
 		// Reload the view if the currently viewed playlist got updated (by import from file)
 		libraryService.subscribe('playlistUpdated', $scope, (_event, playlistId) => {
-			if ($scope.playlist.id == playlistId) {
+			if ($scope.playlist?.id == playlistId) {
 				initViewFromRoute();
 			}
 		});
@@ -156,18 +154,6 @@ angular.module('Music').controller('PlaylistViewController', [
 
 		function listIsPlaying() {
 			return ($rootScope.playingView === $scope.getCurrentViewId());
-		}
-
-		function showMore() {
-			// show more entries only if the view is not already (being) deactivated
-			if ($scope.$parent) {
-				$scope.incrementalLoadLimit += INCREMENTAL_LOAD_STEP;
-				if ($scope.incrementalLoadLimit < $scope.tracks.length) {
-					$timeout(showMore);
-				} else {
-					$rootScope.$emit('viewActivated', THIS_VIEW_ID);
-				}
-			}
 		}
 
 		function initViewFromRoute() {
@@ -184,7 +170,10 @@ angular.module('Music').controller('PlaylistViewController', [
 						window.location.hash = '#/';
 					}
 				}
-				$timeout(showMore);
+				$timeout(() => {
+					$rootScope.$emit('viewActivated', THIS_VIEW_ID);
+					$scope.$broadcast('vsRepeatTrigger'); // the virtual scroller often needs this manual trigger for the first draw
+				});
 			});
 		}
 	}
