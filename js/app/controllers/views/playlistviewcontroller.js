@@ -7,7 +7,7 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Morris Jobke 2013
- * @copyright Pauli Järvinen 2017 - 2023
+ * @copyright Pauli Järvinen 2017 - 2024
  */
 
 
@@ -17,8 +17,6 @@ angular.module('Music').controller('PlaylistViewController', [
 	function ($rootScope, $scope, $routeParams, playlistService, libraryService,
 			gettextCatalog, Restangular, $timeout) {
 
-		const INCREMENTAL_LOAD_STEP = 1000;
-		$scope.incrementalLoadLimit = INCREMENTAL_LOAD_STEP;
 		$scope.tracks = null;
 		$rootScope.currentView = $scope.getViewIdFromUrl();
 
@@ -38,16 +36,16 @@ angular.module('Music').controller('PlaylistViewController', [
 		};
 
 		// Remove chosen track from the list
-		$scope.removeTrack = function(trackIndex) {
+		$scope.removeTrack = function(entry) {
 			let listId = $scope.playlist.id;
 
 			// Remove the element first from our internal array, without recreating the whole array.
 			// Doing this before the HTTP request improves the perceived performance.
-			libraryService.removeFromPlaylist(listId, trackIndex);
+			libraryService.removeFromPlaylist(listId, entry.index);
 
 			if (listIsPlaying()) {
 				let playingIndex = $scope.getCurrentTrackIndex();
-				if (trackIndex <= playingIndex) {
+				if (entry.index <= playingIndex) {
 					--playingIndex;
 				}
 				playlistService.onPlaylistModified($scope.tracks, playingIndex);
@@ -70,14 +68,14 @@ angular.module('Music').controller('PlaylistViewController', [
 		};
 
 		// Play the list, starting from a specific track
-		$scope.onTrackClick = function(trackIndex) {
+		$scope.onTrackClick = function(track) {
 			// play/pause if currently playing list item clicked
-			if ($scope.getCurrentTrackIndex() === trackIndex) {
+			if ($scope.getCurrentTrackIndex() === track.index) {
 				playlistService.publish('togglePlayback');
 			}
 			// on any other list item, start playing the list from this item
 			else {
-				play(trackIndex);
+				play(track.index);
 			}
 		};
 
@@ -171,19 +169,6 @@ angular.module('Music').controller('PlaylistViewController', [
 			return ($rootScope.playingView === $rootScope.currentView);
 		}
 
-		function showMore() {
-			// show more entries only if the view is not already (being) deactivated
-			if ($rootScope.currentView && $scope.$parent) {
-				$scope.incrementalLoadLimit += INCREMENTAL_LOAD_STEP;
-				if ($scope.incrementalLoadLimit < $scope.tracks.length) {
-					$timeout(showMore);
-				} else {
-					$rootScope.loading = false;
-					$rootScope.$emit('viewActivated');
-				}
-			}
-		}
-
 		function initViewFromRoute() {
 			if (libraryService.collectionLoaded() && libraryService.playlistsLoaded()) {
 				if ($routeParams.playlistId) {
@@ -197,22 +182,17 @@ angular.module('Music').controller('PlaylistViewController', [
 						window.location.hash = '#/';
 					}
 				}
-				$timeout(showMore);
+				$timeout(() => {
+					$rootScope.loading = false;
+					$rootScope.$emit('viewActivated');
+				});
 			}
 		}
 
-		function showLess() {
-			$scope.incrementalLoadLimit -= INCREMENTAL_LOAD_STEP;
-			if ($scope.incrementalLoadLimit > 0) {
-				$timeout(showLess);
-			} else {
-				$scope.incrementalLoadLimit = 0;
-				$rootScope.$emit('viewDeactivated');
-			}
-		}
+		$scope.$on('vsRepeatReinitialized', () => console.log('vs-repeat sent event'));
 
 		subscribe('deactivateView', function() {
-			$timeout(showLess);
+			$timeout(() => $rootScope.$emit('viewDeactivated'));
 		});
 
 	}
