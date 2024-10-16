@@ -32,7 +32,7 @@ export class MusicWidget {
 	#trackList: JQuery<HTMLUListElement>;
 	#progressAndOrder: JQuery<HTMLElement>;
 	#controls: JQuery<HTMLElement>;
-	#debouncedPlayCurrent: CallableFunction;
+	#debouncedPlayCurrent: () => void;
 
 	constructor($container: JQuery<HTMLElement>, player: PlayerWrapper, queue: PlayQueue) {
 		this.#player = player;
@@ -63,6 +63,7 @@ export class MusicWidget {
 			() => this.#player.pause(),
 			() => this.#jumpToPrev(),
 			() => this.#jumpToNext(),
+			() => this.#scrollToCurrentTrack(),
 			this.#volumeControl
 		).hide().appendTo($container);
 
@@ -182,7 +183,7 @@ export class MusicWidget {
 								{ type: 'song', rule_1: 'album_artist_id', rule_1_operator: 0, rule_1_input: artistId },
 								'albums-by-artist-' + artistId, artistId);
 						} else {
-							this.#ampacheLoadAndShowTracks('album_songs', { filter: albumId }, 'album-' + albumId, artistId);
+							this.#ampacheLoadAndShowTracks('album_songs', { filter: albumId }, `artist-album-${artistId}-${albumId}`, artistId);
 						}
 					});
 				});
@@ -280,6 +281,11 @@ export class MusicWidget {
 		ampacheApiAction(action, args, (result: any) => {
 			this.#listTracks(listId, result.song, parentId);
 			this.#trackListContainer.removeClass('icon-loading');
+
+			// highlight the current song if the currently playing list was re-entered
+			if (this.#queue.getCurrentPlaylistId() == listId) {
+				this.#trackList.find(`[data-index='${this.#queue.getCurrentIndex()}']`).addClass('current');
+			}
 		});
 	}
 
@@ -304,6 +310,15 @@ export class MusicWidget {
 
 	#jumpToNext() : void {
 		this.#queue.jumpToNextTrack();
+	}
+
+	#scrollToCurrentTrack() : void {
+		const current = this.#trackList.find('.current');
+		if (current.length) {
+			current[0].scrollIntoView({
+				behavior: "smooth"
+			});
+		}
 	}
 
 	#jumpToPrev() : void {
@@ -365,22 +380,28 @@ function createTrackList(tracks: any[], parentId: string|null) : JQuery<HTMLULis
 	return $ul;
 }
 
-function createProgressAndOrder(progress : ProgressInfo, onShuffleBtn : CallableFunction, onRepeatBtn : CallableFunction) : JQuery<HTMLElement>
+function createProgressAndOrder(progress : ProgressInfo, onShuffleBtn : () => void, onRepeatBtn : () => void) : JQuery<HTMLElement>
 {
 	const $container = $('<div class="progress-and-order"/>');
-	$('<div class="control toggle icon-shuffle"/>').appendTo($container).on('click', () => onShuffleBtn());
+	$('<div class="control toggle icon-shuffle"/>').appendTo($container).on('click', onShuffleBtn);
 	progress.addToContainer($container);
-	$('<div class="control toggle icon-repeat"/>').appendTo($container).on('click', () => onRepeatBtn());
+	$('<div class="control toggle icon-repeat"/>').appendTo($container).on('click', onRepeatBtn);
 	return $container;
 }
 
-function createControls(onPlay : CallableFunction, onPause : CallableFunction, onPrev : CallableFunction, onNext : CallableFunction, volumeControl : VolumeControl) : JQuery<HTMLElement> {
+function createControls(
+		onPlay : () => void,
+		onPause : () => void,
+		onPrev : () => void,
+		onNext : () => void,
+		onCoverClick : () => void,
+		volumeControl : VolumeControl) : JQuery<HTMLElement> {
 	const $container = $('<div class="player-controls"/>');
-	$('<div class="albumart"/>').appendTo($container);
-	$('<div class="playback control icon-skip-prev"/>').appendTo($container).on('click', () => onPrev());
-	$('<div class="playback control icon-play"/>').appendTo($container).on('click', () => onPlay());
-	$('<div class="playback control icon-pause"/>').appendTo($container).on('click', () => onPause()).hide();
-	$('<div class="playback control icon-skip-next"/>').appendTo($container).on('click', () => onNext());
+	$('<div class="albumart"/>').appendTo($container).on('click', onCoverClick);
+	$('<div class="playback control icon-skip-prev"/>').appendTo($container).on('click', onPrev);
+	$('<div class="playback control icon-play"/>').appendTo($container).on('click', onPlay);
+	$('<div class="playback control icon-pause"/>').appendTo($container).on('click', onPause).hide();
+	$('<div class="playback control icon-skip-next"/>').appendTo($container).on('click', onNext);
 	volumeControl.addToContainer($container);
 	return $container;
 }
