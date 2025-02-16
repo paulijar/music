@@ -43,6 +43,7 @@ require('vendor/aurora/mp3.js');
 require('vendor/aurora/aac.js'); // this has to come after mp3.js, otherwise MP3 playback breaks
 require('vendor/dragdrop/draganddrop.js');
 require('vendor/nextcloud/placeholder.js');
+require('vendor/snap.js/snap.js');
 // jquery.initialize can't be initialized on a browser lacking the MutationObserver like IE10
 if (typeof MutationObserver !== 'undefined') {
 	require('vendor/jquery-initialize');

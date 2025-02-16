@@ -29,7 +29,7 @@ HtmlUtil::addWebpackStyle('app');
 	<div ng-controller="MainController">
 		<?php HtmlUtil::printPartial('navigation') ?>
 
-		<div id="app-content">
+		<div id="app-content" class="no-snapper">
 
 			<?php
 			HtmlUtil::printPartial('controls');

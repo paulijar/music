@@ -53,7 +53,8 @@ module.exports = {
       'jQuery': 'jquery',
       'window.jQuery': 'jquery',
       '_': 'lodash',
-      'window.AV': 'vendor/aurora/aurora.js'
+      'window.AV': 'vendor/aurora/aurora.js',
+      'Snap': 'vendor/snap.js/snap.js'
     }),
     new WebpackAssetsManifest(),
   ],

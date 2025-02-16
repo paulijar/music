@@ -587,6 +587,60 @@ function ($rootScope, $scope, $timeout, $window, ArtistFactory,
 		}
 	});
 
+	// Snapper integration. Nextcloud ships a bad version of Snap.js so we ship our own. This is the same version
+	// as shipped by ownCloud and the integration below has been copiend from OC. 
+	// TODO: Maybe move to navigationcontroller or to its own dedicated module.
+	function setupSnapper() {
+		var snapper = Snap({
+			element: document.getElementById('app-content'),
+			disable: 'right',
+			maxPosition: 250,
+			minDragDistance: 100
+		});
+		$('#app-content').prepend('<div id="app-navigation-toggle" class="icon-menu" style="display:none;"></div>');
+		$('#app-navigation-toggle').click(function () {
+			if (snapper.state().state == 'left') {
+				snapper.close();
+			} else {
+				snapper.open('left');
+			}
+		});
+		// close sidebar when switching navigation entry
+		var $appNavigation = $('#app-navigation');
+		$appNavigation.delegate('a, :button', 'click', function (event) {
+			var $target = $(event.target);
+			// don't hide navigation when changing settings or adding things
+			if ($target.is('.app-navigation-noclose') ||
+				$target.closest('.app-navigation-noclose').length) {
+				return;
+			}
+			if ($target.is('.add-new') ||
+				$target.closest('.add-new').length) {
+				return;
+			}
+			if ($target.is('#app-settings') ||
+				$target.closest('#app-settings').length) {
+				return;
+			}
+			snapper.close();
+		});
+
+		var toggleSnapperOnSize = function () {
+			if ($(window).width() > 768) {
+				snapper.close();
+				snapper.disable();
+			} else {
+				snapper.enable();
+			}
+		};
+
+		$(window).resize(_.debounce(toggleSnapperOnSize, 250));
+
+		// initial call
+		toggleSnapperOnSize();
+	}
+	setupSnapper();
+
 	$scope.scanning = false;
 	$scope.scanningScanned = 0;
 	$scope.scanningTotal = 0;
