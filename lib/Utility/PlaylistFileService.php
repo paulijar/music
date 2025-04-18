@@ -141,7 +141,7 @@ class PlaylistFileService {
 	 * @param Folder $userFolder user home dir
 	 * @param string $filePath path of the file to import
 	 * @parma string $mode one of the following:
-	 * 						- 'append' (dafault) Append the imported tracks after the existing tracks on the list
+	 * 						- 'append' (default) Append the imported tracks after the existing tracks on the list
 	 * 						- 'overwrite' Replace any previous tracks on the list with the imported tracks
 	 * @return array with three keys:
 	 * 			- 'playlist': The Playlist entity after the modification
