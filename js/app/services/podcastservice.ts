@@ -53,7 +53,13 @@ function($rootScope : MusicRootScope, $timeout : ng.ITimeoutService, $q : ng.IQS
 				if (overwrite) {
 					retryFunc(path, 'overwrite');
 				} else {
-					retryFunc(path, 'keepboth');
+					OC.dialogs.prompt("Give new name", "File name", (accepted : boolean, input : string) => console.log(accepted, input), true, "Filename", false);
+
+					OCA.Music.Utils.executeOnceRefAvailable(
+						() => $('.dialog__content:visible input')[0] ?? $('.oc-dialog:visible input')[0], 
+						(inputElem : HTMLInputElement) => inputElem.value = 'some preset value',
+						100
+					);
 				}
 			},
 			true // modal
