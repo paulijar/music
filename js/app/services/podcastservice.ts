@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2021 - 2023
+ * @copyright Pauli Järvinen 2021 - 2025
  */
 
 import * as ng from 'angular';
@@ -41,6 +41,44 @@ function($rootScope : MusicRootScope, $timeout : ng.ITimeoutService, $q : ng.IQS
 		);
 
 		return deferred.promise;
+	}
+
+	function onExportConflict(path : string, name : string, retryFunc : CallableFunction) : void {
+		OC.dialogs.confirm(
+			gettextCatalog.getString('The folder already has a file named "{{ filename }}". Select "Yes" to overwrite it.'+
+									' Select "No" to save with another name.',
+									{ filename: name }),
+			gettextCatalog.getString('Overwrite existing file'),
+			(overwrite : boolean) => {
+				if (overwrite) {
+					retryFunc(path, 'overwrite');
+				} else {
+					retryFunc(path, 'keepboth');
+				}
+			},
+			true // modal
+		);
+	}
+
+	/** return true if a retry attempt was fired and false if the operation was aborted */
+	function handleExportError(httpError : number, path : string, playlistName : string, retryFunc : CallableFunction) : boolean {
+		switch (httpError) {
+		case 409: // conflict
+			onExportConflict(path, playlistName, retryFunc);
+			return true;
+		case 404: // not found
+			OC.Notification.showTemporary(
+				gettextCatalog.getString('Playlist or folder not found'));
+			return false;
+		case 403: // forbidden
+			OC.Notification.showTemporary(
+				gettextCatalog.getString('Writing to the file is not allowed'));
+			return false;
+		default: // unexpected
+			OC.Notification.showTemporary(
+				gettextCatalog.getString('Unexpected error'));
+			return false;
+		}
 	}
 
 	// Service API
@@ -88,6 +126,38 @@ function($rootScope : MusicRootScope, $timeout : ng.ITimeoutService, $q : ng.IQS
 					true, // modal
 					gettextCatalog.getString('URL'),
 					false // password
+			);
+
+			return deferred.promise;
+		},
+
+		// Export podcast channels to an OPML file
+		exportToFile() : ng.IPromise<any> {
+			let deferred = $q.defer();
+			let name = 'podcasts.opml';
+
+			function onFolderSelected(path : string, onCollision = 'abort') {
+				deferred.notify('started');
+				let args = { path: path, name: name, oncollision: onCollision };
+				Restangular.all('podcasts/export').post(args).then(
+					(result) => {
+						OC.Notification.showTemporary(
+							gettextCatalog.getString('Podcast channels exported to file {{ path }}', { path: result.wrote_to_file }));
+						deferred.resolve();
+					},
+					(error) => {
+						deferred.notify('stopped');
+						let retry = handleExportError(error.status, path, name, onFolderSelected);
+						if (!retry) {
+							deferred.reject();
+						}
+					}
+				);
+			}
+
+			OCA.Music.Dialogs.folderPicker(
+				gettextCatalog.getString('Export podcasts to an OPML file in the selected folder'),
+				onFolderSelected
 			);
 
 			return deferred.promise;
