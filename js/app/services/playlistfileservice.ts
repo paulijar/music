@@ -25,28 +25,21 @@ ng.module('Music').service('playlistFileService', [
 '$rootScope', '$q', 'libraryService', 'gettextCatalog', 'Restangular',
 function($rootScope : MusicRootScope, $q : ng.IQService, libraryService : LibraryService, gettextCatalog : gettextCatalog, Restangular : IService) {
 
-	function onExportConflict(path : string, name : string, retryFunc : CallableFunction) : void {
+	function queryOverwrite(fileName : string, onSelection : CallableFunction) {
 		OC.dialogs.confirm(
 			gettextCatalog.getString('The folder already has a file named "{{ filename }}". Select "Yes" to overwrite it.'+
 									' Select "No" to save with another name.',
-									{ filename: name + '.m3u8' }),
+									{ filename: fileName }),
 			gettextCatalog.getString('Overwrite existing file'),
-			(overwrite : boolean) => {
-				if (overwrite) {
-					retryFunc(path, 'overwrite');
-				} else {
-					retryFunc(path, 'keepboth');
-				}
-			},
+			onSelection,
 			true // modal
 		);
 	}
 
-	/** return true if a retry attempt was fired and false if the operation was aborted */
-	function handleExportError(httpError : number, path : string, playlistName : string, retryFunc : CallableFunction) : boolean {
+	/** return true if the operation can be retried */
+	function handleExportError(httpError : number) : boolean {
 		switch (httpError) {
 		case 409: // conflict
-			onExportConflict(path, playlistName, retryFunc);
 			return true;
 		case 404: // not found
 			OC.Notification.showTemporary(
@@ -90,7 +83,16 @@ function($rootScope : MusicRootScope, $q : ng.IQService, libraryService : Librar
 						playlist.busy = false;
 					},
 					(error) => {
-						handleExportError(error.status, path, playlist.name, onFolderSelected);
+						let retry = handleExportError(error.status);
+						if (retry) {
+							queryOverwrite(playlist.name + '.m3u8', (overwrite : boolean) => {
+								if (overwrite) {
+									onFolderSelected(path, 'overwrite');
+								} else {
+									onFolderSelected(path, 'keepboth');
+								}
+							});
+						}
 						playlist.busy = false;
 					}
 				);
@@ -102,13 +104,11 @@ function($rootScope : MusicRootScope, $q : ng.IQService, libraryService : Librar
 			);
 		},
 
-
 		// Export radio stations to file
 		exportRadio() : ng.IPromise<any> {
 			let deferred = $q.defer();
-			let name = gettextCatalog.getString('Internet radio');
 
-			function onFolderSelected(path : string, onCollision = 'abort') {
+			function onFileNameGiven(name : string, path : string, onCollision = 'abort') {
 				deferred.notify('started');
 				let args = { path: path, name: name, oncollision: onCollision };
 				Restangular.all('radio/export').post(args).then(
@@ -119,17 +119,40 @@ function($rootScope : MusicRootScope, $q : ng.IQService, libraryService : Librar
 					},
 					(error) => {
 						deferred.notify('stopped');
-						let retry = handleExportError(error.status, path, name, onFolderSelected);
-						if (!retry) {
+						let retry = handleExportError(error.status);
+						if (retry) {
+							queryOverwrite(name, (overwrite : boolean) => {
+								if (overwrite) {
+									onFileNameGiven(name, path, 'overwrite');
+								} else {
+									queryFileName(error.data.suggested_name, path);
+								}
+							});
+						} else {
 							deferred.reject();
 						}
 					}
 				);
 			}
 
+			function queryFileName(defaultName : string, path : string) {
+				const title = gettextCatalog.getString('File name');
+				const promptText = gettextCatalog.getString('Save with given file name');
+				OCA.Music.Dialogs.prompt(
+					title,
+					promptText,
+					(accept : boolean, name : string) => {
+						if (accept) {
+							onFileNameGiven(name, path);
+						}
+					},
+					defaultName
+				);
+			}
+
 			showFolderPicker(
 				gettextCatalog.getString('Export radio stations to a file in the selected folder'),
-				onFolderSelected
+				(path : string) => queryFileName(gettextCatalog.getString('Internet radio') + '.m3u8', path)
 			);
 
 			return deferred.promise;

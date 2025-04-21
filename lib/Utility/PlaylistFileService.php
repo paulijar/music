@@ -14,6 +14,7 @@ namespace OCA\Music\Utility;
 
 use OCA\Music\AppFramework\BusinessLayer\BusinessLayerException;
 use OCA\Music\AppFramework\Core\Logger;
+use OCA\Music\AppFramework\Utility\FileExistsException;
 use OCA\Music\BusinessLayer\PlaylistBusinessLayer;
 use OCA\Music\BusinessLayer\RadioStationBusinessLayer;
 use OCA\Music\BusinessLayer\TrackBusinessLayer;
@@ -65,7 +66,7 @@ class PlaylistFileService {
 	 * @return string path of the written file
 	 * @throws BusinessLayerException if playlist with ID not found
 	 * @throws \OCP\Files\NotFoundException if the $folderPath is not a valid folder
-	 * @throws \RuntimeException on name conflict if $collisionMode == 'abort'
+	 * @throws FileExistsException on name conflict if $collisionMode == 'abort'
 	 * @throws \OCP\Files\NotPermittedException if the user is not allowed to write to the given folder
 	 */
 	public function exportToFile(
@@ -112,12 +113,17 @@ class PlaylistFileService {
 	 *								- 'abort' (default) The operation will fail
 	 * @return string path of the written file
 	 * @throws \OCP\Files\NotFoundException if the $folderPath is not a valid folder
-	 * @throws \RuntimeException on name conflict if $collisionMode == 'abort'
+	 * @throws FileExistsException on name conflict if $collisionMode == 'abort'
 	 * @throws \OCP\Files\NotPermittedException if the user is not allowed to write to the given folder
 	 */
 	public function exportRadioStationsToFile(
 			string $userId, Folder $userFolder, string $folderPath, string $filename, string $collisionMode='abort') : string {
 		$targetFolder = Util::getFolderFromRelativePath($userFolder, $folderPath);
+
+		// enforce proper extension
+		if (!Util::endsWith($filename, '.m3u8', true) && !Util::endsWith($filename, '.m3u', true)) {
+			$filename = $filename . '.m3u8';
+		}
 
 		$filename = self::checkFileNameConflict($targetFolder, $filename, $collisionMode);
 
@@ -456,7 +462,10 @@ class PlaylistFileService {
 					$filename = $targetFolder->getNonExistingName($filename);
 					break;
 				default:
-					throw new \RuntimeException('file already exists');
+					throw new FileExistsException(
+						$targetFolder->get($filename)->getPath(),
+						$targetFolder->getNonExistingName($filename)
+					);
 			}
 		}
 		return $filename;
