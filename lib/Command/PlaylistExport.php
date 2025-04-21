@@ -7,12 +7,13 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2021 - 2024
+ * @copyright Pauli Järvinen 2021 - 2025
  */
 
 namespace OCA\Music\Command;
 
 use OCA\Music\AppFramework\BusinessLayer\BusinessLayerException;
+use OCA\Music\AppFramework\Utility\FileExistsException;
 use OCA\Music\BusinessLayer\PlaylistBusinessLayer;
 use OCA\Music\Db\Playlist;
 use OCA\Music\Utility\PlaylistFileService;
@@ -142,7 +143,7 @@ class PlaylistExport extends BaseCommand {
 			$output->writeln("  User <info>$userId</info> has no playlist with id <error>$id</error>");
 		} catch (\OCP\Files\NotFoundException $ex) {
 			$output->writeln("  Invalid folder path <error>$dir</error>");
-		} catch (\RuntimeException $ex) {
+		} catch (FileExistsException $ex) {
 			$output->writeln("  Playlist file with the name <error>{$playlist->getName()}</error> already exists, pass the argument <info>--overwrite</info> to overwrite it");
 		}
 	}
