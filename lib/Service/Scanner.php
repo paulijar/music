@@ -537,7 +537,11 @@ class Scanner extends PublicEmitter {
 
 	public function getUnscannedMusicFileIds(string $userId, ?string $path = null) : array {
 		$scannedIds = $this->getScannedFileIds($userId);
-		$unscannedIds = $this->getAllMusicFileIdsExcluding($userId, $path, $scannedIds);
+		//$unscannedIds = $this->getAllMusicFileIdsExcluding($userId, $path, $scannedIds);
+		$availableIds = $this->getAllMusicFileIds($userId, $path);
+		$unscannedIds = ArrayUtil::diff($availableIds, $scannedIds);
+		$unavailableIds = ArrayUtil::diff($scannedIds, $availableIds);
+
 
 		$count = \count($unscannedIds);
 		if ($count) {

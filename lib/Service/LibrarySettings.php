@@ -28,6 +28,7 @@ class LibrarySettings {
 	private IConfig $configManager;
 	private IRootFolder $rootFolder;
 	private Logger $logger;
+	private array $userFolders;
 
 	public function __construct(
 			string $appName,
@@ -38,6 +39,7 @@ class LibrarySettings {
 		$this->configManager = $configManager;
 		$this->rootFolder = $rootFolder;
 		$this->logger = $logger;
+		$this->userFolders = [];
 	}
 
 	public function setScanMetadataEnabled(string $userId, bool $enabled) : void {
@@ -104,9 +106,12 @@ class LibrarySettings {
 	}
 
 	public function getFolder(string $userId) : Folder {
-		$userHome = $this->rootFolder->getUserFolder($userId);
-		$path = $this->getPath($userId);
-		return FilesUtil::getFolderFromRelativePath($userHome, $path);
+		if (!isset($this->userFolders[$userId])) {
+			$userHome = $this->rootFolder->getUserFolder($userId);
+			$path = $this->getPath($userId);
+			$this->userFolders[$userId] = FilesUtil::getFolderFromRelativePath($userHome, $path);
+		}
+		return $this->userFolders[$userId];
 	}
 
 	public function pathBelongsToMusicLibrary(string $filePath, string $userId) : bool {

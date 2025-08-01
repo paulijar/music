@@ -70,6 +70,7 @@ class Scan extends BaseCommand {
 					InputOption::VALUE_OPTIONAL,
 					'scan only files within this folder (path is relative to the user home folder)'
 			)
+			->addOption('test', null, InputOption::VALUE_NONE, '!!! test only');
 		;
 	}
 
@@ -88,16 +89,23 @@ class Scan extends BaseCommand {
 			$users = \array_map(fn($u) => $u->getUID(), $users);
 		}
 
+
 		foreach ($users as $user) {
-			$this->scanUser(
-					$user,
-					$output,
-					$input->getOption('rescan'),
-					$input->getOption('rescan-modified'),
-					$input->getOption('clean-obsolete'),
-					$input->getOption('folder'),
-					$input->getOption('debug')
-			);
+			if ($input->getOption('test')) {
+				$output->writeln("Getting unscanned files of <info>$user</info>...");
+				$this->scanner->getUnscannedMusicFileIds($user, $input->getOption('folder'));
+				$output->writeln("Done");
+			} else {
+				$this->scanUser(
+						$user,
+						$output,
+						$input->getOption('rescan'),
+						$input->getOption('rescan-modified'),
+						$input->getOption('clean-obsolete'),
+						$input->getOption('folder'),
+						$input->getOption('debug')
+				);
+			}
 		}
 	}
 
