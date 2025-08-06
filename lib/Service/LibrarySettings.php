@@ -28,6 +28,8 @@ class LibrarySettings {
 	private IConfig $configManager;
 	private IRootFolder $rootFolder;
 	private Logger $logger;
+	/** @var array<string, array<string, mixed>> $localCache */
+	private array $localCache = [];
 
 	public function __construct(
 			string $appName,
@@ -75,6 +77,7 @@ class LibrarySettings {
 			$success = true;
 		}
 
+		$this->invalidateCache($userId);
 		return $success;
 	}
 
@@ -88,6 +91,7 @@ class LibrarySettings {
 	 */
 	public function setExcludedPaths(string $userId, array $paths) : bool {
 		$this->configManager->setUserValue($userId, $this->appName, 'excluded_paths', \json_encode($paths));
+		$this->invalidateCache($userId);
 		return true;
 	}
 
@@ -95,30 +99,57 @@ class LibrarySettings {
 	 * @return string[]
 	 */
 	public function getExcludedPaths(string $userId) : array {
-		$paths = $this->configManager->getUserValue($userId, $this->appName, 'excluded_paths');
-		if (empty($paths)) {
-			return [];
-		} else {
-			return \json_decode($paths);
-		}
+		return $this->get($userId, 'excluded_paths', function() use ($userId) {
+			$paths = $this->configManager->getUserValue($userId, $this->appName, 'excluded_paths');
+			if (empty($paths)) {
+				return [];
+			} else {
+				return \json_decode($paths);
+			}
+		});
 	}
 
 	public function getFolder(string $userId) : Folder {
-		$userHome = $this->rootFolder->getUserFolder($userId);
-		$path = $this->getPath($userId);
-		return FilesUtil::getFolderFromRelativePath($userHome, $path);
+		return $this->get($userId, 'music_folder', fn() => FilesUtil::getFolderFromRelativePath(
+			$this->rootFolder->getUserFolder($userId), $this->getPath($userId)));
 	}
 
 	public function pathBelongsToMusicLibrary(string $filePath, string $userId) : bool {
 		$filePath = self::normalizePath($filePath);
-		$musicPath = self::normalizePath($this->getFolder($userId)->getPath());
+		$musicPath = $this->getAbsoluteLibPath($userId);
 
 		return StringUtil::startsWith($filePath, $musicPath)
-				&& !$this->pathIsExcluded($filePath, $musicPath, $userId);
+			&& !$this->pathIsExcluded($filePath, $musicPath, $userId);
+	}
+
+	private function getAbsoluteLibPath(string $userId) : string {
+		return $this->get($userId, 'music_folder_abs_path', fn() => self::normalizePath($this->getFolder($userId)->getPath()));
+	}
+
+	private function getHomePath(string $userId) : string {
+		return $this->get($userId, 'home_path', fn() => $this->rootFolder->getUserFolder($userId)->getPath());
+	}
+
+	/**
+	 * Read value from the local cache or fall back to using the supplied getter function.
+	 * In the latter case, the value is cached after obtaining it.
+	 * Caching the values is useful when the same value is used tens of thousands of times within a
+	 * single request, like when checking the scan status of a huge music library.
+	 * @return mixed
+	 */
+	private function get(string $userId, string $cacheKey, callable $readValue) {
+		if (!isset($this->localCache[$userId][$cacheKey])) {
+			$this->localCache[$userId][$cacheKey] = $readValue();
+		}
+		return $this->localCache[$userId][$cacheKey];
+	}
+
+	private function invalidateCache(string $userId) : void {
+		unset($this->localCache[$userId]);
 	}
 
 	private function pathIsExcluded(string $filePath, string $musicPath, string $userId) : bool {
-		$userRootPath = $this->rootFolder->getUserFolder($userId)->getPath();
+		$userRootPath = $this->getHomePath($userId);
 		$excludedPaths = $this->getExcludedPaths($userId);
 
 		foreach ($excludedPaths as $excludedPath) {
