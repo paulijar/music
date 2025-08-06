@@ -70,6 +70,7 @@ class Scan extends BaseCommand {
 					InputOption::VALUE_OPTIONAL,
 					'scan only files within this folder (path is relative to the user home folder)'
 			)
+			->addOption('test', null, InputOption::VALUE_NONE, '!!! test only');
 		;
 	}
 
@@ -88,16 +89,28 @@ class Scan extends BaseCommand {
 			$users = \array_map(fn($u) => $u->getUID(), $users);
 		}
 
+
 		foreach ($users as $user) {
-			$this->scanUser(
-					$user,
-					$output,
-					$input->getOption('rescan'),
-					$input->getOption('rescan-modified'),
-					$input->getOption('clean-obsolete'),
-					$input->getOption('folder'),
-					$input->getOption('debug')
-			);
+			if ($input->getOption('test')) {
+				$output->writeln("Getting unscanned files of <info>$user</info>...");
+				$this->scanner->getUnscannedMusicFileIds($user, $input->getOption('folder'));
+				$output->writeln("Done");
+
+				$output->writeln("Number of timestamps: " . count($this->scanner->timestamps));
+				for ($i = 0; $i < count($this->scanner->timestamps) - 1; ++$i) {
+					$output->writeln((string)(($this->scanner->timestamps[$i + 1] - $this->scanner->timestamps[$i])/1000000));
+				}
+			} else {
+				$this->scanUser(
+						$user,
+						$output,
+						$input->getOption('rescan'),
+						$input->getOption('rescan-modified'),
+						$input->getOption('clean-obsolete'),
+						$input->getOption('folder'),
+						$input->getOption('debug')
+				);
+			}
 		}
 	}
 
