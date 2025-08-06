@@ -500,6 +500,8 @@ class Scanner extends PublicEmitter {
 		return $folder;
 	}
 
+	public $timestamps = [];
+
 	/**
 	 * Search for music files by mimetype inside user specified library path
 	 * (which defaults to user home dir). Exclude given array of IDs.
@@ -510,25 +512,33 @@ class Scanner extends PublicEmitter {
 	 * @return int[]
 	 */
 	private function getAllMusicFileIdsExcluding(string $userId, ?string $path, array $excludeIds) : array {
+		$this->timestamps[] = \hrtime(true);
+
 		try {
 			$folder = $this->getMusicFolder($userId, $path);
 		} catch (\OCP\Files\NotFoundException $e) {
 			return [];
 		}
 
+		$this->timestamps[] = \hrtime(true);
 		// Search files with mime 'audio/*' but filter out the playlist files and files under excluded folders
 		$files = $folder->searchByMime('audio');
 
+		$this->timestamps[] = \hrtime(true);
 		// Look-up-table of IDs to be excluded from the final result
 		$excludeIdsLut = \array_flip($excludeIds);
+		$this->timestamps[] = \hrtime(true);
 
-		$files = \array_filter($files, function ($f) use ($userId, $excludeIdsLut) {
-			return !isset($excludeIdsLut[$f->getId()])
+		$files = \array_filter($files, fn($f) =>
+					!isset($excludeIdsLut[$f->getId()])
 					&& !self::isPlaylistMime($f->getMimeType())
-					&& $this->librarySettings->pathBelongsToMusicLibrary($f->getPath(), $userId);
-		});
+					&& $this->librarySettings->pathBelongsToMusicLibrary($f->getPath(), $userId)
+		);
+		$this->timestamps[] = \hrtime(true);
 
-		return \array_values(ArrayUtil::extractIds($files)); // the array may be sparse before array_values
+		$result = \array_values(ArrayUtil::extractIds($files)); // the array may be sparse before array_values
+		$this->timestamps[] = \hrtime(true);
+		return $result;
 	}
 
 	public function getAllMusicFileIds(string $userId, ?string $path = null) : array {
@@ -537,7 +547,11 @@ class Scanner extends PublicEmitter {
 
 	public function getUnscannedMusicFileIds(string $userId, ?string $path = null) : array {
 		$scannedIds = $this->getScannedFileIds($userId);
-		$unscannedIds = $this->getAllMusicFileIdsExcluding($userId, $path, $scannedIds);
+		//$unscannedIds = $this->getAllMusicFileIdsExcluding($userId, $path, $scannedIds);
+		$availableIds = $this->getAllMusicFileIds($userId, $path);
+		$unscannedIds = ArrayUtil::diff($availableIds, $scannedIds);
+		$unavailableIds = ArrayUtil::diff($scannedIds, $availableIds);
+
 
 		$count = \count($unscannedIds);
 		if ($count) {
