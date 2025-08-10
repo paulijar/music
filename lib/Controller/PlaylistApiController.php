@@ -63,7 +63,7 @@ class PlaylistApiController extends Controller {
 								GenreBusinessLayer $genreBusinessLayer,
 								CoverService $coverService,
 								PlaylistFileService $playlistFileService,
-								string $userId,
+								?string $userId,
 								IRootFolder $rootFolder,
 								IConfig $configManager,
 								Logger $logger) {
@@ -76,8 +76,8 @@ class PlaylistApiController extends Controller {
 		$this->genreBusinessLayer = $genreBusinessLayer;
 		$this->coverService = $coverService;
 		$this->playlistFileService = $playlistFileService;
-		$this->userId = $userId;
-		$this->userFolder = $rootFolder->getUserFolder($userId);
+		$this->userId = $userId ?? '';
+		$this->userFolder = $userId ? $rootFolder->getUserFolder($userId) : $rootFolder;
 		$this->configManager = $configManager;
 		$this->logger = $logger;
 	}
