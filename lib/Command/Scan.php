@@ -92,9 +92,12 @@ class Scan extends BaseCommand {
 
 		foreach ($users as $user) {
 			if ($input->getOption('test')) {
-				$output->writeln("Getting unscanned files of <info>$user</info>...");
-				$this->scanner->getUnscannedMusicFileIds($user, $input->getOption('folder'));
-				$output->writeln("Done");
+				$output->writeln("Getting scan status of <info>$user</info>...");
+				$status = $this->scanner->getStatusOfLibraryFiles($user, $input->getOption('folder'));
+				$output->writeln('Unscanned count: ' . count($status['unscannedFiles']));
+				$output->writeln('Obsolete count: ' . count($status['obsoleteFiles']));
+				$output->writeln('Dirty count: ' . count($status['dirtyFiles']));
+				$output->writeln('Scanned count: ' . $status['scannedCount']);
 
 				$output->writeln("Number of timestamps: " . count($this->scanner->timestamps));
 				for ($i = 0; $i < count($this->scanner->timestamps) - 1; ++$i) {
