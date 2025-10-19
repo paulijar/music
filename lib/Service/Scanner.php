@@ -365,7 +365,7 @@ class Scanner extends PublicEmitter {
 	 * @param string[]|null $userIds
 	 * @return boolean true if anything was removed
 	 */
-	private function deleteAudio(array $fileIds, ?array $userIds=null) : bool {
+	public function deleteAudio(array $fileIds, ?array $userIds=null) : bool {
 		$result = $this->trackBusinessLayer->deleteTracks($fileIds, $userIds);
 
 		if ($result) { // one or more tracks were removed
@@ -480,8 +480,21 @@ class Scanner extends PublicEmitter {
 		});
 	}
 
-	private function getScannedFileIds(string $userId) : array {
-		return $this->trackBusinessLayer->findAllFileIds($userId);
+	private function getScannedFileIds(string $userId, ?string $path = null) : array {
+		$folderId = null;
+		if (!empty($path)) {
+			try {
+				$folderId = $this->getMusicFolder($userId, $path)->getId();
+				if ($folderId == $this->getMusicFolder($userId, null)->getId()) {
+					// the path just pointed to the root of the library so it doesn't actually limit anything
+					$folderId = null;
+				}
+			} catch (\OCP\Files\NotFoundException $e) {
+				return [];
+			}
+		}
+
+		return $this->trackBusinessLayer->findAllFileIds($userId, $folderId);
 	}
 
 	private function getMusicFolder(string $userId, ?string $path) : Folder {
@@ -500,8 +513,6 @@ class Scanner extends PublicEmitter {
 		return $folder;
 	}
 
-	public $timestamps = [];
-
 	/**
 	 * Search for music files by mimetype inside user specified library path
 	 * (which defaults to user home dir).
@@ -511,7 +522,7 @@ class Scanner extends PublicEmitter {
 	 * @param int[] $excludeIds
 	 * @return int[]
 	 */
-	private function getAllMusicFileIds(string $userId, ?string $path = null) : array {
+	public function getAllMusicFileIds(string $userId, ?string $path = null) : array {
 		try {
 			$folder = $this->getMusicFolder($userId, $path);
 		} catch (\OCP\Files\NotFoundException $e) {
@@ -530,32 +541,17 @@ class Scanner extends PublicEmitter {
 		return $result;
 	}
 
-	public function getUnscannedMusicFileIds(string $userId, ?string $path = null) : array {
-		$scannedIds = $this->getScannedFileIds($userId);
-		$availableIds = $this->getAllMusicFileIds($userId, $path);
-		$unscannedIds = ArrayUtil::diff($availableIds, $scannedIds);
-
-		$count = \count($unscannedIds);
-		if ($count) {
-			$this->logger->info("Found $count unscanned music files for user $userId");
-		} else {
-			$this->logger->debug("No unscanned music files for user $userId");
-		}
-
-		return $unscannedIds;
-	}
-
 	/**
 	 * @return array{unscannedFiles: int[], obsoleteFiles: int[], dirtyFiles: int[], scannedCount: int}
 	 */
-	public function getStatusOfLibraryFiles(string $userId) : array {
-		$scannedIds = $this->getScannedFileIds($userId);
-		$availableIds = $this->getAllMusicFileIds($userId);
+	public function getStatusOfLibraryFiles(string $userId, ?string $path = null) : array {
+		$scannedIds = $this->getScannedFileIds($userId, $path);
+		$availableIds = $this->getAllMusicFileIds($userId, $path);
 
 		return [
 			'unscannedFiles' => ArrayUtil::diff($availableIds, $scannedIds),
 			'obsoleteFiles' => ArrayUtil::diff($scannedIds, $availableIds),
-			'dirtyFiles' => $this->getDirtyMusicFileIds($userId),
+			'dirtyFiles' => $this->getDirtyMusicFileIds($userId, $path),
 			'scannedCount' => \count($scannedIds)
 		];
 	}

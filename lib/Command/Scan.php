@@ -39,18 +39,12 @@ class Scan extends BaseCommand {
 	protected function doConfigure() : void {
 		$this
 			->setName('music:scan')
-			->setDescription('scan and index any unindexed audio files')
+			->setDescription('scan and index any unindexed or dirty audio files, and remove obsolete references')
 			->addOption(
 					'debug',
 					null,
 					InputOption::VALUE_NONE,
 					'will run the scan in debug mode, showing memory and time consumption'
-			)
-			->addOption(
-					'clean-obsolete',
-					null,
-					InputOption::VALUE_NONE,
-					'also check availability of any previously scanned tracks, removing obsolete entries'
 			)
 			->addOption(
 					'rescan',
@@ -59,10 +53,16 @@ class Scan extends BaseCommand {
 					'rescan also any previously scanned tracks'
 			)
 			->addOption(
-					'rescan-modified',
+					'skip-obsolete',
 					null,
 					InputOption::VALUE_NONE,
-					'rescan files which have modification time later than the previous scan time (new files not scanned)'
+					'do not remove the obsolete file references from the library'
+			)
+			->addOption(
+					'skip-dirty',
+					null,
+					InputOption::VALUE_NONE,
+					'do not rescan the files marked "dirty" or having timestamp after the latest scan time'
 			)
 			->addOption(
 					'folder',
@@ -80,8 +80,8 @@ class Scan extends BaseCommand {
 			$this->scanner->listen(Scanner::class, 'exclude', fn($path) => $output->writeln("!! Removing <info>$path</info>"));
 		}
 
-		if ($input->getOption('rescan') && $input->getOption('rescan-modified')) {
-			throw new \InvalidArgumentException('The options <error>rescan</error> and <error>rescan-modified</error> are mutually exclusive');
+		if ($input->getOption('rescan') && $input->getOption('skip-obsolete')) {
+			throw new \InvalidArgumentException('The options <error>rescan</error> and <error>skip-obsolete</error> are mutually exclusive');
 		}
 
 		if ($input->getOption('all')) {
@@ -89,71 +89,71 @@ class Scan extends BaseCommand {
 			$users = \array_map(fn($u) => $u->getUID(), $users);
 		}
 
-
 		foreach ($users as $user) {
-			if ($input->getOption('test')) {
-				$output->writeln("Getting scan status of <info>$user</info>...");
-				$status = $this->scanner->getStatusOfLibraryFiles($user, $input->getOption('folder'));
-				$output->writeln('Unscanned count: ' . count($status['unscannedFiles']));
-				$output->writeln('Obsolete count: ' . count($status['obsoleteFiles']));
-				$output->writeln('Dirty count: ' . count($status['dirtyFiles']));
-				$output->writeln('Scanned count: ' . $status['scannedCount']);
-
-				$output->writeln("Number of timestamps: " . count($this->scanner->timestamps));
-				for ($i = 0; $i < count($this->scanner->timestamps) - 1; ++$i) {
-					$output->writeln((string)(($this->scanner->timestamps[$i + 1] - $this->scanner->timestamps[$i])/1000000));
-				}
-			} else {
-				$this->scanUser(
-						$user,
-						$output,
-						$input->getOption('rescan'),
-						$input->getOption('rescan-modified'),
-						$input->getOption('clean-obsolete'),
-						$input->getOption('folder'),
-						$input->getOption('debug')
-				);
-			}
+			$this->scanUser(
+					$user,
+					$output,
+					$input->getOption('rescan'),
+					$input->getOption('skip-dirty'),
+					$input->getOption('skip-obsolete'),
+					$input->getOption('folder'),
+					$input->getOption('debug')
+			);
 		}
 	}
 
 	protected function scanUser(
-			string $user, OutputInterface $output, bool $rescan, bool $rescanModified,
-			bool $cleanObsolete, ?string $folder, bool $debug) : void {
+			string $user, OutputInterface $output, bool $rescan, bool $skipDirty,
+			bool $skipObsolete, ?string $folder, bool $debug) : void {
 
-		if ($cleanObsolete) {
-			$output->writeln("Checking availability of previously scanned files of <info>$user</info>...");
-			$removedCount = $this->scanner->removeUnavailableFiles($user);
-			if ($removedCount > 0) {
-				$output->writeln("Removed $removedCount tracks which are no longer within the library of <info>$user</info>");
-			}
+		$output->writeln("Check library scan status for <info>$user</info>...");
+		$startTime = \hrtime(true);
+		$libStatus = $this->scanner->getStatusOfLibraryFiles($user, $folder);
+		$statusTime = (int)((\hrtime(true) - $startTime) / 1000000);
+		$output->writeln("  Status got in $statusTime ms");
+		$output->writeln("  Scanned files: " . $libStatus['scannedCount']);
+		$output->writeln("  Unscanned files: " . \count($libStatus['unscannedFiles']));
+		$output->writeln("  Dirty files: " . \count($libStatus['dirtyFiles']));
+		$output->writeln("  Obsolete files: " . \count($libStatus['obsoleteFiles']));
+		$output->writeln("");
+
+		if (!$skipObsolete && !empty($libStatus['obsoleteFiles'])) {
+			$this->scanner->deleteAudio($libStatus['obsoleteFiles'], [$user]);
+			$output->writeln("The obsolete files no longer available in the the library of <info>$user</info> were removed");
 		}
 
-		$output->writeln("Start scan for <info>$user</info>");
 		if ($rescan) {
 			$filesToScan = $this->scanner->getAllMusicFileIds($user, $folder);
-		} elseif ($rescanModified) {
-			$filesToScan = $this->scanner->getDirtyMusicFileIds($user, $folder);
 		} else {
-			$filesToScan = $this->scanner->getUnscannedMusicFileIds($user, $folder);
+			$filesToScan = $libStatus['unscannedFiles'];
+			if (!$skipDirty) {
+				$filesToScan = \array_merge($filesToScan, $libStatus['dirtyFiles']);
+			}
 		}
-		$output->writeln('Found ' . \count($filesToScan) . ' music files to scan' . ($folder ? " in '$folder'" : ''));
+		$output->writeln('Total ' . \count($filesToScan) . ' files to scan' . ($folder ? " in '$folder'" : ''));
 
 		if (\count($filesToScan)) {
 			$stats = $this->scanner->scanFiles($user, $filesToScan, $debug ? $output : null);
 			$output->writeln("Added {$stats['count']} files to database of <info>$user</info>");
-			$output->writeln('Time consumed to analyze files: ' . ($stats['anlz_time'] / 1000) . ' s');
-			$output->writeln('Time consumed to update DB: ' . ($stats['db_time'] / 1000) . ' s');
+			$output->writeln('  Time consumed to analyze files: ' . ($stats['anlz_time'] / 1000) . ' s');
+			$output->writeln('  Time consumed to update DB: ' . ($stats['db_time'] / 1000) . ' s');
 		}
 
+		$output->writeln("");
 		$output->writeln("Searching cover images for albums with no cover art set...");
+		$startTime = \hrtime(true);
 		if ($this->scanner->findAlbumCovers($user)) {
-			$output->writeln("Some album cover image(s) were found and added");
+			$output->writeln("  Some album cover image(s) were found and added");
 		}
+		$albumCoverTime = (int)((\hrtime(true) - $startTime) / 1000000);
+		$output->writeln("  Search took $albumCoverTime ms");
 
 		$output->writeln("Searching cover images for artists with no cover art set...");
+		$startTime = \hrtime(true);
 		if ($this->scanner->findArtistCovers($user)) {
-			$output->writeln("Some artist cover image(s) were found and added");
+			$output->writeln("  Some artist cover image(s) were found and added");
 		}
+		$artistCoverTime = (int)((\hrtime(true) - $startTime) / 1000000);
+		$output->writeln("  Search took $artistCoverTime ms");
 	}
 }
