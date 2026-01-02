@@ -7,7 +7,12 @@ HtmlUtil::printNgTemplate('navigationitem');
 <div id="app-navigation" ng-controller="NavigationController">
 	<ul>
 		<li navigation-item text="'Albums' | translate" destination="'#'"
-			title="{{ albumCountText() }}" icon="'album'"></li>
+			title="{{ albumCountText() }}" icon="'album'"
+			actions="[
+				{ icon: 'radio-button', text: 'Normal layout', action: 'toggleAlbumsCompactLayout(false)' },
+				{ icon: 'radio-button', text: 'Compact layout', action: 'toggleAlbumsCompactLayout(true)' }
+			]">
+		</li>
 		<li navigation-item text="'Folders' | translate" destination="'#/folders'"
 			title="{{ folderCountText() }}" icon="'folder-nav'"></li>
 		<li navigation-item text="'Genres' | translate" destination="'#/genres'"

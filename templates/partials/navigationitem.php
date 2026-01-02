@@ -1,7 +1,7 @@
 <li class="music-navigation-item"
 	ng-class="{	'active': $parent.currentView == destination,
 				'menu-open': $parent.popupShownForNaviItem == destination,
-				'item-with-actions': playlist || destination=='#/radio' || destination=='#/podcasts' || destination=='#' || destination=='#/folders' || destination=='#/smartlist' }"
+				'item-with-actions': actions }"
 >
 	<div class="music-navigation-item-content" ng-click="$parent.navigateTo(destination)"
 		ng-class="{current: $parent.playingView == destination, playing: $parent.playing}"
@@ -23,7 +23,7 @@
 				ng-class="{ disabled: playlist.name.length == 0 }"
 				ng-click="$parent.commitEdit(playlist); $event.stopPropagation()"></button>
 		</div>
-		<div class="actions" ng-init="subMenuShown = false" title="" ng-show="playlist && $parent.showEditForm == null">
+		<!--div class="actions" ng-init="subMenuShown = false" title="" ng-show="playlist && $parent.showEditForm == null">
 			<span class="icon-more" ng-show="!playlist.busy"
 				ng-click="$parent.onNaviItemMoreButton(destination); subMenuShown = false; $event.stopPropagation()"></span>
 			<span class="icon-loading-small" ng-show="playlist.busy"></span>
@@ -152,6 +152,6 @@
 					</li>
 				</ul>
 			</div>
-		</div>
+		</div-->
 	</div>
 </li>
