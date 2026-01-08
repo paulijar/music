@@ -8,7 +8,9 @@
 
 ## Overview
 
-Music player and server for ownCloud and Nextcloud. Shows audio files stored in your cloud categorized by artists and albums. Supports mp3, and depending on the browser, many other audio formats too. Supports shuffle play and playlists. The Music app also allows serving audio files from your cloud to external applications which are compatible either with Ampache or Subsonic.
+Music player and server for Nextcloud. Previously also ownCloud was a supported platform but as of January 2026 the development focuses only on Nextcloud. The old version with OC support can be found from https://github.com/owncloud/music.
+
+The app shows audio files stored in your cloud categorized by artists and albums. Supports mp3, and depending on the browser, many other audio formats too. Supports shuffle play and playlists. The Music app also allows serving audio files from your cloud to external applications which are compatible either with Ampache or Subsonic.
 
 The full-screen albums view:
 ![library view](https://user-images.githubusercontent.com/8565946/132128608-34dc576b-07b7-424c-ae81-a63b9128f3d7.png)
@@ -43,7 +45,7 @@ _Note: The audio formats supported vary depending on the browser. Most recent ve
 
 The modern web browsers ship with a wide variety of built-in audio codecs which can be used directly via the standard HTML5 audio API. Still, there is no browser which could natively play all the formats listed above. For those formats not supported natively, the Music app utilizes the Aurora.js javascript library which is able to play most of the formats listed above, excluding only the OGG containers. On the other hand, Aurora.js may not be able to play all the individual files of the supported formats and is very limited in features (no seeking, no adjusting of playback speed).
 
-_Note: In order to be playable in the Music app, the file type has to be mapped to a MIME type `audio/*` on your cloud instance. Neither ownCloud nor Nextcloud has these mappings by default for the file types AIFF, AU, or CAF. The mapping for the file type AAC is missing from ownCloud but present on Nextcloud. To add the missing mappings, run:_
+_Note: In order to be playable in the Music app, the file type has to be mapped to a MIME type `audio/*` on your cloud instance. Nextcloud doesn't have these mappings by default for the file types AIFF, AU, or CAF. To add the missing mappings, run:_
 
 	php occ music:register-mime-types
 
@@ -55,7 +57,7 @@ If the database would somehow get corrupted, the user can force it to be rebuilt
 
 ### Commands
 
-If preferred, it is also possible to use the command line tool for the database maintenance, see https://github.com/owncloud/music/wiki/Commands. This may be quicker than scanning via the web UI in case of large music library, and optionally allows targeting more than one user at once, as well as some more options not available on the web interface.
+If preferred, it is also possible to use the command line tool for the database maintenance, see https://github.com/nc-music/music/wiki/Commands. This may be quicker than scanning via the web UI in case of large music library, and optionally allows targeting more than one user at once, as well as some more options not available on the web interface.
 
 
 ### Ampache and Subsonic
@@ -77,15 +79,15 @@ https://cloud.domain.org/index.php/apps/music/subsonic
 
 #### Authentication
 
-Ampache and Subsonic don't use your ownCloud password for authentication. Instead, you need to use a specifically generated APIKEY with them.
+Ampache and Subsonic don't use your Nextcloud password for authentication. Instead, you need to use a specifically generated APIKEY with them.
 The APIKEY is generated through the Music app settings accessible from the link at the bottom of the left pane within the app. The generated APIKEY is shown upon creation but it is impossible to retrieve it at later time. If you forget or misplace the key, you can always delete it and generate a new one.
 
-When you create the APIKEY, the application shows also the username you should use on your Ampache/Subsonic client. Typically, this is your ownCloud login name but it may also be an UUID in case you have set up LDAP authentication.
+When you create the APIKEY, the application shows also the username you should use on your Ampache/Subsonic client. Typically, this is your Nextcloud login name but it may also be an UUID in case you have set up LDAP authentication.
 
 
 ### Installation
 
-The Music app can be installed using the App Management available on the web UI of ownCloud or Nextcloud for the admin user.
+The Music app can be installed using the App Management available on the web UI of Nextcloud for the admin user.
 
 After installation, you may want to select a specific sub-folder containing your music files through the settings of the application. This can be useful to prevent unwanted audio files to be included in the music library.
 
@@ -144,9 +146,9 @@ To install test dependencies, run the following command on the root level of the
 	composer run unit-tests
 
 #### PHP integration tests
-The integration tests require the music app to be installed under the `apps` folder of an ownCloud or Nextcloud installation. The following steps assume that the cloud installation in question has not been taken into use yet, e.g. it's a fresh clone from github.
+The integration tests require the music app to be installed under the `apps` folder of a Nextcloud installation. The following steps assume that the cloud installation in question has not been taken into use yet, e.g. it's a fresh clone from github.
 
-	cd ../..          # owncloud/nextcloud core
+	cd ../..          # nextcloud server root folder
 	php occ maintenance:install --admin-user admin --admin-pass admin --database sqlite
 	php occ app:enable music
 	cd apps/music
@@ -184,7 +186,7 @@ The step `l10n-clone` above makes copies of some translations to different langu
 
 ## API
 
-The Music app back-end implements the [Shiva API](https://shiva.readthedocs.org/en/latest/resources/base.html) except the resource `/artists/<int:artist_id>/shows`. The endpoints of this API can be found under `https://own.cloud.example.org/index.php/apps/music/api/`. The Shiva API could be used by other applications running on ownCloud/Nextcloud to access the library contents. This API is accessible only with a valid cloud user session which makes it difficult to use for clients running outside of the hosting cloud.
+The Music app back-end implements the [Shiva API](https://shiva.readthedocs.org/en/latest/resources/base.html) except the resource `/artists/<int:artist_id>/shows`. The endpoints of this API can be found under `https://own.cloud.example.org/index.php/apps/music/api/`. The Shiva API could be used by other applications running on Nextcloud to access the library contents. This API is accessible only with a valid cloud user session which makes it difficult to use for clients running outside of the hosting cloud.
 
 To connect external client applications, partial implementations of the following APIs are available:
 
@@ -192,12 +194,12 @@ To connect external client applications, partial implementations of the followin
 * [Ampache JSON API](https://github.com/ampache/ampache/wiki/JSON-methods) at `/ampache/server/json.server.php`
 * [Subsonic API](http://www.subsonic.org/pages/api.jsp) at `/subsonic/rest/{method}`
 
-The web interface of the Music app uses a proprietary REST API. Note that this API may change between the application versions without prior notice. For list of all available endpoints, see [appinfo/routes.php](https://github.com/owncloud/music/blob/master/appinfo/routes.php). As this API is not documented anywhere, the details of each endpoint have to be checked from the implementation. See [here](https://github.com/owncloud/music/issues/1012#issuecomment-1256943457) for some hints.
+The web interface of the Music app uses a proprietary REST API. Note that this API may change between the application versions without prior notice. For list of all available endpoints, see [appinfo/routes.php](https://github.com/nc-music/music/blob/master/appinfo/routes.php). As this API is not documented anywhere, the details of each endpoint have to be checked from the implementation. See [here](https://github.com/owncloud/music/issues/1012#issuecomment-1256943457) for some hints.
 
 
 ### `/api/log`
 
-Allows to log a message to ownCloud defined log system.
+Allows to log a message to Nextcloud defined log system.
 
 	POST /api/log
 
