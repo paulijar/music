@@ -1,5 +1,11 @@
 ## [Unreleased]
 
+### Breaking changes
+- Drop support for ownCloud
+- Drop support for Nextcloud versions 20 - 27
+- Drop support for PHP 7.4
+- Drop support for Internet Explorer
+
 ### Added
 
 ### Changed
