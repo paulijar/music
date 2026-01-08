@@ -1,14 +1,14 @@
 {
 	"name": "music",
-	"description": "Music player and server for ownCloud and Nextcloud",
+	"description": "Music player and server for Nextcloud",
 	"version": "2.5.1",
 	"private": true,
-	"homepage": "https://github.com/owncloud/music",
+	"homepage": "https://github.com/nc-music/music",
 	"repository": {
 		"type": "git",
-		"url": "git@github.com:owncloud/music.git"
+		"url": "git@github.com:nc-music/music.git"
 	},
-	"bugs": "https://github.com/owncloud/music/issues",
+	"bugs": "https://github.com/nc-music/music/issues",
 	"dependencies": {
 		"@nextcloud/files": "^3.0.0",
 		"@nextcloud/sharing": "^0.2.4",

@@ -7,7 +7,7 @@
  * @author Gregory Baudet <gregory.baudet@gmail.com>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Gregory Baudet 2018
- * @copyright Pauli Järvinen 2018 - 2023
+ * @copyright Pauli Järvinen 2018 - 2026
  */
 
 angular.module('Music').controller('SettingsViewController', [
@@ -16,9 +16,9 @@ angular.module('Music').controller('SettingsViewController', [
 
 		$rootScope.currentView = $scope.getViewIdFromUrl();
 
-		$scope.issueTrackerUrl = 'https://github.com/owncloud/music/issues';
-		$scope.ampacheClientsUrl = 'https://github.com/owncloud/music/wiki/Ampache';
-		$scope.subsonicClientsUrl = 'https://github.com/owncloud/music/wiki/Subsonic';
+		$scope.issueTrackerUrl = 'https://github.com/nc-music/music/issues';
+		$scope.ampacheClientsUrl = 'https://github.com/nc-music/music/wiki/Ampache';
+		$scope.subsonicClientsUrl = 'https://github.com/nc-music/music/wiki/Subsonic';
 
 		$scope.desktopNotificationsSupported = (typeof Notification !== 'undefined');
 
