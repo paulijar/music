@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2017 - 2025
+ * @copyright Pauli Järvinen 2017 - 2026
  */
 
 namespace OCA\Music\Http;
@@ -15,7 +15,7 @@ namespace OCA\Music\Http;
 use OCP\AppFramework\Http\JSONResponse;
 
 /**
- * A renderer for files
+ * @extends JSONResponse<int, array, array<string, mixed>>
  */
 class ErrorResponse extends JSONResponse {
 
