@@ -1,6 +1,6 @@
 # README
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/owncloud/music/badges/quality-score.png?s=ddb9090619b6bcf0bf381e87011322dd2514c884)](https://scrutinizer-ci.com/g/owncloud/music/)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nc-music/music/badges/quality-score.png?s=ddb9090619b6bcf0bf381e87011322dd2514c884)](https://scrutinizer-ci.com/g/nc-music/music/)
 [![PHP Analysis](/../../actions/workflows/php-analysis.yml/badge.svg)](/../../actions/workflows/php-analysis.yml)
 [![PHP Integration Tests](/../../actions/workflows/php-integration-tests.yml/badge.svg)](/../../actions/workflows/php-integration-tests.yml)
 
