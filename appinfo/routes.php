@@ -9,12 +9,12 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Morris Jobke 2014
- * @copyright Pauli Järvinen 2017 - 2025
+ * @copyright Pauli Järvinen 2017 - 2026
  */
 
 namespace OCA\Music;
 
-$routes = ['routes' => [
+return ['routes' => [
 	// Page
 	['name' => 'page#index', 'url' => '/',			'verb' => 'GET'],
 	// also the Ampache and Subsonic base URLs are directed to the front page, as several clients provide such links
@@ -166,11 +166,3 @@ $routes = ['routes' => [
 	// Subsonic API - Allow CORS pre-flight for web clients from different domains
 	['name' => 'subsonic#preflightedCors',	'url' => '/subsonic/rest/{method}',	'verb' => 'OPTIONS','requirements' => ['method' => '[a-zA-Z0-9\.]+']],
 ]];
-
-// The method registerRoutes is deprecated in NC20+ and removed in NC32 while we still need to use it on ownCloud.
-if (Utility\AppInfo::getVendor() == 'owncloud') {
-	$app = \OC::$server->query(AppInfo\Application::class);
-	$app->registerRoutes($this, $routes);
-} else {
-	return $routes;
-}

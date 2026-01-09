@@ -10,28 +10,22 @@
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Alessandro Cosentino 2012
  * @copyright Bernhard Posselt 2012, 2014
- * @copyright Pauli Järvinen 2018 - 2025
+ * @copyright Pauli Järvinen 2018 - 2026
  */
 
 namespace OCA\Music\AppFramework\Core;
 
 use OCP\IServerContainer;
+use Psr\Log\LoggerInterface;
 
 class Logger {
 
 	protected string $appName;
-	/** @var \OCP\ILogger|\Psr\Log\LoggerInterface $logger */
-	protected $logger;
+	protected LoggerInterface $logger;
 
 	public function __construct(string $appName, IServerContainer $container) {
 		$this->appName = $appName;
-
-		// NC 31 removed the getLogger method but the Psr alternative is not available on OC
-		if (\method_exists($container, 'getLogger')) { // @phpstan-ignore function.alreadyNarrowedType
-			$this->logger = $container->getLogger();
-		} else {
-			$this->logger = $container->get(\Psr\Log\LoggerInterface::class);
-		}
+		$this->logger = $container->get(LoggerInterface::class);
 	}
 
 	public function emergency(string $message) : void {

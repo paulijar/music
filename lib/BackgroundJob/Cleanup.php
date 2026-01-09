@@ -9,17 +9,17 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Morris Jobke 2013, 2014
- * @copyright Pauli Järvinen 2017 - 2025
+ * @copyright Pauli Järvinen 2017 - 2026
  */
 
 namespace OCA\Music\BackgroundJob;
 
-use OCA\Music\AppFramework\BackgroundJob\TimedJob;
 use OCA\Music\AppFramework\Core\Logger;
 use OCA\Music\AppInfo\Application;
 use OCA\Music\Db\AmpacheSessionMapper;
 use OCA\Music\Db\Maintenance;
 use OCA\Music\Service\Scanner;
+use OCP\BackgroundJob\TimedJob;
 
 class Cleanup extends TimedJob {
 

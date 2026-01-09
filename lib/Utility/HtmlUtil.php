@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2020 - 2025
+ * @copyright Pauli Järvinen 2020 - 2026
  */
 
 namespace OCA\Music\Utility;
@@ -85,11 +85,7 @@ class HtmlUtil {
 	public static function addWebpackScript(string $name) : void {
 		$manifest = self::getManifest();
 		$hashedName = \substr($manifest["$name.js"], 0, -3); // the extension is cropped from the name in $manifest
-		if (\method_exists(\OCP\Util::class, 'addInitScript')) {
-			\OCP\Util::/** @scrutinizer ignore-call */addInitScript('music', '../dist/' . $hashedName);
-		} else {
-			\OCP\Util::addScript('music', '../dist/' . $hashedName);
-		}
+		\OCP\Util::addInitScript('music', '../dist/' . $hashedName);
 	}
 
 	public static function addWebpackStyle(string $name) : void {

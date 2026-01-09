@@ -7,16 +7,16 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2021 - 2025
+ * @copyright Pauli Järvinen 2021 - 2026
  */
 
 namespace OCA\Music\BackgroundJob;
 
-use OCA\Music\AppFramework\BackgroundJob\TimedJob;
 use OCA\Music\AppFramework\Core\Logger;
 use OCA\Music\AppInfo\Application;
 use OCA\Music\BusinessLayer\PodcastChannelBusinessLayer;
 use OCA\Music\Service\PodcastService;
+use OCP\BackgroundJob\TimedJob;
 use OCP\IConfig;
 
 class PodcastUpdateCheck extends TimedJob {

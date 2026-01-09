@@ -9,14 +9,18 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Morris Jobke 2014
- * @copyright Pauli Järvinen 2017 - 2025
+ * @copyright Pauli Järvinen 2017 - 2026
  */
 
 namespace OCA\Music\AppInfo;
 
+use OCA\Files\Event\LoadAdditionalScriptsEvent;
+use OCA\Files_Sharing\Event\BeforeTemplateRenderedEvent;
+
 use OCA\Music\AppFramework\Core\Logger;
 use OCA\Music\BusinessLayer\AlbumBusinessLayer;
 use OCA\Music\BusinessLayer\TrackBusinessLayer;
+use OCA\Music\Dashboard\MusicWidget;
 use OCA\Music\Hooks\FileHooks;
 use OCA\Music\Hooks\ShareHooks;
 use OCA\Music\Hooks\UserHooks;
@@ -28,74 +32,35 @@ use OCA\Music\Service\AggregateScrobbler;
 use OCA\Music\Service\ExternalScrobbler;
 use OCA\Music\Service\Scrobbler;
 use OCP\AppFramework\App;
-use OCP\AppFramework\IAppContainer;
-use OCP\Files\IMimeTypeLoader;
+use OCP\AppFramework\Bootstrap\IBootContext;
+use OCP\AppFramework\Bootstrap\IBootstrap;
+use OCP\AppFramework\Bootstrap\IRegistrationContext;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\Security\IContentSecurityPolicyManager;
 use OCP\Security\ICrypto;
 
-// The IBootstrap interface is not available on ownCloud. Create a thin base class to hide this difference
-// from the actual Application class.
-function useOwncloudBootstrapping() : bool {
-	return (\OCA\Music\Utility\AppInfo::getVendor() == 'owncloud');
-}
-
-if (useOwncloudBootstrapping()) {
-	class ApplicationBase extends App {}
-} else {
-	abstract class ApplicationBase extends App implements \OCP\AppFramework\Bootstrap\IBootstrap {}
-}
-
-class Application extends ApplicationBase {
+class Application extends App implements IBootstrap {
 	public function __construct(array $urlParams=[]) {
 		parent::__construct('music', $urlParams);
 
 		\mb_internal_encoding('UTF-8');
-
-		// On ownCloud, the registrations must happen already within the constructor
-		if (useOwncloudBootstrapping()) {
-			$container = $this->getContainer();
-			// this is not registered by the ownCloud core
-			$container->registerService(IMimeTypeLoader::class, function (IAppContainer $c) {
-				return $c->getServer()->getMimeTypeLoader();
-			});
-
-			// Unlike Nextcloud, ownCloud is not able to autoload the classes directly within registerMiddleWare.
-			// We have to fetch each middleware once so that the instances are already cached when registerMiddleWare is called.
-			$container->query(AmpacheMiddleware::class);
-			$container->query(SubsonicMiddleware::class);
-
-			$this->registerMiddleWares($container);
-			$this->registerScrobblers($container);
-		}
 	}
 
-	/**
-	 * @param mixed $context On Nextcloud, this is \OCP\AppFramework\Bootstrap\IRegistrationContext.
-	 *                       On ownCloud, this is \OCP\AppFramework\IAppContainer.
-	 */
-	private function registerMiddleWares($context) : void {
+	private function registerMiddleWares(IRegistrationContext $context) : void {
 		$context->registerMiddleWare(AmpacheMiddleware::class);
 		$context->registerMiddleWare(SubsonicMiddleware::class);
 	}
 
-	/**
-	 * This gets called on Nextcloud but not on ownCloud
-	 * @param \OCP\AppFramework\Bootstrap\IRegistrationContext $context
-	 */
-	public function register($context) : void {
+	public function register(IRegistrationContext $context) : void {
 		$this->registerMiddleWares($context);
 		$this->registerScrobblers($context);
-		$context->registerDashboardWidget(\OCA\Music\Dashboard\MusicWidget::class);
+		$context->registerDashboardWidget(MusicWidget::class);
 	}
 
-	/**
-	 * This gets called on Nextcloud but not on ownCloud
-	 * @param \OCP\AppFramework\Bootstrap\IBootContext $context
-	 */
-	public function boot($context) : void {
+	public function boot(IBootContext $context) : void {
 		$this->init();
 		$this->registerEmbeddedPlayer();
 	}
@@ -126,11 +91,7 @@ class Application extends ApplicationBase {
 	 */
 	public function get(string $id) {
 		$container = $this->getContainer();
-		if (\method_exists($container, 'get')) { // @phpstan-ignore function.alreadyNarrowedType
-			return $container->get($id); // IAppContainer::get exists on NC20+
-		} else {
-			return $container->query($id); // On ownCloud, we use IAppContainer::query which is deprecated on NC20+
-		}
+		return $container->get($id);
 	}
 
 	private function getRequestUrl() : string {
@@ -148,17 +109,17 @@ class Application extends ApplicationBase {
 	}
 
 	private function registerEmbeddedPlayer() : void {
-		$dispatcher = $this->get(\OCP\EventDispatcher\IEventDispatcher::class);
+		$dispatcher = $this->get(IEventDispatcher::class);
 
 		// Files app
-		$dispatcher->addListener(\OCA\Files\Event\LoadAdditionalScriptsEvent::class, function () {
+		$dispatcher->addListener(LoadAdditionalScriptsEvent::class, function () {
 			$this->loadEmbeddedMusicPlayer();
 		});
 
 		// Files_Sharing app
-		$dispatcher->addListener(\OCA\Files_Sharing\Event\BeforeTemplateRenderedEvent::class, function (\OCA\Files_Sharing\Event\BeforeTemplateRenderedEvent $event) {
+		$dispatcher->addListener(BeforeTemplateRenderedEvent::class, function (BeforeTemplateRenderedEvent $event) {
 			// don't load the embedded player on the authentication page of password-protected share, and only load it for shared folders (not individual files)
-			if ($event->getScope() != \OCA\Files_Sharing\Event\BeforeTemplateRenderedEvent::SCOPE_PUBLIC_SHARE_AUTH
+			if ($event->getScope() != BeforeTemplateRenderedEvent::SCOPE_PUBLIC_SHARE_AUTH
 					&& $event->getShare()->getNodeType() == 'folder') {
 				$this->loadEmbeddedMusicPlayer();
 			}
@@ -200,11 +161,7 @@ class Application extends ApplicationBase {
 		return $enabled;
 	}
 
-	/**
-	 * @param mixed $context On Nextcloud, this is \OCP\AppFramework\Bootstrap\IRegistrationContext.
-	 *                       On ownCloud, this is \OCP\AppFramework\IAppContainer.
-	 */
-	private function registerScrobblers($context) : void {
+	private function registerScrobblers(IRegistrationContext $context) : void {
 		$context->registerService('externalScrobblers', function () {
 			return [
 				new ExternalScrobbler(
