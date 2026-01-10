@@ -11,6 +11,7 @@
 ### Changed
 
 ### Fixed
+- When no local album art available, the art from Last.fm was accidentally applied also to the artist list of the album details pane
 
 ## 2.5.1 - 2026-01-01
 
