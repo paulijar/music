@@ -9,7 +9,7 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Morris Jobke 2013, 2014
- * @copyright Pauli Järvinen 2017 - 2025
+ * @copyright Pauli Järvinen 2017 - 2026
  */
 
 namespace OCA\Music\BusinessLayer;
@@ -177,7 +177,6 @@ class ArtistBusinessLayer extends BusinessLayer {
 		// may be replaced with an underscore, which is taken into account when building
 		// the LUT.
 		$replacedChars = \str_split(self::REPLACEABLE_CHARS_IN_FILE_NAME);
-		\assert(\is_array($replacedChars)); // for scrutinizer
 		$imageLut = [];
 		foreach ($imageFiles as $imageFile) {
 			$imageName = \pathinfo($imageFile->getName(), PATHINFO_FILENAME);

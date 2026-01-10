@@ -1,7 +1,7 @@
 <?php
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
- * @copyright Copyright (c) 2023 - 2025, Pauli Järvinen
+ * @copyright Copyright (c) 2023 - 2026, Pauli Järvinen
  *
  * @author Bernhard Posselt <dev@bernhard-posselt.com>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -37,10 +37,6 @@ use OCP\IDBConnection;
 /**
  * The base class OCP\AppFramework\Db\Mapper is no longer shipped by NC26+.
  * This is a slightly modified copy of that class on NC25, the modifications are just stylistic.
- * OwnCloud still ships the platform version of the class and it's almost identical to this one;
- * the difference is just that the OC version still accepts also IDb type of handle in the constructor.
- * However, IDBConnection has been available since OC 8.1 and that's what we always use.
- * We use this copy of ours both on NC and OC.
  *
  * @template EntityType of Entity
  * @phpstan-property class-string<EntityType> $entityClass
@@ -232,10 +228,10 @@ abstract class Mapper {
 	 * @param array $params the params which should replace the ? in the sql query
 	 * @param int $limit the maximum number of rows
 	 * @param int $offset from which row we want to start
-	 * @return \Doctrine\DBAL\Driver\Statement the database query result
+	 * @return \OCP\DB\IPreparedStatement the database query result
 	 * @since 7.0.0
 	 */
-	protected function execute($sql, array $params=[], $limit=null, $offset=null) {
+	protected function execute($sql, array $params=[], $limit=null, $offset=null) : \OCP\DB\IPreparedStatement {
 		$query = $this->db->prepare($sql, $limit, $offset);
 
 		if ($this->isAssocArray($params)) {

@@ -102,35 +102,26 @@ class ScrobblerController extends Controller {
 	 * @NoCSRFRequired
 	 */
 	public function clearSession(?string $serviceIdentifier): JSONResponse {
-		$response = new JSONResponse(['error' => [
-			'message' => 'Unknown error'
-		]]);
+		$error = null;
 
 		if (!$this->userId) {
-			$response->setData(['error' => [
-				'message' => $this->l10n->t('Not logged in')
-			]]);
-			return $response;
+			$error = $this->l10n->t('Not logged in');
+		} else {
+			$scrobbler = $this->getExternalScrobbler($serviceIdentifier);
+			if (!$scrobbler) {
+				$error = $this->l10n->t('Unknown service %s', [$serviceIdentifier]);
+			} else {
+				try {
+					$scrobbler->clearSession($this->userId);
+				} catch (\InvalidArgumentException $e) {
+					$error = $this->l10n->t('Check the error log for details.');
+				}
+			}
 		}
 
-		$scrobbler = $this->getExternalScrobbler($serviceIdentifier);
-		if (!$scrobbler) {
-			$response->setData(['error' => [
-				'message' => $this->l10n->t('Unknown service %s', [$serviceIdentifier])
-			]]);
-			return $response;
-		}
-
-		try {
-			$scrobbler->clearSession($this->userId);
-			$response->setData(['success' => true]);
-		} catch (\InvalidArgumentException $e) {
-			$response->setData(['error' => [
-				'message' => $this->l10n->t('Check the error log for details.')
-			]]);
-		} finally {
-			return $response;
-		}
+		return ($error === null)
+			? new JSONResponse(['success' => true])
+			: new JSONResponse(['error' => ['message' => $error]]);
 	}
 
 	private function getExternalScrobbler(?string $serviceIdentifier) : ?ExternalScrobbler {
