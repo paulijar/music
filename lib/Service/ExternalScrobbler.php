@@ -202,9 +202,7 @@ class ExternalScrobbler implements Scrobbler {
 	}
 
 	/**
-	 * @return array<string, string>
 	 * @param array<string, mixed> $moreParams
-	 * @param bool $sign
 	 * @return array<string, mixed>
 	 */
 	private function generateMethodParams(string $method, array $moreParams = [], bool $sign = true) : array {
@@ -220,6 +218,9 @@ class ExternalScrobbler implements Scrobbler {
 		return $params;
 	}
 
+	/**
+	 * @param array<string, mixed> $params
+	 */
 	private function execRequest(array $params) : ?\SimpleXMLElement {
 		$ch = \curl_init();
 		if (!$ch) {
