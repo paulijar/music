@@ -180,7 +180,7 @@ class ArtistBusinessLayer extends BusinessLayer {
 		$imageLut = [];
 		foreach ($imageFiles as $imageFile) {
 			$imageName = \pathinfo($imageFile->getName(), PATHINFO_FILENAME);
-			$lookupName = \str_replace($replacedChars, '_', $imageName);
+			$lookupName = \str_replace(/** @scrutinizer ignore-type */$replacedChars, '_', $imageName);
 			$imageLut[$lookupName][] = ['name' => $imageName, 'file' => $imageFile];
 		}
 
