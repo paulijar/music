@@ -33,8 +33,8 @@
 	<bugs>https://github.com/nc-music/music/issues</bugs>
 	<repository type="git">https://github.com/nc-music/music.git</repository>
 	<dependencies>
-		<php min-version="8.0" max-version="8.4"/>
-		<nextcloud min-version="28" max-version="32" />
+		<php min-version="8.0" max-version="8.5"/>
+		<nextcloud min-version="28" max-version="33" />
 	</dependencies>
 	<types>
 		<!-- update metadata cache when create/update/delete a file -->

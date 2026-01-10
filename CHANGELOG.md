@@ -7,6 +7,8 @@
 - Drop support for Internet Explorer
 
 ### Added
+- Support for Nextcloud 33 (tested on beta2)
+- Support for PHP 8.5
 
 ### Changed
 
