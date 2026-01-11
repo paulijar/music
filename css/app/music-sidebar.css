@@ -52,13 +52,6 @@
 	background-color: var(--color-main-background-translucent, rgba(255, 255, 255, .95));
 }
 
-/* IE doesn't support the var() syntax */
-.ie #app-sidebar .close {
-	top: 45px;
-	right: 0;
-	background-color: rgba(255, 255, 255, .95);
-}
-
 #app-sidebar .close:hover {
 	opacity: 1;
 }
@@ -207,11 +200,6 @@
 	background-color: var(--color-background-dark, #ededed);
 }
 
-/* IE doesn't support the var() syntax */
-.ie #app-sidebar .lyrics.highlight {
-	background-color: #ededed;
-}
-
 #app-sidebar #follow-playback {
 	position: fixed;
 	inset-inline-end: var(--body-container-margin, 0);
@@ -220,13 +208,6 @@
 	background-color: var(--color-main-background-translucent, rgba(255, 255, 255, .95));
 	margin: 6px;
 	padding: 12px;
-}
-
-/* IE doesn't support the var() syntax */
-.ie #app-sidebar #follow-playback {
-	right: 0;
-	bottom: 0;
-	background-color: rgba(255, 255, 255, .95);
 }
 
 #app-sidebar .icon-loading:not(.inline) {

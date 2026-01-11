@@ -7,7 +7,7 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Morris Jobke 2013, 2014
- * @copyright Pauli Järvinen 2016 - 2025
+ * @copyright Pauli Järvinen 2016 - 2026
  */
 
 /**
@@ -148,19 +148,4 @@
 .view-container.single-col.compact .album-area > h2 {
 	/* in the compact mode, specifying width using a percent wouldn't work because the position is not absolute */
 	max-width: calc(100vw - 60px);
-}
-
-/**
- * Rudimentary support for Internet Explorer
- */
-
-.ie .album-area,
-.ie .album-area > h2 > span,
-.ie .album-area > .albumart {
-	float: left;
-}
-
-.ie .album-area > .overlay {
-	float: left;
-	margin-left: -190px;
 }
