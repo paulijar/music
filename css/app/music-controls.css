@@ -20,10 +20,6 @@
 	z-index: unset;
 }
 
-body:not(.snapjs-left):not(.snapjs-right) .app-music.nc14to24 #controls {
-	top: 50px;
-}
-
 #controls, #controls * {
 	display: none;
 }
