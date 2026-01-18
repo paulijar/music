@@ -9,7 +9,7 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Morris Jobke 2013, 2014
- * @copyright Pauli Järvinen 2016 - 2025
+ * @copyright Pauli Järvinen 2016 - 2026
  */
 
 namespace OCA\Music\BusinessLayer;
@@ -112,7 +112,7 @@ class AlbumBusinessLayer extends BusinessLayer {
 	 * @param int|int[] $artistId
 	 * @return Album[] albums
 	 */
-	public function findAllByAlbumArtist(/*mixed*/ $artistId, string $userId, ?int $limit=null, ?int $offset=null) : array {
+	public function findAllByAlbumArtist(int|array $artistId, string $userId, ?int $limit=null, ?int $offset=null) : array {
 		if (empty($artistId)) {
 			return [];
 		} else {

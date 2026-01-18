@@ -9,7 +9,7 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Morris Jobke 2013, 2014
- * @copyright Pauli Järvinen 2016 - 2025
+ * @copyright Pauli Järvinen 2016 - 2026
  */
 
 namespace OCA\Music\Service;
@@ -800,10 +800,7 @@ class Scanner extends PublicEmitter {
 		return $this->l10nFactory->get('music', $languageCode);
 	}
 
-	/**
-	 * @param int|float|string|null $ordinal
-	 */
-	private static function normalizeOrdinal(/*mixed*/ $ordinal) : ?int {
+	private static function normalizeOrdinal(int|float|string|null $ordinal) : ?int {
 		if (\is_string($ordinal)) {
 			// convert format '1/10' to '1'
 			$ordinal = \explode('/', $ordinal)[0];
@@ -832,10 +829,7 @@ class Scanner extends PublicEmitter {
 		}
 	}
 
-	/**
-	 * @param int|float|string|null $date
-	 */
-	private static function normalizeYear(/*mixed*/ $date) : ?int {
+	private static function normalizeYear(int|float|string|null $date) : ?int {
 		$year = null;
 		$matches = null;
 
@@ -850,10 +844,7 @@ class Scanner extends PublicEmitter {
 		return ($year === null) ? null : (int)Util::limit($year, Util::SINT32_MIN, Util::SINT32_MAX);
 	}
 
-	/**
-	 * @param int|float|string|null $value
-	 */
-	private static function normalizeUnsigned(/*mixed*/ $value) : ?int {
+	private static function normalizeUnsigned(int|float|string|null $value) : ?int {
 		if (\is_numeric($value)) {
 			$value = (int)\round((float)$value);
 			$value = (int)Util::limit($value, 0, Util::SINT32_MAX); // can't use UINT32_MAX since PostgreSQL has no unsigned types

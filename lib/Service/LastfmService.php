@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2020 - 2025
+ * @copyright Pauli Järvinen 2020 - 2026
  */
 
 namespace OCA\Music\Service;
@@ -190,7 +190,7 @@ class LastfmService {
 	 *						less tracks if the top tracks from Last.fm are not present in the user's library.
 	 * @return Track[]
 	 */
-	public function getTopTracks(/*mixed*/ $artistIdOrName, string $userId, int $maxCount) : array {
+	public function getTopTracks(int|string $artistIdOrName, string $userId, int $maxCount) : array {
 		$foundTracks = [];
 
 		if (\is_integer($artistIdOrName)) {

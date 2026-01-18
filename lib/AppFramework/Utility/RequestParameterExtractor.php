@@ -29,7 +29,7 @@ class RequestParameterExtractor {
 	 * @param object|string $object an object or classname
 	 * @param string $method the method for which we want to extract parameters from the HTTP request
 	 * @throws RequestParameterExtractorException if a required parameter is not found from the request
-	 * @return array of mixed types (string, string[], int, bool, null)
+	 * @return array<string|string[]|int|bool|null>
 	 */
 	public function getParametersForMethod($object, string $method) : array {
 		$refMethod = new \ReflectionMethod($object, $method);
@@ -40,7 +40,7 @@ class RequestParameterExtractor {
 	 * @throws RequestParameterExtractorException
 	 * @return string|string[]|int|bool|null
 	 */
-	private function getParameterValueFromRequest(\ReflectionParameter $parameter) {
+	private function getParameterValueFromRequest(\ReflectionParameter $parameter) : string|array|int|bool|null {
 		$paramName = $parameter->getName();
 		$type = $parameter->getType();
 		if ($type === null) {

@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2025
+ * @copyright Pauli Järvinen 2025, 2026
  */
 
 namespace OCA\Music\Utility;
@@ -79,9 +79,8 @@ class StringUtil {
 
 	/**
 	 * Test if $item is a string and not empty or only consisting of whitespace
-	 * @param mixed $item
 	 */
-	public static function isNonEmptyString(/*mixed*/ $item) : bool {
+	public static function isNonEmptyString(mixed $item) : bool {
 		return \is_string($item) && \trim($item) !== '';
 	}
 

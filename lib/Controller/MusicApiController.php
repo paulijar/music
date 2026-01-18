@@ -164,13 +164,10 @@ class MusicApiController extends Controller {
 		return new JSONResponse($this->scanner->getStatusOfLibraryFiles($this->userId));
 	}
 
-	/**
-	 * @param string|int|bool|null $finalize
-	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	#[UseSession] // to keep the session reserved while execution in progress
-	public function scan(string $files, /*mixed*/ $finalize) : JSONResponse {
+	public function scan(string $files, string|int|bool|null $finalize) : JSONResponse {
 		// extract the parameters
 		$fileIds = \array_map('intval', \explode(',', $files));
 		$finalize = \filter_var($finalize, FILTER_VALIDATE_BOOLEAN);
@@ -305,12 +302,9 @@ class MusicApiController extends Controller {
 		}
 	}
 
-	/**
-	 * @param string|int|bool|null $embedCoverArt
-	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	public function albumDetails(int $albumId, /*mixed*/ $embedCoverArt=false) : JSONResponse {
+	public function albumDetails(int $albumId, string|int|bool|null $embedCoverArt=false) : JSONResponse {
 		$embedCoverArt = \filter_var($embedCoverArt, FILTER_VALIDATE_BOOLEAN);
 		try {
 			$info = $this->lastfmService->getAlbumInfo($albumId, $this->userId);

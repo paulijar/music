@@ -73,65 +73,46 @@ class FavoritesController extends Controller {
 		]);
 	}
 
-	/**
-	 * @param string|int|bool|null $status
-	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	public function setFavoriteTrack(int $id, /*mixed*/ $status) : JSONResponse {
+	public function setFavoriteTrack(int $id, string|int|bool|null $status) : JSONResponse {
 		return $this->setFavorite($this->trackBusinessLayer, $id, $status);
 	}
 
-	/**
-	 * @param string|int|bool|null $status
-	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	public function setFavoriteAlbum(int $id, /*mixed*/ $status) : JSONResponse {
+	public function setFavoriteAlbum(int $id, string|int|bool|null $status) : JSONResponse {
 		return $this->setFavorite($this->albumBusinessLayer, $id, $status);
 	}
 
-	/**
-	 * @param string|int|bool|null $status
-	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	public function setFavoriteArtist(int $id, /*mixed*/ $status) : JSONResponse {
+	public function setFavoriteArtist(int $id, string|int|bool|null $status) : JSONResponse {
 		return $this->setFavorite($this->artistBusinessLayer, $id, $status);
 	}
 
-	/**
-	 * @param string|int|bool|null $status
-	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	public function setFavoritePlaylist(int $id, /*mixed*/ $status) : JSONResponse {
+	public function setFavoritePlaylist(int $id, string|int|bool|null $status) : JSONResponse {
 		return $this->setFavorite($this->playlistBusinessLayer, $id, $status);
 	}
 
-	/**
-	 * @param string|int|bool|null $status
-	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	public function setFavoriteChannel(int $id, /*mixed*/ $status) : JSONResponse {
+	public function setFavoriteChannel(int $id, string|int|bool|null $status) : JSONResponse {
 		return $this->setFavorite($this->podcastChannelBusinessLayer, $id, $status);
 	}
 
-	/**
-	 * @param string|int|bool|null $status
-	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	public function setFavoriteEpisode(int $id, /*mixed*/ $status) : JSONResponse {
+	public function setFavoriteEpisode(int $id, string|int|bool|null $status) : JSONResponse {
 		return $this->setFavorite($this->podcastEpisodeBusinessLayer, $id, $status);
 	}
 
 	/**
-	 * @param string|int|bool|null $status
 	 * @phpstan-param BusinessLayer<*> $businessLayer
 	 */
-	private function setFavorite(BusinessLayer $businessLayer, int $id, /*mixed*/ $status) : JSONResponse {
+	private function setFavorite(BusinessLayer $businessLayer, int $id, string|int|bool|null $status) : JSONResponse {
 		if ($status === null) {
 			return new ErrorResponse(Http::STATUS_BAD_REQUEST, "argument 'status' is required");
 		} else {

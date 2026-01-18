@@ -243,12 +243,9 @@ class AmpacheController extends ApiController {
 		return $this->dispatch($action);
 	}
 
-	/**
-	 * @param string|int|bool $xml
-	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	public function internalApi(string $action, /*mixed*/ $xml='0') : Response {
+	public function internalApi(string $action, string|int|bool $xml='0') : Response {
 		$this->setJsonMode(!\filter_var($xml, FILTER_VALIDATE_BOOLEAN));
 		return $this->dispatch($action);
 	}

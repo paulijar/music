@@ -85,13 +85,9 @@ class ShivaApiController extends Controller {
 		return [$limit, $offset];
 	}
 
-	/**
-	 * @param string|int|bool|null $fulltree
-	 * @param string|int|bool|null $albums
-	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	public function artists(/*mixed*/ $fulltree, /*mixed*/ $albums, ?int $page_size=null, ?int $page=null) : JSONResponse {
+	public function artists(string|int|bool|null $fulltree, string|int|bool|null $albums, ?int $page_size=null, ?int $page=null) : JSONResponse {
 		$fulltree = \filter_var($fulltree, FILTER_VALIDATE_BOOLEAN);
 		$includeAlbums = \filter_var($albums, FILTER_VALIDATE_BOOLEAN);
 		list($limit, $offset) = self::shivaPageToLimits($page_size, $page);
@@ -104,12 +100,9 @@ class ShivaApiController extends Controller {
 		return new JSONResponse($artists);
 	}
 
-	/**
-	 * @param string|int|bool|null $fulltree
-	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	public function artist(int $id, /*mixed*/ $fulltree) : JSONResponse {
+	public function artist(int $id, string|int|bool|null $fulltree) : JSONResponse {
 		$fulltree = \filter_var($fulltree, FILTER_VALIDATE_BOOLEAN);
 		try {
 			/** @var Artist $artist */
@@ -139,12 +132,9 @@ class ShivaApiController extends Controller {
 		return $artistInApi;
 	}
 
-	/**
-	 * @param string|int|bool|null $fulltree
-	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	public function albums(?int $artist=null, /*mixed*/ $fulltree=null, ?int $page_size=null, ?int $page=null) : JSONResponse {
+	public function albums(?int $artist=null, string|int|bool|null $fulltree=null, ?int $page_size=null, ?int $page=null) : JSONResponse {
 		$fulltree = \filter_var($fulltree, FILTER_VALIDATE_BOOLEAN);
 		list($limit, $offset) = self::shivaPageToLimits($page_size, $page);
 
@@ -159,12 +149,9 @@ class ShivaApiController extends Controller {
 		return new JSONResponse($albums);
 	}
 
-	/**
-	 * @param string|int|bool|null $fulltree
-	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	public function album(int $id, /*mixed*/ $fulltree) : JSONResponse {
+	public function album(int $id, string|int|bool|null $fulltree) : JSONResponse {
 		$fulltree = \filter_var($fulltree, FILTER_VALIDATE_BOOLEAN);
 		try {
 			$album = $this->albumBusinessLayer->find($id, $this->userId);
@@ -195,12 +182,9 @@ class ShivaApiController extends Controller {
 		return $albumInApi;
 	}
 
-	/**
-	 * @param string|int|bool|null $fulltree
-	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	public function tracks(?int $artist=null, ?int $album=null, /*mixed*/ $fulltree=null, ?int $page_size=null, ?int $page=null) : JSONResponse {
+	public function tracks(?int $artist=null, ?int $album=null, string|int|bool|null $fulltree=null, ?int $page_size=null, ?int $page=null) : JSONResponse {
 		$fulltree = \filter_var($fulltree, FILTER_VALIDATE_BOOLEAN);
 		list($limit, $offset) = self::shivaPageToLimits($page_size, $page);
 

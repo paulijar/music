@@ -100,12 +100,10 @@ class PlaylistApiController extends Controller {
 
 	/**
 	 * creates a playlist
-	 *
-	 * @param string|int|null $trackIds
 	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	public function create(?string $name, /*mixed*/ $trackIds, ?string $comment=null) : JSONResponse {
+	public function create(?string $name, string|int|null $trackIds, ?string $comment=null) : JSONResponse {
 		$playlist = $this->playlistBusinessLayer->create($name ?? '', $this->userId);
 
 		// add trackIds and comment to the newly created playlist if provided
@@ -134,11 +132,10 @@ class PlaylistApiController extends Controller {
 	/**
 	 * lists a single playlist
 	 * @param int $id playlist ID
-	 * @param string|int|bool $fulltree
 	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	public function get(int $id, string $type = 'shiva', /*mixed*/ $fulltree = 'false') : JSONResponse {
+	public function get(int $id, string $type = 'shiva', string|int|bool|null $fulltree = 'false') : JSONResponse {
 		try {
 			$playlist = $this->playlistBusinessLayer->find($id, $this->userId);
 
@@ -173,13 +170,12 @@ class PlaylistApiController extends Controller {
 
 	/**
 	 * generate a smart playlist according to the given rules
-	 * @param string|int|bool|null $historyStrict
 	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function generate(
 			?bool $useLatestParams, ?string $history, ?string $genres, ?string $artists,
-			?int $fromYear, ?int $toYear, ?string $favorite=null, int $size=100, /*mixed*/ $historyStrict='false') : JSONResponse {
+			?int $fromYear, ?int $toYear, ?string $favorite=null, int $size=100, string|int|bool|null $historyStrict='false') : JSONResponse {
 
 		if ($useLatestParams) {
 			$history = $this->configManager->getUserValue($this->userId, $this->appName, 'smartlist_history') ?: null;
@@ -276,7 +272,7 @@ class PlaylistApiController extends Controller {
 	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	public function addTracks(int $id, /*mixed*/ $track, ?int $index = null) : JSONResponse {
+	public function addTracks(int $id, string|int|null $track, ?int $index = null) : JSONResponse {
 		return $this->modifyPlaylist('addTracks', [self::toIntArray($track), $id, $this->userId, $index]);
 	}
 
@@ -287,7 +283,7 @@ class PlaylistApiController extends Controller {
 	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	public function removeTracks(int $id, /*mixed*/ $index) : JSONResponse {
+	public function removeTracks(int $id, string|int|null $index) : JSONResponse {
 		return $this->modifyPlaylist('removeTracks', [self::toIntArray($index), $id, $this->userId]);
 	}
 
@@ -421,7 +417,7 @@ class PlaylistApiController extends Controller {
 	 * @param string|int|null $listAsString Comma-separated integer values in string, or a single integer
 	 * @return int[]
 	 */
-	private static function toIntArray(/*mixed*/ $listAsString) : array {
+	private static function toIntArray(string|int|null $listAsString) : array {
 		if ($listAsString === null || $listAsString === '') {
 			return [];
 		} else {

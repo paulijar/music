@@ -1124,10 +1124,7 @@ class SubsonicController extends ApiController {
 	 * -------------------------------------------------------------------------
 	 */
 
-	/**
-	 * @param string|int|null $paramValue
-	 */
-	private static function ensureParamHasValue(string $paramName, /*mixed*/ $paramValue) : void {
+	private static function ensureParamHasValue(string $paramName, string|int|null $paramValue) : void {
 		if ($paramValue === null || $paramValue === '') {
 			throw new SubsonicException("Required parameter '$paramName' missing", 10);
 		}
@@ -1857,7 +1854,7 @@ class SubsonicController extends ApiController {
 	/**
 	 * @param bool|string[] $useAttributes
 	 */
-	private function subsonicResponse(array $content, /*mixed*/ $useAttributes=true, string $status = 'ok') : Response {
+	private function subsonicResponse(array $content, bool|array $useAttributes=true, string $status = 'ok') : Response {
 		$content['status'] = $status;
 		$content['version'] = self::API_VERSION;
 		$content['type'] = AppInfo::getFullName();

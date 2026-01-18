@@ -87,9 +87,8 @@ class Application extends App implements IBootstrap {
 	/**
 	 * Wrapper to get a service from the container, hiding the differences between the cloud versions.
 	 * @param string $id A fully-qualified class name of an autoloadable class or other registered service ID
-	 * @return mixed
 	 */
-	public function get(string $id) {
+	public function get(string $id) : mixed {
 		$container = $this->getContainer();
 		return $container->get($id);
 	}

@@ -9,7 +9,7 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Morris Jobke 2013, 2014
- * @copyright Pauli Järvinen 2017 - 2025
+ * @copyright Pauli Järvinen 2017 - 2026
  */
 
 namespace OCA\Music\Http;
@@ -22,8 +22,7 @@ use OCP\Files\File;
  * A renderer for files
  */
 class FileResponse extends Response {
-	/** @var File|string $file */
-	protected $file;
+	protected File|string $file;
 	protected int $start;
 	protected int $end;
 	protected bool $rangeRequest;

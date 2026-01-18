@@ -9,7 +9,7 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Morris Jobke 2013
- * @copyright Pauli Järvinen 2016 - 2025
+ * @copyright Pauli Järvinen 2016 - 2026
  */
 
 namespace OCA\Music\BusinessLayer;
@@ -53,7 +53,7 @@ class TrackBusinessLayer extends BusinessLayer implements Scrobbler {
 	 * @param int|int[] $artistId
 	 * @return Track[]
 	 */
-	public function findAllByArtist(/*mixed*/ $artistId, string $userId, ?int $limit=null, ?int $offset=null) : array {
+	public function findAllByArtist(int|array $artistId, string $userId, ?int $limit=null, ?int $offset=null) : array {
 		if (empty($artistId)) {
 			return [];
 		} else {
@@ -69,7 +69,7 @@ class TrackBusinessLayer extends BusinessLayer implements Scrobbler {
 	 * @param int|int[] $albumId
 	 * @return Track[]
 	 */
-	public function findAllByAlbum(/*mixed*/ $albumId, string $userId, ?int $artistId=null, ?int $limit=null, ?int $offset=null) : array {
+	public function findAllByAlbum(int|array $albumId, string $userId, ?int $artistId=null, ?int $limit=null, ?int $offset=null) : array {
 		if (empty($albumId)) {
 			return [];
 		} else {

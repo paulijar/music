@@ -9,7 +9,7 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Morris Jobke 2014
- * @copyright Pauli Järvinen 2017 - 2025
+ * @copyright Pauli Järvinen 2017 - 2026
  */
 
 namespace OCA\Music\Hooks;
@@ -125,9 +125,8 @@ class FileHooks {
 
 	/**
 	 * Get the dependency identified by the given name
-	 * @return mixed
 	 */
-	private static function inject(string $id) {
+	private static function inject(string $id) : mixed {
 		$app = \OC::$server->query(Application::class);
 		return $app->get($id);
 	}

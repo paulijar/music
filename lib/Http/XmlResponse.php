@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2019 - 2025
+ * @copyright Pauli Järvinen 2019 - 2026
  */
 
 namespace OCA\Music\Http;
@@ -31,7 +31,7 @@ class XmlResponse extends Response {
 	private array $content;
 	private \DOMDocument $doc;
 	/** @var bool|string[] $attributeKeys */
-	private $attributeKeys;
+	private bool|array $attributeKeys;
 	private bool $boolAsInt;
 	private bool $nullAsEmpty;
 	private ?string $textNodeKey;
@@ -48,7 +48,7 @@ class XmlResponse extends Response {
 	 * @param ?string $textNodeKey When a key within @a $content matches this, the corresponding value is converted to a text node,
 	 *                             instead of creating an element or attribute named by the key.
 	 */
-	public function __construct(array $content, /*mixed*/ $attributes=true,
+	public function __construct(array $content, bool|array $attributes=true,
 								bool $boolAsInt=false, bool $nullAsEmpty=false,
 								?string $textNodeKey='value') {
 		$this->setStatus(Http::STATUS_OK);
@@ -85,9 +85,8 @@ class XmlResponse extends Response {
 	/**
 	 * Add child element or attribute to a given element. In case the value of the child is an array,
 	 * all the nested children will be added recursively.
-	 * @param string|int|float|bool|array|\stdClass|null $value
 	 */
-	private function addChildElement(\DOMElement $parentElem, string $key, /*mixed*/ $value, bool $allowAttribute=true) : void {
+	private function addChildElement(\DOMElement $parentElem, string $key, string|int|float|bool|array|\stdClass|null $value, bool $allowAttribute=true) : void {
 		if (\is_bool($value)) {
 			if ($this->boolAsInt) {
 				$value = $value ? '1' : '0';

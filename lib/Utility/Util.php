@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2018 - 2025
+ * @copyright Pauli Järvinen 2018 - 2026
  */
 
 namespace OCA\Music\Utility;
@@ -67,9 +67,8 @@ class Util {
 	/**
 	 * Convert date and time to the ISO UTC "Zulu format" e.g. "2021-08-19T19:33:15Z". The date and time may be passed
 	 * as a DateTime object or any string format accepted by the DateTime constructor.
-	 * @param string|\DateTime|null $dateTime
 	 */
-	public static function formatZuluDateTime(/*mixed*/ $dateTime) : ?string {
+	public static function formatZuluDateTime(string|\DateTime|null $dateTime) : ?string {
 		if ($dateTime === null) {
 			return null;
 		} else {
@@ -121,10 +120,8 @@ class Util {
 
 	/**
 	 * Swap values of two variables in place
-	 * @param mixed $a
-	 * @param mixed $b
 	 */
-	public static function swap(&$a, &$b) : void {
+	public static function swap(mixed &$a, mixed &$b) : void {
 		$temp = $a;
 		$a = $b;
 		$b = $temp;

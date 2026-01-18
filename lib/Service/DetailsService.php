@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2018 - 2025
+ * @copyright Pauli Järvinen 2018 - 2026
  */
 
 namespace OCA\Music\Service;
@@ -244,9 +244,8 @@ class DetailsService {
 
 	/**
 	 * Remove potentially invalid characters from the string and normalize the line breaks to LF.
-	 * @param mixed $item
 	 */
-	private static function sanitizeString(&$item) : void {
+	private static function sanitizeString(mixed &$item) : void {
 		if (\is_string($item)) {
 			\mb_substitute_character(0xFFFD); // Use the Unicode REPLACEMENT CHARACTER (U+FFFD)
 			$item = \mb_convert_encoding($item, 'UTF-8', 'UTF-8');
