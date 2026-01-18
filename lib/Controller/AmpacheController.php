@@ -9,21 +9,10 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Morris Jobke 2013, 2014
- * @copyright Pauli Järvinen 2017 - 2025
+ * @copyright Pauli Järvinen 2017 - 2026
  */
 
 namespace OCA\Music\Controller;
-
-use OCP\AppFramework\ApiController;
-use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\JSONResponse;
-use OCP\AppFramework\Http\RedirectResponse;
-use OCP\AppFramework\Http\Response;
-use OCP\IConfig;
-use OCP\IL10N;
-use OCP\IRequest;
-use OCP\IURLGenerator;
-use OCP\IUserManager;
 
 use OCA\Music\AppFramework\BusinessLayer\BusinessLayer;
 use OCA\Music\AppFramework\BusinessLayer\BusinessLayerException;
@@ -81,6 +70,21 @@ use OCA\Music\Utility\ArrayUtil;
 use OCA\Music\Utility\Random;
 use OCA\Music\Utility\StringUtil;
 use OCA\Music\Utility\Util;
+
+use OCP\AppFramework\ApiController;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\CORS;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
+use OCP\AppFramework\Http\Attribute\PublicPage;
+use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Http\RedirectResponse;
+use OCP\AppFramework\Http\Response;
+use OCP\IConfig;
+use OCP\IL10N;
+use OCP\IRequest;
+use OCP\IURLGenerator;
+use OCP\IUserManager;
 
 class AmpacheController extends ApiController {
 	private IConfig $config;
@@ -219,35 +223,31 @@ class AmpacheController extends ApiController {
 		return $this->ampacheResponse($content);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @PublicPage
-	 * @NoCSRFRequired
-	 * @NoSameSiteCookieRequired
-	 * @CORS
-	 */
+	/** @NoSameSiteCookieRequired */
+	#[NoAdminRequired]
+	#[PublicPage]
+	#[NoCSRFRequired]
+	#[CORS]
 	public function xmlApi(string $action) : Response {
 		// differentiation between xmlApi and jsonApi is made already by the middleware
 		return $this->dispatch($action);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @PublicPage
-	 * @NoCSRFRequired
-	 * @NoSameSiteCookieRequired
-	 * @CORS
-	 */
+	/** @NoSameSiteCookieRequired */
+	#[NoAdminRequired]
+	#[PublicPage]
+	#[NoCSRFRequired]
+	#[CORS]
 	public function jsonApi(string $action) : Response {
 		// differentiation between xmlApi and jsonApi is made already by the middleware
 		return $this->dispatch($action);
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 * @param string|int|bool $xml
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function internalApi(string $action, /*mixed*/ $xml='0') : Response {
 		$this->setJsonMode(!\filter_var($xml, FILTER_VALIDATE_BOOLEAN));
 		return $this->dispatch($action);

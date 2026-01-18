@@ -7,28 +7,28 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2021 - 2025
+ * @copyright Pauli Järvinen 2021 - 2026
  */
 
 namespace OCA\Music\Controller;
-
-use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\JSONResponse;
-use OCP\AppFramework\Http\RedirectResponse;
-use OCP\AppFramework\Http\Response;
-
-use OCP\Files\IRootFolder;
-
-use OCP\IConfig;
-use OCP\IRequest;
-use OCP\IURLGenerator;
 
 use OCA\Music\AppFramework\Core\Logger;
 use OCA\Music\AppFramework\Utility\FileExistsException;
 use OCA\Music\Http\ErrorResponse;
 use OCA\Music\Http\RelayStreamResponse;
 use OCA\Music\Service\PodcastService;
+
+use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
+use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Http\RedirectResponse;
+use OCP\AppFramework\Http\Response;
+use OCP\Files\IRootFolder;
+use OCP\IConfig;
+use OCP\IRequest;
+use OCP\IURLGenerator;
 
 class PodcastApiController extends Controller {
 	private IConfig $config;
@@ -60,9 +60,9 @@ class PodcastApiController extends Controller {
 	/**
 	 * lists all podcasts
 	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function getAll() : JSONResponse {
 		$channels = $this->podcastService->getAllChannels($this->userId, /*$includeEpisodes=*/ true);
 		return new JSONResponse(
@@ -71,11 +71,10 @@ class PodcastApiController extends Controller {
 	}
 
 	/**
-	 * add a followed podcast
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
+	 * adds a followed podcast channel
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function subscribe(?string $url) : JSONResponse {
 		if ($url === null) {
 			return new ErrorResponse(Http::STATUS_BAD_REQUEST, "Mandatory argument 'url' not given");
@@ -98,11 +97,10 @@ class PodcastApiController extends Controller {
 	}
 
 	/**
-	 * deletes a station
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
+	 * removes a followed podcast channel
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function unsubscribe(int $id) : JSONResponse {
 		$status = $this->podcastService->unsubscribe($id, $this->userId);
 
@@ -118,10 +116,9 @@ class PodcastApiController extends Controller {
 
 	/**
 	 * get a single podcast channel
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function get(int $id) : JSONResponse {
 		$channel = $this->podcastService->getChannel($id, $this->userId, /*includeEpisodes=*/ true);
 
@@ -134,10 +131,9 @@ class PodcastApiController extends Controller {
 
 	/**
 	 * get details for a podcast channel
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function channelDetails(int $id) : JSONResponse {
 		$channel = $this->podcastService->getChannel($id, $this->userId, /*includeEpisodes=*/ false);
 
@@ -150,10 +146,9 @@ class PodcastApiController extends Controller {
 
 	/**
 	 * get details for a podcast episode
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function episodeDetails(int $id) : JSONResponse {
 		$episode = $this->podcastService->getEpisode($id, $this->userId);
 
@@ -166,10 +161,9 @@ class PodcastApiController extends Controller {
 
 	/**
 	 * get audio stream for a podcast episode
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function episodeStream(int $id) : Response {
 		$episode = $this->podcastService->getEpisode($id, $this->userId);
 
@@ -193,10 +187,9 @@ class PodcastApiController extends Controller {
 	 * @param string|null $prevHash Previous content hash known by the client. If given, the result will tell
 	 *								if the channel content has updated from this state. If omitted, the result
 	 *								will tell if the channel changed from its previous server-known state.
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function updateChannel(int $id, ?string $prevHash) : JSONResponse {
 		$updateResult = $this->podcastService->updateChannel($id, $this->userId, $prevHash);
 
@@ -213,10 +206,9 @@ class PodcastApiController extends Controller {
 
 	/**
 	 * reset all the subscribed podcasts of the user
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function resetAll() : JSONResponse {
 		$this->podcastService->resetAll($this->userId);
 		return new JSONResponse(['success' => true]);
@@ -232,10 +224,9 @@ class PodcastApiController extends Controller {
 	 *								- 'overwrite' The existing file will be overwritten
 	 *								- 'keepboth' The new file is named with a suffix to make it unique
 	 *								- 'abort' (default) The operation will fail
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function exportAllToFile(string $name, string $path, string $oncollision) : JSONResponse {
 		try {
 			$userFolder = $this->rootFolder->getUserFolder($this->userId);
@@ -255,10 +246,9 @@ class PodcastApiController extends Controller {
 	 * parse an OPML file and return list of contained channels
 	 *
 	 * @param string $filePath path of the file to parse
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function parseListFile(string $filePath) : JSONResponse {
 		try {
 			$userFolder = $this->rootFolder->getUserFolder($this->userId);

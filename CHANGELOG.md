@@ -11,6 +11,7 @@
 - Support for PHP 8.5
 
 ### Changed
+- Use PHP attributes instead of annotations to get rid of deprecation warnings in the debug log on NC 31+
 
 ### Fixed
 - When no local album art available, the art from Last.fm was accidentally applied also to the artist list of the album details pane

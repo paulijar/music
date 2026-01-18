@@ -17,6 +17,8 @@ namespace OCA\Music\Controller;
 use OCA\Music\Service\ScrobbleServiceException;
 use OCA\Music\Service\ExternalScrobbler;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\StandaloneTemplateResponse;
 use OCP\IL10N;
@@ -44,11 +46,9 @@ class ScrobblerController extends Controller {
 		$this->externalScrobblers = $externalScrobblers;
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 * @NoSameSiteCookieRequired
-	 */
+	/** @NoSameSiteCookieRequired */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function handleToken(?string $serviceIdentifier, ?string $token) : StandaloneTemplateResponse {
 		$params = [
 			'lang' => $this->l10n->getLanguageCode(),
@@ -97,10 +97,8 @@ class ScrobblerController extends Controller {
 		}
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function clearSession(?string $serviceIdentifier): JSONResponse {
 		$error = null;
 

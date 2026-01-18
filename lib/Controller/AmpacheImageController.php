@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2023 - 2025
+ * @copyright Pauli Järvinen 2023 - 2026
  */
 
 namespace OCA\Music\Controller;
@@ -28,6 +28,10 @@ use OCA\Music\Utility\HttpUtil;
 use OCA\Music\Utility\PlaceholderImage;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\CORS;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
+use OCP\AppFramework\Http\Attribute\PublicPage;
 use OCP\AppFramework\Http\Response;
 use OCP\IRequest;
 
@@ -61,13 +65,11 @@ class AmpacheImageController extends Controller {
 		$this->logger = $logger;
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @PublicPage
-	 * @NoCSRFRequired
-	 * @NoSameSiteCookieRequired
-	 * @CORS
-	 */
+	/** @NoSameSiteCookieRequired */
+	#[NoAdminRequired]
+	#[PublicPage]
+	#[NoCSRFRequired]
+	#[CORS]
 	public function image(?string $token, ?string $object_id, string $object_type='album', ?int $size=null) : Response {
 		if ($token === null) {
 			// Workaround for Ample client which uses this kind of call to get the placeholder graphics

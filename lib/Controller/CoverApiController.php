@@ -7,13 +7,15 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2024, 2025
+ * @copyright Pauli Järvinen 2024 - 2026
  */
 
 namespace OCA\Music\Controller;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
+use OCP\AppFramework\Http\Attribute\PublicPage;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\Files\IRootFolder;
@@ -69,10 +71,8 @@ class CoverApiController extends Controller {
 		$this->logger = $logger;
 	}
 
-	/**
-	 * @PublicPage
-	 * @NoCSRFRequired
-	 */
+	#[PublicPage]
+	#[NoCSRFRequired]
 	public function externalCover(?string $url) : Response {
 		$allowedDomains = ['lastfm.freetls.fastly.net']; // domain used by Last.fm for the album art
 
@@ -92,10 +92,8 @@ class CoverApiController extends Controller {
 		}
 	}
 
-	/**
-	 * @PublicPage
-	 * @NoCSRFRequired
-	 */
+	#[PublicPage]
+	#[NoCSRFRequired]
 	public function albumCover(int $albumId, ?string $originalSize, ?string $coverToken) : Response {
 		try {
 			$userId = $this->userId ?? $this->coverService->getUserForAccessToken($coverToken);
@@ -107,10 +105,8 @@ class CoverApiController extends Controller {
 		}
 	}
 
-	/**
-	 * @PublicPage
-	 * @NoCSRFRequired
-	 */
+	#[PublicPage]
+	#[NoCSRFRequired]
 	public function artistCover(int $artistId, ?string $originalSize, ?string $coverToken) : Response {
 		try {
 			$userId = $this->userId ?? $this->coverService->getUserForAccessToken($coverToken);
@@ -122,10 +118,8 @@ class CoverApiController extends Controller {
 		}
 	}
 
-	/**
-	 * @PublicPage
-	 * @NoCSRFRequired
-	 */
+	#[PublicPage]
+	#[NoCSRFRequired]
 	public function podcastCover(int $channelId, ?string $originalSize, ?string $coverToken) : Response {
 		try {
 			$userId = $this->userId ?? $this->coverService->getUserForAccessToken($coverToken);
@@ -137,10 +131,8 @@ class CoverApiController extends Controller {
 		}
 	}
 
-	/**
-	 * @PublicPage
-	 * @NoCSRFRequired
-	 */
+	#[PublicPage]
+	#[NoCSRFRequired]
 	public function cachedCover(string $hash, ?string $coverToken) : Response {
 		try {
 			$userId = $this->userId ?? $this->coverService->getUserForAccessToken($coverToken);

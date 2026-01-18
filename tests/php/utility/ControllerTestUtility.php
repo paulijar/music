@@ -10,12 +10,11 @@
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Alessandro Cosentino 2012
  * @copyright Bernhard Posselt 2012, 2014
- * @copyright Pauli Järvinen 2020, 2021
+ * @copyright Pauli Järvinen 2020 - 2026
  */
 
 namespace OCA\Music\Tests\Utility;
 
-use OCA\Music\AppFramework\Utility\MethodAnnotationReader;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Response;
 
@@ -25,29 +24,29 @@ use OCP\AppFramework\Http\Response;
 abstract class ControllerTestUtility extends \PHPUnit\Framework\TestCase {
 
 	/**
-	 * Checks if a controllermethod has the expected annotations
+	 * Checks if a controller method has the expected attributes
 	 * @param Controller|string $controller name or instance of the controller
-	 * @param array $expected an array containing the expected annotations
-	 * @param array $valid if you define your own annotations, pass them here
+	 * @param string[] $expected an array containing the expected attributes
+	 * @param string[] $valid if you define your own attributes, pass them here
 	 */
-	protected function assertAnnotations($controller, $method, array $expected, array $valid=[]) {
+	protected function assertAttributes(/*mixed*/ $controller, string $method, array $expected, array $valid=[]) {
 		$standard = [
-			'PublicPage',
-			'NoAdminRequired',
-			'NoCSRFRequired',
-			'API'
+			\OCP\AppFramework\Http\Attribute\PublicPage::class,
+			\OCP\AppFramework\Http\Attribute\NoAdminRequired::class,
+			\OCP\AppFramework\Http\Attribute\NoCSRFRequired::class,
+			\OCP\AppFramework\Http\Attribute\CORS::class
 		];
 
 		$possible = \array_merge($standard, $valid);
 
 		// check if expected annotations are valid
-		foreach ($expected as $annotation) {
-			$this->assertTrue(\in_array($annotation, $possible));
+		foreach ($expected as $attrName) {
+			$this->assertTrue(\in_array($attrName, $possible));
 		}
 
-		$reader = new MethodAnnotationReader($controller, $method);
-		foreach ($expected as $annotation) {
-			$this->assertTrue($reader->hasAnnotation($annotation));
+		$reflection = new \ReflectionMethod($controller, $method);
+		foreach ($expected as $attrName) {
+			$this->assertNotEmpty($reflection->getAttributes($attrName), "attribute $attrName on method $method");
 		}
 	}
 

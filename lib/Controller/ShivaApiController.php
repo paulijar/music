@@ -9,17 +9,10 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Morris Jobke 2013, 2014
- * @copyright Pauli Järvinen 2017 - 2025
+ * @copyright Pauli Järvinen 2017 - 2026
  */
 
 namespace OCA\Music\Controller;
-
-use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\JSONResponse;
-use OCP\IL10N;
-use OCP\IRequest;
-use OCP\IURLGenerator;
 
 use OCA\Music\AppFramework\BusinessLayer\BusinessLayer;
 use OCA\Music\AppFramework\BusinessLayer\BusinessLayerException;
@@ -35,6 +28,15 @@ use OCA\Music\Http\ErrorResponse;
 use OCA\Music\Service\DetailsService;
 use OCA\Music\Service\Scanner;
 use OCA\Music\Utility\Random;
+
+use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
+use OCP\AppFramework\Http\JSONResponse;
+use OCP\IL10N;
+use OCP\IRequest;
+use OCP\IURLGenerator;
 
 class ShivaApiController extends Controller {
 
@@ -86,9 +88,9 @@ class ShivaApiController extends Controller {
 	/**
 	 * @param string|int|bool|null $fulltree
 	 * @param string|int|bool|null $albums
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function artists(/*mixed*/ $fulltree, /*mixed*/ $albums, ?int $page_size=null, ?int $page=null) : JSONResponse {
 		$fulltree = \filter_var($fulltree, FILTER_VALIDATE_BOOLEAN);
 		$includeAlbums = \filter_var($albums, FILTER_VALIDATE_BOOLEAN);
@@ -104,9 +106,9 @@ class ShivaApiController extends Controller {
 
 	/**
 	 * @param string|int|bool|null $fulltree
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function artist(int $id, /*mixed*/ $fulltree) : JSONResponse {
 		$fulltree = \filter_var($fulltree, FILTER_VALIDATE_BOOLEAN);
 		try {
@@ -139,9 +141,9 @@ class ShivaApiController extends Controller {
 
 	/**
 	 * @param string|int|bool|null $fulltree
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function albums(?int $artist=null, /*mixed*/ $fulltree=null, ?int $page_size=null, ?int $page=null) : JSONResponse {
 		$fulltree = \filter_var($fulltree, FILTER_VALIDATE_BOOLEAN);
 		list($limit, $offset) = self::shivaPageToLimits($page_size, $page);
@@ -159,9 +161,9 @@ class ShivaApiController extends Controller {
 
 	/**
 	 * @param string|int|bool|null $fulltree
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function album(int $id, /*mixed*/ $fulltree) : JSONResponse {
 		$fulltree = \filter_var($fulltree, FILTER_VALIDATE_BOOLEAN);
 		try {
@@ -195,9 +197,9 @@ class ShivaApiController extends Controller {
 
 	/**
 	 * @param string|int|bool|null $fulltree
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function tracks(?int $artist=null, ?int $album=null, /*mixed*/ $fulltree=null, ?int $page_size=null, ?int $page=null) : JSONResponse {
 		$fulltree = \filter_var($fulltree, FILTER_VALIDATE_BOOLEAN);
 		list($limit, $offset) = self::shivaPageToLimits($page_size, $page);
@@ -223,10 +225,8 @@ class ShivaApiController extends Controller {
 		return new JSONResponse($tracks);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function track(int $id) : JSONResponse {
 		try {
 			$track = $this->trackBusinessLayer->find($id, $this->userId);
@@ -236,10 +236,8 @@ class ShivaApiController extends Controller {
 		}
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function trackLyrics(int $id) : JSONResponse {
 		try {
 			$track = $this->trackBusinessLayer->find($id, $this->userId);
@@ -268,26 +266,20 @@ class ShivaApiController extends Controller {
 		return new ErrorResponse(Http::STATUS_NOT_FOUND);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function randomArtist() : JSONResponse {
 		return $this->randomItem($this->artistBusinessLayer, 'artist');
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function randomAlbum() : JSONResponse {
 		return $this->randomItem($this->albumBusinessLayer, 'album');
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function randomTrack() : JSONResponse {
 		return $this->randomItem($this->trackBusinessLayer, 'track');
 	}
@@ -311,10 +303,8 @@ class ShivaApiController extends Controller {
 		];
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function latestItems(?string $since) : JSONResponse {
 		if ($since === null) {
 			$dateTime = new \DateTime('7 days ago');

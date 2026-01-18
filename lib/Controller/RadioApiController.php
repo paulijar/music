@@ -7,22 +7,10 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2020 - 2025
+ * @copyright Pauli Järvinen 2020 - 2026
  */
 
 namespace OCA\Music\Controller;
-
-use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\JSONResponse;
-use OCP\AppFramework\Http\RedirectResponse;
-use OCP\AppFramework\Http\Response;
-
-use OCP\Files\Folder;
-use OCP\Files\IRootFolder;
-use OCP\IConfig;
-use OCP\IRequest;
-use OCP\IURLGenerator;
 
 use OCA\Music\AppFramework\BusinessLayer\BusinessLayerException;
 use OCA\Music\AppFramework\Core\Logger;
@@ -35,6 +23,19 @@ use OCA\Music\Service\PlaylistFileService;
 use OCA\Music\Service\RadioService;
 use OCA\Music\Service\StreamTokenService;
 use OCA\Music\Utility\HttpUtil;
+
+use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
+use OCP\AppFramework\Http\Attribute\PublicPage;
+use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Http\RedirectResponse;
+use OCP\AppFramework\Http\Response;
+use OCP\Files\IRootFolder;
+use OCP\IConfig;
+use OCP\IRequest;
+use OCP\IURLGenerator;
 
 class RadioApiController extends Controller {
 	private IConfig $config;
@@ -74,10 +75,9 @@ class RadioApiController extends Controller {
 
 	/**
 	 * lists all radio stations
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function getAll() : JSONResponse {
 		$stations = $this->businessLayer->findAll($this->userId);
 		return new JSONResponse(
@@ -87,10 +87,9 @@ class RadioApiController extends Controller {
 
 	/**
 	 * creates a station
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function create(?string $name, ?string $streamUrl, ?string $homeUrl) : JSONResponse {
 		if ($streamUrl === null) {
 			return new ErrorResponse(Http::STATUS_BAD_REQUEST, "Mandatory argument 'streamUrl' not given");
@@ -106,10 +105,9 @@ class RadioApiController extends Controller {
 
 	/**
 	 * deletes a station
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function delete(int $id) : JSONResponse {
 		try {
 			$this->businessLayer->delete($id, $this->userId);
@@ -121,10 +119,9 @@ class RadioApiController extends Controller {
 
 	/**
 	 * get a single radio station
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function get(int $id) : JSONResponse {
 		try {
 			$station = $this->businessLayer->find($id, $this->userId);
@@ -136,10 +133,9 @@ class RadioApiController extends Controller {
 
 	/**
 	 * update a station
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function update(int $id, ?string $name = null, ?string $streamUrl = null, ?string $homeUrl = null) : JSONResponse {
 		if ($name === null && $streamUrl === null && $homeUrl === null) {
 			return new ErrorResponse(Http::STATUS_BAD_REQUEST, "at least one of the args ['name', 'streamUrl', 'homeUrl'] must be given");
@@ -165,10 +161,9 @@ class RadioApiController extends Controller {
 	 *								- 'overwrite' The existing file will be overwritten
 	 *								- 'keepboth' The new file is named with a suffix to make it unique
 	 *								- 'abort' (default) The operation will fail
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function exportAllToFile(string $name, string $path, string $oncollision='abort') : JSONResponse {
 		try {
 			$userFolder = $this->rootFolder->getUserFolder($this->userId);
@@ -187,10 +182,9 @@ class RadioApiController extends Controller {
 	/**
 	 * import radio stations from a file
 	 * @param string $filePath path of the file to import
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function importFromFile(string $filePath) : JSONResponse {
 		try {
 			$userFolder = $this->rootFolder->getUserFolder($this->userId);
@@ -206,10 +200,9 @@ class RadioApiController extends Controller {
 
 	/**
 	 * reset all the radio stations of the user
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function resetAll() : JSONResponse {
 		$this->businessLayer->deleteAll($this->userId);
 		return new JSONResponse(['success' => true]);
@@ -217,10 +210,9 @@ class RadioApiController extends Controller {
 
 	/**
 	* get metadata for a channel
-	*
-	* @NoAdminRequired
-	* @NoCSRFRequired
 	*/
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function getChannelInfo(int $id, ?string $type=null) : JSONResponse {
 		try {
 			$station = $this->businessLayer->find($id, $this->userId);
@@ -255,10 +247,9 @@ class RadioApiController extends Controller {
 
 	/**
 	 * get stream URL for a radio station
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function stationStreamUrl(int $id) : JSONResponse {
 		try {
 			$station = $this->businessLayer->find($id, $this->userId);
@@ -270,10 +261,9 @@ class RadioApiController extends Controller {
 
 	/**
 	 * get audio stream for a radio station
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function stationStream(int $id) : Response {
 		try {
 			$station = $this->businessLayer->find($id, $this->userId);
@@ -293,10 +283,9 @@ class RadioApiController extends Controller {
 	 * get the actual stream URL from the given public URL
 	 *
 	 * Available without login since no user data is handled and this may be used on link-shared folder.
-	 *
-	 * @PublicPage
-	 * @NoCSRFRequired
 	 */
+	#[PublicPage]
+	#[NoCSRFRequired]
 	public function resolveStreamUrl(string $url, ?string $token) : JSONResponse {
 		$url = \rawurldecode($url);
 
@@ -333,10 +322,9 @@ class RadioApiController extends Controller {
 
 	/**
 	 * create a relayed stream for the given URL if relaying enabled; otherwise just redirect to the URL
-	 *
-	 * @PublicPage
-	 * @NoCSRFRequired
 	 */
+	#[PublicPage]
+	#[NoCSRFRequired]
 	public function streamFromUrl(string $url, ?string $token) : Response {
 		$url = \rawurldecode($url);
 
@@ -356,10 +344,9 @@ class RadioApiController extends Controller {
 	 *
 	 * This fetches the manifest file from the given URL and returns a modified version of it.
 	 * The front-end can't easily stream directly from the original source because of the Content-Security-Policy.
-	 *
-	 * @PublicPage
-	 * @NoCSRFRequired
 	 */
+	#[PublicPage]
+	#[NoCSRFRequired]
 	public function hlsManifest(string $url, ?string $token) : Response {
 		$url = \rawurldecode($url);
 
@@ -384,10 +371,9 @@ class RadioApiController extends Controller {
 	 * get one segment of a HLS stream
 	 *
 	 * The segment is fetched from the given URL and relayed as such to the client.
-	 *
-	 * @PublicPage
-	 * @NoCSRFRequired
 	 */
+	#[PublicPage]
+	#[NoCSRFRequired]
 	public function hlsSegment(string $url, ?string $token) : Response {
 		$url = \rawurldecode($url);
 

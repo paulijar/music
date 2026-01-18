@@ -9,7 +9,7 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Morris Jobke 2013, 2014
- * @copyright Pauli Järvinen 2016 - 2025
+ * @copyright Pauli Järvinen 2016 - 2026
  */
 
 namespace OCA\Music\Controller;
@@ -96,18 +96,21 @@ class ShivaApiControllerTest extends ControllerTestUtility {
 	/**
 	 * @param string $methodName
 	 */
-	private function assertAPIControllerAnnotations($methodName) {
-		$annotations = ['NoAdminRequired', 'NoCSRFRequired'];
-		$this->assertAnnotations($this->controller, $methodName, $annotations);
+	private function assertApiControllerAttributes($methodName) {
+		$annotations = [
+			\OCP\AppFramework\Http\Attribute\NoAdminRequired::class,
+			\OCP\AppFramework\Http\Attribute\NoCSRFRequired::class
+		];
+		$this->assertAttributes($this->controller, $methodName, $annotations);
 	}
 
 	public function testAnnotations() {
-		$this->assertAPIControllerAnnotations('artists');
-		$this->assertAPIControllerAnnotations('artist');
-		$this->assertAPIControllerAnnotations('albums');
-		$this->assertAPIControllerAnnotations('album');
-		$this->assertAPIControllerAnnotations('tracks');
-		$this->assertAPIControllerAnnotations('track');
+		$this->assertApiControllerAttributes('artists');
+		$this->assertApiControllerAttributes('artist');
+		$this->assertApiControllerAttributes('albums');
+		$this->assertApiControllerAttributes('album');
+		$this->assertApiControllerAttributes('tracks');
+		$this->assertApiControllerAttributes('track');
 	}
 
 	public function testArtists() {

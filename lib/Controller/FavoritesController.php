@@ -7,13 +7,15 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2024, 2025
+ * @copyright Pauli Järvinen 2024 - 2026
  */
 
 namespace OCA\Music\Controller;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
@@ -58,10 +60,8 @@ class FavoritesController extends Controller {
 		$this->userId = $userId;
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function favorites() : JSONResponse {
 		return new JSONResponse([
 			'tracks' => $this->trackBusinessLayer->findAllStarredIds($this->userId),
@@ -74,55 +74,55 @@ class FavoritesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 * @param string|int|bool|null $status
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function setFavoriteTrack(int $id, /*mixed*/ $status) : JSONResponse {
 		return $this->setFavorite($this->trackBusinessLayer, $id, $status);
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 * @param string|int|bool|null $status
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function setFavoriteAlbum(int $id, /*mixed*/ $status) : JSONResponse {
 		return $this->setFavorite($this->albumBusinessLayer, $id, $status);
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 * @param string|int|bool|null $status
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function setFavoriteArtist(int $id, /*mixed*/ $status) : JSONResponse {
 		return $this->setFavorite($this->artistBusinessLayer, $id, $status);
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 * @param string|int|bool|null $status
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function setFavoritePlaylist(int $id, /*mixed*/ $status) : JSONResponse {
 		return $this->setFavorite($this->playlistBusinessLayer, $id, $status);
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 * @param string|int|bool|null $status
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function setFavoriteChannel(int $id, /*mixed*/ $status) : JSONResponse {
 		return $this->setFavorite($this->podcastChannelBusinessLayer, $id, $status);
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 * @param string|int|bool|null $status
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function setFavoriteEpisode(int $id, /*mixed*/ $status) : JSONResponse {
 		return $this->setFavorite($this->podcastEpisodeBusinessLayer, $id, $status);
 	}

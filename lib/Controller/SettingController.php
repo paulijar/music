@@ -9,18 +9,10 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Morris Jobke 2013, 2014
- * @copyright Pauli Järvinen 2017 - 2025
+ * @copyright Pauli Järvinen 2017 - 2026
  */
 
 namespace OCA\Music\Controller;
-
-use OCA\Music\Service\ExternalScrobbler;
-use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\JSONResponse;
-use OCP\IRequest;
-use OCP\IURLGenerator;
-use OCP\Security\ISecureRandom;
 
 use OCA\Music\AppFramework\Core\Logger;
 use OCA\Music\Db\AmpacheSessionMapper;
@@ -30,6 +22,18 @@ use OCA\Music\Service\LibrarySettings;
 use OCA\Music\Service\Scanner;
 use OCA\Music\Utility\AppInfo;
 use OCA\Music\Utility\StringUtil;
+
+use OCA\Music\Service\ExternalScrobbler;
+use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\CORS;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
+use OCP\AppFramework\Http\Attribute\UseSession;
+use OCP\AppFramework\Http\JSONResponse;
+use OCP\IRequest;
+use OCP\IURLGenerator;
+use OCP\Security\ISecureRandom;
 
 class SettingController extends Controller {
 	private const DEFAULT_PASSWORD_LENGTH = 10;
@@ -74,11 +78,9 @@ class SettingController extends Controller {
 		$this->externalScrobblers = $externalScrobblers;
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 * @UseSession to keep the session reserved while execution in progress
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
+	#[UseSession] // to keep the session reserved while execution in progress
 	public function userPath(string $value) : JSONResponse {
 		$prevPath = $this->librarySettings->getPath($this->userId);
 		$success = $this->librarySettings->setPath($this->userId, $value);
@@ -90,37 +92,29 @@ class SettingController extends Controller {
 		return new JSONResponse(['success' => $success]);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function userExcludedPaths(array $value) : JSONResponse {
 		$success = $this->librarySettings->setExcludedPaths($this->userId, $value);
 		return new JSONResponse(['success' => $success]);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function enableScanMetadata(bool $value) : JSONResponse {
 		$this->librarySettings->setScanMetadataEnabled($this->userId, $value);
 		return new JSONResponse(['success' => true]);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function ignoredArticles(array $value) : JSONResponse {
 		$this->librarySettings->setIgnoredArticles($this->userId, $value);
 		return new JSONResponse(['success' => true]);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function getAll() : JSONResponse {
 		return new JSONResponse([
 			'path' => $this->librarySettings->getPath($this->userId),
@@ -136,10 +130,8 @@ class SettingController extends Controller {
 		]);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function getUserKeys() : JSONResponse {
 		return new JSONResponse($this->ampacheUserMapper->getAll($this->userId));
 	}
@@ -185,9 +177,7 @@ class SettingController extends Controller {
 		return $this->ampacheUserMapper->addUserKey($this->userId, $hash, $description);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 */
+	#[NoAdminRequired]
 	public function createUserKey(?int $length, ?string $description) : JSONResponse {
 		if ($length === null || $length < self::DEFAULT_PASSWORD_LENGTH) {
 			$length = self::DEFAULT_PASSWORD_LENGTH;
@@ -208,18 +198,15 @@ class SettingController extends Controller {
 	 * The CORS-version of the key creation function is targeted for external clients. We need separate function
 	 * because the CORS middleware blocks the normal internal access on Nextcloud versions older than 25 as well
 	 * as on ownCloud 10.0, at least (but not on OC 10.4+).
-	 *
-	 * @NoAdminRequired
-	 * @CORS
 	 */
+	#[NoAdminRequired]
+	#[CORS]
 	public function createUserKeyCors(?int $length, ?string $description) : JSONResponse {
 		return $this->createUserKey($length, $description);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function removeUserKey(int $id) : JSONResponse {
 		$this->ampacheSessionMapper->revokeSessions($id);
 		$this->ampacheUserMapper->removeUserKey($this->userId, $id);

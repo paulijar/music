@@ -7,25 +7,10 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2019 - 2025
+ * @copyright Pauli Järvinen 2019 - 2026
  */
 
 namespace OCA\Music\Controller;
-
-use OCA\Music\Service\Scrobbler;
-use OCP\AppFramework\ApiController;
-use OCP\AppFramework\Http\DataDisplayResponse;
-use OCP\AppFramework\Http\JSONResponse;
-use OCP\AppFramework\Http\RedirectResponse;
-use OCP\AppFramework\Http\Response;
-use OCP\Files\File;
-use OCP\Files\Folder;
-use OCP\Files\Node;
-use OCP\IConfig;
-use OCP\IL10N;
-use OCP\IRequest;
-use OCP\IUserManager;
-use OCP\IURLGenerator;
 
 use OCA\Music\AppFramework\BusinessLayer\BusinessLayerException;
 use OCA\Music\AppFramework\Core\Logger;
@@ -65,6 +50,7 @@ use OCA\Music\Service\FileSystemService;
 use OCA\Music\Service\LastfmService;
 use OCA\Music\Service\LibrarySettings;
 use OCA\Music\Service\PodcastService;
+use OCA\Music\Service\Scrobbler;
 
 use OCA\Music\Utility\AppInfo;
 use OCA\Music\Utility\ArrayUtil;
@@ -72,6 +58,24 @@ use OCA\Music\Utility\HttpUtil;
 use OCA\Music\Utility\Random;
 use OCA\Music\Utility\StringUtil;
 use OCA\Music\Utility\Util;
+
+use OCP\AppFramework\ApiController;
+use OCP\AppFramework\Http\Attribute\CORS;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
+use OCP\AppFramework\Http\Attribute\PublicPage;
+use OCP\AppFramework\Http\DataDisplayResponse;
+use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Http\RedirectResponse;
+use OCP\AppFramework\Http\Response;
+use OCP\Files\File;
+use OCP\Files\Folder;
+use OCP\Files\Node;
+use OCP\IConfig;
+use OCP\IL10N;
+use OCP\IRequest;
+use OCP\IUserManager;
+use OCP\IURLGenerator;
 
 class SubsonicController extends ApiController {
 	private const API_VERSION = '1.16.1';
@@ -131,7 +135,7 @@ class SubsonicController extends ApiController {
 			AmpacheImageService $imageService,
 			Random $random,
 			Logger $logger,
-			\OCP\IConfig $configManager,
+			IConfig $configManager,
 			Scrobbler $scrobbler
 	) {
 		parent::__construct($appName, $request, 'POST, GET', 'Authorization, Content-Type, Accept, X-Requested-With');
@@ -184,13 +188,11 @@ class SubsonicController extends ApiController {
 		$this->ignoredArticles = $this->librarySettings->getIgnoredArticles($userId);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @PublicPage
-	 * @NoCSRFRequired
-	 * @NoSameSiteCookieRequired
-	 * @CORS
-	 */
+	/** @NoSameSiteCookieRequired */
+	#[NoAdminRequired]
+	#[PublicPage]
+	#[NoCSRFRequired]
+	#[CORS]
 	public function handleRequest(string $method) : Response {
 		$this->logger->debug("Subsonic request $method");
 
