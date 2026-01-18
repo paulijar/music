@@ -7,16 +7,10 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2024, 2025
+ * @copyright Pauli Järvinen 2024 - 2026
  */
 
 namespace OCA\Music\Controller;
-
-use OCA\Music\AppFramework\BusinessLayer\BusinessLayer;
-use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\JSONResponse;
-use OCP\IRequest;
 
 use OCA\Music\AppFramework\BusinessLayer\BusinessLayerException;
 use OCA\Music\AppFramework\Core\Logger;
@@ -36,6 +30,14 @@ use OCA\Music\Http\ErrorResponse;
 use OCA\Music\Utility\ArrayUtil;
 use OCA\Music\Utility\Random;
 use OCA\Music\Utility\StringUtil;
+
+use OCA\Music\AppFramework\BusinessLayer\BusinessLayer;
+use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
+use OCP\AppFramework\Http\JSONResponse;
+use OCP\IRequest;
 
 class AdvSearchController extends Controller {
 
@@ -83,10 +85,8 @@ class AdvSearchController extends Controller {
 		$this->logger = $logger;
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function search(string $entity, string $rules, string $conjunction='and', string $order='name', ?int $limit=null, ?int $offset=null) : JSONResponse {
 		$rules = \json_decode($rules, true);
 

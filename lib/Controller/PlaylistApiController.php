@@ -9,21 +9,10 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Morris Jobke 2013, 2014
- * @copyright Pauli Järvinen 2017 - 2025
+ * @copyright Pauli Järvinen 2017 - 2026
  */
 
 namespace OCA\Music\Controller;
-
-use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\JSONResponse;
-use OCP\AppFramework\Http\Response;
-
-use OCP\Files\Folder;
-use OCP\Files\IRootFolder;
-use OCP\IConfig;
-use OCP\IRequest;
-use OCP\IURLGenerator;
 
 use OCA\Music\AppFramework\BusinessLayer\BusinessLayerException;
 use OCA\Music\AppFramework\Core\Logger;
@@ -38,6 +27,18 @@ use OCA\Music\Http\ErrorResponse;
 use OCA\Music\Http\FileResponse;
 use OCA\Music\Service\CoverService;
 use OCA\Music\Service\PlaylistFileService;
+
+use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
+use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Http\Response;
+use OCP\Files\Folder;
+use OCP\Files\IRootFolder;
+use OCP\IConfig;
+use OCP\IRequest;
+use OCP\IURLGenerator;
 
 class PlaylistApiController extends Controller {
 	private IURLGenerator $urlGenerator;
@@ -86,10 +87,9 @@ class PlaylistApiController extends Controller {
 
 	/**
 	 * lists all playlists
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function getAll(string $type = 'shiva') : JSONResponse {
 		$playlists = $this->playlistBusinessLayer->findAll($this->userId);
 		$result = ($type === 'shiva')
@@ -101,11 +101,10 @@ class PlaylistApiController extends Controller {
 	/**
 	 * creates a playlist
 	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
 	 * @param string|int|null $trackIds
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function create(?string $name, /*mixed*/ $trackIds, ?string $comment=null) : JSONResponse {
 		$playlist = $this->playlistBusinessLayer->create($name ?? '', $this->userId);
 
@@ -124,10 +123,9 @@ class PlaylistApiController extends Controller {
 	/**
 	 * deletes a playlist
 	 * @param  int $id playlist ID
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function delete(int $id) : JSONResponse {
 		$this->playlistBusinessLayer->delete($id, $this->userId);
 		return new JSONResponse([]);
@@ -137,10 +135,9 @@ class PlaylistApiController extends Controller {
 	 * lists a single playlist
 	 * @param int $id playlist ID
 	 * @param string|int|bool $fulltree
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function get(int $id, string $type = 'shiva', /*mixed*/ $fulltree = 'false') : JSONResponse {
 		try {
 			$playlist = $this->playlistBusinessLayer->find($id, $this->userId);
@@ -177,10 +174,9 @@ class PlaylistApiController extends Controller {
 	/**
 	 * generate a smart playlist according to the given rules
 	 * @param string|int|bool|null $historyStrict
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function generate(
 			?bool $useLatestParams, ?string $history, ?string $genres, ?string $artists,
 			?int $fromYear, ?int $toYear, ?string $favorite=null, int $size=100, /*mixed*/ $historyStrict='false') : JSONResponse {
@@ -231,10 +227,9 @@ class PlaylistApiController extends Controller {
 	/**
 	 * get cover image for a playlist
 	 * @param int $id playlist ID
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function getCover(int $id) : Response {
 		try {
 			$playlist = $this->playlistBusinessLayer->find($id, $this->userId);
@@ -253,10 +248,9 @@ class PlaylistApiController extends Controller {
 	/**
 	 * update a playlist
 	 * @param int $id playlist ID
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function update(int $id, ?string $name = null, ?string $comment = null, ?string $trackIds = null) : JSONResponse {
 		$result = null;
 		if ($name !== null) {
@@ -279,10 +273,9 @@ class PlaylistApiController extends Controller {
 	 * @param int $id playlist ID
 	 * @param string|int|null $track Comma-separated list of track IDs
 	 * @param ?int $index Insertion position within the playlist, or null to append
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function addTracks(int $id, /*mixed*/ $track, ?int $index = null) : JSONResponse {
 		return $this->modifyPlaylist('addTracks', [self::toIntArray($track), $id, $this->userId, $index]);
 	}
@@ -291,10 +284,9 @@ class PlaylistApiController extends Controller {
 	 * removes tracks from a playlist
 	 * @param int $id playlist ID
 	 * @param string|int|null $index Comma-separated list of track indices within the playlist
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function removeTracks(int $id, /*mixed*/ $index) : JSONResponse {
 		return $this->modifyPlaylist('removeTracks', [self::toIntArray($index), $id, $this->userId]);
 	}
@@ -302,10 +294,9 @@ class PlaylistApiController extends Controller {
 	/**
 	 * moves single track on playlist to a new position
 	 * @param int $id playlist ID
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function reorder(int $id, ?int $fromIndex, ?int $toIndex) : JSONResponse {
 		if ($fromIndex === null || $toIndex === null) {
 			return new ErrorResponse(Http::STATUS_BAD_REQUEST, "Arguments 'fromIndex' and 'toIndex' are required");
@@ -324,10 +315,9 @@ class PlaylistApiController extends Controller {
 	 *								- 'overwrite' The existing file will be overwritten
 	 *								- 'keepboth' The new file is named with a suffix to make it unique
 	 *								- 'abort' (default) The operation will fail
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function exportToFile(int $id, string $path, ?string $filename=null, string $oncollision='abort') : JSONResponse {
 		try {
 			$exportedFilePath = $this->playlistFileService->exportToFile(
@@ -348,10 +338,9 @@ class PlaylistApiController extends Controller {
 	 * import playlist contents from a file
 	 * @param int $id playlist ID
 	 * @param string $filePath path of the file to import
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function importFromFile(int $id, string $filePath) : JSONResponse {
 		try {
 			$result = $this->playlistFileService->importFromFile($id, $this->userId, $this->userFolder, $filePath);
@@ -369,10 +358,9 @@ class PlaylistApiController extends Controller {
 	/**
 	 * read and parse a playlist file
 	 * @param int $fileId ID of the file to parse
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function parseFile(int $fileId) : JSONResponse {
 		try {
 			$result = $this->playlistFileService->parseFile($fileId, $this->userFolder);

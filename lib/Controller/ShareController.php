@@ -7,13 +7,21 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2018 - 2025
+ * @copyright Pauli Järvinen 2018 - 2026
  */
 
 namespace OCA\Music\Controller;
 
+use OCA\Music\AppFramework\Core\Logger;
+use OCA\Music\Http\ErrorResponse;
+use OCA\Music\Http\FileStreamResponse;
+use OCA\Music\Service\PlaylistFileService;
+use OCA\Music\Service\Scanner;
+
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
+use OCP\AppFramework\Http\Attribute\PublicPage;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\Files\File;
@@ -21,12 +29,6 @@ use OCP\Files\Folder;
 use OCP\IRequest;
 use OCP\Share\IManager;
 use OCP\Share\Exceptions\ShareNotFound;
-
-use OCA\Music\AppFramework\Core\Logger;
-use OCA\Music\Http\ErrorResponse;
-use OCA\Music\Http\FileStreamResponse;
-use OCA\Music\Service\PlaylistFileService;
-use OCA\Music\Service\Scanner;
 
 /**
  * End-points for shared audio file handling. Methods of this class may be
@@ -54,10 +56,8 @@ class ShareController extends Controller {
 		$this->logger = $logger;
 	}
 
-	/**
-	 * @PublicPage
-	 * @NoCSRFRequired
-	 */
+	#[PublicPage]
+	#[NoCSRFRequired]
 	public function fileInfo(string $token, int $fileId) : JSONResponse {
 		$share = $this->shareManager->getShareByToken($token);
 		$fileOwner = $share->getShareOwner();
@@ -86,10 +86,8 @@ class ShareController extends Controller {
 		}
 	}
 
-	/**
-	 * @PublicPage
-	 * @NoCSRFRequired
-	 */
+	#[PublicPage]
+	#[NoCSRFRequired]
 	public function download(string $token, int $fileId) : Response {
 		try {
 			$sharedFolder = $this->getSharedFolder($token);
@@ -106,10 +104,8 @@ class ShareController extends Controller {
 		}
 	}
 
-	/**
-	 * @PublicPage
-	 * @NoCSRFRequired
-	 */
+	#[PublicPage]
+	#[NoCSRFRequired]
 	public function parsePlaylist(string $token, int $fileId) : JSONResponse {
 		try {
 			$sharedFolder = $this->getSharedFolder($token);

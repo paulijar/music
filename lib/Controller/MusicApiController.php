@@ -9,18 +9,10 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Morris Jobke 2013, 2014
- * @copyright Pauli Järvinen 2017 - 2025
+ * @copyright Pauli Järvinen 2017 - 2026
  */
 
 namespace OCA\Music\Controller;
-
-use OCA\Music\Service\Scrobbler;
-use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\DataDisplayResponse;
-use OCP\AppFramework\Http\JSONResponse;
-use OCP\AppFramework\Http\Response;
-use OCP\IRequest;
 
 use OCA\Music\AppFramework\BusinessLayer\BusinessLayerException;
 use OCA\Music\AppFramework\Core\Logger;
@@ -36,8 +28,19 @@ use OCA\Music\Service\FileSystemService;
 use OCA\Music\Service\LastfmService;
 use OCA\Music\Service\LibrarySettings;
 use OCA\Music\Service\Scanner;
+use OCA\Music\Service\Scrobbler;
 use OCA\Music\Utility\HttpUtil;
 use OCA\Music\Utility\Util;
+
+use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
+use OCP\AppFramework\Http\Attribute\UseSession;
+use OCP\AppFramework\Http\DataDisplayResponse;
+use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Http\Response;
+use OCP\IRequest;
 
 class MusicApiController extends Controller {
 
@@ -88,10 +91,8 @@ class MusicApiController extends Controller {
 		$this->scrobbler = $scrobbler;
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function prepareCollection() : JSONResponse {
 		$hash = $this->collectionService->getCachedJsonHash();
 		if ($hash === null) {
@@ -108,10 +109,8 @@ class MusicApiController extends Controller {
 		]);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function collection() : DataDisplayResponse {
 		$collectionJson = $this->collectionService->getJson();
 		$response = new DataDisplayResponse($collectionJson);
@@ -129,20 +128,16 @@ class MusicApiController extends Controller {
 		return $response;
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function folders() : JSONResponse {
 		$musicFolder = $this->librarySettings->getFolder($this->userId);
 		$folders = $this->fileSystemService->findAllFolders($this->userId, $musicFolder);
 		return new JSONResponse($folders);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function genres() : JSONResponse {
 		$genres = $this->genreBusinessLayer->findAllWithTrackIds($this->userId);
 		$unscanned =  $this->trackBusinessLayer->findFilesWithoutScannedGenre($this->userId);
@@ -152,10 +147,8 @@ class MusicApiController extends Controller {
 		]);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function trackByFileId(int $fileId) : JSONResponse {
 		$track = $this->trackBusinessLayer->findByFileId($fileId, $this->userId);
 		if ($track !== null) {
@@ -165,21 +158,18 @@ class MusicApiController extends Controller {
 		}
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function getScanState() : JSONResponse {
 		return new JSONResponse($this->scanner->getStatusOfLibraryFiles($this->userId));
 	}
 
 	/**
 	 * @param string|int|bool|null $finalize
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 * @UseSession to keep the session reserved while execution in progress
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
+	#[UseSession] // to keep the session reserved while execution in progress
 	public function scan(string $files, /*mixed*/ $finalize) : JSONResponse {
 		// extract the parameters
 		$fileIds = \array_map('intval', \explode(',', $files));
@@ -201,31 +191,25 @@ class MusicApiController extends Controller {
 		]);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 * @UseSession to keep the session reserved while execution in progress
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
+	#[UseSession] // to keep the session reserved while execution in progress
 	public function removeScanned(string $files) : JSONResponse {
 		$fileIds = \array_map('intval', \explode(',', $files));
 		$anythingRemoved = $this->scanner->deleteAudio($fileIds, [$this->userId]);
 		return new JSONResponse(['filesRemoved' => $anythingRemoved]);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 * @UseSession to keep the session reserved while execution in progress
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
+	#[UseSession] // to keep the session reserved while execution in progress
 	public function resetScanned() : JSONResponse {
 		$this->maintenance->resetLibrary($this->userId);
 		return new JSONResponse(['success' => true]);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function download(int $fileId) : Response {
 		$nodes = $this->scanner->resolveUserFolder($this->userId)->getById($fileId);
 		$node = $nodes[0] ?? null;
@@ -236,10 +220,8 @@ class MusicApiController extends Controller {
 		return new ErrorResponse(Http::STATUS_NOT_FOUND, 'file not found');
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function filePath(int $fileId) : JSONResponse {
 		$userFolder = $this->scanner->resolveUserFolder($this->userId);
 		$nodes = $userFolder->getById($fileId);
@@ -252,10 +234,8 @@ class MusicApiController extends Controller {
 		}
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function fileInfo(int $fileId) : JSONResponse {
 		$userFolder = $this->scanner->resolveUserFolder($this->userId);
 		$info = $this->scanner->getFileInfo($fileId, $this->userId, $userFolder);
@@ -266,10 +246,8 @@ class MusicApiController extends Controller {
 		}
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function fileDetails(int $fileId) : JSONResponse {
 		$userFolder = $this->scanner->resolveUserFolder($this->userId);
 		$details = $this->detailsService->getDetails($fileId, $userFolder);
@@ -288,10 +266,8 @@ class MusicApiController extends Controller {
 		}
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function findDetails(?string $song, ?string $artist) : JSONResponse {
 		if (empty($song) || empty($artist)) {
 			return new ErrorResponse(Http::STATUS_BAD_REQUEST, 'Song or artist name argument missing');
@@ -300,10 +276,8 @@ class MusicApiController extends Controller {
 		}
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function fileLyrics(int $fileId, ?string $format) : Response {
 		$userFolder = $this->scanner->resolveUserFolder($this->userId);
 		if ($format == 'plaintext') {
@@ -320,10 +294,8 @@ class MusicApiController extends Controller {
 		return new ErrorResponse(Http::STATUS_NOT_FOUND);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function scrobble(int $trackId) : JSONResponse {
 		try {
 			$this->scrobbler->recordTrackPlayed($trackId, $this->userId);
@@ -335,9 +307,9 @@ class MusicApiController extends Controller {
 
 	/**
 	 * @param string|int|bool|null $embedCoverArt
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function albumDetails(int $albumId, /*mixed*/ $embedCoverArt=false) : JSONResponse {
 		$embedCoverArt = \filter_var($embedCoverArt, FILTER_VALIDATE_BOOLEAN);
 		try {
@@ -358,10 +330,8 @@ class MusicApiController extends Controller {
 		}
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function artistDetails(int $artistId) : JSONResponse {
 		try {
 			$info = $this->lastfmService->getArtistInfo($artistId, $this->userId);
@@ -371,10 +341,8 @@ class MusicApiController extends Controller {
 		}
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function similarArtists(int $artistId) : JSONResponse {
 		try {
 			$similar = $this->lastfmService->getSimilarArtists($artistId, $this->userId, /*includeNotPresent=*/true);

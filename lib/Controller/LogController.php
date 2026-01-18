@@ -9,12 +9,14 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Morris Jobke 2013, 2014
- * @copyright Pauli Järvinen 2020 - 2025
+ * @copyright Pauli Järvinen 2020 - 2026
  */
 
 namespace OCA\Music\Controller;
 
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
@@ -28,10 +30,8 @@ class LogController extends Controller {
 		$this->logger = $logger;
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function log(?string $message) : JSONResponse {
 		$this->logger->debug('JS: ' . $message);
 		return new JSONResponse(['success' => true]);
