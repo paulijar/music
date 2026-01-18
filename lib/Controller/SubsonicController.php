@@ -14,7 +14,6 @@ namespace OCA\Music\Controller;
 
 use OCA\Music\AppFramework\BusinessLayer\BusinessLayerException;
 use OCA\Music\AppFramework\Core\Logger;
-use OCA\Music\AppFramework\Utility\MethodAnnotationReader;
 use OCA\Music\AppFramework\Utility\RequestParameterExtractor;
 use OCA\Music\AppFramework\Utility\RequestParameterExtractorException;
 
@@ -37,6 +36,7 @@ use OCA\Music\Db\PodcastEpisode;
 use OCA\Music\Db\SortBy;
 use OCA\Music\Db\Track;
 
+use OCA\Music\Http\Attribute\SubsonicAPI;
 use OCA\Music\Http\FileResponse;
 use OCA\Music\Http\FileStreamResponse;
 use OCA\Music\Http\XmlResponse;
@@ -208,8 +208,8 @@ class SubsonicController extends ApiController {
 
 		// Allow calling any functions annotated to be part of the API
 		if (\method_exists($this, $method)) {
-			$annotationReader = new MethodAnnotationReader($this, $method);
-			if ($annotationReader->hasAnnotation('SubsonicAPI')) {
+			$reflection = new \ReflectionMethod($this, $method);
+			if (!empty($reflection->getAttributes(SubsonicAPI::class))) {
 				$parameterExtractor = new RequestParameterExtractor($this->request);
 				try {
 					$parameterValues = $parameterExtractor->getParametersForMethod($this, $method);
@@ -234,16 +234,12 @@ class SubsonicController extends ApiController {
 	 * -------------------------------------------------------------------------
 	 */
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function ping() : array {
 		return [];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getLicense() : array {
 		return [
 			'license' => [
@@ -252,9 +248,7 @@ class SubsonicController extends ApiController {
 		];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getMusicFolders() : array {
 		// Only single root folder is supported
 		return [
@@ -265,9 +259,7 @@ class SubsonicController extends ApiController {
 		];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getIndexes(?int $musicFolderId) : array {
 		if ($musicFolderId === self::FOLDER_ID_FOLDERS) {
 			return $this->getIndexesForFolders();
@@ -276,9 +268,7 @@ class SubsonicController extends ApiController {
 		}
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getMusicDirectory(string $id) : array {
 		if (StringUtil::startsWith($id, 'folder-')) {
 			return $this->getMusicDirectoryForFolder($id);
@@ -293,9 +283,7 @@ class SubsonicController extends ApiController {
 		}
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getAlbumList(
 			string $type, ?string $genre, ?int $fromYear, ?int $toYear, int $size=10, int $offset=0) : array {
 		$albums = $this->albumsForGetAlbumList($type, $genre, $fromYear, $toYear, $size, $offset);
@@ -304,9 +292,7 @@ class SubsonicController extends ApiController {
 		]];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getAlbumList2(
 			string $type, ?string $genre, ?int $fromYear, ?int $toYear, int $size=10, int $offset=0) : array {
 		/*
@@ -322,16 +308,12 @@ class SubsonicController extends ApiController {
 		]];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getArtists() : array {
 		return $this->getIndexesForArtists('artists');
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getArtist(string $id) : array {
 		$artistId = self::ripIdPrefix($id); // get rid of 'artist-' prefix
 
@@ -344,51 +326,37 @@ class SubsonicController extends ApiController {
 		return ['artist' => $artistNode];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getArtistInfo(string $id, bool $includeNotPresent=false) : Response {
 		return $this->doGetArtistInfo('artistInfo', $id, $includeNotPresent);
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getArtistInfo2(string $id, bool $includeNotPresent=false) : Response {
 		return $this->doGetArtistInfo('artistInfo2', $id, $includeNotPresent);
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getAlbumInfo(string $id) : Response {
 		return $this->doGetAlbumInfo($id);
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getAlbumInfo2(string $id) : Response {
 		return $this->doGetAlbumInfo($id);
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getSimilarSongs(string $id, int $count=50) : array {
 		return $this->doGetSimilarSongs('similarSongs', $id, $count);
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getSimilarSongs2(string $id, int $count=50) : array {
 		return $this->doGetSimilarSongs('similarSongs2', $id, $count);
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getTopSongs(string $artist, int $count=50) : array {
 		$tracks = $this->lastfmService->getTopTracks($artist, $this->user(), $count);
 		return ['topSongs' => [
@@ -396,9 +364,7 @@ class SubsonicController extends ApiController {
 		]];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getAlbum(string $id) : array {
 		$albumId = self::ripIdPrefix($id); // get rid of 'album-' prefix
 
@@ -410,18 +376,14 @@ class SubsonicController extends ApiController {
 		return ['album' => $albumNode];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getSong(string $id) : array {
 		$trackId = self::ripIdPrefix($id); // get rid of 'track-' prefix
 		$track = $this->trackBusinessLayer->find($trackId, $this->user());
 		return ['song' => $this->trackToApi($track)];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getRandomSongs(?string $genre, ?string $fromYear, ?string $toYear, int $size=10) : array {
 		$size = \min($size, 500); // the API spec limits the maximum amount to 500
 
@@ -446,9 +408,7 @@ class SubsonicController extends ApiController {
 		]];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getCoverArt(string $id, ?int $size) : Response {
 		list($type, $entityId) = self::parseEntityId($id);
 		$userId = $this->user();
@@ -474,9 +434,7 @@ class SubsonicController extends ApiController {
 		return $this->subsonicErrorResponse(70, "entity $id has no cover");
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getLyrics(?string $artist, ?string $title) : array {
 		$userId = $this->user();
 		$matches = $this->trackBusinessLayer->findAllByNameArtistOrAlbum($title, $artist, null, $userId);
@@ -506,8 +464,8 @@ class SubsonicController extends ApiController {
 
 	/**
 	 * OpenSubsonic extension
-	 * @SubsonicAPI
 	 */
+	#[SubsonicAPI]
 	protected function getLyricsBySongId(string $id) : array {
 		$userId = $this->user();
 		$trackId = self::ripIdPrefix($id); // get rid of 'track-' prefix
@@ -537,17 +495,13 @@ class SubsonicController extends ApiController {
 		]];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function stream(string $id) : Response {
 		// We don't support transcoding, so 'stream' and 'download' act identically
 		return $this->download($id);
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function download(string $id) : Response {
 		list($type, $entityId) = self::parseEntityId($id);
 
@@ -572,27 +526,21 @@ class SubsonicController extends ApiController {
 		}
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function search2(string $query, int $artistCount=20, int $artistOffset=0,
 			int $albumCount=20, int $albumOffset=0, int $songCount=20, int $songOffset=0) : array {
 		$results = $this->doSearch($query, $artistCount, $artistOffset, $albumCount, $albumOffset, $songCount, $songOffset);
 		return $this->searchResponse('searchResult2', $results, /*$useNewApi=*/false);
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function search3(string $query, int $artistCount=20, int $artistOffset=0,
 			int $albumCount=20, int $albumOffset=0, int $songCount=20, int $songOffset=0) : array {
 		$results = $this->doSearch($query, $artistCount, $artistOffset, $albumCount, $albumOffset, $songCount, $songOffset);
 		return $this->searchResponse('searchResult3', $results, /*$useNewApi=*/true);
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getGenres() : array {
 		$genres = $this->genreBusinessLayer->findAll($this->user(), SortBy::Name);
 
@@ -605,9 +553,7 @@ class SubsonicController extends ApiController {
 		]];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getSongsByGenre(string $genre, int $count=10, int $offset=0) : array {
 		$tracks = $this->findTracksByGenre($genre, $count, $offset);
 
@@ -616,9 +562,7 @@ class SubsonicController extends ApiController {
 		]];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getPlaylists() : array {
 		$userId = $this->user();
 		$playlists = $this->playlistBusinessLayer->findAll($userId);
@@ -632,9 +576,7 @@ class SubsonicController extends ApiController {
 		]];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getPlaylist(int $id) : array {
 		$userId = $this->user();
 		$playlist = $this->playlistBusinessLayer->find($id, $userId);
@@ -649,9 +591,7 @@ class SubsonicController extends ApiController {
 		return ['playlist' => $playlistNode];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function createPlaylist(?string $name, ?string $playlistId, array $songId) : array {
 		$songIds = \array_map('self::ripIdPrefix', $songId);
 
@@ -671,9 +611,7 @@ class SubsonicController extends ApiController {
 		return $this->getPlaylist($playlistId);
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function updatePlaylist(int $playlistId, ?string $name, ?string $comment, array $songIdToAdd, array $songIndexToRemove) : array {
 		$songIdsToAdd = \array_map('self::ripIdPrefix', $songIdToAdd);
 		$songIndicesToRemove = \array_map('intval', $songIndexToRemove);
@@ -698,17 +636,13 @@ class SubsonicController extends ApiController {
 		return [];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function deletePlaylist(int $id) : array {
 		$this->playlistBusinessLayer->delete($id, $this->user());
 		return [];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getInternetRadioStations() : array {
 		$stations = $this->radioStationBusinessLayer->findAll($this->user());
 
@@ -722,33 +656,25 @@ class SubsonicController extends ApiController {
 		]];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function createInternetRadioStation(string $streamUrl, string $name, ?string $homepageUrl) : array {
 		$this->radioStationBusinessLayer->create($this->user(), $name, $streamUrl, $homepageUrl);
 		return [];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function updateInternetRadioStation(int $id, string $streamUrl, string $name, ?string $homepageUrl) : array {
 		$this->radioStationBusinessLayer->updateStation($id, $this->user(), $name, $streamUrl, $homepageUrl);
 		return [];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function deleteInternetRadioStation(int $id) : array {
 		$this->radioStationBusinessLayer->delete($id, $this->user());
 		return [];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getUser(string $username) : array {
 		$userId = $this->user();
 		if (\mb_strtolower($username) != \mb_strtolower($userId)) {
@@ -779,16 +705,12 @@ class SubsonicController extends ApiController {
 		];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getUsers() : array {
 		throw new SubsonicException("{$this->user()} is not authorized to get details for other users.", 50);
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getAvatar(string $username) : Response {
 		$userId = $this->user();
 		if (\mb_strtolower($username) != \mb_strtolower($userId)) {
@@ -806,8 +728,8 @@ class SubsonicController extends ApiController {
 
 	/**
 	 * OpenSubsonic extension
-	 * @SubsonicAPI
 	 */
+	#[SubsonicAPI]
 	protected function tokenInfo() : array {
 		// This method is intended to be used when API key is used for authentication and the user name is not
 		// directly available for the client. But it shouldn't hurt to allow calling this regardless of the
@@ -815,9 +737,7 @@ class SubsonicController extends ApiController {
 		return ['tokenInfo' => ['username' => $this->user()]];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function scrobble(array $id, array $time, bool $submission = true) : array {
 		// suppress non-submission scrobbles: we retrieve the nowPlaying track from recent plays
 		// todo: track "now playing" separately
@@ -846,9 +766,7 @@ class SubsonicController extends ApiController {
 		return [];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function star(array $id, array $albumId, array $artistId) : array {
 		$targetIds = self::parseStarringParameters($id, $albumId, $artistId);
 		$userId = $this->user();
@@ -862,9 +780,7 @@ class SubsonicController extends ApiController {
 		return [];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function unstar(array $id, array $albumId, array $artistId) : array {
 		$targetIds = self::parseStarringParameters($id, $albumId, $artistId);
 		$userId = $this->user();
@@ -878,9 +794,7 @@ class SubsonicController extends ApiController {
 		return [];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function setRating(string $id, int $rating) : array {
 		$rating = (int)Util::limit($rating, 0, 5);
 		list($type, $entityId) = self::parseEntityId($id);
@@ -909,25 +823,19 @@ class SubsonicController extends ApiController {
 		return [];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getStarred() : array {
 		$starred = $this->doGetStarred();
 		return $this->searchResponse('starred', $starred, /*$useNewApi=*/false);
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getStarred2() : array {
 		$starred = $this->doGetStarred();
 		return $this->searchResponse('starred2', $starred, /*$useNewApi=*/true);
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getVideos() : array {
 		// Feature not supported, return an empty list
 		return [
@@ -937,9 +845,7 @@ class SubsonicController extends ApiController {
 		];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getPodcasts(?string $id, bool $includeEpisodes = true) : array {
 		if ($id !== null) {
 			$id = self::ripIdPrefix($id);
@@ -961,8 +867,8 @@ class SubsonicController extends ApiController {
 
 	/**
 	 * OpenSubsonic extension
-	 * @SubsonicAPI
 	 */
+	#[SubsonicAPI]
 	protected function getPodcastEpisode(string $id) : array {
 		$id = self::ripIdPrefix($id);
 		$episode = $this->podcastService->getEpisode($id, $this->user());
@@ -976,9 +882,7 @@ class SubsonicController extends ApiController {
 		];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getNewestPodcasts(int $count=20) : array {
 		$episodes = $this->podcastService->getLatestEpisodes($this->user(), $count);
 
@@ -989,17 +893,13 @@ class SubsonicController extends ApiController {
 		];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function refreshPodcasts() : array {
 		$this->podcastService->updateAllChannels($this->user());
 		return [];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function createPodcastChannel(string $url) : array {
 		$result = $this->podcastService->subscribe($url, $this->user());
 
@@ -1017,9 +917,7 @@ class SubsonicController extends ApiController {
 		}
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function deletePodcastChannel(string $id) : array {
 		$id = self::ripIdPrefix($id);
 		$status = $this->podcastService->unsubscribe($id, $this->user());
@@ -1034,9 +932,7 @@ class SubsonicController extends ApiController {
 		}
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getBookmarks() : array {
 		$userId = $this->user();
 		$bookmarkNodes = [];
@@ -1065,18 +961,14 @@ class SubsonicController extends ApiController {
 		return ['bookmarks' => ['bookmark' => $bookmarkNodes]];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function createBookmark(string $id, int $position, ?string $comment) : array {
 		list($type, $entityId) = self::parseBookmarkIdParam($id);
 		$this->bookmarkBusinessLayer->addOrUpdate($this->user(), $type, $entityId, $position, $comment);
 		return [];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function deleteBookmark(string $id) : array {
 		list($type, $entityId) = self::parseBookmarkIdParam($id);
 
@@ -1086,9 +978,7 @@ class SubsonicController extends ApiController {
 		return [];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getPlayQueue() : array {
 		$queueByIndex = $this->getPlayQueueByIndex();
 		$queue = $queueByIndex['playQueueByIndex'];
@@ -1104,8 +994,8 @@ class SubsonicController extends ApiController {
 
 	/**
 	 * OpenSubsonic extension
-	 * @SubsonicAPI
 	 */
+	#[SubsonicAPI]
 	protected function getPlayQueueByIndex() : array {
 		/** @var array|false $playQueue */
 		$playQueue = \json_decode($this->configManager->getUserValue($this->user(), $this->appName, 'play_queue', 'false'), true);
@@ -1142,9 +1032,7 @@ class SubsonicController extends ApiController {
 		return ['playQueueByIndex' => $playQueue];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function savePlayQueue(array $id, string $c, ?string $current = null, ?int $position = null) : array {
 		if ($current === null && !empty($id)) {
 			throw new SubsonicException('Parameter `current` is required for a non-empty queue', 10);
@@ -1166,8 +1054,8 @@ class SubsonicController extends ApiController {
 
 	/**
 	 * OpenSubsonic extension
-	 * @SubsonicAPI
 	 */
+	#[SubsonicAPI]
 	protected function savePlayQueueByIndex(array $id, string $c, ?int $currentIndex = null, ?int $position = null) : array {
 		if ($currentIndex === null && !empty($id)) {
 			throw new SubsonicException('Parameter `currentIndex` is required for a non-empty queue', 10);
@@ -1194,9 +1082,7 @@ class SubsonicController extends ApiController {
 		return [];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getScanStatus() : array {
 		return ['scanStatus' => [
 			'scanning' => false,
@@ -1204,9 +1090,7 @@ class SubsonicController extends ApiController {
 		]];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getNowPlaying() : array {
 		// Note: This is documented to return latest play of all users on the server but we don't want to
 		// provide access to other people's data => Always return just this user's data.
@@ -1224,9 +1108,7 @@ class SubsonicController extends ApiController {
 		return ['nowPlaying' => ['entry' => $recent]];
 	}
 
-	/**
-	 * @SubsonicAPI
-	 */
+	#[SubsonicAPI]
 	protected function getOpenSubsonicExtensions() : array {
 		return ['openSubsonicExtensions' => [
 			[ 'name' => 'apiKeyAuthentication', 'versions' => [1] ],

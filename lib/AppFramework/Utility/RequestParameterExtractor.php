@@ -6,7 +6,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2021 - 2025
+ * @copyright Pauli Järvinen 2021 - 2026
  */
 
 namespace OCA\Music\AppFramework\Utility;
@@ -14,7 +14,7 @@ namespace OCA\Music\AppFramework\Utility;
 use OCP\IRequest;
 
 /**
- * Reads and parses annotations from doc comments
+ * Match HTTP request arguments to method parameters for Subsonic or Ampache API
  */
 class RequestParameterExtractor {
 	private IRequest $request;
