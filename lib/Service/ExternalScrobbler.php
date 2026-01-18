@@ -138,6 +138,13 @@ class ExternalScrobbler implements Scrobbler {
 		$tracks = $this->trackBusinessLayer->findById([$trackId], $userId);
 		$this->albumBusinessLayer->injectAlbumsToTracks($tracks, $userId);
 		foreach ($tracks as $i => $track) {
+			// Last.fm's docs say a track must be >30 seconds in order to scrobble
+			// This scrobbler uses the Last.fm Scrobbler 2.0 spec, so we follow that rule
+			// https://www.last.fm/api/scrobbling#when-is-a-scrobble-a-scrobble
+			if ($track->getLength() <= 30) {
+				return;
+			}
+
 			$trackData = $this->generateTrackData($track);
 			if (isset($trackData['albumArtist'])) {
 				$scrobbleData["albumArtist[{$i}]"] = $trackData['albumArtist'];
