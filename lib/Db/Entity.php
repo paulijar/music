@@ -51,14 +51,9 @@ class Entity extends \OCP\AppFramework\Db\Entity {
 	/**
 	 * Override the property setter from the platform base class.
 	 *
-	 * NOTE: Type declarations should not be used on the parameters because OC and NC < 26
-	 * don't use them in the parent class. On those platforms, using the declarations in this
-	 * override method would break the PHP contravariance rules.
-	 *
-	 * @param string $name
 	 * @param mixed[] $args
 	 */
-	protected function setter($name, $args) : void {
+	protected function setter(string $name, array $args) : void {
 		parent::setter($name, $args);
 		/**
 		 * The parent implementation has such a feature that it doesn't mark a field updated

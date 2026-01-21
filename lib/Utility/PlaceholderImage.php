@@ -5,7 +5,7 @@ declare(strict_types=1);
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  * @copyright 2018 John Molakvoæ <skjnldsv@protonmail.com>
- * @copyright 2022 - 2025 Pauli Järvinen
+ * @copyright 2022 - 2026 Pauli Järvinen
  *
  * @author Christopher Schäpers <kondou@ts.unde.re>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -53,6 +53,7 @@ class PlaceholderImage {
 		$backgroundColor = self::getBackgroundColor($seed);
 
 		$im = \imagecreatetruecolor($size, $size);
+		\assert($im instanceof \GdImage);
 		$background = \imagecolorallocate(
 			$im,
 			$backgroundColor->red(),
@@ -114,14 +115,14 @@ class PlaceholderImage {
 	/**
 	 * Calculate real image ttf center
 	 *
-	 * @param mixed $image Prior to PHP 8.0 a resource and from 8.0 onwards a GdImage
+	 * @param \GdImage $image
 	 * @param string $text text string
 	 * @param string $font font path
 	 * @param int $size font size
 	 * @param int $angle
 	 * @return int[]
 	 */
-	private static function imageTtfCenter($image, string $text, string $font, int $size, int $angle = 0) : array {
+	private static function imageTtfCenter(\GdImage $image, string $text, string $font, int $size, int $angle = 0) : array {
 		// Image width & height
 		$xi = \imagesx($image);
 		$yi = \imagesy($image);

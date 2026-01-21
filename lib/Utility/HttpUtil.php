@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2022 - 2025
+ * @copyright Pauli Järvinen 2022 - 2026
  */
 
 namespace OCA\Music\Utility;
@@ -32,12 +32,7 @@ class HttpUtil {
 
 		$status_code = $resolved['status_code'];
 		if ($status_code >= 200 && $status_code < 300) {
-			// The length parameter of file_get_contents isn't nullable prior to PHP8.0
-			if ($maxLength === null) {
-				$content = @\file_get_contents($resolved['url'], false, $context);
-			} else {
-				$content = @\file_get_contents($resolved['url'], false, $context, 0, $maxLength);
-			}
+			$content = @\file_get_contents($resolved['url'], false, $context, 0, $maxLength);
 		} else {
 			$content = false;
 		}
@@ -96,9 +91,7 @@ class HttpUtil {
 	private static function getUrlHeaders(string $url, $context) : array {
 		$result = null;
 		if (self::isUrlSchemeOneOf($url, self::ALLOWED_SCHEMES)) {
-			// the type of the second parameter of get_header has changed in PHP 8.0
-			$associative = \version_compare(\phpversion(), '8.0', '<') ? 0 : false;
-			$rawHeaders = @\get_headers($url, /** @scrutinizer ignore-type */ $associative, $context);
+			$rawHeaders = @\get_headers($url, /* associative= */ false, $context);
 
 			if ($rawHeaders !== false) {
 				$result = self::parseHeaders($rawHeaders);
