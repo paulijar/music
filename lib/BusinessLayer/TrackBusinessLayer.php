@@ -226,6 +226,23 @@ class TrackBusinessLayer extends BusinessLayer implements Scrobbler {
 		if (!$this->mapper->recordTrackPlayed($trackId, $userId, $timeOfPlay)) {
 			throw new BusinessLayerException("Track with ID $trackId was not found");
 		}
+		try {
+			$nowPlaying = $this->getNowPlaying($userId);
+			$track = $nowPlaying['track'];
+			$nowPlayingTimestamp = $nowPlaying['timeOfPlay'];
+
+			// prevent the same track from getting an updated timestamp until the track is played through
+			if ($track->getId() === $trackId && $timeOfPlay->getTimestamp() - $nowPlayingTimestamp < $track->getLength()) {
+				return;
+			}
+
+			// rate-limit updates of now playing track when calling from recordTrackPlayed
+			if ($timeOfPlay->getTimestamp() < $nowPlayingTimestamp + 3) {
+				return;
+			}
+		} catch (BusinessLayerException $e) {
+			// malformed data, we can overwrite it no problem
+		}
 		$this->setNowPlaying($trackId, $userId, $timeOfPlay);
 	}
 
