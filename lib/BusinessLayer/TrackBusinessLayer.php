@@ -17,7 +17,7 @@ namespace OCA\Music\BusinessLayer;
 use OCA\Music\AppFramework\BusinessLayer\BusinessLayer;
 use OCA\Music\AppFramework\BusinessLayer\BusinessLayerException;
 use OCA\Music\AppFramework\Core\Logger;
-
+use OCA\Music\Db\Cache;
 use OCA\Music\Db\MatchMode;
 use OCA\Music\Db\SortBy;
 use OCA\Music\Db\TrackMapper;
@@ -28,7 +28,6 @@ use OCA\Music\Utility\ArrayUtil;
 use OCA\Music\Utility\StringUtil;
 
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\IConfig;
 
 /**
  * Base class functions with the actually used inherited types to help IDE and Scrutinizer:
@@ -40,7 +39,7 @@ use OCP\IConfig;
  */
 class TrackBusinessLayer extends BusinessLayer implements Scrobbler {
 
-	public function __construct(TrackMapper $trackMapper, private FileSystemService $fileSystemService, private Logger $logger, private IConfig $config) {
+	public function __construct(TrackMapper $trackMapper, private FileSystemService $fileSystemService, private Logger $logger, private Cache $cache) {
 		parent::__construct($trackMapper);
 	}
 
@@ -255,7 +254,7 @@ class TrackBusinessLayer extends BusinessLayer implements Scrobbler {
 			'trackId' => $trackId,
 			'timeOfPlay' => ($timeOfPlay ?? new \DateTime())->getTimestamp()
 		];
-		$this->config->setUserValue($userId, 'music', 'music.nowPlaying', \json_encode($data));
+		$this->cache->set($userId, 'nowPlaying', \json_encode($data));
 	}
 
 	/**
@@ -264,7 +263,7 @@ class TrackBusinessLayer extends BusinessLayer implements Scrobbler {
 	 * @throws BusinessLayerException
 	 */
 	public function getNowPlaying(string $userId) : array {
-		$nowPlayingData = \json_decode($this->config->getUserValue($userId, 'music', 'music.nowPlaying', '{}'), true);
+		$nowPlayingData = \json_decode($this->cache->get($userId, 'nowPlaying') ?? '{}', true);
 		if (!isset($nowPlayingData['trackId'], $nowPlayingData['timeOfPlay'])) {
 			throw new BusinessLayerException('Malformed now playing data');
 		}
