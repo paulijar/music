@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2020 - 2024
+ * @copyright Pauli Järvinen 2020 - 2026
  */
 
 OCA.Music = OCA.Music || {};
@@ -105,30 +105,8 @@ OCA.Music.initPlaylistTabView = function(playlistMimes) {
 	}
 	_.extend(PlaylistTabView.prototype, OC.Backbone.Events);
 
-	// Registration before NC28
-	if (OCA.Files?.DetailTabView) {
-		OCA.Music.playlistTabView = new PlaylistTabView();
-
-		const WrappedPlaylistTabView = OCA.Files.DetailTabView.extend({
-			id: OCA.Music.playlistTabView.id,
-			className: 'tab musicPlaylistTabView',
-			getLabel: () => OCA.Music.playlistTabView.name,
-			getIcon: () => OCA.Music.playlistTabView.icon,
-			canDisplay: OCA.Music.playlistTabView.enabled,
-			render: function() {
-				OCA.Music.playlistTabView.$el = this.$el;
-				OCA.Music.playlistTabView.populate(this.getFileInfo());
-			}
-		});
-		OC.Plugins.register('OCA.Files.FileList', {
-			attach: function(fileList) {
-				fileList.registerTabView(new WrappedPlaylistTabView());
-			}
-		});
-	}
-
-	// Registration after NC28
-	else if (OCA.Files?.Sidebar) {
+	// Registration for NC versions 28 ... 32
+	if (OCA.Files?.Sidebar) {
 		OCA.Music.playlistTabView = new PlaylistTabView();
 
 		OCA.Files.Sidebar.registerTab(new OCA.Files.Sidebar.Tab({
