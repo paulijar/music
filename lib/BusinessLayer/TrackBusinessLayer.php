@@ -266,7 +266,7 @@ class TrackBusinessLayer extends BusinessLayer implements Scrobbler {
 
 	/**
 	 * Return the "now playing" track along with its time of play
-	 * @return ?array{track: Track, timeOfPlay: int}, null if no data available
+	 * @return ?array{track: Track, timeOfPlay: int} - null if no data available
 	 * @throws BusinessLayerException if data available but somehow incorrect
 	 */
 	public function getNowPlaying(string $userId) : ?array {
