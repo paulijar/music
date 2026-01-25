@@ -7,7 +7,8 @@
 - Drop support for Internet Explorer
 
 ### Added
-- Support for Nextcloud 33 (tested on beta2)
+- Partial support for Nextcloud 33 (tested on rc1)
+  * The integration to the Files app does not work on NC 33
 - Support for PHP 8.5
 
 ### Changed
