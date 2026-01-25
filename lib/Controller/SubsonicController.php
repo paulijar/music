@@ -54,6 +54,7 @@ use OCA\Music\Service\Scrobbler;
 
 use OCA\Music\Utility\AppInfo;
 use OCA\Music\Utility\ArrayUtil;
+use OCA\Music\Utility\Concurrency;
 use OCA\Music\Utility\HttpUtil;
 use OCA\Music\Utility\Random;
 use OCA\Music\Utility\StringUtil;
@@ -105,6 +106,7 @@ class SubsonicController extends ApiController {
 	private Logger $logger;
 	private IConfig $configManager;
 	private Scrobbler $scrobbler;
+	private Concurrency $concurrency;
 	private ?string $userId;
 	private ?int $keyId;
 	private array $ignoredArticles;
@@ -136,7 +138,8 @@ class SubsonicController extends ApiController {
 			Random $random,
 			Logger $logger,
 			IConfig $configManager,
-			Scrobbler $scrobbler
+			Scrobbler $scrobbler,
+			Concurrency $concurrency
 	) {
 		parent::__construct($appName, $request, 'POST, GET', 'Authorization, Content-Type, Accept, X-Requested-With');
 
@@ -163,6 +166,7 @@ class SubsonicController extends ApiController {
 		$this->logger = $logger;
 		$this->configManager = $configManager;
 		$this->scrobbler = $scrobbler;
+		$this->concurrency = $concurrency;
 		$this->userId = null;
 		$this->keyId = null;
 		$this->ignoredArticles = [];
@@ -744,6 +748,11 @@ class SubsonicController extends ApiController {
 		}
 
 		$userId = $this->user();
+
+		// Some clients make multiple calls to this method in so rapid succession that they get executed
+		// in parallel. Enforce serial execution of the critical section.
+		$mutex = $this->concurrency->mutexReserve($userId, 'scrobble');
+
 		foreach ($id as $index => $aId) {
 			list($type, $trackId) = self::parseEntityId($aId);
 			if ($type === 'track') {
@@ -760,6 +769,8 @@ class SubsonicController extends ApiController {
 				}
 			}
 		}
+
+		$this->concurrency->mutexRelease($mutex);
 
 		return [];
 	}
