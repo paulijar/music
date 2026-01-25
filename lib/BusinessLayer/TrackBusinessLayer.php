@@ -225,8 +225,16 @@ class TrackBusinessLayer extends BusinessLayer implements Scrobbler {
 		if (!$this->mapper->recordTrackPlayed($trackId, $userId, $timeOfPlay)) {
 			throw new BusinessLayerException("Track with ID $trackId was not found");
 		}
+
+		// Update also "now playing" if the client hasn't updated it separately
 		try {
 			$nowPlaying = $this->getNowPlaying($userId);
+		} catch (BusinessLayerException $e) {
+			// malformed data, we can overwrite it no problem
+			$nowPlaying = null;
+		}
+
+		if ($nowPlaying !== null) {
 			$track = $nowPlaying['track'];
 			$nowPlayingTimestamp = $nowPlaying['timeOfPlay'];
 
@@ -239,9 +247,8 @@ class TrackBusinessLayer extends BusinessLayer implements Scrobbler {
 			if ($timeOfPlay->getTimestamp() < $nowPlayingTimestamp + 3) {
 				return;
 			}
-		} catch (BusinessLayerException $e) {
-			// malformed data, we can overwrite it no problem
 		}
+
 		$this->setNowPlaying($trackId, $userId, $timeOfPlay);
 	}
 
@@ -259,11 +266,16 @@ class TrackBusinessLayer extends BusinessLayer implements Scrobbler {
 
 	/**
 	 * Return the "now playing" track along with its time of play
-	 * @return array{track: Track, timeOfPlay: int}
-	 * @throws BusinessLayerException
+	 * @return ?array{track: Track, timeOfPlay: int}, null if no data available
+	 * @throws BusinessLayerException if data available but somehow incorrect
 	 */
-	public function getNowPlaying(string $userId) : array {
-		$nowPlayingData = \json_decode($this->cache->get($userId, 'nowPlaying') ?? '{}', true);
+	public function getNowPlaying(string $userId) : ?array {
+		$rawData = $this->cache->get($userId, 'nowPlaying');
+		if ($rawData === null) {
+			return null;
+		}
+
+		$nowPlayingData = \json_decode($rawData, true);
 		if (!isset($nowPlayingData['trackId'], $nowPlayingData['timeOfPlay'])) {
 			throw new BusinessLayerException('Malformed now playing data');
 		}

@@ -1106,20 +1106,18 @@ class SubsonicController extends ApiController {
 		$apiTrack = [];
 		try {
 			$nowPlaying = $this->trackBusinessLayer->getNowPlaying($this->user());
-			$track = $nowPlaying['track'];
-			if (!empty($track)) {;
+			if ($nowPlaying !== null) {;
 				$now = new \DateTime();
-				$apiTrack = $this->tracksToApi([$track]);
-				$apiTrack[0]['username'] = $this->user();
-				$apiTrack[0]['minutesAgo'] = (int)(($now->getTimestamp() - $nowPlaying['timeOfPlay']) / 60);
-				$apiTrack[0]['playerId'] = 0; // dummy
+				$apiTrack = $this->trackToApi($nowPlaying['track']);
+				$apiTrack['username'] = $this->user();
+				$apiTrack['minutesAgo'] = (int)(($now->getTimestamp() - $nowPlaying['timeOfPlay']) / 60);
+				$apiTrack['playerId'] = 0; // dummy
 			}
 		} catch (BusinessLayerException $e) {
 			$this->logger->warning($e->getMessage());
 		}
 
-
-		return ['nowPlaying' => ['entry' => $apiTrack]];
+		return ['nowPlaying' => ['entry' => [$apiTrack]]];
 	}
 
 	#[SubsonicAPI]
