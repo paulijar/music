@@ -1,5 +1,3 @@
-# Cloned from ../l10n\sk_SK\music.po by duplicate-lang.py
-# 
 # Translators:
 # Marián Hvolka <marian.hvolka@stuba.sk>, 2013-2015
 # mehturt <mehturt@gmail.com>, 2014

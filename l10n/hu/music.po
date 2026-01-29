@@ -1,5 +1,3 @@
-# Cloned from ../l10n\hu_HU\music.po by duplicate-lang.py
-#
 # Translators:
 # bela erdei <bela@dandre.hu>, 2013
 # János Fehér <feher.janos@mindworks.hu>, 2014

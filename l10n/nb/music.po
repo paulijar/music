@@ -1,5 +1,3 @@
-# Cloned from ../l10n\nb_NO\music.po by duplicate-lang.py
-# 
 # Translators:
 # Allan Nordhøy <epost@anotheragency.no>, 2017
 # Espen Bye, 2014

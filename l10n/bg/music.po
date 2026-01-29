@@ -1,5 +1,3 @@
-# Cloned from ../l10n\bg_BG\music.po by duplicate-lang.py
-# 
 # Translators:
 # George Kamenov, 2014
 # Ivo, 2014

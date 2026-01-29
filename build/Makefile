@@ -34,7 +34,7 @@ deps:
 
 # localization
 l10n-clone:
-	python ./duplicate-lang.py --path=../l10n bg_BG:bg cs_CZ:cs de:de_AT de:de_CH de:de_DE fi_FI:fi hu_HU:hu nb_NO:nb sk_SK:sk th_TH:th
+	python ./duplicate-lang.py --path=../l10n de:de_DE
 
 l10n-extract:
 	npm run l10n-extract

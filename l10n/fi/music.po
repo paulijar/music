@@ -1,5 +1,3 @@
-# Cloned from ../l10n\fi_FI\music.po by duplicate-lang.py
-#
 # Translators:
 # Jiri Grönroos <jiri.gronroos@iki.fi>, 2013-2015
 # Pauli Järvinen <pauli.jarvinen@gmail.com>, 2017

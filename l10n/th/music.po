@@ -1,5 +1,3 @@
-# Cloned from ../l10n\th_TH\music.po by duplicate-lang.py
-# 
 # Translators:
 # Sunchai Paejaroenchai, 2015,2017
 msgid ""

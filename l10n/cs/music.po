@@ -1,5 +1,3 @@
-# Cloned from ../l10n\cs_CZ\music.po by duplicate-lang.py
-# 
 # Translators:
 # Adam Kettner <cetnerix@gmail.com>, 2017
 # Jan Liska, 2013-2014
