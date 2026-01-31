@@ -9,7 +9,7 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Morris Jobke 2013, 2014
- * @copyright Pauli Järvinen 2018 - 2025
+ * @copyright Pauli Järvinen 2018 - 2026
  */
 
 namespace OCA\Music\Middleware;
@@ -36,28 +36,18 @@ use OCA\Music\Utility\StringUtil;
  */
 class AmpacheMiddleware extends Middleware {
 
-	private IRequest $request;
-	private AmpacheSessionMapper $ampacheSessionMapper;
-	private AmpacheUserMapper $ampacheUserMapper;
-	private Logger $logger;
-	private ?string $loggedInUser;
 	private int $sessionExpiryTime;
 
 	public function __construct(
-			IRequest $request,
-			IConfig $config,
-			AmpacheSessionMapper $ampacheSessionMapper,
-			AmpacheUserMapper $ampacheUserMapper,
-			Logger $logger,
-			?string $userId) {
-		$this->request = $request;
-		$this->ampacheSessionMapper = $ampacheSessionMapper;
-		$this->ampacheUserMapper = $ampacheUserMapper;
-		$this->logger = $logger;
-		$this->loggedInUser = $userId;
-
-		$this->sessionExpiryTime = (int)$config->getSystemValue('music.ampache_session_expiry_time', 6000);
-		$this->sessionExpiryTime = \min($this->sessionExpiryTime, 365*24*60*60); // limit to one year
+		IConfig $config,
+		private IRequest $request,
+		private AmpacheSessionMapper $ampacheSessionMapper,
+		private AmpacheUserMapper $ampacheUserMapper,
+		private Logger $logger,
+		private ?string $userId // non-null when within a valid Nextcloud user session
+	) {
+		$sessionExpiryTime = (int)$config->getSystemValue('music.ampache_session_expiry_time', 6000);
+		$this->sessionExpiryTime = \min($sessionExpiryTime, 365*24*60*60); // limit to one year
 	}
 
 	/**
@@ -227,17 +217,17 @@ class AmpacheMiddleware extends Middleware {
 	}
 
 	/**
-	 * Internal session may be used to utilize the Ampache API within the Nextcloud/ownCloud server while in
+	 * Internal session may be used to utilize the Ampache API within the Nextcloud server while in
 	 * a valid user session, without needing to create an API key for this. That is, this session type is never
 	 * used by the external client applications.
 	 */
 	private function getInternalSession() : AmpacheSession {
-		if ($this->loggedInUser === null) {
+		if ($this->userId === null) {
 			throw new AmpacheException('Internal session requires a logged-in cloud user', 401);
 		}
 
 		$session = new AmpacheSession();
-		$session->userId = $this->loggedInUser;
+		$session->userId = $this->userId;
 		$session->token = 'internal';
 		$session->expiry = 0;
 		$session->apiVersion = AmpacheController::API6_VERSION;

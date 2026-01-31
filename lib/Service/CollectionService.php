@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2018 - 2025
+ * @copyright Pauli Järvinen 2018 - 2026
  */
 
 namespace OCA\Music\Service;
@@ -36,62 +36,52 @@ use OCP\ICache;
  * DB may be configured with maximum object size of e.g. 1 MB).
  */
 class CollectionService {
-	private Library $library;
-	private ICache $fileCache;
-	private Cache $dbCache;
-	private Logger $logger;
-	private string $userId;
 
 	public function __construct(
-			Library $library,
-			ICache $fileCache,
-			Cache $dbCache,
-			Logger $logger,
-			?string $userId) {
-		$this->library = $library;
-		$this->fileCache = $fileCache;
-		$this->dbCache = $dbCache;
-		$this->logger = $logger;
-		$this->userId = $userId ?? ''; // TODO: null makes no sense but we need it because ApiController may be constructed for public covers without a user
+		private Library $library,
+		private ICache $fileCache,
+		private Cache $dbCache,
+		private Logger $logger
+	) {
 	}
 
-	public function getJson() : string {
-		$collectionJson = $this->getCachedJson();
+	public function getJson(string $userId) : string {
+		$collectionJson = $this->getCachedJson($userId);
 
 		if ($collectionJson === null) {
-			$collectionJson = \json_encode($this->library->toCollection($this->userId));
+			$collectionJson = \json_encode($this->library->toCollection($userId));
 			try {
-				$this->addJsonToCache($collectionJson);
+				$this->addJsonToCache($collectionJson, $userId);
 			} catch (UniqueConstraintViolationException $ex) {
-				$this->logger->warning("Race condition: collection.json for user {$this->userId} cached twice, ignoring latter.");
+				$this->logger->warning("Race condition: collection.json for user $userId cached twice, ignoring latter.");
 			}
 		}
 
 		return $collectionJson;
 	}
 
-	public function getCachedJsonHash() : ?string {
-		return $this->dbCache->get($this->userId, 'collection');
+	public function getCachedJsonHash(string $userId) : ?string {
+		return $this->dbCache->get($userId, 'collection');
 	}
 
-	private function getCachedJson() : ?string {
+	private function getCachedJson(string $userId) : ?string {
 		$json = null;
-		$hash = $this->dbCache->get($this->userId, 'collection');
+		$hash = $this->dbCache->get($userId, 'collection');
 		if ($hash !== null) {
 			$json = $this->fileCache->get('music_collection.json');
 			if ($json === null) {
-				$this->logger->debug("Inconsistent collection state for user {$this->userId}: ".
+				$this->logger->debug("Inconsistent collection state for user $userId: ".
 						"Hash found from DB-backed cache but data not found from the ".
 						"file-backed cache. Removing also the hash.");
-				$this->dbCache->remove($this->userId, 'collection');
+				$this->dbCache->remove($userId, 'collection');
 			}
 		}
 		return $json;
 	}
 
-	private function addJsonToCache(string $json) : void {
+	private function addJsonToCache(string $json, string $userId) : void {
 		$hash = \hash('md5', $json);
-		$this->dbCache->add($this->userId, 'collection', $hash);
+		$this->dbCache->add($userId, 'collection', $hash);
 		$this->fileCache->set('music_collection.json', $json, 5*365*24*60*60);
 	}
 }

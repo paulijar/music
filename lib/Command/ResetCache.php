@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2017 - 2024
+ * @copyright Pauli Järvinen 2017 - 2026
  */
 
 namespace OCA\Music\Command;
@@ -18,11 +18,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ResetCache extends BaseCommand {
 
-	private Cache $cache;
-
-	public function __construct(\OCP\IUserManager $userManager,
-			\OCP\IGroupManager $groupManager, Cache $cache) {
-		$this->cache = $cache;
+	public function __construct(
+		\OCP\IUserManager $userManager,
+		\OCP\IGroupManager $groupManager,
+		private Cache $cache
+	) {
 		parent::__construct($userManager, $groupManager);
 	}
 

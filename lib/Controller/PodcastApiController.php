@@ -31,30 +31,25 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 
 class PodcastApiController extends Controller {
-	private IConfig $config;
-	private IURLGenerator $urlGenerator;
-	private IRootFolder $rootFolder;
-	private PodcastService $podcastService;
-	private string $userId;
-	private Logger $logger;
 
 	public function __construct(
-			string $appName,
-			IRequest $request,
-			IConfig $config,
-			IURLGenerator $urlGenerator,
-			IRootFolder $rootFolder,
-			PodcastService $podcastService,
-			?string $userId,
-			Logger $logger
+		string $appName,
+		IRequest $request,
+		private IConfig $config,
+		private IURLGenerator $urlGenerator,
+		private IRootFolder $rootFolder,
+		private PodcastService $podcastService,
+		private ?string $userId,
+		private Logger $logger
 	) {
 		parent::__construct($appName, $request);
-		$this->config = $config;
-		$this->urlGenerator = $urlGenerator;
-		$this->rootFolder = $rootFolder;
-		$this->podcastService = $podcastService;
-		$this->userId = $userId ?? ''; // ensure non-null to satisfy Scrutinizer; the null case should happen only when the user has already logged out
-		$this->logger = $logger;
+	}
+
+	private function user() : string {
+		// The $userId may be null in constructor (if user session has been terminated) but none of our
+		// public methods should get called in such case. Assure this also for Scrutinizer.
+		\assert($this->userId !== null);
+		return $this->userId;
 	}
 
 	/**
@@ -64,7 +59,7 @@ class PodcastApiController extends Controller {
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function getAll() : JSONResponse {
-		$channels = $this->podcastService->getAllChannels($this->userId, /*$includeEpisodes=*/ true);
+		$channels = $this->podcastService->getAllChannels($this->user(), /*$includeEpisodes=*/ true);
 		return new JSONResponse(
 			\array_map(fn($c) => $c->toApi($this->urlGenerator), $channels)
 		);
@@ -80,7 +75,7 @@ class PodcastApiController extends Controller {
 			return new ErrorResponse(Http::STATUS_BAD_REQUEST, "Mandatory argument 'url' not given");
 		}
 
-		$result = $this->podcastService->subscribe($url, $this->userId);
+		$result = $this->podcastService->subscribe($url, $this->user());
 
 		switch ($result['status']) {
 			case PodcastService::STATUS_OK:
@@ -102,7 +97,7 @@ class PodcastApiController extends Controller {
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function unsubscribe(int $id) : JSONResponse {
-		$status = $this->podcastService->unsubscribe($id, $this->userId);
+		$status = $this->podcastService->unsubscribe($id, $this->user());
 
 		switch ($status) {
 			case PodcastService::STATUS_OK:
@@ -120,7 +115,7 @@ class PodcastApiController extends Controller {
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function get(int $id) : JSONResponse {
-		$channel = $this->podcastService->getChannel($id, $this->userId, /*includeEpisodes=*/ true);
+		$channel = $this->podcastService->getChannel($id, $this->user(), /*includeEpisodes=*/ true);
 
 		if ($channel !== null) {
 			return new JSONResponse($channel->toApi($this->urlGenerator));
@@ -135,7 +130,7 @@ class PodcastApiController extends Controller {
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function channelDetails(int $id) : JSONResponse {
-		$channel = $this->podcastService->getChannel($id, $this->userId, /*includeEpisodes=*/ false);
+		$channel = $this->podcastService->getChannel($id, $this->user(), /*includeEpisodes=*/ false);
 
 		if ($channel !== null) {
 			return new JSONResponse($channel->detailsToApi($this->urlGenerator));
@@ -150,7 +145,7 @@ class PodcastApiController extends Controller {
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function episodeDetails(int $id) : JSONResponse {
-		$episode = $this->podcastService->getEpisode($id, $this->userId);
+		$episode = $this->podcastService->getEpisode($id, $this->user());
 
 		if ($episode !== null) {
 			return new JSONResponse($episode->detailsToApi());
@@ -165,7 +160,7 @@ class PodcastApiController extends Controller {
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function episodeStream(int $id) : Response {
-		$episode = $this->podcastService->getEpisode($id, $this->userId);
+		$episode = $this->podcastService->getEpisode($id, $this->user());
 
 		if ($episode !== null) {
 			$streamUrl = $episode->getStreamUrl();
@@ -191,7 +186,7 @@ class PodcastApiController extends Controller {
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function updateChannel(int $id, ?string $prevHash) : JSONResponse {
-		$updateResult = $this->podcastService->updateChannel($id, $this->userId, $prevHash);
+		$updateResult = $this->podcastService->updateChannel($id, $this->user(), $prevHash);
 
 		$response = [
 			'success' => ($updateResult['status'] === PodcastService::STATUS_OK),
@@ -210,7 +205,7 @@ class PodcastApiController extends Controller {
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function resetAll() : JSONResponse {
-		$this->podcastService->resetAll($this->userId);
+		$this->podcastService->resetAll($this->user());
 		return new JSONResponse(['success' => true]);
 	}
 
@@ -229,9 +224,9 @@ class PodcastApiController extends Controller {
 	#[NoCSRFRequired]
 	public function exportAllToFile(string $name, string $path, string $oncollision) : JSONResponse {
 		try {
-			$userFolder = $this->rootFolder->getUserFolder($this->userId);
+			$userFolder = $this->rootFolder->getUserFolder($this->user());
 			$exportedFilePath = $this->podcastService->exportToFile(
-					$this->userId, $userFolder, $path, $name, $oncollision);
+					$this->user(), $userFolder, $path, $name, $oncollision);
 			return new JSONResponse(['wrote_to_file' => $exportedFilePath]);
 		} catch (\OCP\Files\NotFoundException $ex) {
 			return new ErrorResponse(Http::STATUS_NOT_FOUND, 'folder not found');
@@ -251,7 +246,7 @@ class PodcastApiController extends Controller {
 	#[NoCSRFRequired]
 	public function parseListFile(string $filePath) : JSONResponse {
 		try {
-			$userFolder = $this->rootFolder->getUserFolder($this->userId);
+			$userFolder = $this->rootFolder->getUserFolder($this->user());
 			$list = $this->podcastService->parseOpml($userFolder, $filePath);
 			return new JSONResponse($list);
 		} catch (\UnexpectedValueException $ex) {

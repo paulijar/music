@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2021 - 2025
+ * @copyright Pauli Järvinen 2021 - 2026
  */
 
 namespace OCA\Music\Command;
@@ -27,19 +27,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class PlaylistExport extends BaseCommand {
 
-	private IRootFolder $rootFolder;
-	private PlaylistBusinessLayer $businessLayer;
-	private PlaylistFileService $playlistFileService;
-
 	public function __construct(
-			\OCP\IUserManager $userManager,
-			\OCP\IGroupManager $groupManager,
-			IRootFolder $rootFolder,
-			PlaylistBusinessLayer $playlistBusinessLayer,
-			PlaylistFileService $playlistFileService) {
-		$this->rootFolder = $rootFolder;
-		$this->businessLayer = $playlistBusinessLayer;
-		$this->playlistFileService = $playlistFileService;
+		\OCP\IUserManager $userManager,
+		\OCP\IGroupManager $groupManager,
+		private IRootFolder $rootFolder,
+		private PlaylistBusinessLayer $businessLayer,
+		private PlaylistFileService $playlistFileService
+	) {
 		parent::__construct($userManager, $groupManager);
 	}
 

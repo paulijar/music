@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2025
+ * @copyright Pauli Järvinen 2025, 2026
  */
 
 namespace OCA\Music\Command;
@@ -23,16 +23,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class PodcastImport extends BaseCommand {
 
-	private IRootFolder $rootFolder;
-	private PodcastService $podcastService;
-
 	public function __construct(
-			\OCP\IUserManager $userManager,
-			\OCP\IGroupManager $groupManager,
-			IRootFolder $rootFolder,
-			PodcastService $podcastService) {
-		$this->rootFolder = $rootFolder;
-		$this->podcastService = $podcastService;
+		\OCP\IUserManager $userManager,
+		\OCP\IGroupManager $groupManager,
+		private IRootFolder $rootFolder,
+		private PodcastService $podcastService
+	) {
 		parent::__construct($userManager, $groupManager);
 	}
 

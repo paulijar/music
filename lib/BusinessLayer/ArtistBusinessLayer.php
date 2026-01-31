@@ -40,13 +40,13 @@ class ArtistBusinessLayer extends BusinessLayer {
 	/** @phpstan-use LocalCacheTrait<Artist> */
 	use LocalCacheTrait;
 
-	private Logger $logger;
-
 	private const REPLACEABLE_CHARS_IN_FILE_NAME = ' <>:"/\|?*'; // space and chars forbidden in Windows may be replaced by '_', on Linux only '/' is technically forbidden
 
-	public function __construct(ArtistMapper $artistMapper, Logger $logger) {
+	public function __construct(
+		ArtistMapper $artistMapper,
+		private Logger $logger
+	) {
 		parent::__construct($artistMapper);
-		$this->logger = $logger;
 	}
 
 	/**

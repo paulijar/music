@@ -41,48 +41,27 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 
 class PlaylistApiController extends Controller {
-	private IURLGenerator $urlGenerator;
-	private PlaylistBusinessLayer $playlistBusinessLayer;
-	private ArtistBusinessLayer $artistBusinessLayer;
-	private AlbumBusinessLayer $albumBusinessLayer;
-	private TrackBusinessLayer $trackBusinessLayer;
-	private GenreBusinessLayer $genreBusinessLayer;
-	private CoverService $coverService;
-	private PlaylistFileService $playlistFileService;
-	private string $userId;
+
 	private Folder $userFolder;
-	private IConfig $configManager;
-	private Logger $logger;
 
 	public function __construct(
-			string $appName,
-			IRequest $request,
-			IURLGenerator $urlGenerator,
-			PlaylistBusinessLayer $playlistBusinessLayer,
-			ArtistBusinessLayer $artistBusinessLayer,
-			AlbumBusinessLayer $albumBusinessLayer,
-			TrackBusinessLayer $trackBusinessLayer,
-			GenreBusinessLayer $genreBusinessLayer,
-			CoverService $coverService,
-			PlaylistFileService $playlistFileService,
-			string $userId,
-			IRootFolder $rootFolder,
-			IConfig $configManager,
-			Logger $logger
+		string $appName,
+		IRequest $request,
+		IRootFolder $rootFolder,
+		private IURLGenerator $urlGenerator,
+		private PlaylistBusinessLayer $playlistBusinessLayer,
+		private ArtistBusinessLayer $artistBusinessLayer,
+		private AlbumBusinessLayer $albumBusinessLayer,
+		private TrackBusinessLayer $trackBusinessLayer,
+		private GenreBusinessLayer $genreBusinessLayer,
+		private CoverService $coverService,
+		private PlaylistFileService $playlistFileService,
+		private string $userId,
+		private IConfig $configManager,
+		private Logger $logger
 	) {
 		parent::__construct($appName, $request);
-		$this->urlGenerator = $urlGenerator;
-		$this->playlistBusinessLayer = $playlistBusinessLayer;
-		$this->artistBusinessLayer = $artistBusinessLayer;
-		$this->albumBusinessLayer = $albumBusinessLayer;
-		$this->trackBusinessLayer = $trackBusinessLayer;
-		$this->genreBusinessLayer = $genreBusinessLayer;
-		$this->coverService = $coverService;
-		$this->playlistFileService = $playlistFileService;
-		$this->userId = $userId;
 		$this->userFolder = $rootFolder->getUserFolder($userId);
-		$this->configManager = $configManager;
-		$this->logger = $logger;
 	}
 
 	/**

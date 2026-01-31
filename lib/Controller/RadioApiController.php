@@ -38,39 +38,28 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 
 class RadioApiController extends Controller {
-	private IConfig $config;
-	private IURLGenerator $urlGenerator;
-	private RadioStationBusinessLayer $businessLayer;
-	private RadioService $service;
-	private StreamTokenService $tokenService;
-	private PlaylistFileService $playlistFileService;
-	private string $userId;
-	private IRootFolder $rootFolder;
-	private Logger $logger;
 
 	public function __construct(
-			string $appName,
-			IRequest $request,
-			IConfig $config,
-			IURLGenerator $urlGenerator,
-			RadioStationBusinessLayer $businessLayer,
-			RadioService $service,
-			StreamTokenService $tokenService,
-			PlaylistFileService $playlistFileService,
-			?string $userId,
-			IRootFolder $rootFolder,
-			Logger $logger
+		string $appName,
+		IRequest $request,
+		private IConfig $config,
+		private IURLGenerator $urlGenerator,
+		private RadioStationBusinessLayer $businessLayer,
+		private RadioService $service,
+		private StreamTokenService $tokenService,
+		private PlaylistFileService $playlistFileService,
+		private ?string $userId,
+		private IRootFolder $rootFolder,
+		private Logger $logger
 	) {
 		parent::__construct($appName, $request);
-		$this->config = $config;
-		$this->urlGenerator = $urlGenerator;
-		$this->businessLayer = $businessLayer;
-		$this->service = $service;
-		$this->tokenService = $tokenService;
-		$this->playlistFileService = $playlistFileService;
-		$this->userId = $userId ?? ''; // ensure non-null to satisfy Scrutinizer; may be null when resolveStreamUrl used on public share
-		$this->rootFolder = $rootFolder;
-		$this->logger = $logger;
+	}
+
+	private function user() : string {
+		// The $userId may be null in constructor (if user session has been terminated) but none of our
+		// public methods should get called in such case. Assure this also for Scrutinizer.
+		\assert($this->userId !== null);
+		return $this->userId;
 	}
 
 	/**
@@ -79,7 +68,7 @@ class RadioApiController extends Controller {
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function getAll() : JSONResponse {
-		$stations = $this->businessLayer->findAll($this->userId);
+		$stations = $this->businessLayer->findAll($this->user());
 		return new JSONResponse(
 			\array_map(fn($s) => $s->toApi(), $stations)
 		);
@@ -96,7 +85,7 @@ class RadioApiController extends Controller {
 		}
 		
 		try {
-			$station = $this->businessLayer->create($this->userId, $name, $streamUrl, $homeUrl);
+			$station = $this->businessLayer->create($this->user(), $name, $streamUrl, $homeUrl);
 			return new JSONResponse($station->toApi());
 		} catch (\DomainException $ex) {
 			return new ErrorResponse(Http::STATUS_BAD_REQUEST, $ex->getMessage());
@@ -110,7 +99,7 @@ class RadioApiController extends Controller {
 	#[NoCSRFRequired]
 	public function delete(int $id) : JSONResponse {
 		try {
-			$this->businessLayer->delete($id, $this->userId);
+			$this->businessLayer->delete($id, $this->user());
 			return new JSONResponse([]);
 		} catch (BusinessLayerException $ex) {
 			return new ErrorResponse(Http::STATUS_NOT_FOUND, $ex->getMessage());
@@ -124,7 +113,7 @@ class RadioApiController extends Controller {
 	#[NoCSRFRequired]
 	public function get(int $id) : JSONResponse {
 		try {
-			$station = $this->businessLayer->find($id, $this->userId);
+			$station = $this->businessLayer->find($id, $this->user());
 			return new JSONResponse($station->toApi());
 		} catch (BusinessLayerException $ex) {
 			return new ErrorResponse(Http::STATUS_NOT_FOUND, $ex->getMessage());
@@ -142,7 +131,7 @@ class RadioApiController extends Controller {
 		}
 
 		try {
-			$station = $this->businessLayer->updateStation($id, $this->userId, $name, $streamUrl, $homeUrl);
+			$station = $this->businessLayer->updateStation($id, $this->user(), $name, $streamUrl, $homeUrl);
 			return new JSONResponse($station->toApi());
 		} catch (BusinessLayerException $ex) {
 			return new ErrorResponse(Http::STATUS_NOT_FOUND, $ex->getMessage());
@@ -166,9 +155,9 @@ class RadioApiController extends Controller {
 	#[NoCSRFRequired]
 	public function exportAllToFile(string $name, string $path, string $oncollision='abort') : JSONResponse {
 		try {
-			$userFolder = $this->rootFolder->getUserFolder($this->userId);
+			$userFolder = $this->rootFolder->getUserFolder($this->user());
 			$exportedFilePath = $this->playlistFileService->exportRadioStationsToFile(
-					$this->userId, $userFolder, $path, $name, $oncollision);
+					$this->user(), $userFolder, $path, $name, $oncollision);
 			return new JSONResponse(['wrote_to_file' => $exportedFilePath]);
 		} catch (\OCP\Files\NotFoundException $ex) {
 			return new ErrorResponse(Http::STATUS_NOT_FOUND, 'folder not found');
@@ -187,8 +176,8 @@ class RadioApiController extends Controller {
 	#[NoCSRFRequired]
 	public function importFromFile(string $filePath) : JSONResponse {
 		try {
-			$userFolder = $this->rootFolder->getUserFolder($this->userId);
-			$result = $this->playlistFileService->importRadioStationsFromFile($this->userId, $userFolder, $filePath);
+			$userFolder = $this->rootFolder->getUserFolder($this->user());
+			$result = $this->playlistFileService->importRadioStationsFromFile($this->user(), $userFolder, $filePath);
 			$result['stations'] = \array_map(fn($s) => $s->toApi(), $result['stations']);
 			return new JSONResponse($result);
 		} catch (\OCP\Files\NotFoundException $ex) {
@@ -204,7 +193,7 @@ class RadioApiController extends Controller {
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function resetAll() : JSONResponse {
-		$this->businessLayer->deleteAll($this->userId);
+		$this->businessLayer->deleteAll($this->user());
 		return new JSONResponse(['success' => true]);
 	}
 
@@ -215,7 +204,7 @@ class RadioApiController extends Controller {
 	#[NoCSRFRequired]
 	public function getChannelInfo(int $id, ?string $type=null) : JSONResponse {
 		try {
-			$station = $this->businessLayer->find($id, $this->userId);
+			$station = $this->businessLayer->find($id, $this->user());
 			$streamUrl = $station->getStreamUrl();
 
 			switch ($type) {
@@ -252,7 +241,7 @@ class RadioApiController extends Controller {
 	#[NoCSRFRequired]
 	public function stationStreamUrl(int $id) : JSONResponse {
 		try {
-			$station = $this->businessLayer->find($id, $this->userId);
+			$station = $this->businessLayer->find($id, $this->user());
 			return $this->doResolveStreamUrl($station->getStreamUrl());
 		} catch (BusinessLayerException $ex) {
 			return new ErrorResponse(Http::STATUS_NOT_FOUND, $ex->getMessage());
@@ -266,7 +255,7 @@ class RadioApiController extends Controller {
 	#[NoCSRFRequired]
 	public function stationStream(int $id) : Response {
 		try {
-			$station = $this->businessLayer->find($id, $this->userId);
+			$station = $this->businessLayer->find($id, $this->user());
 			$streamUrl = $station->getStreamUrl();
 			$resolved = $this->service->resolveStreamUrl($streamUrl);
 			if ($this->streamRelayEnabled()) {
@@ -396,7 +385,7 @@ class RadioApiController extends Controller {
 
 	private function hlsEnabled() : bool {
 		$enabled = (bool)$this->config->getSystemValue('music.enable_radio_hls', true);
-		if ($this->userId === '') {
+		if ($this->userId === null) {
 			$enabled = (bool)$this->config->getSystemValue('music.enable_radio_hls_on_share', $enabled);
 		}
 		return $enabled;
@@ -404,7 +393,7 @@ class RadioApiController extends Controller {
 
 	private function streamRelayEnabled() : bool {
 		$enabled = (bool)$this->config->getSystemValue('music.relay_radio_stream', true);
-		if ($this->userId === '') {
+		if ($this->userId === null) {
 			$enabled = (bool)$this->config->getSystemValue('music.relay_radio_stream_on_share', $enabled);
 		}
 		return $enabled;

@@ -40,15 +40,13 @@ class AlbumBusinessLayer extends BusinessLayer {
 	/** @phpstan-use LocalCacheTrait<Album> */
 	use LocalCacheTrait;
 
-	private ArtistMapper $artistMapper;
-	private FileSystemService $fileSystemService;
-	private Logger $logger;
-
-	public function __construct(AlbumMapper $albumMapper, ArtistMapper $artistMapper, FileSystemService $fileSystemService, Logger $logger) {
+	public function __construct(
+		AlbumMapper $albumMapper,
+		private ArtistMapper $artistMapper,
+		private FileSystemService $fileSystemService,
+		private Logger $logger
+	) {
 		parent::__construct($albumMapper);
-		$this->artistMapper = $artistMapper;
-		$this->fileSystemService = $fileSystemService;
-		$this->logger = $logger;
 	}
 
 	/**

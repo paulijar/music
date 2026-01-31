@@ -9,7 +9,7 @@
  * @author Gregory Baudet <gregory.baudet@gmail.com>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Gregory Baudet 2018
- * @copyright Pauli Järvinen 2019 - 2025
+ * @copyright Pauli Järvinen 2019 - 2026
  */
 
 namespace OCA\Music\Migration;
@@ -21,12 +21,9 @@ use OCP\Migration\IRepairStep;
 
 class BogusTrackRemoval implements IRepairStep {
 
-	private IDBConnection $db;
-	private IConfig $config;
-
-	public function __construct(IDBConnection $connection, IConfig $config) {
-		$this->db = $connection;
-		$this->config = $config;
+	public function __construct(
+		private IDBConnection $db,
+		private IConfig $config) {
 	}
 
 	public function getName() {

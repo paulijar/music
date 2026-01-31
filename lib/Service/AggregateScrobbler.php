@@ -7,7 +7,9 @@
  * later. See the COPYING file.
  *
  * @author Matthew Wells
+ * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Matthew Wells 2025
+ * @copyright Pauli Järvinen 2026
  */
 
 namespace OCA\Music\Service;
@@ -15,11 +17,11 @@ namespace OCA\Music\Service;
 use DateTime;
 
 class AggregateScrobbler implements Scrobbler {
-	/** @var array<Scrobbler> $scrobblers */
-	private array $scrobblers;
 
-	public function __construct(array $scrobblers) {
-		$this->scrobblers = $scrobblers;
+	/**
+	 * @param array<Scrobbler> $scrobblers
+	 */
+	public function __construct(private array $scrobblers) {
 	}
 
 	public function recordTrackPlayed(int $trackId, string $userId, ?\DateTime $timeOfPlay = null): void {

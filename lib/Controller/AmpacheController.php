@@ -87,30 +87,6 @@ use OCP\IURLGenerator;
 use OCP\IUserManager;
 
 class AmpacheController extends ApiController {
-	private IConfig $config;
-	private IL10N $l10n;
-	private IURLGenerator $urlGenerator;
-	private IUserManager $userManager;
-	private AlbumBusinessLayer $albumBusinessLayer;
-	private ArtistBusinessLayer $artistBusinessLayer;
-	private BookmarkBusinessLayer $bookmarkBusinessLayer;
-	private GenreBusinessLayer $genreBusinessLayer;
-	private PlaylistBusinessLayer $playlistBusinessLayer;
-	private PodcastChannelBusinessLayer $podcastChannelBusinessLayer;
-	private PodcastEpisodeBusinessLayer $podcastEpisodeBusinessLayer;
-	private RadioStationBusinessLayer $radioStationBusinessLayer;
-	private TrackBusinessLayer $trackBusinessLayer;
-	private Library $library;
-	private PodcastService $podcastService;
-	private AmpacheImageService $imageService;
-	private CoverService $coverService;
-	private DetailsService $detailsService;
-	private FileSystemService $fileSystemService;
-	private LastfmService $lastfmService;
-	private LibrarySettings $librarySettings;
-	private Random $random;
-	private Logger $logger;
-	private Scrobbler $scrobbler;
 
 	private bool $jsonMode;
 	private ?AmpacheSession $session;
@@ -123,59 +99,34 @@ class AmpacheController extends ApiController {
 	public const API_MIN_COMPATIBLE_VERSION = '350001';
 
 	public function __construct(
-			string $appName,
-			IRequest $request,
-			IConfig $config,
-			IL10N $l10n,
-			IURLGenerator $urlGenerator,
-			IUserManager $userManager,
-			AlbumBusinessLayer $albumBusinessLayer,
-			ArtistBusinessLayer $artistBusinessLayer,
-			BookmarkBusinessLayer $bookmarkBusinessLayer,
-			GenreBusinessLayer $genreBusinessLayer,
-			PlaylistBusinessLayer $playlistBusinessLayer,
-			PodcastChannelBusinessLayer $podcastChannelBusinessLayer,
-			PodcastEpisodeBusinessLayer $podcastEpisodeBusinessLayer,
-			RadioStationBusinessLayer $radioStationBusinessLayer,
-			TrackBusinessLayer $trackBusinessLayer,
-			Library $library,
-			PodcastService $podcastService,
-			AmpacheImageService $imageService,
-			CoverService $coverService,
-			DetailsService $detailsService,
-			FileSystemService $fileSystemService,
-			LastfmService $lastfmService,
-			LibrarySettings $librarySettings,
-			Random $random,
-			Logger $logger,
-			Scrobbler $scrobbler
+		string $appName,
+		IRequest $request,
+		private IConfig $config,
+		private IL10N $l10n,
+		private IURLGenerator $urlGenerator,
+		private IUserManager $userManager,
+		private AlbumBusinessLayer $albumBusinessLayer,
+		private ArtistBusinessLayer $artistBusinessLayer,
+		private BookmarkBusinessLayer $bookmarkBusinessLayer,
+		private GenreBusinessLayer $genreBusinessLayer,
+		private PlaylistBusinessLayer $playlistBusinessLayer,
+		private PodcastChannelBusinessLayer $podcastChannelBusinessLayer,
+		private PodcastEpisodeBusinessLayer $podcastEpisodeBusinessLayer,
+		private RadioStationBusinessLayer $radioStationBusinessLayer,
+		private TrackBusinessLayer $trackBusinessLayer,
+		private Library $library,
+		private PodcastService $podcastService,
+		private AmpacheImageService $imageService,
+		private CoverService $coverService,
+		private DetailsService $detailsService,
+		private FileSystemService $fileSystemService,
+		private LastfmService $lastfmService,
+		private LibrarySettings $librarySettings,
+		private Random $random,
+		private Logger $logger,
+		private Scrobbler $scrobbler
 	) {
 		parent::__construct($appName, $request, 'POST, GET', 'Authorization, Content-Type, Accept, X-Requested-With');
-
-		$this->config = $config;
-		$this->l10n = $l10n;
-		$this->urlGenerator = $urlGenerator;
-		$this->userManager = $userManager;
-		$this->albumBusinessLayer = $albumBusinessLayer;
-		$this->artistBusinessLayer = $artistBusinessLayer;
-		$this->bookmarkBusinessLayer = $bookmarkBusinessLayer;
-		$this->genreBusinessLayer = $genreBusinessLayer;
-		$this->playlistBusinessLayer = $playlistBusinessLayer;
-		$this->podcastChannelBusinessLayer = $podcastChannelBusinessLayer;
-		$this->podcastEpisodeBusinessLayer = $podcastEpisodeBusinessLayer;
-		$this->radioStationBusinessLayer = $radioStationBusinessLayer;
-		$this->trackBusinessLayer = $trackBusinessLayer;
-		$this->library = $library;
-		$this->podcastService = $podcastService;
-		$this->imageService = $imageService;
-		$this->coverService = $coverService;
-		$this->detailsService = $detailsService;
-		$this->fileSystemService = $fileSystemService;
-		$this->lastfmService = $lastfmService;
-		$this->librarySettings = $librarySettings;
-		$this->random = $random;
-		$this->logger = $logger;
-		$this->scrobbler = $scrobbler;
 
 		$this->jsonMode = false;
 		$this->session = null;

@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2017 - 2025
+ * @copyright Pauli Järvinen 2017 - 2026
  */
 
 namespace OCA\Music\Service;
@@ -35,30 +35,21 @@ use OCP\IL10N;
  * utility to get cover image for album
  */
 class CoverService {
-	private Extractor $extractor;
-	private Cache $cache;
-	private AlbumBusinessLayer $albumBusinessLayer;
-	private int $coverSize;
-	private IL10N $l10n;
-	private Logger $logger;
 
 	private const MAX_SIZE_TO_CACHE = 102400;
 
 	public const DO_NOT_CROP_OR_SCALE = -1;
 
-	public function __construct(
-			ExtractorGetID3 $extractor,
-			Cache $cache,
-			AlbumBusinessLayer $albumBusinessLayer,
-			IConfig $config,
-			IL10N $l10n,
-			Logger $logger) {
-		$this->extractor = $extractor;
-		$this->cache = $cache;
-		$this->albumBusinessLayer = $albumBusinessLayer;
-		$this->l10n = $l10n;
-		$this->logger = $logger;
+	private int $coverSize;
 
+	public function __construct(
+		private ExtractorGetID3 $extractor,
+		private Cache $cache,
+		private AlbumBusinessLayer $albumBusinessLayer,
+		private IL10N $l10n,
+		private Logger $logger,
+		IConfig $config,
+	) {
 		// Read the cover size to use from config.php or use the default
 		$this->coverSize = \intval($config->getSystemValue('music.cover_size')) ?: 380;
 	}

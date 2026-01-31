@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2016 - 2025
+ * @copyright Pauli Järvinen 2016 - 2026
  */
 
 namespace OCA\Music\BusinessLayer;
@@ -34,16 +34,13 @@ use OCA\Music\Utility\StringUtil;
  * @extends BusinessLayer<Playlist>
  */
 class PlaylistBusinessLayer extends BusinessLayer {
-	private TrackMapper $trackMapper;
-	private Logger $logger;
 
 	public function __construct(
-			PlaylistMapper $playlistMapper,
-			TrackMapper $trackMapper,
-			Logger $logger) {
+		PlaylistMapper $playlistMapper,
+		private TrackMapper $trackMapper,
+		private Logger $logger
+	) {
 		parent::__construct($playlistMapper);
-		$this->trackMapper = $trackMapper;
-		$this->logger = $logger;
 	}
 
 	public function setTracks(array $trackIds, int $playlistId, string $userId) : Playlist {

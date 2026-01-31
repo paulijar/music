@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2020 - 2025
+ * @copyright Pauli Järvinen 2020 - 2026
  */
 
 namespace OCA\Music\BusinessLayer;
@@ -35,13 +35,12 @@ class GenreBusinessLayer extends BusinessLayer {
 	/** @phpstan-use LocalCacheTrait<Genre> */
 	use LocalCacheTrait;
 
-	private TrackMapper $trackMapper;
-	private Logger $logger;
-
-	public function __construct(GenreMapper $genreMapper, TrackMapper $trackMapper, Logger $logger) {
+	public function __construct(
+		GenreMapper $genreMapper,
+		private TrackMapper $trackMapper,
+		private Logger $logger
+	) {
 		parent::__construct($genreMapper);
-		$this->trackMapper = $trackMapper;
-		$this->logger = $logger;
 	}
 
 	/**

@@ -41,48 +41,23 @@ use OCP\IRequest;
 
 class AdvSearchController extends Controller {
 
-	private AlbumBusinessLayer $albumBusinessLayer;
-	private ArtistBusinessLayer $artistBusinessLayer;
-	private BookmarkBusinessLayer $bookmarkBusinessLayer;
-	private GenreBusinessLayer $genreBusinessLayer;
-	private PlaylistBusinessLayer $playlistBusinessLayer;
-	private PodcastChannelBusinessLayer $podcastChannelBusinessLayer;
-	private PodcastEpisodeBusinessLayer $podcastEpisodeBusinessLayer;
-	private RadioStationBusinessLayer $radioStationBusinessLayer;
-	private TrackBusinessLayer $trackBusinessLayer;
-	private ?string $userId;
-	private Random $random;
-	private Logger $logger;
-
 	public function __construct(
-			string $appName,
-			IRequest $request,
-			AlbumBusinessLayer $albumBusinessLayer,
-			ArtistBusinessLayer $artistBusinessLayer,
-			BookmarkBusinessLayer $bookmarkBusinessLayer,
-			GenreBusinessLayer $genreBusinessLayer,
-			PlaylistBusinessLayer $playlistBusinessLayer,
-			PodcastChannelBusinessLayer $podcastChannelBusinessLayer,
-			PodcastEpisodeBusinessLayer $podcastEpisodeBusinessLayer,
-			RadioStationBusinessLayer $radioStationBusinessLayer,
-			TrackBusinessLayer $trackBusinessLayer,
-			?string $userId, // null if this gets called after the user has logged out or on a public page
-			Random $random,
-			Logger $logger
+		string $appName,
+		IRequest $request,
+		private AlbumBusinessLayer $albumBusinessLayer,
+		private ArtistBusinessLayer $artistBusinessLayer,
+		private BookmarkBusinessLayer $bookmarkBusinessLayer,
+		private GenreBusinessLayer $genreBusinessLayer,
+		private PlaylistBusinessLayer $playlistBusinessLayer,
+		private PodcastChannelBusinessLayer $podcastChannelBusinessLayer,
+		private PodcastEpisodeBusinessLayer $podcastEpisodeBusinessLayer,
+		private RadioStationBusinessLayer $radioStationBusinessLayer,
+		private TrackBusinessLayer $trackBusinessLayer,
+		private ?string $userId, // null if this gets called after the user has logged out or on a public page
+		private Random $random,
+		private Logger $logger
 	) {
 		parent::__construct($appName, $request);
-		$this->albumBusinessLayer = $albumBusinessLayer;
-		$this->artistBusinessLayer = $artistBusinessLayer;
-		$this->bookmarkBusinessLayer = $bookmarkBusinessLayer;
-		$this->genreBusinessLayer = $genreBusinessLayer;
-		$this->playlistBusinessLayer = $playlistBusinessLayer;
-		$this->podcastChannelBusinessLayer = $podcastChannelBusinessLayer;
-		$this->podcastEpisodeBusinessLayer = $podcastEpisodeBusinessLayer;
-		$this->radioStationBusinessLayer = $radioStationBusinessLayer;
-		$this->trackBusinessLayer = $trackBusinessLayer;
-		$this->userId = $userId;
-		$this->random = $random;
-		$this->logger = $logger;
 	}
 
 	#[NoAdminRequired]

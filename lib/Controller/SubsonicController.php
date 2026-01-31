@@ -83,30 +83,6 @@ class SubsonicController extends ApiController {
 	private const FOLDER_ID_ARTISTS = -1;
 	private const FOLDER_ID_FOLDERS = -2;
 
-	private AlbumBusinessLayer $albumBusinessLayer;
-	private ArtistBusinessLayer $artistBusinessLayer;
-	private BookmarkBusinessLayer $bookmarkBusinessLayer;
-	private GenreBusinessLayer $genreBusinessLayer;
-	private PlaylistBusinessLayer $playlistBusinessLayer;
-	private PodcastChannelBusinessLayer $podcastChannelBusinessLayer;
-	private PodcastEpisodeBusinessLayer $podcastEpisodeBusinessLayer;
-	private RadioStationBusinessLayer $radioStationBusinessLayer;
-	private TrackBusinessLayer $trackBusinessLayer;
-	private IURLGenerator $urlGenerator;
-	private IUserManager $userManager;
-	private LibrarySettings $librarySettings;
-	private IL10N $l10n;
-	private CoverService $coverService;
-	private DetailsService $detailsService;
-	private FileSystemService $fileSystemService;
-	private LastfmService $lastfmService;
-	private PodcastService $podcastService;
-	private AmpacheImageService $imageService;
-	private Random $random;
-	private Logger $logger;
-	private IConfig $configManager;
-	private Scrobbler $scrobbler;
-	private Concurrency $concurrency;
 	private ?string $userId;
 	private ?int $keyId;
 	private array $ignoredArticles;
@@ -114,59 +90,35 @@ class SubsonicController extends ApiController {
 	private ?string $callback;
 
 	public function __construct(
-			string $appName,
-			IRequest $request,
-			IL10N $l10n,
-			IURLGenerator $urlGenerator,
-			IUserManager $userManager,
-			AlbumBusinessLayer $albumBusinessLayer,
-			ArtistBusinessLayer $artistBusinessLayer,
-			BookmarkBusinessLayer $bookmarkBusinessLayer,
-			GenreBusinessLayer $genreBusinessLayer,
-			PlaylistBusinessLayer $playlistBusinessLayer,
-			PodcastChannelBusinessLayer $podcastChannelBusinessLayer,
-			PodcastEpisodeBusinessLayer $podcastEpisodeBusinessLayer,
-			RadioStationBusinessLayer $radioStationBusinessLayer,
-			TrackBusinessLayer $trackBusinessLayer,
-			LibrarySettings $librarySettings,
-			CoverService $coverService,
-			FileSystemService $fileSystemService,
-			DetailsService $detailsService,
-			LastfmService $lastfmService,
-			PodcastService $podcastService,
-			AmpacheImageService $imageService,
-			Random $random,
-			Logger $logger,
-			IConfig $configManager,
-			Scrobbler $scrobbler,
-			Concurrency $concurrency
+		string $appName,
+		IRequest $request,
+		private IL10N $l10n,
+		private IURLGenerator $urlGenerator,
+		private IUserManager $userManager,
+		private AlbumBusinessLayer $albumBusinessLayer,
+		private ArtistBusinessLayer $artistBusinessLayer,
+		private BookmarkBusinessLayer $bookmarkBusinessLayer,
+		private GenreBusinessLayer $genreBusinessLayer,
+		private PlaylistBusinessLayer $playlistBusinessLayer,
+		private PodcastChannelBusinessLayer $podcastChannelBusinessLayer,
+		private PodcastEpisodeBusinessLayer $podcastEpisodeBusinessLayer,
+		private RadioStationBusinessLayer $radioStationBusinessLayer,
+		private TrackBusinessLayer $trackBusinessLayer,
+		private LibrarySettings $librarySettings,
+		private CoverService $coverService,
+		private FileSystemService $fileSystemService,
+		private DetailsService $detailsService,
+		private LastfmService $lastfmService,
+		private PodcastService $podcastService,
+		private AmpacheImageService $imageService,
+		private Random $random,
+		private Logger $logger,
+		private IConfig $configManager,
+		private Scrobbler $scrobbler,
+		private Concurrency $concurrency
 	) {
 		parent::__construct($appName, $request, 'POST, GET', 'Authorization, Content-Type, Accept, X-Requested-With');
 
-		$this->albumBusinessLayer = $albumBusinessLayer;
-		$this->artistBusinessLayer = $artistBusinessLayer;
-		$this->bookmarkBusinessLayer = $bookmarkBusinessLayer;
-		$this->genreBusinessLayer = $genreBusinessLayer;
-		$this->playlistBusinessLayer = $playlistBusinessLayer;
-		$this->podcastChannelBusinessLayer = $podcastChannelBusinessLayer;
-		$this->podcastEpisodeBusinessLayer = $podcastEpisodeBusinessLayer;
-		$this->radioStationBusinessLayer = $radioStationBusinessLayer;
-		$this->trackBusinessLayer = $trackBusinessLayer;
-		$this->urlGenerator = $urlGenerator;
-		$this->userManager = $userManager;
-		$this->l10n = $l10n;
-		$this->librarySettings = $librarySettings;
-		$this->coverService = $coverService;
-		$this->fileSystemService = $fileSystemService;
-		$this->detailsService = $detailsService;
-		$this->lastfmService = $lastfmService;
-		$this->podcastService = $podcastService;
-		$this->imageService = $imageService;
-		$this->random = $random;
-		$this->logger = $logger;
-		$this->configManager = $configManager;
-		$this->scrobbler = $scrobbler;
-		$this->concurrency = $concurrency;
 		$this->userId = null;
 		$this->keyId = null;
 		$this->ignoredArticles = [];

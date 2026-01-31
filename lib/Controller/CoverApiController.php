@@ -39,36 +39,19 @@ use OCA\Music\Utility\StringUtil;
 
 class CoverApiController extends Controller {
 
-	private IURLGenerator $urlGenerator;
-	private IRootFolder $rootFolder;
-	private ArtistBusinessLayer $artistBusinessLayer;
-	private AlbumBusinessLayer $albumBusinessLayer;
-	private PodcastChannelBusinessLayer $podcastChannelBusinessLayer;
-	private CoverService $coverService;
-	private ?string $userId;
-	private Logger $logger;
-
 	public function __construct(
-			string $appName,
-			IRequest $request,
-			IURLGenerator $urlGenerator,
-			IRootFolder $rootFolder,
-			ArtistBusinessLayer $artistBusinessLayer,
-			AlbumBusinessLayer $albumBusinessLayer,
-			PodcastChannelBusinessLayer $podcastChannelBusinessLayer,
-			CoverService $coverService,
-			?string $userId, // null if this gets called after the user has logged out or on a public page
-			Logger $logger
+		string $appName,
+		IRequest $request,
+		private IURLGenerator $urlGenerator,
+		private IRootFolder $rootFolder,
+		private ArtistBusinessLayer $artistBusinessLayer,
+		private AlbumBusinessLayer $albumBusinessLayer,
+		private PodcastChannelBusinessLayer $podcastChannelBusinessLayer,
+		private CoverService $coverService,
+		private ?string $userId, // null if this gets called after the user has logged out or on a public page
+		private Logger $logger
 	) {
 		parent::__construct($appName, $request);
-		$this->urlGenerator = $urlGenerator;
-		$this->rootFolder = $rootFolder;
-		$this->artistBusinessLayer = $artistBusinessLayer;
-		$this->albumBusinessLayer = $albumBusinessLayer;
-		$this->podcastChannelBusinessLayer = $podcastChannelBusinessLayer;
-		$this->coverService = $coverService;
-		$this->userId = $userId;
-		$this->logger = $logger;
 	}
 
 	#[PublicPage]

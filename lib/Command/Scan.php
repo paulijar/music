@@ -13,7 +13,7 @@
  * @copyright Thomas Müller 2013
  * @copyright Bart Visscher 2013
  * @copyright Leizh 2014
- * @copyright Pauli Järvinen 2017 - 2025
+ * @copyright Pauli Järvinen 2017 - 2026
  */
 
 namespace OCA\Music\Command;
@@ -29,10 +29,11 @@ use OCA\Music\Service\Scanner;
 
 class Scan extends BaseCommand {
 
-	private Scanner $scanner;
-
-	public function __construct(IUserManager $userManager, IGroupManager $groupManager, Scanner $scanner) {
-		$this->scanner = $scanner;
+	public function __construct(
+		IUserManager $userManager,
+		IGroupManager $groupManager,
+		private Scanner $scanner
+	) {
 		parent::__construct($userManager, $groupManager);
 	}
 

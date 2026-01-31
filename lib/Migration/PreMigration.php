@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2017 - 2025
+ * @copyright Pauli Järvinen 2017 - 2026
  */
 
 namespace OCA\Music\Migration;
@@ -19,12 +19,9 @@ use OCP\Migration\IRepairStep;
 
 class PreMigration implements IRepairStep {
 
-	private IDBConnection $db;
-	private IConfig $config;
-
-	public function __construct(IDBConnection $connection, IConfig $config) {
-		$this->db = $connection;
-		$this->config = $config;
+	public function __construct(
+		private IDBConnection $db,
+		private IConfig $config) {
 	}
 
 	public function getName() {

@@ -39,7 +39,12 @@ use OCP\AppFramework\Db\DoesNotExistException;
  */
 class TrackBusinessLayer extends BusinessLayer implements Scrobbler {
 
-	public function __construct(TrackMapper $trackMapper, private FileSystemService $fileSystemService, private Logger $logger, private Cache $cache) {
+	public function __construct(
+		TrackMapper $trackMapper,
+		private FileSystemService $fileSystemService,
+		private Logger $logger,
+		private Cache $cache
+	) {
 		parent::__construct($trackMapper);
 	}
 

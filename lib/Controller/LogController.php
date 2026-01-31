@@ -23,11 +23,13 @@ use OCP\IRequest;
 use OCA\Music\AppFramework\Core\Logger;
 
 class LogController extends Controller {
-	private Logger $logger;
 
-	public function __construct(string $appName, IRequest $request, Logger $logger) {
+	public function __construct(
+		string $appName,
+		IRequest $request,
+		private Logger $logger
+	) {
 		parent::__construct($appName, $request);
-		$this->logger = $logger;
 	}
 
 	#[NoAdminRequired]

@@ -41,52 +41,41 @@ class SettingController extends Controller {
 	 * on Nextcloud as ISecureRandom::CHAR_HUMAN_READABLE but that's not available on ownCloud. */
 	private const API_KEY_CHARSET = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
-	private AmpacheSessionMapper $ampacheSessionMapper;
-	private AmpacheUserMapper $ampacheUserMapper;
-	private Scanner $scanner;
-	private string $userId;
-	private LibrarySettings $librarySettings;
-	private ISecureRandom $secureRandom;
-	private IURLGenerator $urlGenerator;
-	private Logger $logger;
-	/** @var ExternalScrobbler[] $externalScrobblers */
-	private array $externalScrobblers;
-
+	/**
+	 * @param ExternalScrobbler[] $externalScrobblers
+	 */
 	public function __construct(
-			string $appName,
-			IRequest $request,
-			AmpacheSessionMapper $ampacheSessionMapper,
-			AmpacheUserMapper $ampacheUserMapper,
-			Scanner $scanner,
-			?string $userId,
-			LibrarySettings $librarySettings,
-			ISecureRandom $secureRandom,
-			IURLGenerator $urlGenerator,
-			Logger $logger,
-			array $externalScrobblers
+		string $appName,
+		IRequest $request,
+		private AmpacheSessionMapper $ampacheSessionMapper,
+		private AmpacheUserMapper $ampacheUserMapper,
+		private Scanner $scanner,
+		private ?string $userId,
+		private LibrarySettings $librarySettings,
+		private ISecureRandom $secureRandom,
+		private IURLGenerator $urlGenerator,
+		private Logger $logger,
+		private array $externalScrobblers
 	) {
 		parent::__construct($appName, $request);
+	}
 
-		$this->ampacheSessionMapper = $ampacheSessionMapper;
-		$this->ampacheUserMapper = $ampacheUserMapper;
-		$this->scanner = $scanner;
-		$this->userId = $userId ?? ''; // ensure non-null to satisfy Scrutinizer; the null case should happen only when the user has already logged out
-		$this->librarySettings = $librarySettings;
-		$this->secureRandom = $secureRandom;
-		$this->urlGenerator = $urlGenerator;
-		$this->logger = $logger;
-		$this->externalScrobblers = $externalScrobblers;
+	private function user() : string {
+		// The $userId may be null in constructor (if user session has been terminated) but none of our
+		// public methods should get called in such case. Assure this also for Scrutinizer.
+		\assert($this->userId !== null);
+		return $this->userId;
 	}
 
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	#[UseSession] // to keep the session reserved while execution in progress
 	public function userPath(string $value) : JSONResponse {
-		$prevPath = $this->librarySettings->getPath($this->userId);
-		$success = $this->librarySettings->setPath($this->userId, $value);
+		$prevPath = $this->librarySettings->getPath($this->user());
+		$success = $this->librarySettings->setPath($this->user(), $value);
 
 		if ($success) {
-			$this->scanner->updatePath($prevPath, $value, $this->userId);
+			$this->scanner->updatePath($prevPath, $value, $this->user());
 		}
 
 		return new JSONResponse(['success' => $success]);
@@ -95,21 +84,21 @@ class SettingController extends Controller {
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function userExcludedPaths(array $value) : JSONResponse {
-		$success = $this->librarySettings->setExcludedPaths($this->userId, $value);
+		$success = $this->librarySettings->setExcludedPaths($this->user(), $value);
 		return new JSONResponse(['success' => $success]);
 	}
 
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function enableScanMetadata(bool $value) : JSONResponse {
-		$this->librarySettings->setScanMetadataEnabled($this->userId, $value);
+		$this->librarySettings->setScanMetadataEnabled($this->user(), $value);
 		return new JSONResponse(['success' => true]);
 	}
 
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function ignoredArticles(array $value) : JSONResponse {
-		$this->librarySettings->setIgnoredArticles($this->userId, $value);
+		$this->librarySettings->setIgnoredArticles($this->user(), $value);
 		return new JSONResponse(['success' => true]);
 	}
 
@@ -117,15 +106,15 @@ class SettingController extends Controller {
 	#[NoCSRFRequired]
 	public function getAll() : JSONResponse {
 		return new JSONResponse([
-			'path' => $this->librarySettings->getPath($this->userId),
-			'excludedPaths' => $this->librarySettings->getExcludedPaths($this->userId),
-			'scanMetadata' => $this->librarySettings->getScanMetadataEnabled($this->userId),
-			'ignoredArticles' => $this->librarySettings->getIgnoredArticles($this->userId),
+			'path' => $this->librarySettings->getPath($this->user()),
+			'excludedPaths' => $this->librarySettings->getExcludedPaths($this->user()),
+			'scanMetadata' => $this->librarySettings->getScanMetadataEnabled($this->user()),
+			'ignoredArticles' => $this->librarySettings->getIgnoredArticles($this->user()),
 			'ampacheUrl' => $this->getAmpacheUrl(),
 			'subsonicUrl' => $this->getSubsonicUrl(),
-			'ampacheKeys' => $this->ampacheUserMapper->getAll($this->userId),
+			'ampacheKeys' => $this->ampacheUserMapper->getAll($this->user()),
 			'appVersion' => AppInfo::getVersion(),
-			'user' => $this->userId,
+			'user' => $this->user(),
 			'scrobblers' => $this->getScrobbleAuth()
 		]);
 	}
@@ -133,7 +122,7 @@ class SettingController extends Controller {
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function getUserKeys() : JSONResponse {
-		return new JSONResponse($this->ampacheUserMapper->getAll($this->userId));
+		return new JSONResponse($this->ampacheUserMapper->getAll($this->user()));
 	}
 
 	private function getAmpacheUrl() : string {
@@ -164,7 +153,7 @@ class SettingController extends Controller {
 				'identifier' => $scrobbler->getIdentifier(),
 				'configured' => $tokenRequestUrl && $scrobbler->getApiSecret(),
 				'tokenRequestUrl' => $tokenRequestUrl,
-				'hasSession' => $scrobbler->getApiSession($this->userId) !== null
+				'hasSession' => $scrobbler->getApiSession($this->user()) !== null
 			];
 		}
 
@@ -174,7 +163,7 @@ class SettingController extends Controller {
 	private function storeUserKey(?string $description, string $password) : ?int {
 		$hash = \hash('sha256', $password);
 		$description = StringUtil::truncate($description, 64); // some DB setups can't truncate automatically to column max size
-		return $this->ampacheUserMapper->addUserKey($this->userId, $hash, $description);
+		return $this->ampacheUserMapper->addUserKey($this->user(), $hash, $description);
 	}
 
 	#[NoAdminRequired]
@@ -209,7 +198,7 @@ class SettingController extends Controller {
 	#[NoCSRFRequired]
 	public function removeUserKey(int $id) : JSONResponse {
 		$this->ampacheSessionMapper->revokeSessions($id);
-		$this->ampacheUserMapper->removeUserKey($this->userId, $id);
+		$this->ampacheUserMapper->removeUserKey($this->user(), $id);
 		return new JSONResponse(['success' => true]);
 	}
 }

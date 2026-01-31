@@ -29,35 +29,19 @@ use OCA\Music\BusinessLayer\TrackBusinessLayer;
 use OCA\Music\Http\ErrorResponse;
 
 class FavoritesController extends Controller {
-	private AlbumBusinessLayer $albumBusinessLayer;
-	private ArtistBusinessLayer $artistBusinessLayer;
-	private PlaylistBusinessLayer $playlistBusinessLayer;
-	private PodcastChannelBusinessLayer $podcastChannelBusinessLayer;
-	private PodcastEpisodeBusinessLayer $podcastEpisodeBusinessLayer;
-	private TrackBusinessLayer $trackBusinessLayer;
-	private string $userId;
 
 	public function __construct(
-			string $appName,
-			IRequest $request,
-			AlbumBusinessLayer $albumBusinessLayer,
-			ArtistBusinessLayer $artistBusinessLayer,
-			PlaylistBusinessLayer $playlistBusinessLayer,
-			PodcastChannelBusinessLayer $podcastChannelBusinessLayer,
-			PodcastEpisodeBusinessLayer $podcastEpisodeBusinessLayer,
-			TrackBusinessLayer $trackBusinessLayer,
-			string $userId
+		string $appName,
+		IRequest $request,
+		private AlbumBusinessLayer $albumBusinessLayer,
+		private ArtistBusinessLayer $artistBusinessLayer,
+		private PlaylistBusinessLayer $playlistBusinessLayer,
+		private PodcastChannelBusinessLayer $podcastChannelBusinessLayer,
+		private PodcastEpisodeBusinessLayer $podcastEpisodeBusinessLayer,
+		private TrackBusinessLayer $trackBusinessLayer,
+		private string $userId
 	) {
-
 		parent::__construct($appName, $request);
-
-		$this->albumBusinessLayer = $albumBusinessLayer;
-		$this->artistBusinessLayer = $artistBusinessLayer;
-		$this->playlistBusinessLayer = $playlistBusinessLayer;
-		$this->podcastChannelBusinessLayer = $podcastChannelBusinessLayer;
-		$this->podcastEpisodeBusinessLayer = $podcastEpisodeBusinessLayer;
-		$this->trackBusinessLayer = $trackBusinessLayer;
-		$this->userId = $userId;
 	}
 
 	#[NoAdminRequired]

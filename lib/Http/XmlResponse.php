@@ -28,19 +28,14 @@ use OCP\AppFramework\Http\Response;
  * purposes.
  */
 class XmlResponse extends Response {
-	private array $content;
+
 	private \DOMDocument $doc;
-	/** @var bool|string[] $attributeKeys */
-	private bool|array $attributeKeys;
-	private bool $boolAsInt;
-	private bool $nullAsEmpty;
-	private ?string $textNodeKey;
 
 	/**
 	 * @param array $content
-	 * @param bool|string[] $attributes If true, then key-value pair is made into attribute if possible.
-	 *                                  If false, then key-value pairs are never made into attributes.
-	 *                                  If an array, then keys found from the array are made into attributes if possible.
+	 * @param bool|string[] $attributeKeys If true, then key-value pair is made into attribute if possible.
+	 *                                     If false, then key-value pairs are never made into attributes.
+	 *                                     If an array, then keys found from the array are made into attributes if possible.
 	 * @param bool $boolAsInt If true, any boolean values are yielded as int 0/1.
 	 *                        If false, any boolean values are yielded as string "false"/"true".
 	 * @param bool $nullAsEmpty If true, any null values are converted to empty strings, and the result has an empty element or attribute.
@@ -48,23 +43,23 @@ class XmlResponse extends Response {
 	 * @param ?string $textNodeKey When a key within @a $content matches this, the corresponding value is converted to a text node,
 	 *                             instead of creating an element or attribute named by the key.
 	 */
-	public function __construct(array $content, bool|array $attributes=true,
-								bool $boolAsInt=false, bool $nullAsEmpty=false,
-								?string $textNodeKey='value') {
+	public function __construct(
+		private array $content,
+		private bool|array $attributeKeys=true,
+		private bool $boolAsInt=false,
+		private bool $nullAsEmpty=false,
+		private ?string $textNodeKey='value'
+	) {
 		$this->setStatus(Http::STATUS_OK);
 		$this->addHeader('Content-Type', 'application/xml');
 
 		// The content must have exactly one root element, add one if necessary
-		if (\count($content) != 1) {
-			$content = ['root' => $content];
+		if (\count($this->content) != 1) {
+			$this->content = ['root' => $this->content];
 		}
-		$this->content = $content;
+
 		$this->doc = new \DOMDocument('1.0', 'UTF-8');
 		$this->doc->formatOutput = true;
-		$this->attributeKeys = $attributes;
-		$this->boolAsInt = $boolAsInt;
-		$this->nullAsEmpty = $nullAsEmpty;
-		$this->textNodeKey = $textNodeKey;
 	}
 
 	/**

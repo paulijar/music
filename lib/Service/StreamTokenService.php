@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2024, 2025
+ * @copyright Pauli Järvinen 2024 - 2026
  */
 
 namespace OCA\Music\Service;
@@ -22,12 +22,9 @@ use OCA\Music\Db\Cache;
  */
 class StreamTokenService {
 
-	private Cache $cache;
-	private ?string $secret;
+	private ?string $secret = null; // lazy load
 
-	public function __construct(Cache $cache) {
-		$this->cache = $cache;
-		$this->secret = null; // lazy load
+	public function __construct(private Cache $cache) {
 	}
 
 	public function tokenForUrl(string $url) : string {

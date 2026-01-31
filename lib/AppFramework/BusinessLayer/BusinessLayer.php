@@ -10,7 +10,7 @@
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Alessandro Cosentino 2012
  * @copyright Bernhard Posselt 2012, 2014
- * @copyright Pauli Järvinen 2017 - 2025
+ * @copyright Pauli Järvinen 2017 - 2026
  */
 
 namespace OCA\Music\AppFramework\BusinessLayer;
@@ -30,17 +30,13 @@ use OCP\IL10N;
  * @template EntityType of Entity
  */
 abstract class BusinessLayer {
-	/** @phpstan-var BaseMapper<EntityType> */
-	protected BaseMapper $mapper;
-
 	// Some SQLite installations can't handle more than 999 query args. Remember that `user_id` takes one slot in most queries.
 	public const MAX_SQL_ARGS = 999;
 
 	/**
 	 * @phpstan-param BaseMapper<EntityType> $mapper
 	 */
-	public function __construct(BaseMapper $mapper) {
-		$this->mapper = $mapper;
+	public function __construct(protected BaseMapper $mapper) {
 	}
 
 	/**

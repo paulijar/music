@@ -9,7 +9,7 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Morris Jobke 2013, 2014
- * @copyright Pauli Järvinen 2016 - 2025
+ * @copyright Pauli Järvinen 2016 - 2026
  */
 
 namespace OCA\Music\Service;
@@ -22,12 +22,10 @@ use OCP\Files\File;
  * an extractor class for getID3
  */
 class ExtractorGetID3 implements Extractor {
-	private ?\getID3 $getID3;
-	private Logger $logger;
 
-	public function __construct(Logger $logger) {
-		$this->logger = $logger;
-		$this->getID3 = null; // lazy-loaded
+	private ?\getID3 $getID3 = null; // lazy-loaded
+
+	public function __construct(private Logger $logger) {
 	}
 
 	/**

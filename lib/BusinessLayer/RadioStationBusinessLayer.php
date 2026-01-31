@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2020 - 2025
+ * @copyright Pauli Järvinen 2020 - 2026
  */
 
 namespace OCA\Music\BusinessLayer;
@@ -31,11 +31,12 @@ use OCA\Music\Utility\StringUtil;
  * @extends BusinessLayer<RadioStation>
  */
 class RadioStationBusinessLayer extends BusinessLayer {
-	private Logger $logger;
 
-	public function __construct(RadioStationMapper $mapper, Logger $logger) {
+	public function __construct(
+		RadioStationMapper $mapper,
+		private Logger $logger
+	) {
 		parent::__construct($mapper);
-		$this->logger = $logger;
 	}
 
 	/**

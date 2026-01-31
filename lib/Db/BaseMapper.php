@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2016 - 2025
+ * @copyright Pauli Järvinen 2016 - 2026
  */
 
 namespace OCA\Music\Db;
@@ -37,9 +37,6 @@ use OCA\Music\Utility\StringUtil;
 abstract class BaseMapper extends Mapper {
 	public const SQL_DATE_FORMAT = 'Y-m-d H:i:s.v';
 
-	protected string $nameColumn;
-	protected ?array $uniqueColumns;
-	protected ?string $parentIdColumn;
 	protected string $dbType; // database type 'mysql', 'pgsql', or 'sqlite3'
 
 	/**
@@ -47,12 +44,15 @@ abstract class BaseMapper extends Mapper {
 	 * @phpstan-param class-string<EntityType> $entityClass
 	 */
 	public function __construct(
-			IDBConnection $db, IConfig $config, string $tableName, string $entityClass,
-			string $nameColumn, ?array $uniqueColumns=null, ?string $parentIdColumn=null) {
+		IDBConnection $db,
+		IConfig $config,
+		string $tableName,
+		string $entityClass,
+		protected string $nameColumn,
+		protected ?array $uniqueColumns=null,
+		protected ?string $parentIdColumn=null
+	) {
 		parent::__construct($db, $tableName, $entityClass);
-		$this->nameColumn = $nameColumn;
-		$this->uniqueColumns = $uniqueColumns;
-		$this->parentIdColumn = $parentIdColumn;
 		$this->dbType = $config->getSystemValue('dbtype');
 	}
 

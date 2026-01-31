@@ -24,10 +24,8 @@ use OCA\Music\BusinessLayer\TrackBusinessLayer;
 use OCA\Music\Service\Scanner;
 
 class FileHooks {
-	private IRootFolder $filesystemRoot;
 
-	public function __construct(IRootFolder $filesystemRoot) {
-		$this->filesystemRoot = $filesystemRoot;
+	public function __construct(private IRootFolder $filesystemRoot) {
 	}
 
 	/**

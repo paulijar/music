@@ -42,10 +42,6 @@ use OCP\IDBConnection;
  * @phpstan-property class-string<EntityType> $entityClass
  */
 abstract class Mapper {
-	protected string $tableName;
-	protected string $entityClass;
-	protected IDBConnection $db;
-
 	/**
 	 * @param IDBConnection $db Instance of the Db abstraction layer
 	 * @param string $tableName the name of the table. set this to allow entity
@@ -53,8 +49,11 @@ abstract class Mapper {
 	 * @phpstan-param class-string<EntityType> $entityClass
 	 * @since 7.0.0
 	 */
-	public function __construct(IDBConnection $db, $tableName, $entityClass=null) {
-		$this->db = $db;
+	public function __construct(
+		protected IDBConnection $db,
+		protected string $tableName,
+		protected ?string $entityClass=null
+	) {
 		$this->tableName = '*PREFIX*' . $tableName;
 
 		// if not given set the entity name to the class without the mapper part

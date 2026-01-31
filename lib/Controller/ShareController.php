@@ -36,24 +36,15 @@ use OCP\Share\Exceptions\ShareNotFound;
  */
 class ShareController extends Controller {
 
-	private IManager $shareManager;
-	private Scanner $scanner;
-	private PlaylistFileService $playlistFileService;
-	private Logger $logger;
-
 	public function __construct(
-			string $appName,
-			IRequest $request,
-			Scanner $scanner,
-			PlaylistFileService $playlistFileService,
-			Logger $logger,
-			IManager $shareManager
+		string $appName,
+		IRequest $request,
+		private Scanner $scanner,
+		private PlaylistFileService $playlistFileService,
+		private Logger $logger,
+		private IManager $shareManager
 	) {
 		parent::__construct($appName, $request);
-		$this->shareManager = $shareManager;
-		$this->scanner = $scanner;
-		$this->playlistFileService = $playlistFileService;
-		$this->logger = $logger;
 	}
 
 	#[PublicPage]

@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2019 - 2025
+ * @copyright Pauli Järvinen 2019 - 2026
  */
 
 namespace OCA\Music\Middleware;
@@ -29,14 +29,11 @@ use OCA\Music\Utility\StringUtil;
  * Map SubsonicExceptions from the controller to proper Subsonic error results.
  */
 class SubsonicMiddleware extends Middleware {
-	private IRequest $request;
-	private AmpacheUserMapper $userMapper;
-	private Logger $logger;
-
-	public function __construct(IRequest $request, AmpacheUserMapper $userMapper, Logger $logger) {
-		$this->request = $request;
-		$this->userMapper = $userMapper;
-		$this->logger = $logger;
+	public function __construct(
+		private IRequest $request,
+		private AmpacheUserMapper $userMapper,
+		private Logger $logger,
+	) {
 	}
 
 	/**

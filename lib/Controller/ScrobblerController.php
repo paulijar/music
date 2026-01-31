@@ -25,25 +25,17 @@ use OCP\IL10N;
 use OCP\IRequest;
 
 class ScrobblerController extends Controller {
-	private IL10N $l10n;
-
-	private ?string $userId;
-
-	/** @var ExternalScrobbler[] $externalScrobblers */
-	private array $externalScrobblers;
-
+	/**
+	 * @param ExternalScrobbler[] $externalScrobblers
+	 */
 	public function __construct(
-			string $appName,
-			IRequest $request,
-			IL10N $l10n,
-			?string $userId,
-			array $externalScrobblers
+		string $appName,
+		IRequest $request,
+		private IL10N $l10n,
+		private ?string $userId,
+		private array $externalScrobblers
 	) {
 		parent::__construct($appName, $request);
-		$this->l10n = $l10n;
-		$this->userId = $userId;
-		$this->appName = $appName;
-		$this->externalScrobblers = $externalScrobblers;
 	}
 
 	/** @NoSameSiteCookieRequired */

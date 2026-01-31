@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2018 - 2025
+ * @copyright Pauli Järvinen 2018 - 2026
  */
 
 namespace OCA\Music\BusinessLayer;
@@ -22,29 +22,16 @@ use OCP\IL10N;
 use OCP\IURLGenerator;
 
 class Library {
-	private AlbumBusinessLayer $albumBusinessLayer;
-	private ArtistBusinessLayer $artistBusinessLayer;
-	private TrackBusinessLayer $trackBusinessLayer;
-	private CoverService $coverService;
-	private IURLGenerator $urlGenerator;
-	private IL10N $l10n;
-	private Logger $logger;
 
 	public function __construct(
-			AlbumBusinessLayer $albumBusinessLayer,
-			ArtistBusinessLayer $artistBusinessLayer,
-			TrackBusinessLayer $trackBusinessLayer,
-			CoverService $coverService,
-			IURLGenerator $urlGenerator,
-			IL10N $l10n,
-			Logger $logger) {
-		$this->albumBusinessLayer = $albumBusinessLayer;
-		$this->artistBusinessLayer = $artistBusinessLayer;
-		$this->trackBusinessLayer = $trackBusinessLayer;
-		$this->coverService = $coverService;
-		$this->urlGenerator = $urlGenerator;
-		$this->l10n = $l10n;
-		$this->logger = $logger;
+		private AlbumBusinessLayer $albumBusinessLayer,
+		private ArtistBusinessLayer $artistBusinessLayer,
+		private TrackBusinessLayer $trackBusinessLayer,
+		private CoverService $coverService,
+		private IURLGenerator $urlGenerator,
+		private IL10N $l10n,
+		private Logger $logger
+	) {
 	}
 
 	public function getTracksAlbumsAndArtists(string $userId) : array {

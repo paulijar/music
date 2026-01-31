@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2023 - 2025
+ * @copyright Pauli Järvinen 2023 - 2026
  */
 
 namespace OCA\Music\Service;
@@ -17,14 +17,10 @@ use OCA\Music\Db\AmpacheUserMapper;
 
 class AmpacheImageService {
 
-	private AmpacheUserMapper $userMapper;
-	private Logger $logger;
-
 	public function __construct(
-			AmpacheUserMapper $userMapper,
-			Logger $logger) {
-		$this->userMapper = $userMapper;
-		$this->logger = $logger;
+		private AmpacheUserMapper $userMapper,
+		private Logger $logger
+	) {
 	}
 
 	public function getToken(string $entityType, int $entityId, int $apiKeyId) : ?string {

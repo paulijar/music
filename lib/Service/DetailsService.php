@@ -19,14 +19,11 @@ use OCA\Music\AppFramework\Core\Logger;
 use OCA\Music\Utility\StringUtil;
 
 class DetailsService {
-	private Extractor $extractor;
-	private Logger $logger;
 
 	public function __construct(
-			ExtractorGetID3 $extractor,
-			Logger $logger) {
-		$this->extractor = $extractor;
-		$this->logger = $logger;
+		private ExtractorGetID3 $extractor,
+		private Logger $logger
+	) {
 	}
 
 	public function getDetails(int $fileId, Folder $userFolder) : ?array {

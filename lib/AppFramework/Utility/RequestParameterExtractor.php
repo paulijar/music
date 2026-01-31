@@ -17,12 +17,10 @@ use OCP\IRequest;
  * Match HTTP request arguments to method parameters for Subsonic or Ampache API
  */
 class RequestParameterExtractor {
-	private IRequest $request;
-	private array $customFilters;
-
-	public function __construct(IRequest $request, array $customFilters = []) {
-		$this->request = $request;
-		$this->customFilters = $customFilters;
+	public function __construct(
+		private IRequest $request,
+		private array $customFilters = []
+	) {
 	}
 
 	/**

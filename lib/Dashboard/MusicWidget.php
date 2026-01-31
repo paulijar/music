@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2024
+ * @copyright Pauli Järvinen 2024 - 2026
  */
 
 namespace OCA\Music\Dashboard;
@@ -20,12 +20,11 @@ use OCP\IURLGenerator;
  * Widget for the Nextcloud Dashboard. This class is not used on ownCloud.
  */
 class MusicWidget implements IWidget {
-	private IL10N $l10n;
-	private IURLGenerator $urlGenerator;
 
-	public function __construct(IL10N $l10n, IURLGenerator $urlGenerator) {
-		$this->l10n = $l10n;
-		$this->urlGenerator = $urlGenerator;
+	public function __construct(
+		private IL10N $l10n, 
+		private IURLGenerator $urlGenerator
+	) {
 	}
 
 	/**

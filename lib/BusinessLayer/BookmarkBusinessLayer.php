@@ -9,7 +9,7 @@
  * @author Gavin E <no.emai@address.for.me>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Gavin E 2020
- * @copyright Pauli Järvinen 2020 - 2025
+ * @copyright Pauli Järvinen 2020 - 2026
  */
 
 namespace OCA\Music\BusinessLayer;
@@ -35,9 +35,11 @@ use OCP\AppFramework\Db\DoesNotExistException;
  * @extends BusinessLayer<Bookmark>
  */
 class BookmarkBusinessLayer extends BusinessLayer {
-	private Logger $logger;
 
-	public function __construct(BookmarkMapper $bookmarkMapper, Logger $logger) {
+	public function __construct(
+		BookmarkMapper $bookmarkMapper,
+		private Logger $logger
+	) {
 		parent::__construct($bookmarkMapper);
 		$this->logger = $logger;
 	}

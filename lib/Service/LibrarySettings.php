@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2019 - 2025
+ * @copyright Pauli Järvinen 2019 - 2026
  */
 
 namespace OCA\Music\Service;
@@ -32,20 +32,12 @@ class LibrarySettings {
 	 */
 	use LocalCacheTrait;
 
-	private string $appName;
-	private IConfig $configManager;
-	private IRootFolder $rootFolder;
-	private Logger $logger;
-
 	public function __construct(
-			string $appName,
-			IConfig $configManager,
-			IRootFolder $rootFolder,
-			Logger $logger) {
-		$this->appName = $appName;
-		$this->configManager = $configManager;
-		$this->rootFolder = $rootFolder;
-		$this->logger = $logger;
+		private string $appName,
+		private IConfig $configManager,
+		private IRootFolder $rootFolder,
+		private Logger $logger
+	) {
 	}
 
 	public function setScanMetadataEnabled(string $userId, bool $enabled) : void {

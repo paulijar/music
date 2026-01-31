@@ -26,24 +26,18 @@ use OCA\Music\Utility\StringUtil;
 use OCP\IConfig;
 
 class LastfmService {
-	private AlbumBusinessLayer $albumBusinessLayer;
-	private ArtistBusinessLayer $artistBusinessLayer;
-	private TrackBusinessLayer $trackBusinessLayer;
-	private Logger $logger;
-	private string $apiKey;
 
 	private const LASTFM_URL = 'http://ws.audioscrobbler.com/2.0/';
 
+	private string $apiKey;
+
 	public function __construct(
-			AlbumBusinessLayer $albumBusinessLayer,
-			ArtistBusinessLayer $artistBusinessLayer,
-			TrackBusinessLayer $trackBusinessLayer,
-			IConfig $config,
-			Logger $logger) {
-		$this->albumBusinessLayer = $albumBusinessLayer;
-		$this->artistBusinessLayer = $artistBusinessLayer;
-		$this->trackBusinessLayer = $trackBusinessLayer;
-		$this->logger = $logger;
+		IConfig $config,
+		private AlbumBusinessLayer $albumBusinessLayer,
+		private ArtistBusinessLayer $artistBusinessLayer,
+		private TrackBusinessLayer $trackBusinessLayer,
+		private Logger $logger
+	) {
 		$this->apiKey = $config->getSystemValue('music.lastfm_api_key');
 	}
 

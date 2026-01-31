@@ -36,33 +36,19 @@ use OCP\AppFramework\Http\Response;
 use OCP\IRequest;
 
 class AmpacheImageController extends Controller {
-	private AmpacheImageService $service;
-	private CoverService $coverService;
-	private LibrarySettings $librarySettings;
-	private AlbumBusinessLayer $albumBusinessLayer;
-	private ArtistBusinessLayer $artistBusinessLayer;
-	private PlaylistBusinessLayer $playlistBusinessLayer;
-	private Logger $logger;
 
 	public function __construct(
-			string $appName,
-			IRequest $request,
-			AmpacheImageService $service,
-			CoverService $coverService,
-			LibrarySettings $librarySettings,
-			AlbumBusinessLayer $albumBusinessLayer,
-			ArtistBusinessLayer $artistBusinessLayer,
-			PlaylistBusinessLayer $playlistBusinessLayer,
-			Logger $logger
+		string $appName,
+		IRequest $request,
+		private AmpacheImageService $service,
+		private CoverService $coverService,
+		private LibrarySettings $librarySettings,
+		private AlbumBusinessLayer $albumBusinessLayer,
+		private ArtistBusinessLayer $artistBusinessLayer,
+		private PlaylistBusinessLayer $playlistBusinessLayer,
+		private Logger $logger
 	) {
 		parent::__construct($appName, $request);
-		$this->service = $service;
-		$this->coverService = $coverService;
-		$this->librarySettings = $librarySettings;
-		$this->albumBusinessLayer = $albumBusinessLayer;
-		$this->artistBusinessLayer = $artistBusinessLayer;
-		$this->playlistBusinessLayer = $playlistBusinessLayer;
-		$this->logger = $logger;
 	}
 
 	/** @NoSameSiteCookieRequired */

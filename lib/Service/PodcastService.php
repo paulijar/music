@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2021 - 2025
+ * @copyright Pauli Järvinen 2021 - 2026
  */
 
 namespace OCA\Music\Service;
@@ -26,9 +26,6 @@ use OCP\Files\File;
 use OCP\Files\Folder;
 
 class PodcastService {
-	private PodcastChannelBusinessLayer $channelBusinessLayer;
-	private PodcastEpisodeBusinessLayer $episodeBusinessLayer;
-	private Logger $logger;
 
 	public const STATUS_OK = 0;
 	public const STATUS_INVALID_URL = 1;
@@ -37,12 +34,10 @@ class PodcastService {
 	public const STATUS_NOT_FOUND = 4;
 
 	public function __construct(
-			PodcastChannelBusinessLayer $channelBusinessLayer,
-			PodcastEpisodeBusinessLayer $episodeBusinessLayer,
-			Logger $logger) {
-		$this->channelBusinessLayer = $channelBusinessLayer;
-		$this->episodeBusinessLayer = $episodeBusinessLayer;
-		$this->logger = $logger;
+		private PodcastChannelBusinessLayer $channelBusinessLayer,
+		private PodcastEpisodeBusinessLayer $episodeBusinessLayer,
+		private Logger $logger
+	) {
 	}
 
 	/**

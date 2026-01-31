@@ -39,51 +39,23 @@ use OCA\Music\Utility\Util;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class Scanner extends PublicEmitter {
-	private Extractor $extractor;
-	private ArtistBusinessLayer $artistBusinessLayer;
-	private AlbumBusinessLayer $albumBusinessLayer;
-	private TrackBusinessLayer $trackBusinessLayer;
-	private PlaylistBusinessLayer $playlistBusinessLayer;
-	private GenreBusinessLayer $genreBusinessLayer;
-	private Cache $cache;
-	private CoverService $coverService;
-	private Logger $logger;
-	private Maintenance $maintenance;
-	private LibrarySettings $librarySettings;
-	private IRootFolder $rootFolder;
-	private IConfig $config;
-	private IFactory $l10nFactory;
 
 	public function __construct(
-			ExtractorGetID3 $extractor,
-			ArtistBusinessLayer $artistBusinessLayer,
-			AlbumBusinessLayer $albumBusinessLayer,
-			TrackBusinessLayer $trackBusinessLayer,
-			PlaylistBusinessLayer $playlistBusinessLayer,
-			GenreBusinessLayer $genreBusinessLayer,
-			Cache $cache,
-			CoverService $coverService,
-			Logger $logger,
-			Maintenance $maintenance,
-			LibrarySettings $librarySettings,
-			IRootFolder $rootFolder,
-			IConfig $config,
-			IFactory $l10nFactory
+		private ExtractorGetID3 $extractor,
+		private ArtistBusinessLayer $artistBusinessLayer,
+		private AlbumBusinessLayer $albumBusinessLayer,
+		private TrackBusinessLayer $trackBusinessLayer,
+		private PlaylistBusinessLayer $playlistBusinessLayer,
+		private GenreBusinessLayer $genreBusinessLayer,
+		private Cache $cache,
+		private CoverService $coverService,
+		private Logger $logger,
+		private Maintenance $maintenance,
+		private LibrarySettings $librarySettings,
+		private IRootFolder $rootFolder,
+		private IConfig $config,
+		private IFactory $l10nFactory
 	) {
-		$this->extractor = $extractor;
-		$this->artistBusinessLayer = $artistBusinessLayer;
-		$this->albumBusinessLayer = $albumBusinessLayer;
-		$this->trackBusinessLayer = $trackBusinessLayer;
-		$this->playlistBusinessLayer = $playlistBusinessLayer;
-		$this->genreBusinessLayer = $genreBusinessLayer;
-		$this->cache = $cache;
-		$this->coverService = $coverService;
-		$this->logger = $logger;
-		$this->maintenance = $maintenance;
-		$this->librarySettings = $librarySettings;
-		$this->rootFolder = $rootFolder;
-		$this->config = $config;
-		$this->l10nFactory = $l10nFactory;
 	}
 
 	/**

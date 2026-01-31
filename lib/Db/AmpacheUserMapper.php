@@ -9,7 +9,7 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Morris Jobke 2013, 2014
- * @copyright Pauli Järvinen 2018 - 2025
+ * @copyright Pauli Järvinen 2018 - 2026
  */
 
 namespace OCA\Music\Db;
@@ -24,10 +24,8 @@ use OCP\IDBConnection;
  *       a mapper either, since this does not extend OCP\AppFramework\Db\Mapper.
  */
 class AmpacheUserMapper {
-	private IDBConnection $db;
 
-	public function __construct(IDBConnection $db) {
-		$this->db = $db;
+	public function __construct(private IDBConnection $db) {
 	}
 
 	/**

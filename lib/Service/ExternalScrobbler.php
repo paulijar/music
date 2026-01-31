@@ -7,7 +7,9 @@
  * later. See the COPYING file.
  *
  * @author Matthew Wells
+ * @author Pauli Järvinen <pauli.jarvine@gmail.co>
  * @copyright Matthew Wells 2025
+ * @copyright Pauli Järvinen 2026
  */
 
 namespace OCA\Music\Service;
@@ -22,42 +24,20 @@ use OCP\IURLGenerator;
 use OCP\Security\ICrypto;
 
 class ExternalScrobbler implements Scrobbler {
-	private IConfig $config;
-	private Logger $logger;
-	private IURLGenerator $urlGenerator;
-	private TrackBusinessLayer $trackBusinessLayer;
-	private AlbumBusinessLayer $albumBusinessLayer;
-	private ICrypto $crypto;
-	private string $name;
-	private string $identifier;
-	private string $endpoint;
-	private string $tokenRequestUrl;
-	private ?string $appName;
 
 	public function __construct(
-		IConfig $config,
-		Logger $logger,
-		IURLGenerator $urlGenerator,
-		TrackBusinessLayer $trackBusinessLayer,
-		AlbumBusinessLayer $albumBusinessLayer,
-		ICrypto $crypto,
-		string $name,
-		string $identifier,
-		string $endpoint,
-		string $tokenRequestUrl,
-		?string $appName = 'music'
+		private IConfig $config,
+		private Logger $logger,
+		private IURLGenerator $urlGenerator,
+		private TrackBusinessLayer $trackBusinessLayer,
+		private AlbumBusinessLayer $albumBusinessLayer,
+		private ICrypto $crypto,
+		private string $name,
+		private string $identifier,
+		private string $endpoint,
+		private string $tokenRequestUrl,
+		private string $appName
 	) {
-		$this->config = $config;
-		$this->logger = $logger;
-		$this->urlGenerator = $urlGenerator;
-		$this->trackBusinessLayer = $trackBusinessLayer;
-		$this->albumBusinessLayer = $albumBusinessLayer;
-		$this->crypto = $crypto;
-		$this->name = $name;
-		$this->identifier = $identifier;
-		$this->endpoint = $endpoint;
-		$this->tokenRequestUrl = $tokenRequestUrl;
-		$this->appName = $appName;
 	}
 
 	/**

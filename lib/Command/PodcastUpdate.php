@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2021 - 2025
+ * @copyright Pauli Järvinen 2021 - 2026
  */
 
 namespace OCA\Music\Command;
@@ -19,13 +19,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class PodcastUpdate extends BaseCommand {
 
-	private PodcastService $podcastService;
-
 	public function __construct(
-			\OCP\IUserManager $userManager,
-			\OCP\IGroupManager $groupManager,
-			PodcastService $podcastService) {
-		$this->podcastService = $podcastService;
+		\OCP\IUserManager $userManager,
+		\OCP\IGroupManager $groupManager,
+		private PodcastService $podcastService
+	) {
 		parent::__construct($userManager, $groupManager);
 	}
 

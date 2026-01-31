@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2022 - 2025
+ * @copyright Pauli Järvinen 2022 - 2026
  */
 
 namespace OCA\Music\Command;
@@ -19,8 +19,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class RegisterMimeTypes extends Command {
 
-	private IMimeTypeLoader $mimeTypeLoader;
-
 	private array $mimeMappings = [
 		'aac'	=> ['audio/aac'],
 		'aif'	=> ['audio/aiff'],
@@ -31,8 +29,7 @@ class RegisterMimeTypes extends Command {
 		'wpl'	=> ['application/vnd.ms-wpl'],
 	];
 
-	public function __construct(IMimeTypeLoader $mimeTypeLoader) {
-		$this->mimeTypeLoader = $mimeTypeLoader;
+	public function __construct(private IMimeTypeLoader $mimeTypeLoader) {
 		parent::__construct();
 	}
 

@@ -7,19 +7,17 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2025
+ * @copyright Pauli Järvinen 2025, 2026
  */
 
 namespace OCA\Music\AppFramework\Utility;
 
 class FileExistsException extends \RuntimeException {
 
-	private string $path;
-	private string $altName;
-
-	public function __construct(string $path, string $altName) {
-		$this->path = $path;
-		$this->altName = $altName;
+	public function __construct(
+		private string $path,
+		private string $altName
+	) {
 	}
 
 	/**

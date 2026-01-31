@@ -20,12 +20,10 @@ use Psr\Log\LoggerInterface;
 
 class Logger {
 
-	protected string $appName;
-	protected LoggerInterface $logger;
-
-	public function __construct(string $appName, IServerContainer $container) {
-		$this->appName = $appName;
-		$this->logger = $container->get(LoggerInterface::class);
+	public function __construct(
+		protected string $appName,
+		protected LoggerInterface $logger
+	) {
 	}
 
 	public function emergency(string $message) : void {

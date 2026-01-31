@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2020 - 2025
+ * @copyright Pauli Järvinen 2020 - 2026
  */
 
 namespace OCA\Music\Service;
@@ -31,27 +31,18 @@ use OCP\Files\Folder;
  * contents from file.
  */
 class PlaylistFileService {
-	private PlaylistBusinessLayer $playlistBusinessLayer;
-	private RadioStationBusinessLayer $radioStationBusinessLayer;
-	private TrackBusinessLayer $trackBusinessLayer;
-	private StreamTokenService $tokenService;
-	private Logger $logger;
 
 	private const PARSE_LOCAL_FILES_ONLY = 1;
 	private const PARSE_URLS_ONLY = 2;
 	private const PARSE_LOCAL_FILES_AND_URLS = 3;
 
 	public function __construct(
-			PlaylistBusinessLayer $playlistBusinessLayer,
-			RadioStationBusinessLayer $radioStationBusinessLayer,
-			TrackBusinessLayer $trackBusinessLayer,
-			StreamTokenService $tokenService,
-			Logger $logger) {
-		$this->playlistBusinessLayer = $playlistBusinessLayer;
-		$this->radioStationBusinessLayer = $radioStationBusinessLayer;
-		$this->trackBusinessLayer = $trackBusinessLayer;
-		$this->tokenService = $tokenService;
-		$this->logger = $logger;
+		private PlaylistBusinessLayer $playlistBusinessLayer,
+		private RadioStationBusinessLayer $radioStationBusinessLayer,
+		private TrackBusinessLayer $trackBusinessLayer,
+		private StreamTokenService $tokenService,
+		private Logger $logger
+	) {
 	}
 
 	/**
