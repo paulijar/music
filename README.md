@@ -10,19 +10,22 @@
 
 Music player and server for Nextcloud. Previously also ownCloud was a supported platform but as of January 2026 the development focuses only on Nextcloud. The old version with OC support can be found from https://github.com/owncloud/music.
 
-The app shows audio files stored in your cloud categorized by artists and albums. Supports mp3, and depending on the browser, many other audio formats too. Supports shuffle play and playlists. The Music app also allows serving audio files from your cloud to external applications which are compatible either with Ampache or Subsonic.
+The app shows audio files stored in your cloud categorized by artists and albums. Alternatively, the files can be viewed according the directory hierarchy. The app can play any audio file type supported on your browser and a few types even without native browser-support. Also podcasts and internet radio can be listened to. There's possibility for shuffle play, playlists, automatic playlist generation, and search by freely combining various criteria. The Music app also allows serving audio files from your cloud to external players which are compatible with either Ampache or Subsonic. In addition to the stand-alone application, the Music app comes with a minimal player embedded in the Files app and a widget for the Nextcloud Dashboard.
 
-The full-screen albums view:
-![library view](https://user-images.githubusercontent.com/8565946/132128608-34dc576b-07b7-424c-ae81-a63b9128f3d7.png)
+The albums view on the dark theme:
+![library view, dark](https://github.com/user-attachments/assets/747ebc2b-0ca2-4ada-a73c-ab4790e6c4b1)
+
+The albums view on the light theme with the track details pane opened:
+![library view, light](https://github.com/user-attachments/assets/fb3bb669-c5d2-44f0-8766-5bfba29de439)
+
+The advanced search view:
+![advanced search](https://github.com/user-attachments/assets/98846b32-8ba6-425d-b421-8c2db0bbd635)
 
 Music player embedded into the files view:
-![files view](https://user-images.githubusercontent.com/8565946/132128626-712bf745-691e-4f03-83d7-20cbc4dd37d1.png)
+![files view](https://github.com/user-attachments/assets/de9ffc20-c2ec-4033-8098-7cc84c96b395)
 
-Integration with the media control panel in Chrome:
-<img src="https://user-images.githubusercontent.com/16665512/96973502-4373e800-1518-11eb-9f99-9446d3dbf19a.jpg" alt="Chrome media control panel" width="60%"/>
-
-Mobile layout and media control integration to the lock screen and notification center with Chrome on Android:
-<img src="https://user-images.githubusercontent.com/16665512/96973698-89c94700-1518-11eb-8f9b-dc31ad529345.jpg" alt="Mobile layout" width="30%"/>    <img src="https://user-images.githubusercontent.com/8565946/79892141-bdf96900-840a-11ea-8ab7-b5afefa712d7.png" alt="Android lock screen" width="30%"/>    <img src="https://user-images.githubusercontent.com/8565946/79892145-bfc32c80-840a-11ea-88c3-0911d22b45cc.png" alt="Android notification center" width="30%"/>
+The Dashboard widget:
+![dashboard widget](https://github.com/user-attachments/assets/4783f027-9847-4979-8965-b83f265bf3dd)
 
 ## Supported formats
 
