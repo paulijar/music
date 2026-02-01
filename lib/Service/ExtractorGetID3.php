@@ -21,7 +21,7 @@ use OCP\Files\File;
 /**
  * an extractor class for getID3
  */
-class ExtractorGetID3 implements Extractor {
+class ExtractorGetID3 {
 
 	private ?\getID3 $getID3 = null; // lazy-loaded
 
