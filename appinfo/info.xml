@@ -53,6 +53,20 @@
 			<step>OCA\Music\Migration\TimestampInit</step>
 		</post-migration>
 	</repair-steps>
+	<commands>
+		<command>OCA\Music\Command\Cleanup</command>
+		<command>OCA\Music\Command\PlaylistExport</command>
+		<command>OCA\Music\Command\PlaylistImport</command>
+		<command>OCA\Music\Command\PodcastAdd</command>
+		<command>OCA\Music\Command\PodcastExport</command>
+		<command>OCA\Music\Command\PodcastImport</command>
+		<command>OCA\Music\Command\PodcastReset</command>
+		<command>OCA\Music\Command\PodcastUpdate</command>
+		<command>OCA\Music\Command\RegisterMimeTypes</command>
+		<command>OCA\Music\Command\ResetCache</command>
+		<command>OCA\Music\Command\ResetDatabase</command>
+		<command>OCA\Music\Command\Scan</command>
+	</commands>
 	<navigations>
 		<navigation>
 			<id>music</id>
