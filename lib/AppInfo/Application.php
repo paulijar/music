@@ -30,7 +30,7 @@ use OCA\Music\Middleware\SubsonicMiddleware;
 
 use OCA\Music\Service\AggregateScrobbler;
 use OCA\Music\Service\ExternalScrobbler;
-use OCA\Music\Service\Scrobbler;
+use OCA\Music\Service\IScrobbler;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
@@ -179,7 +179,7 @@ class Application extends App implements IBootstrap {
 			];
 		});
 
-		$context->registerService(Scrobbler::class, function () {
+		$context->registerService(IScrobbler::class, function () {
 			$scrobblers = $this->get('externalScrobblers');
 			$scrobblers[] = $this->get(TrackBusinessLayer::class);
 			return new AggregateScrobbler($scrobblers);

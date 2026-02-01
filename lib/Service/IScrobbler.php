@@ -7,12 +7,14 @@
  * later. See the COPYING file.
  *
  * @author Matthew Wells
+ * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Matthew Wells 2025
+ * @copyright Pauli Järvinen 2026
  */
 
 namespace OCA\Music\Service;
 
-interface Scrobbler {
+interface IScrobbler {
 	public function recordTrackPlayed(int $trackId, string $userId, ?\DateTime $timeOfPlay = null) : void;
 	public function setNowPlaying(int $trackId, string $userId, ?\DateTime $timeOfPlay = null) : void;
 }

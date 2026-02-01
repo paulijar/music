@@ -60,10 +60,10 @@ use OCA\Music\Service\AmpachePreferences;
 use OCA\Music\Service\CoverService;
 use OCA\Music\Service\DetailsService;
 use OCA\Music\Service\FileSystemService;
+use OCA\Music\Service\IScrobbler;
 use OCA\Music\Service\LastfmService;
 use OCA\Music\Service\LibrarySettings;
 use OCA\Music\Service\PodcastService;
-use OCA\Music\Service\Scrobbler;
 
 use OCA\Music\Utility\AppInfo;
 use OCA\Music\Utility\ArrayUtil;
@@ -124,7 +124,7 @@ class AmpacheController extends ApiController {
 		private LibrarySettings $librarySettings,
 		private Random $random,
 		private Logger $logger,
-		private Scrobbler $scrobbler
+		private IScrobbler $scrobbler
 	) {
 		parent::__construct($appName, $request, 'POST, GET', 'Authorization, Content-Type, Accept, X-Requested-With');
 

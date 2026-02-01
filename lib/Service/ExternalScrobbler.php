@@ -23,7 +23,7 @@ use OCP\IConfig;
 use OCP\IURLGenerator;
 use OCP\Security\ICrypto;
 
-class ExternalScrobbler implements Scrobbler {
+class ExternalScrobbler implements IScrobbler {
 
 	public function __construct(
 		private IConfig $config,

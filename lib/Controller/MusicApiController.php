@@ -25,10 +25,10 @@ use OCA\Music\Service\CollectionService;
 use OCA\Music\Service\CoverService;
 use OCA\Music\Service\DetailsService;
 use OCA\Music\Service\FileSystemService;
+use OCA\Music\Service\IScrobbler;
 use OCA\Music\Service\LastfmService;
 use OCA\Music\Service\LibrarySettings;
 use OCA\Music\Service\Scanner;
-use OCA\Music\Service\Scrobbler;
 use OCA\Music\Utility\HttpUtil;
 use OCA\Music\Utility\Util;
 
@@ -59,7 +59,7 @@ class MusicApiController extends Controller {
 		private LibrarySettings $librarySettings,
 		private ?string $userId, // null case should happen only when the user has already logged out
 		private Logger $logger,
-		private Scrobbler $scrobbler
+		private IScrobbler $scrobbler
 	) {
 		parent::__construct($appName, $request);
 	}
