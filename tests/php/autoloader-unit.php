@@ -1,6 +1,6 @@
 <?php
 /**
- * ownCloud - music
+ * Nextcloud Music app
  *
  * This file is licensed under the Affero General Public License version 3 or
  * later. See the COPYING file.
@@ -11,7 +11,7 @@
  * @copyright Pauli Järvinen 2020 - 2025
  */
 
-// to execute without owncloud, we need to create our own classloader
+// to execute without Nextcloud, we need to create our own classloader
 \spl_autoload_register(function ($className) {
 
 	$classPath = \str_replace('\\', '/', $className) . '.php';

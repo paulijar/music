@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 #
-# ownCloud Music
+# Nextcloud Music app
 #
-# @author Pauli Järvinen
-# @copyright 2025 Pauli Järvinen <pauli.jarvinen@gmail.com>
+# This file is licensed under the Affero General Public License version 3 or
+# later. See the COPYING file.
+#
+# @author Pauli Järvinen <pauli.jarvinen@gmail.com>
+# @copyright Pauli Järvinen 2025
 #
 
 # Prerequisite: The server to use is downloaded and extracted to /tmp/oc_music_ci/server
@@ -51,7 +54,7 @@ if [ $CLOUD == 'nextcloud' ]; then
     rm apps/music/appinfo/app.php
 fi
 
-# Activate the Music app. On NC, we may install the app also on officially unsupported cloud versions but the --force flag doesn't exits on OC.
+# Activate the Music app. On NC, we may install the app also on officially unsupported cloud versions but the --force flag doesn't exist on OC.
 if [ $CLOUD == 'nextcloud' ]; then
     php occ app:enable music --force
 else

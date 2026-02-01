@@ -1,9 +1,24 @@
 #!/usr/bin/env bash
+#
+# Nextcloud Music app
+#
+# This file is licensed under the Affero General Public License version 3 or
+# later. See the COPYING file.
+#
+# @author Morris Jobke
+# @author Gaurav Narula
+# @author Pauli Järvinen <pauli.jarvinen@gmail.com>
+# @copyright Morris Jobke 2015
+# @copyright Gaurav Narula 2016
+# @copyright Pauli Järvinen 2018 - 2026
+#
+
+
 # this downloads test data from github that is then moved to the data folder
-# and then can be scanned by the ownCloud filescanner
+# and then can be scanned by the Nextcloud filescanner
 
 if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 <path to ownCloud user dir>"
+    echo "Usage: $0 <path to Nextcloud user dir>"
     exit 1
 fi
 

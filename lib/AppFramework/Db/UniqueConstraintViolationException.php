@@ -14,7 +14,7 @@ namespace OCA\Music\AppFramework\Db;
 
 /**
  * Own exception type for the Music app to be used on DB unique constraint violations.
- * The exceptions used for this by the core vary by the version of Nextcloud or ownCloud used.
+ * The exceptions used for this by the core vary by the version of Nextcloud used.
  * Mapping these all to a common type enables unified handling.
  */
 class UniqueConstraintViolationException extends \Exception {

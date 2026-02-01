@@ -17,7 +17,7 @@ use OCP\IL10N;
 use OCP\IURLGenerator;
 
 /**
- * Widget for the Nextcloud Dashboard. This class is not used on ownCloud.
+ * Widget for the Nextcloud Dashboard
  */
 class MusicWidget implements IWidget {
 

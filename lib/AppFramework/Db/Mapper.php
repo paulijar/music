@@ -1,5 +1,7 @@
 <?php
 /**
+ * Nextcloud Music app
+ *
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  * @copyright Copyright (c) 2023 - 2026, Pauli Järvinen
  *

@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 /**
+ * Nextcloud Music app
+ *
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  * @copyright 2018 John Molakvoæ <skjnldsv@protonmail.com>
  * @copyright 2022 - 2026 Pauli Järvinen
