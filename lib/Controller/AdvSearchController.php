@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /**
- * ownCloud - Music app
+ * Nextcloud Music app
  *
  * This file is licensed under the Affero General Public License version 3 or
  * later. See the COPYING file.
