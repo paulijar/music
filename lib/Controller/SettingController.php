@@ -22,8 +22,8 @@ use OCA\Music\Service\LibrarySettings;
 use OCA\Music\Service\Scanner;
 use OCA\Music\Utility\AppInfo;
 use OCA\Music\Utility\StringUtil;
+use OCA\Music\Service\Scrobbling\ExternalScrobbler;
 
-use OCA\Music\Service\ExternalScrobbler;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\CORS;
