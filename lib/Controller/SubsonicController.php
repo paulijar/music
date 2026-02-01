@@ -382,6 +382,7 @@ class SubsonicController extends ApiController {
 		if (!empty($entity)) {
 			$rootFolder = $this->librarySettings->getFolder($userId);
 			$coverData = $this->coverService->getCover($entity, $userId, $rootFolder, $size);
+			\assert($coverData !== null, 'getCover shouldn\'t return null when placeholder is allowed');
 			$response = new FileResponse($coverData);
 			HttpUtil::setClientCachingDays($response, 30);
 			return $response;
