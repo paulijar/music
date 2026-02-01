@@ -28,10 +28,10 @@ class FileResponse extends Response {
 	protected bool $rangeRequest;
 
 	/**
-	 * @param File|array{content: string, mimetype: string} $file file
+	 * @param File|array{content: string, mimetype: string} $file
 	 * @param int $statusCode the Http status code, defaults to 200
 	 */
-	public function __construct($file, int $statusCode=Http::STATUS_OK) {
+	public function __construct(File|array $file, int $statusCode=Http::STATUS_OK) {
 		if (\is_array($file)) {
 			$this->file = $file['content'];
 			$mime = $file['mimetype'];
