@@ -109,7 +109,7 @@ class FilesUtil {
 			}
 		}
 
-		// In owncloud/Nextcloud, the whole file name must fit 250 characters, including the file extension.
+		// In Nextcloud, the whole file name must fit 250 characters, including the file extension.
 		$maxLength = 250 - \strlen($ext) - 1;
 		$filename = StringUtil::truncate($filename, $maxLength);
 		// Reserve another 5 characters to fit the postfix like " (xx)" on name collisions, unless there is such postfix already.

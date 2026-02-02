@@ -304,7 +304,7 @@ class PodcastService {
 		$dom->appendChild($rootElem);
 
 		$headElem = $dom->createElement('head');
-		$titleElem = $dom->createElement('title', 'Podcast channels from ownCloud/Nextcloud Music');
+		$titleElem = $dom->createElement('title', 'Podcast channels from Nextcloud Music');
 		$now = new \DateTime();
 		$dateCreatedElem = $dom->createElement('dateCreated', $now->format(\DateTime::RFC822));
 		$headElem->appendChild($titleElem);
