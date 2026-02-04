@@ -716,12 +716,13 @@ class SubsonicController extends ApiController {
 					$timeOfPlay = null;
 				}
 				if ($submission) {
-					$this->scrobbler->recordTrackPlayed((int)$trackId, $userId, $timeOfPlay);
+					$this->scrobbler->recordTrackPlayed($trackId, $userId, $timeOfPlay);
 				} else {
-					$this->scrobbler->setNowPlaying((int)$trackId, $userId, $timeOfPlay);
+					$this->scrobbler->setNowPlaying($trackId, $userId, $timeOfPlay);
 				}
 			}
 		}
+		// TODO: This needs rework. Currently, recordTrackPlayed will throw in case of invalid $trackId, which would leave the mutex reserved.
 
 		$this->concurrency->mutexRelease($mutex);
 
@@ -1798,6 +1799,7 @@ class SubsonicController extends ApiController {
 
 	/**
 	 * Given a prefixed ID like 'artist-123' or 'track-45', return the string part and the numeric part.
+	 * @return array{0: string, 1: int} Entity type prefix and the numeric part
 	 * @throws SubsonicException if the \a $id doesn't follow the expected pattern
 	 */
 	private static function parseEntityId(string $id) : array {

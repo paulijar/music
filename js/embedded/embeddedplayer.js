@@ -325,8 +325,9 @@ OCA.Music.EmbeddedPlayer = function() {
 		const resizeObs = new ResizeObserver(_entries => resizeControls());
 		resizeObs.observe(parentContainer[0]);
 
-		// While the z-index from CSS is crucial on ownCloud and older Nextcloud versions, NC28+ doesn't need it. In addition, there it
-		// causes the "overlay" scrollbar used by Firefox on Windows 11 to be hidden behind the pane which we don't want.
+		// While the z-index from CSS is crucial on the old Files architecture, the new Vue.js-based Files UI on NC28+ doesn't need it.
+		// In addition, there it causes the "overlay" scrollbar used by Firefox on Windows 11 to be hidden behind the pane which we don't want.
+		// However, the Share app still uses the old Files architecture before NC31; hence we can't remove the z-index yet from the CSS.
 		if (OCA.Music.Utils.getScrollContainer().is($('#app-content-vue .files-list'))) {
 			musicControls.css('z-index', 'unset');
 		}
