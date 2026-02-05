@@ -125,7 +125,9 @@ abstract class BusinessLayer {
 			$lut = ArrayUtil::createIdLookupTable($entities);
 			$result = [];
 			foreach ($ids as $id) {
-				$result[] = $lut[$id];
+				if (isset($lut[$id])) {
+					$result[] = $lut[$id];
+				}
 			}
 		} else {
 			$result = $entities;

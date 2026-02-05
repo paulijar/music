@@ -166,7 +166,6 @@ class Application extends App implements IBootstrap {
 					$this->get(IConfig::class),
 					$this->get(Logger::class),
 					$this->get(IURLGenerator::class),
-					$this->get(TrackBusinessLayer::class),
 					$this->get(AlbumBusinessLayer::class),
 					$this->get(ICrypto::class),
 					'Last.fm',

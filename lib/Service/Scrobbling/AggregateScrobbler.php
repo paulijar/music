@@ -14,7 +14,7 @@
 
 namespace OCA\Music\Service\Scrobbling;
 
-use DateTime;
+use OCA\Music\Db\Track;
 
 class AggregateScrobbler implements IScrobbler {
 
@@ -24,15 +24,15 @@ class AggregateScrobbler implements IScrobbler {
 	public function __construct(private array $scrobblers) {
 	}
 
-	public function recordTrackPlayed(int $trackId, string $userId, ?\DateTime $timeOfPlay = null): void {
+	public function recordTrackPlayed(Track $track, ?\DateTime $timeOfPlay = null): void {
 		foreach ($this->scrobblers as $scrobbler) {
-			$scrobbler->recordTrackPlayed($trackId, $userId, $timeOfPlay);
+			$scrobbler->recordTrackPlayed($track, $timeOfPlay);
 		}
 	}
 
-	public function setNowPlaying(int $trackId, string $userId, ?\DateTime $timeOfPlay = null): void {
+	public function setNowPlaying(Track $track, ?\DateTime $timeOfPlay = null): void {
 		foreach ($this->scrobblers as $scrobbler) {
-			$scrobbler->setNowPlaying($trackId, $userId, $timeOfPlay);
+			$scrobbler->setNowPlaying($track, $timeOfPlay);
 		}
 	}
 }
