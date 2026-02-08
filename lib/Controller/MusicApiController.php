@@ -285,6 +285,18 @@ class MusicApiController extends Controller {
 
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
+	public function setPlayingTrack(int $trackId) : JSONResponse {
+		try {
+			$track = $this->trackBusinessLayer->find($trackId, $this->user());
+			$this->scrobbler->setNowPlaying($track);
+			return new JSONResponse(['success' => true]);
+		} catch (BusinessLayerException $e) {
+			return new ErrorResponse(Http::STATUS_NOT_FOUND);
+		}
+	}
+
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function albumDetails(int $albumId, string|int|bool|null $embedCoverArt=false) : JSONResponse {
 		$embedCoverArt = \filter_var($embedCoverArt, FILTER_VALIDATE_BOOLEAN);
 		try {

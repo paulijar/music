@@ -19,6 +19,8 @@
   * If `scrobble` is called with multiple `id` values, they must all be valid or nothing gets recorded (previously, songs were recorded one-by-one until hitting the invalid ID)
 - Don't scrobble songs shorter than 30 seconds to Last.fm to comply with the service's guideline
   [#116](https://github.com/nc-music/music/pull/116) @mattwellss
+- Record a track played only if at least 50 % or 4 minutes has been played, to comply with Last.fm's guideline. Mark the track immediately as "playing" on the server.
+  * This influences only the Music app's own web UI, the behavior of Subsonic and Ampache clients may vary
 
 ### Fixed
 - When no local album art available, the art from Last.fm was accidentally applied also to the artist list of the album details pane
