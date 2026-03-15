@@ -6,29 +6,26 @@
 # later. See the COPYING file.
 #
 # @author Pauli Järvinen <pauli.jarvinen@gmail.com>
-# @copyright Pauli Järvinen 2025
+# @copyright Pauli Järvinen 2025, 2026
 #
 
-if [ "$#" -ne 2 ]; then
-    echo "Usage: $0 <owncloud|nextcloud> <cloud_version>"
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <nextcloud_version>"
     exit 1
 fi
 
-CLOUD=$1
-VERSION=$2
+VERSION=$1
 
-mkdir -p /tmp/oc_music_ci
-cd /tmp/oc_music_ci
+mkdir -p /tmp/nc_music_ci
+cd /tmp/nc_music_ci
 
 # download the cloud and setup folders
-if [ $CLOUD == 'owncloud' ]; then
-    URL=https://download.owncloud.com/server/stable
-elif [[ $VERSION == *"beta"* || $VERSION == *"rc"* ]]; then
+if [[ $VERSION == *"beta"* || $VERSION == *"rc"* ]]; then
     URL=https://download.nextcloud.com/server/prereleases
 else
     URL=https://download.nextcloud.com/server/releases
 fi
 
-wget $URL/$CLOUD-$VERSION.zip
-unzip $CLOUD-$VERSION.zip
-mv $CLOUD server
+wget $URL/nextcloud-$VERSION.zip
+unzip nextcloud-$VERSION.zip
+mv nextcloud server

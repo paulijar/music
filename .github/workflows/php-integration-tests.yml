@@ -15,20 +15,16 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - cloud: nextcloud
-            version: 28.0.0
+          - nc: 28.0.0
             php: 8.0
             db: sqlite
-          - cloud: nextcloud
-            version: 31.0.12
+          - nc: 31.0.12
             php: 8.2
             db: pgsql
-          - cloud: nextcloud
-            version: 32.0.3
+          - nc: 32.0.3
             php: 8.4
             db: mysql
-          - cloud: nextcloud
-            version: 33.0.0
+          - nc: 33.0.0
             php: 8.5
             db: sqlite
 
@@ -57,34 +53,34 @@ jobs:
       id: server-cache-restore
       uses: actions/cache/restore@v4
       with:
-        path: /tmp/oc_music_ci/server
-        key: ${{ matrix.cloud }}-${{ matrix.version }}
+        path: /tmp/nc_music_ci/server
+        key: nextcloud-${{ matrix.nc }}
 
     - name: Download the cloud SW package
       if: steps.server-cache-restore.outputs.cache-hit != 'true'
-      run: tests/scripts/downloadServerForCi.sh ${{ matrix.cloud }} ${{ matrix.version }}
+      run: tests/scripts/downloadServerForCi.sh ${{ matrix.nc }}
 
     - name: Save SW package to cache
       id: server-cache-save
       if: steps.server-cache-restore.outputs.cache-hit != 'true'
       uses: actions/cache/save@v4
       with:
-        path: /tmp/oc_music_ci/server
-        key: ${{ matrix.cloud }}-${{ matrix.version }}
+        path: /tmp/nc_music_ci/server
+        key: nextcloud-${{ matrix.nc }}
 
     - name: Setup CI env
-      run: tests/scripts/setupEnvForCi.sh ${{ matrix.cloud }} ${{ matrix.db }}
+      run: tests/scripts/setupEnvForCi.sh ${{ matrix.db }}
 
     - name: Run integration tests
-      working-directory: /tmp/oc_music_ci/server/apps/music
+      working-directory: /tmp/nc_music_ci/server/apps/music
       run: composer run-script integration-tests
 
     - name: Run behat tests
       run: |
-          php -S localhost:8888 -t /tmp/oc_music_ci/server &
+          php -S localhost:8888 -t /tmp/nc_music_ci/server &
           cp tests/behat.yml.ci_tests tests/behat.yml
           composer run-script behat
 
     - name: Check log
       if: success() || failure()
-      run: cat /tmp/oc_music_ci/data/${{ matrix.cloud }}.log
+      run: cat /tmp/nc_music_ci/data/nextcloud.log
