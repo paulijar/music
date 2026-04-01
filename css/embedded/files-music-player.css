@@ -17,7 +17,6 @@
 }
 
 #music-controls {
-	height: 66px;
 	width: 100%;
 	padding: 0 20px 0 20px;
 	position: fixed;
@@ -31,8 +30,10 @@
 	border-end-end-radius: var(--body-container-radius);
 }
 
-#music-controls.with-playlist {
-	height: 90px;
+#music-controls #music-song-area {
+	height: 66px;
+	width: 100%;
+	white-space: nowrap;
 }
 
 #music-controls #playlist-area {
@@ -184,7 +185,8 @@
 
 #music-controls .music-progress-info {
 	width: 45%;
-	margin: 0 auto 25px auto;
+	margin: 9px auto 25px auto;
+	white-space: normal;
 }
 
 #music-controls .music-volume-control {

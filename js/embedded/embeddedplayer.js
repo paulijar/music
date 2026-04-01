@@ -258,16 +258,24 @@ OCA.Music.EmbeddedPlayer = function() {
 			.click(close);
 	}
 
+	function createSongArea() {
+		const container = $('<div id="music-song-area"/>');
+
+		container.append(createPlaybackControls());
+		container.append(coverImageContainer);
+		container.append(createInfoProgressContainer());
+		volumeControl.addToContainer(container);
+
+		return container;
+	}
+
 	function createUi() {
 		musicControls = $(document.createElement('div')).attr('id', 'music-controls');
 
 		coverImageContainer = createCoverImage();
 
 		musicControls.append(createPlaylistArea());
-		musicControls.append(createPlaybackControls());
-		musicControls.append(coverImageContainer);
-		musicControls.append(createInfoProgressContainer());
-		volumeControl.addToContainer(musicControls);
+		musicControls.append(createSongArea());
 		musicControls.append(createCloseButton());
 
 		// Round also the bottom left corner on NC25 on the share page. The bottom right corner is rounded by default.
