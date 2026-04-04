@@ -193,3 +193,8 @@
 	position: absolute;
 	inset-inline-end: 54px;
 }
+
+/* Ensure the music controls don't cover the bottom of the file list when visible */
+.files-list:has(+ #music-controls:not([style*="display: none"])) .files-list__table {
+	margin-bottom: 114px;
+}

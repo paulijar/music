@@ -7,6 +7,7 @@
 - On narrow screen, use similar "mobile portrait" layout in the Files player as in the Music app proper
 
 ### Fixed
+- Embedded Files player hiding bottom of the file list on NC 31+
 
 ## 3.0.0 - 2026-02-23
 
