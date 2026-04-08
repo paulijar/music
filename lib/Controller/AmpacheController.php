@@ -55,8 +55,8 @@ use OCA\Music\Http\XmlResponse;
 
 use OCA\Music\Middleware\AmpacheException;
 
-use OCA\Music\Service\AmpacheImageService;
-use OCA\Music\Service\AmpachePreferences;
+use OCA\Music\Service\Ampache\AmpacheImageService;
+use OCA\Music\Service\Ampache\AmpachePreferences;
 use OCA\Music\Service\CoverService;
 use OCA\Music\Service\DetailsService;
 use OCA\Music\Service\FileSystemService;

@@ -43,7 +43,7 @@ use OCA\Music\Http\XmlResponse;
 
 use OCA\Music\Middleware\SubsonicException;
 
-use OCA\Music\Service\AmpacheImageService;
+use OCA\Music\Service\Ampache\AmpacheImageService;
 use OCA\Music\Service\CoverService;
 use OCA\Music\Service\DetailsService;
 use OCA\Music\Service\FileSystemService;
