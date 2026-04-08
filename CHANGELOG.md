@@ -6,6 +6,8 @@
 - Periodically refresh "Now playing" song to Last.fm while playing (Last.fm forgets the song after 4 minutes which was an issue on longer songs or when the song was paused)
 - On narrow screen, use similar "mobile portrait" layout in the Files player as in the Music app proper
 - Updated the getID3 library to the release version 1.9.25-202603060942
+- Ampache API:
+  * Allow handshake using the bearer token on Authorization header
 
 ### Fixed
 - Embedded Files player hiding bottom of the file list on NC 31+
