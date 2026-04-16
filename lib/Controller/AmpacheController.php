@@ -117,6 +117,7 @@ class AmpacheController extends ApiController {
 		private TrackBusinessLayer $trackBusinessLayer,
 		private Library $library,
 		private PodcastService $podcastService,
+		private AmpacheAdvSearch $advSearchService,
 		private AmpacheImageService $imageService,
 		private CoverService $coverService,
 		private DetailsService $detailsService,
@@ -715,7 +716,7 @@ class AmpacheController extends ApiController {
 
 	#[AmpacheAPI]
 	protected function user_playlists(
-			?string $filter, ?string $add, ?string $update,	int $limit, int $offset=0, bool $exact=false) : array {
+			?string $filter, ?string $add, ?string $update, int $limit, int $offset=0, bool $exact=false) : array {
 		// alias for playlists without smart lists
 		return $this->playlists($filter, $add, $update, $limit, $offset, $exact, true);
 	}
@@ -1189,15 +1190,8 @@ class AmpacheController extends ApiController {
 
 	#[AmpacheAPI]
 	protected function advanced_search(int $limit, int $offset=0, string $type='song', string $operator='and', bool $random=false) : array {
-		// get all the rule parameters as passed on the HTTP call
-		$rules = AmpacheAdvSearch::getRuleParams($this->request->getParams());
-
-		// apply some conversions on the rules
-		foreach ($rules as &$rule) {
-			$rule['rule'] = AmpacheAdvSearch::resolveRuleAlias($rule['rule']);
-			$rule['operator'] = AmpacheAdvSearch::interpretOperator($rule['operator'], $rule['rule']);
-			$rule['input'] = AmpacheAdvSearch::convertInput($rule['input'], $rule['rule']);
-		}
+		// get all the rule parameters as passed on the HTTP call and apply some conversions
+		$rules = $this->advSearchService->getAndConvertRules($this->request->getParams());
 
 		// types 'album_artist' and 'song_artist' are just 'artist' searches with some extra conditions
 		if ($type == 'album_artist') {
@@ -1223,6 +1217,14 @@ class AmpacheController extends ApiController {
 	protected function search(int $limit, int $offset=0, string $type='song', string $operator='and', bool $random=false) : array {
 		// this is an alias
 		return $this->advanced_search($limit, $offset, $type, $operator, $random);
+	}
+
+	#[AmpacheAPI]
+	protected function search_rules(string $filter) : array {
+		if ($filter == 'album_artist' || $filter == 'song_artist') {
+			$filter = 'artist';
+		}
+		return ['rule' => $this->advSearchService->searchRules($filter, $this->userId())];
 	}
 
 	#[AmpacheAPI]
