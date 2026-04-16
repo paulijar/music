@@ -1,6 +1,7 @@
 ## [Unreleased]
 
 ### Added
+- Searching for genres with the advanced search
 
 ### Changed
 - Periodically refresh "Now playing" song to Last.fm while playing (Last.fm forgets the song after 4 minutes which was an issue on longer songs or when the song was paused)

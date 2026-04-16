@@ -10,6 +10,7 @@
 					<option value="album" translate>albums</option>
 					<option value="artist" translate>artists</option>
 					<option value="playlist" translate>playlists</option>
+					<option value="genre" translate>genres</option>
 					<option value="podcast_episode" translate>podcast episodes</option>
 					<option value="podcast_channel" translate>podcast channels</option>
 					<option value="radio_station" translate>radio stations</option>
@@ -119,6 +120,14 @@
 			get-draggable="getPlaylistDraggable"
 			track-id-prefix="'playlist'"
 			content-type="'playlist'"
+		></track-list>
+		<track-list
+			tracks="results.genres"
+			get-track-data="getGenreData"
+			play-track="onGenreClick"
+			get-draggable="getGenreDraggable"
+			track-id-prefix="'genre'"
+			content-type="'genre'"
 		></track-list>
 		<track-list
 			tracks="results.podcastEpisodes"

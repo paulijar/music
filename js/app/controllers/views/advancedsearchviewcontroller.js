@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2024, 2025
+ * @copyright Pauli Järvinen 2024 - 2026
  */
 
 angular.module('Music').controller('AdvancedSearchViewController', [
@@ -65,6 +65,11 @@ angular.module('Music').controller('AdvancedSearchViewController', [
 				{ value: 'random',		text: gettextCatalog.getString('randomly') },
 			],
 			playlist: [
+				{ value: 'name',		text: gettextCatalog.getString('by name') },
+				{ value: 'newest',		text: gettextCatalog.getString('by time added') },
+				{ value: 'random',		text: gettextCatalog.getString('randomly') },
+			],
+			genre: [
 				{ value: 'name',		text: gettextCatalog.getString('by name') },
 				{ value: 'newest',		text: gettextCatalog.getString('by time added') },
 				{ value: 'random',		text: gettextCatalog.getString('randomly') },
@@ -271,6 +276,18 @@ angular.module('Music').controller('AdvancedSearchViewController', [
 						{ key: 'recent_added',		name: gettextCatalog.getString('Recently added'),		type: 'numeric_limit' },
 						{ key: 'recent_updated',	name: gettextCatalog.getString('Recently updated'),		type: 'numeric_limit' },
 						{ key: 'favorite',			name: gettextCatalog.getString('Favorite'),				type: 'text' },
+					]
+				},
+			],
+			genre: [
+				{
+					label: null,
+					options: [
+						{ key: 'title',				name: gettextCatalog.getString('Name'),					type: 'text' },
+						{ key: 'added',				name: gettextCatalog.getString('Add date'),				type: 'date' },
+						{ key: 'updated',			name: gettextCatalog.getString('Update date'),			type: 'date' },
+						{ key: 'recent_added',		name: gettextCatalog.getString('Recently added'),		type: 'numeric_limit' },
+						{ key: 'recent_updated',	name: gettextCatalog.getString('Recently updated'),		type: 'numeric_limit' },
 					]
 				},
 			],
@@ -482,10 +499,11 @@ angular.module('Music').controller('AdvancedSearchViewController', [
 			const tracksFromAlbums = _($scope.results.albums).map('tracks').flatten().value();
 			const tracksFromArtists = _($scope.results.artists).map(a => libraryService.findTracksByArtist(a.id)).flatten().value();
 			const tracksFromPlaylists = _($scope.results.playlists).map('tracks').flatten().map('track').value();
+			const tracksFromGenres = _($scope.results.genres).map('tracks').flatten().map('track').value();
 			const episodeResults = $scope.results.podcastEpisodes;
 			const episodesFromChannels = _($scope.results.podcastChannels).map('episodes').flatten().value();
 			const radioResults = $scope.results.radioStations;
-			return [].concat(trackResults, tracksFromAlbums, tracksFromArtists, tracksFromPlaylists, episodeResults, episodesFromChannels, radioResults);
+			return [].concat(trackResults, tracksFromAlbums, tracksFromArtists, tracksFromPlaylists, tracksFromGenres, episodeResults, episodesFromChannels, radioResults);
 		}
 
 		// Call playQueueService to play all songs in the current playlist from the beginning
@@ -502,7 +520,7 @@ angular.module('Music').controller('AdvancedSearchViewController', [
 
 		$scope.resultCount = function() {
 			const res = $scope.results;
-			return res.tracks.length + res.albums.length + res.artists.length + res.playlists.length
+			return res.tracks.length + res.albums.length + res.artists.length + res.playlists.length + res.genres.length
 					+ res.podcastEpisodes.length + res.podcastChannels.length + res.radioStations.length;
 		};
 
@@ -607,7 +625,28 @@ angular.module('Music').controller('AdvancedSearchViewController', [
 		$scope.getPlaylistDraggable = function(playlistId) {
 			return { playlist: playlistId };
 		};
-		
+
+		$scope.onGenreClick = function(genreId) {
+			// TODO: play/pause if currently playing genre clicked?
+			playQueueService.setPlaylist('genre-' + genreId, libraryService.getGenre(genreId).tracks);
+			playQueueService.publish('play');
+		};
+
+		$scope.getGenreData = function(listItem, index, _scope) {
+			return {
+				title: listItem.name || gettextCatalog.getString('(Unknown genre)'),
+				title2: $scope.trackCountText(listItem),
+				tooltip: listItem.name,
+				number: index + 1,
+				id: listItem.id,
+				art: listItem
+			};
+		};
+
+		$scope.getGenreDraggable = function(genreId) {
+			return { genre: genreId };
+		};
+
 		$scope.onPodcastEpisodeClick = function(episodeId) {
 			const currentTrack = $scope.$parent.currentTrack;
 			if (currentTrack && currentTrack.id === episodeId && currentTrack.type == 'podcast') {
