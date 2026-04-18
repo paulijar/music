@@ -165,6 +165,8 @@ class AmpacheAdvSearch {
 			'genre' => [
 				'' => [
 					'title'				=> $l10n->t('Name'),
+					'album_count'		=> $l10n->t('Album count'),
+					'song_count'		=> $l10n->t('Track count'),
 					'added'				=> $l10n->t('Add date'),
 					'updated'			=> $l10n->t('Update date'),
 					'recent_added'		=> $l10n->t('Recently added'),

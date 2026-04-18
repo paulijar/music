@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2020 - 2025
+ * @copyright Pauli Järvinen 2020 - 2026
  */
 
 namespace OCA\Music\Db;
@@ -58,5 +58,43 @@ class GenreMapper extends BaseMapper {
 					`*PREFIX*music_genres`.`created`,
 					`*PREFIX*music_genres`.`updated`
 				$extension";
+	}
+
+	/**
+	 * Overridden from the base implementation to provide support for table-specific rules
+	 *
+	 * {@inheritdoc}
+	 * @see BaseMapper::advFormatSqlCondition()
+	 */
+	protected function advFormatSqlCondition(string $rule, string $sqlOp, string $conv): string
+	{
+		$condForRule = [
+			'album_count' => "`*PREFIX*music_genres`.`id` IN (
+				SELECT `id` FROM `*PREFIX*music_genres`
+				JOIN (
+					SELECT `*PREFIX*music_genres`.`id` AS `id2`, " . $this->sqlCoalesce('`count1`', '0') . " AS `count2`
+					FROM `*PREFIX*music_genres`
+					LEFT JOIN (
+						SELECT `*PREFIX*music_tracks`.`genre_id` AS `id1`, COUNT(DISTINCT(`*PREFIX*music_tracks`.`album_id`)) AS `count1`
+						FROM `*PREFIX*music_tracks`
+						GROUP BY `*PREFIX*music_tracks`.`genre_id`
+					) `sub1`
+					ON `*PREFIX*music_genres`.`id` = `id1`
+				) `sub2`
+				ON `*PREFIX*music_genres`.`id` = `id2`
+				WHERE `count2` $sqlOp ?
+			)",
+
+			'song_count' => "`*PREFIX*music_genres`.`id` IN (
+				SELECT * FROM (
+					SELECT `genre_id`
+					FROM `*PREFIX*music_tracks`
+					GROUP BY `genre_id`
+					HAVING COUNT(`id`) $sqlOp ?
+				) mysqlhack
+			)",
+		];
+
+		return $condForRule[$rule] ?? parent::advFormatSqlCondition($rule, $sqlOp, $conv);
 	}
 }

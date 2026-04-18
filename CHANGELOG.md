@@ -11,6 +11,7 @@
 - Ampache API:
   * Allow handshake using the bearer token on Authorization header
   * Add action `search_rules`
+  * Advanced search supports rules `song_count` and `album_count` also for type `genre`
   * Support argument `include` in the actions `user_playlists` and `user_smartlists`
 
 ### Fixed
