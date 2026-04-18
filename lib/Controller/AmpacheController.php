@@ -96,7 +96,7 @@ class AmpacheController extends ApiController {
 	public const ALL_TRACKS_PLAYLIST_ID = -1;
 	public const API4_VERSION = '4.4.0';
 	public const API5_VERSION = '5.6.0';
-	public const API6_VERSION = '6.7.1';
+	public const API6_VERSION = '6.8.0';
 	public const API_MIN_COMPATIBLE_VERSION = '350001';
 
 	public function __construct(
@@ -716,16 +716,16 @@ class AmpacheController extends ApiController {
 
 	#[AmpacheAPI]
 	protected function user_playlists(
-			?string $filter, ?string $add, ?string $update, int $limit, int $offset=0, bool $exact=false) : array {
+			?string $filter, ?string $add, ?string $update, int $limit, int $offset=0, bool $exact=false, bool $include=false) : array {
 		// alias for playlists without smart lists
-		return $this->playlists($filter, $add, $update, $limit, $offset, $exact, true);
+		return $this->playlists($filter, $add, $update, $limit, $offset, $exact, true, $include);
 	}
 
 	#[AmpacheAPI]
-	protected function user_smartlists() : array {
+	protected function user_smartlists(bool $include=false) : array {
 		// the only "smart list" currently supported is "All tracks", hence supporting any kind of filtering criteria
 		// isn't worthwhile
-		return $this->renderPlaylists([$this->getAllTracksPlaylist()]);
+		return $this->renderPlaylists([$this->getAllTracksPlaylist()], $include);
 	}
 
 	#[AmpacheAPI]

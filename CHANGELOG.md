@@ -11,6 +11,7 @@
 - Ampache API:
   * Allow handshake using the bearer token on Authorization header
   * Add action `search_rules`
+  * Support argument `include` in the actions `user_playlists` and `user_smartlists`
 
 ### Fixed
 - Embedded Files player hiding bottom of the file list on NC 31+
