@@ -173,6 +173,52 @@ class AmpacheAdvSearch {
 					'recent_updated'	=> $l10n->t('Recently updated'),
 				]
 			],
+			'podcast_episode' => [
+				$l10n->t('Podcast metadata') => [
+					'title'		=> $l10n->t('Name'),
+					'podcast'	=> $l10n->t('Podcast channel'),
+					'time'		=> $l10n->t('Duration (seconds)'),
+				],
+				$l10n->t('History') => [
+					'pubdate'			=> $l10n->t('Date published'),
+					'added'				=> $l10n->t('Add date'),
+					'updated'			=> $l10n->t('Update date'),
+					'recent_added'		=> $l10n->t('Recently added'),
+					'recent_updated'	=> $l10n->t('Recently updated'),
+				],
+				$l10n->t('Rating') => [
+					'favorite'	=> $l10n->t('Favorite'),
+					'rating'	=> $l10n->t('Rating'),
+				],
+			],
+			'podcast' => [
+				$l10n->t('Podcast metadata') => [
+					'title'				=> $l10n->t('Name'),
+					'podcast_episode'	=> $l10n->t('Podcast episode'),
+					'time'				=> $l10n->t('Duration (seconds)'),
+				],
+				$l10n->t('History') => [
+					'pubdate'			=> $l10n->t('Date published'),
+					'added'				=> $l10n->t('Add date'),
+					'updated'			=> $l10n->t('Update date'),
+					'recent_added'		=> $l10n->t('Recently added'),
+					'recent_updated'	=> $l10n->t('Recently updated'),
+				],
+				$l10n->t('Rating') => [
+					'favorite'	=> $l10n->t('Favorite'),
+					'rating'	=> $l10n->t('Rating'),
+				],
+			],
+			'live_stream' /* proprietary extension */ => [
+				'' => [
+					'title'				=> $l10n->t('Name'),
+					'stream_url'		=> $l10n->t('Stream URL'),
+					'added'				=> $l10n->t('Add date'),
+					'updated'			=> $l10n->t('Update date'),
+					'recent_added'		=> $l10n->t('Recently added'),
+					'recent_updated'	=> $l10n->t('Recently updated'),
+				],
+			],
 		];
 
 		$result = [];
@@ -331,7 +377,7 @@ class AmpacheAdvSearch {
 			'text' => [
 				'anywhere', 'title', 'song', 'album', 'artist', 'podcast', 'podcast_episode', 'album_artist', 'song_artist',
 				'favorite', 'favorite_album', 'favorite_artist', 'genre', 'song_genre', 'album_genre', 'artist_genre',
-				'playlist_name', 'type', 'file', 'mbid', 'mbid_album', 'mbid_artist', 'mbid_song'
+				'playlist_name', 'type', 'file', 'mbid', 'mbid_album', 'mbid_artist', 'mbid_song', 'stream_url' /* proprietary extension */
 			],
 			// text but not supported: 'composer', 'summary', 'placeformed', 'release_type', 'release_status', 'barcode',
 			// 'catalog_number', 'label', 'comment', 'lyrics', 'username', 'category'
@@ -355,7 +401,7 @@ class AmpacheAdvSearch {
 			],
 			// boolean but not supported: 'smartplaylist', 'possible_duplicate', 'possible_duplicate_album'
 
-			'boolean_numeric' => ['playlist', 'album_artist_id' /* own extension */],
+			'boolean_numeric' => ['playlist', 'album_artist_id' /* proprietary extension */],
 			// boolean numeric but not supported: 'license', 'state', 'catalog'
 		];
 
