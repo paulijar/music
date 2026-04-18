@@ -1224,7 +1224,25 @@ class AmpacheController extends ApiController {
 		if ($filter == 'album_artist' || $filter == 'song_artist') {
 			$filter = 'artist';
 		}
-		return ['rule' => $this->advSearchService->searchRules($filter, $this->userId())];
+		$rules = $this->advSearchService->searchRules($filter, $this->userId());
+
+		// The XML format is specified quite differently regarding the widgets compared to the JSON.
+		// Also, in the XML format only the 'select' type widgets have any content.
+		if (!$this->jsonMode) {
+			foreach ($rules as &$rule) {
+				if ($rule['widget'][0] == 'select') {
+					$options = $rule['widget'][1];
+					$rule['widget'] = ['select' => \array_map(fn($option, $key) => [
+						'id' => $key,
+						'text' => $option
+					], $options, \array_keys($options))];
+				} else {
+					$rule['widget'] = new \stdClass();
+				}
+			}
+		}
+
+		return ['rule' => $rules];
 	}
 
 	#[AmpacheAPI]
