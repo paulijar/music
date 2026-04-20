@@ -5,7 +5,7 @@
 ### Changed
 - Periodically refresh "Now playing" song to Last.fm while playing (Last.fm forgets the song after 4 minutes which was an issue on longer songs or when the song was paused)
 - On narrow screen, use similar "mobile portrait" layout in the Files player as in the Music app proper
-- Updated the getID3 library to the release version 1.9.25-202603060942
+- Don't hide empty genres, but instead, remove them in the background cleanup task
 - Advanced search:
   * Enable searching for genres
 - Ampache API:
@@ -13,6 +13,7 @@
   * Add action `search_rules`
   * Advanced search supports rules `song_count` and `album_count` also for type `genre`
   * Support argument `include` in the actions `user_playlists` and `user_smartlists`
+- Updated the getID3 library to the release version 1.9.25-202603060942
 
 ### Fixed
 - Embedded Files player hiding bottom of the file list on NC 31+
