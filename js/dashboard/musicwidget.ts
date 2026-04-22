@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2024, 2025
+ * @copyright Pauli Järvinen 2024 - 2026
  */
 
 import { BrowserMediaSession } from "shared/browsermediasession";
@@ -13,6 +13,7 @@ import { PlayerWrapper } from "shared/playerwrapper";
 import { PlayQueue } from "shared/playqueue";
 import { ProgressInfo } from "shared/progressinfo";
 import { VolumeControl } from "shared/volumecontrol";
+import * as Backbone from "backbone";
 import * as _ from 'lodash';
 
 declare function t(module : string, text : string) : string;
@@ -34,7 +35,7 @@ export class MusicWidget {
 	#progressAndOrder: JQuery<HTMLElement>;
 	#currentSongLabel: JQuery<HTMLElement>;
 	#controls: JQuery<HTMLElement>;
-	#events: typeof OC.Backbone.Events;
+	#events: Backbone.Events;
 	#debouncedPlayCurrent: () => void;
 
 	constructor($container: JQuery<HTMLElement>, player: PlayerWrapper, queue: PlayQueue) {
@@ -46,7 +47,7 @@ export class MusicWidget {
 		this.#selectContainer = $('<div class="select-container" />').appendTo($container);
 		this.#filterSelects = [];
 		this.#trackListContainer = $('<div class="tracks-container" />').appendTo($container);
-		this.#events = _.clone(OC.Backbone.Events);
+		this.#events = _.clone(Backbone.Events);
 
 		const modes = [
 			{ id: 'album_artists',	name: t('music', 'Album artists'),	onSelect: () => this.#showAlbumArtists() },
