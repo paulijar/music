@@ -1713,10 +1713,10 @@ class AmpacheController extends ApiController {
 			'artist' => \array_map(function (Artist $artist) use ($userId, $genreMap, $genreKey, $oldCountApi) {
 				$name = $artist->getNameString($this->l10n);
 				$nameParts = $this->prefixAndBaseName($name);
-				$albumCount = $this->albumBusinessLayer->countByAlbumArtist($artist->getId());
-				$songCount = $this->trackBusinessLayer->countByArtist($artist->getId());
-				$albums = $artist->getAlbums();
-				$songs = $artist->getTracks();
+				$albumCount = $artist->getOwnAlbumCount(); // always present
+				$songCount = $artist->getTrackCount(); // always present
+				$albums = $artist->getAlbums(); // present if injected
+				$songs = $artist->getTracks(); // present if injected
 
 				$apiArtist = [
 					'id' => (string)$artist->getId(),

@@ -9,7 +9,7 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Morris Jobke 2013, 2014
- * @copyright Pauli Järvinen 2016 - 2025
+ * @copyright Pauli Järvinen 2016 - 2026
  */
 
 namespace OCA\Music\Db;
@@ -30,6 +30,28 @@ class ArtistMapper extends BaseMapper {
 	}
 
 	/**
+	 * Override the base implementation to include data from multiple tables
+	 *
+	 * {@inheritdoc}
+	 * @see BaseMapper::selectEntities()
+	 */
+	protected function selectEntities(string $condition, ?string $extension=null) : string {
+		return "SELECT
+					`*PREFIX*music_artists`.*,
+					COUNT(DISTINCT(`track`.`id`)) AS `trackCount`,
+					COUNT(DISTINCT(`album`.`id`)) AS `ownAlbumCount`
+				FROM `*PREFIX*music_artists`
+				LEFT JOIN `*PREFIX*music_tracks` `track`
+				ON `track`.`artist_id` = `*PREFIX*music_artists`.`id`
+				LEFT JOIN `*PREFIX*music_albums` `album`
+				ON `album`.`album_artist_id` = `*PREFIX*music_artists`.`id`
+				WHERE $condition
+				GROUP BY
+					`*PREFIX*music_artists`.`id`
+				$extension";
+	}
+
+	/**
 	 * @param string $userId
 	 * @param integer $sortBy sort order of the result set
 	 * @return Artist[]
@@ -37,10 +59,9 @@ class ArtistMapper extends BaseMapper {
 	public function findAllHavingAlbums(string $userId, int $sortBy=SortBy::Name,
 			?int $limit=null, ?int $offset=null, ?string $name=null, int $matchMode=MatchMode::Exact,
 			?string $createdMin=null, ?string $createdMax=null, ?string $updatedMin=null, ?string $updatedMax=null) : array {
-		
-		$condition = $this->formatExcludeChildlessCondition();
-		return $this->findAllWithCondition(
-			$condition, $userId, $sortBy, $limit, $offset, $name, $matchMode, $createdMin, $createdMax, $updatedMin, $updatedMax);
+		// the alias name `ownAlbumCount` can't be used in HAVING since that's not valid in pgsql
+		return $this->findAllHaving(
+			'COUNT(DISTINCT(`album`.`id`)) > 0', $userId, $sortBy, $limit, $offset, $name, $matchMode, $createdMin, $createdMax, $updatedMin, $updatedMax);
 	}
 
 	/**
@@ -51,34 +72,34 @@ class ArtistMapper extends BaseMapper {
 	public function findAllHavingTracks(string $userId, int $sortBy=SortBy::Name,
 			?int $limit=null, ?int $offset=null, ?string $name=null, int $matchMode=MatchMode::Exact,
 			?string $createdMin=null, ?string $createdMax=null, ?string $updatedMin=null, ?string $updatedMax=null) : array {
-		
-		$condition = 'EXISTS (SELECT 1 FROM `*PREFIX*music_tracks` `track` WHERE `*PREFIX*music_artists`.`id` = `track`.`artist_id`)';
-		return $this->findAllWithCondition(
-			$condition, $userId, $sortBy, $limit, $offset, $name, $matchMode, $createdMin, $createdMax, $updatedMin, $updatedMax);
+		// the alias name `trackCount` can't be used in HAVING since that's not valid in pgsql
+		return $this->findAllHaving(
+			'COUNT(DISTINCT(`track`.`id`)) > 0', $userId, $sortBy, $limit, $offset, $name, $matchMode, $createdMin, $createdMax, $updatedMin, $updatedMax);
 	}
 
 	/**
 	 * @return Artist[]
 	 */
-	private function findAllWithCondition(
-			string $condition, string $userId, int $sortBy, ?int $limit, ?int $offset,
+	private function findAllHaving(
+			string $having, string $userId, int $sortBy, ?int $limit, ?int $offset,
 			?string $name, int $matchMode, ?string $createdMin, ?string $createdMax,
 			?string $updatedMin, ?string $updatedMax) : array {
 		$params = [$userId];
+		$conditions = [];
 
 		if ($name !== null) {
 			[$nameCond, $nameParams] = $this->formatNameConditions($name, $matchMode);
-			$condition .= " AND $nameCond";
+			$conditions[] = $nameCond;
 			$params = \array_merge($params, $nameParams);
 		}
 
 		[$timestampConds, $timestampParams] = $this->formatTimestampConditions($createdMin, $createdMax, $updatedMin, $updatedMax);
 		if (!empty($timestampConds)) {
-			$condition .= " AND $timestampConds";
+			$conditions[] = $timestampConds;
 			$params = \array_merge($params, $timestampParams);
 		}
 
-		$sql = $this->selectUserEntities($condition, $this->formatSortingClause($sortBy));
+		$sql = $this->selectUserEntities(\implode(' AND ', $conditions), "HAVING $having " . $this->formatSortingClause($sortBy));
 
 		return $this->findEntities($sql, $params, $limit, $offset);
 	}
