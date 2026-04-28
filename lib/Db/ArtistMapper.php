@@ -30,8 +30,6 @@ class ArtistMapper extends BaseMapper {
 	}
 
 	/**
-	 * @param string $userId
-	 * @param integer $sortBy sort order of the result set
 	 * @return Artist[]
 	 */
 	public function findAllHavingAlbums(string $userId, int $sortBy=SortBy::Name,
@@ -44,8 +42,6 @@ class ArtistMapper extends BaseMapper {
 	}
 
 	/**
-	 * @param string $userId
-	 * @param integer $sortBy sort order of the result set
 	 * @return Artist[]
 	 */
 	public function findAllHavingTracks(string $userId, int $sortBy=SortBy::Name,
@@ -84,10 +80,6 @@ class ArtistMapper extends BaseMapper {
 	}
 
 	/**
-	 * @param int $genreId
-	 * @param string $userId
-	 * @param int|null $limit
-	 * @param int|null $offset
 	 * @return Artist[]
 	 */
 	public function findAllByGenre(int $genreId, string $userId, ?int $limit=null, ?int $offset=null) : array {
@@ -103,7 +95,7 @@ class ArtistMapper extends BaseMapper {
 	/**
 	 * returns summed track play counts of each artist of the user, omitting artists which have never been played
 	 *
-	 * @return array [int => int], keys are artist IDs and values are play count sums; ordered largest counts first
+	 * @return array<int, int> keys are artist IDs and values are play count sums; ordered largest counts first
 	 */
 	public function getArtistTracksPlayCount(string $userId, ?int $limit=null, ?int $offset=null) : array {
 		$sql = 'SELECT `artist_id`, SUM(`play_count`) AS `sum_count`
@@ -124,7 +116,7 @@ class ArtistMapper extends BaseMapper {
 	/**
 	 * returns the latest play time of each artist of the user, omitting artists which have never been played
 	 *
-	 * @return array [int => string], keys are artist IDs and values are date-times; ordered latest times first
+	 * @return array<int, string> keys are artist IDs and values are date-times; ordered latest times first
 	 */
 	public function getLatestArtistPlayTimes(string $userId, ?int $limit=null, ?int $offset=null) : array {
 		$sql = 'SELECT `artist_id`, MAX(`last_played`) AS `latest_time`
@@ -145,8 +137,8 @@ class ArtistMapper extends BaseMapper {
 	/**
 	 * returns the latest play time of each artist of the user, including artists which have never been played
 	 *
-	 * @return array [int => ?string], keys are artist IDs and values are date-times (or null for never played);
-	 *									ordered furthest times first
+	 * @return array<int, ?string> keys are artist IDs and values are date-times (or null for never played);
+	 *								ordered furthest times first
 	 */
 	public function getFurthestArtistPlayTimes(string $userId, ?int $limit=null, ?int $offset=null) : array {
 		$sql = 'SELECT `artist_id`, MAX(`last_played`) AS `latest_time`
