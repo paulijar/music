@@ -30,24 +30,22 @@ class GenreMapper extends BaseMapper {
 	 */
 	protected function selectEntities(string $condition, ?string $extension=null) : string {
 		return "SELECT
-					`*PREFIX*music_genres`.`id`,
-					`*PREFIX*music_genres`.`name`,
-					`*PREFIX*music_genres`.`lower_name`,
-					`*PREFIX*music_genres`.`created`,
-					`*PREFIX*music_genres`.`updated`,
-					COUNT(`track`.`id`) AS `trackCount`,
-					COUNT(DISTINCT(`track`.`album_id`)) AS `albumCount`,
-					COUNT(DISTINCT(`track`.`artist_id`)) AS `artistCount`
+					`*PREFIX*music_genres`.*,
+					{$this->sqlCoalesce('`trackCount`', '0')} AS `trackCount`,
+					{$this->sqlCoalesce('`albumCount`', '0')} AS `albumCount`,
+					{$this->sqlCoalesce('`artistCount`', '0')} AS `artistCount`
 				FROM `*PREFIX*music_genres`
-				LEFT JOIN `*PREFIX*music_tracks` `track`
-				ON `track`.`genre_id` = `*PREFIX*music_genres`.`id`
+				LEFT JOIN (
+					SELECT
+						`genre_id`,
+						COUNT(`track`.`id`) AS `trackCount`,
+						COUNT(DISTINCT(`track`.`album_id`)) AS `albumCount`,
+						COUNT(DISTINCT(`track`.`artist_id`)) AS `artistCount`
+					FROM `*PREFIX*music_tracks` `track`
+					GROUP BY `genre_id`
+				) `counts`
+				ON `*PREFIX*music_genres`.`id` = `counts`.`genre_id`
 				WHERE $condition
-				GROUP BY
-					`*PREFIX*music_genres`.`id`,
-					`*PREFIX*music_genres`.`name`,
-					`*PREFIX*music_genres`.`lower_name`,
-					`*PREFIX*music_genres`.`created`,
-					`*PREFIX*music_genres`.`updated`
 				$extension";
 	}
 
@@ -60,30 +58,8 @@ class GenreMapper extends BaseMapper {
 	protected function advFormatSqlCondition(string $rule, string $sqlOp, string $conv): string
 	{
 		$condForRule = [
-			'album_count' => "`*PREFIX*music_genres`.`id` IN (
-				SELECT `id` FROM `*PREFIX*music_genres`
-				JOIN (
-					SELECT `*PREFIX*music_genres`.`id` AS `id2`, " . $this->sqlCoalesce('`count1`', '0') . " AS `count2`
-					FROM `*PREFIX*music_genres`
-					LEFT JOIN (
-						SELECT `*PREFIX*music_tracks`.`genre_id` AS `id1`, COUNT(DISTINCT(`*PREFIX*music_tracks`.`album_id`)) AS `count1`
-						FROM `*PREFIX*music_tracks`
-						GROUP BY `*PREFIX*music_tracks`.`genre_id`
-					) `sub1`
-					ON `*PREFIX*music_genres`.`id` = `id1`
-				) `sub2`
-				ON `*PREFIX*music_genres`.`id` = `id2`
-				WHERE `count2` $sqlOp ?
-			)",
-
-			'song_count' => "`*PREFIX*music_genres`.`id` IN (
-				SELECT * FROM (
-					SELECT `genre_id`
-					FROM `*PREFIX*music_tracks`
-					GROUP BY `genre_id`
-					HAVING COUNT(`id`) $sqlOp ?
-				) mysqlhack
-			)",
+			'album_count'	=> "{$this->sqlCoalesce('`albumCount`', '0')} $sqlOp ?",
+			'song_count'	=> "{$this->sqlCoalesce('`trackCount`', '0')} $sqlOp ?",
 		];
 
 		return $condForRule[$rule] ?? parent::advFormatSqlCondition($rule, $sqlOp, $conv);
