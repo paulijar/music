@@ -13,6 +13,8 @@
   * Add action `search_rules`
   * Advanced search supports rules `song_count` and `album_count` also for type `genre`
   * Support argument `include` in the actions `user_playlists` and `user_smartlists`
+- Subsonic API:
+  * Add OpenSubsonic property `roles` to the artist result type
 - Updated the getID3 library to the release version 1.9.25-202603060942
 
 ### Fixed
