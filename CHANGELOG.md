@@ -15,6 +15,7 @@
   * Support argument `include` in the actions `user_playlists` and `user_smartlists`
 - Subsonic API:
   * Add OpenSubsonic property `roles` to the artist result type
+  * Client-specific tweak for Feishin: Method `getArtists` returns also the artists having no own albums
 - Updated the getID3 library to the release version 1.9.25-202603060942
 
 ### Fixed

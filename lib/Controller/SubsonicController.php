@@ -265,8 +265,9 @@ class SubsonicController extends ApiController {
 	}
 
 	#[SubsonicAPI]
-	protected function getArtists() : array {
-		return $this->getIndexesForArtists('artists');
+	protected function getArtists(string $c) : array {
+		// Feishin is expecting to get also non-album artists from this function although that's not what the original Subsonic does
+		return $this->getIndexesForArtists('artists', $c == 'Feishin');
 	}
 
 	#[SubsonicAPI]
@@ -1301,8 +1302,12 @@ class SubsonicController extends ApiController {
 		return $content;
 	}
 
-	private function getIndexesForArtists(string $rootElementName = 'indexes') : array {
-		$artists = $this->artistBusinessLayer->findAllHavingAlbums($this->user(), SortBy::Name);
+	private function getIndexesForArtists(string $rootElementName = 'indexes', bool $includeAllArtists = false) : array {
+		if ($includeAllArtists) {
+			$artists = $this->artistBusinessLayer->findAll($this->user(), SortBy::Name);
+		} else {
+			$artists = $this->artistBusinessLayer->findAllHavingAlbums($this->user(), SortBy::Name);
+		}
 
 		$indexes = [];
 		foreach ($artists as $artist) {
