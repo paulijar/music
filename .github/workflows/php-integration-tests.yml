@@ -27,6 +27,9 @@ jobs:
           - nc: 33.0.0
             php: 8.5
             db: sqlite
+          - nc: 34.0.0beta2
+            php: 8.5
+            db: pgsql
 
     steps:
     - name: Checkout repository
