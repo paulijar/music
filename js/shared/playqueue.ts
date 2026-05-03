@@ -10,8 +10,8 @@
  * @copyright Pauli Järvinen 2017 - 2026
  */
 
-import * as _ from "lodash";
-import * as Backbone from "backbone";
+import * as _ from 'lodash';
+import * as Backbone from 'backbone';
 
 interface PlayQueueEntry {
 };

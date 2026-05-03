@@ -9,7 +9,7 @@
  *
  */
 
-import * as ng from "angular";
+import * as ng from 'angular';
 
 ng.module('Music').service('albumartService', [function() {
 
@@ -21,7 +21,7 @@ ng.module('Music').service('albumartService', [function() {
 		element.css('background-image', 'url(' + imageUrl + ')');
 	}
 
-	function setPlaceholder(element : JQuery, text : string, seed : string = null) {
+	function setPlaceholder(element : JQuery, text : string, seed : string|null = null) {
 		if (text) {
 			// remove background image
 			element.css('background-image', '');

@@ -9,7 +9,7 @@
  */
 
 import * as _ from 'lodash';
-import * as Backbone from "backbone";
+import * as Backbone from 'backbone';
 import { PlayerWrapper } from './playerwrapper';
 
 class GaplessPlayer {

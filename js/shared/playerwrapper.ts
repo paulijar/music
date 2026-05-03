@@ -12,7 +12,7 @@
 
 const Hls = require('node_modules/hls.js/dist/hls.light.js');
 import * as _ from 'lodash';
-import * as Backbone from "backbone";
+import * as Backbone from 'backbone';
 
 export class PlayerWrapper {
 	#eventDispatcher : Backbone.Events;

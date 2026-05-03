@@ -8,12 +8,12 @@
  * @copyright Pauli Järvinen 2024 - 2026
  */
 
-import { BrowserMediaSession } from "shared/browsermediasession";
-import { PlayerWrapper } from "shared/playerwrapper";
-import { PlayQueue } from "shared/playqueue";
-import { ProgressInfo } from "shared/progressinfo";
-import { VolumeControl } from "shared/volumecontrol";
-import * as Backbone from "backbone";
+import { BrowserMediaSession } from 'shared/browsermediasession';
+import { PlayerWrapper } from 'shared/playerwrapper';
+import { PlayQueue } from 'shared/playqueue';
+import { ProgressInfo } from 'shared/progressinfo';
+import { VolumeControl } from 'shared/volumecontrol';
+import * as Backbone from 'backbone';
 import * as _ from 'lodash';
 
 declare function t(module : string, text : string) : string;
@@ -31,7 +31,7 @@ export class MusicWidget {
 	#modeSelect: JQuery<HTMLSelectElement>;
 	#filterSelects: JQuery<HTMLSelectElement>[];
 	#trackListContainer: JQuery<HTMLElement>;
-	#trackList: JQuery<HTMLUListElement>;
+	#trackList: JQuery<HTMLUListElement>|null;
 	#progressAndOrder: JQuery<HTMLElement>;
 	#currentSongLabel: JQuery<HTMLElement>;
 	#controls: JQuery<HTMLElement>;
@@ -47,6 +47,7 @@ export class MusicWidget {
 		this.#selectContainer = $('<div class="select-container" />').appendTo($container);
 		this.#filterSelects = [];
 		this.#trackListContainer = $('<div class="tracks-container" />').appendTo($container);
+		this.#trackList = null;
 		this.#events = _.clone(Backbone.Events);
 
 		const modes = [
@@ -138,7 +139,7 @@ export class MusicWidget {
 			this.#progressAndOrder.hide();
 			this.#currentSongLabel.hide();
 			this.#controls.hide();
-			this.#trackList.find('.current').removeClass('current');
+			this.#trackList?.find('.current').removeClass('current');
 		});
 
 		this.#player.on('play', () => {
@@ -182,7 +183,7 @@ export class MusicWidget {
 		this.#ampacheLoadContent('list', { type: 'album_artist' }, (result: any) => {
 			this.#addFilterSelect(result.list, t('music', 'Select artist'), (artist) => {
 				if (this.#filterSelects.length > 1) {
-					this.#filterSelects.pop().remove();
+					this.#filterSelects.pop()?.remove();
 				}
 				this.#trackList?.remove();
 
@@ -285,7 +286,7 @@ export class MusicWidget {
 		});
 	}
 
-	#addFilterSelect(options: any[], placeholder: string, onChange: (selectedItem: any) => void, fmtTitle: (item: any) => string = null) {
+	#addFilterSelect(options: any[], placeholder: string, onChange: (selectedItem: any) => void, fmtTitle: ((item: any) => string)|null = null) {
 		const filter = createSelect(options, placeholder, onChange, fmtTitle).appendTo(this.#selectContainer);
 		this.#filterSelects.push(filter);
 		this.#events.trigger('filterPopulated', filter);
@@ -300,7 +301,7 @@ export class MusicWidget {
 
 			// highlight the current song if the currently playing list was re-entered
 			if (this.#queue.getCurrentPlaylistId() == listId) {
-				this.#trackList.find(`[data-index='${this.#queue.getCurrentIndex()}']`).addClass('current');
+				this.#trackList?.find(`[data-index='${this.#queue.getCurrentIndex()}']`).addClass('current');
 			}
 
 			this.#events.trigger('tracksPopulated');
@@ -370,11 +371,11 @@ export class MusicWidget {
 	}
 
 	#playingRadio() : boolean {
-		return this.#queue.getCurrentPlaylistId()?.startsWith('radio');
+		return this.#queue.getCurrentPlaylistId()?.startsWith('radio') ?? false;
 	}
 
 	#getSelectedListId() : string {
-		let listId = this.#modeSelect.val().toString();
+		let listId = this.#modeSelect.val()?.toString() ?? '';
 
 		this.#filterSelects.forEach((filter) => {
 			listId += '/' + filter.val();
@@ -417,7 +418,7 @@ export class MusicWidget {
 	}
 }
 
-function createSelect(items: any[], placeholder: string|null, onChange: (selectedItem: any) => void, fmtTitle: (item: any) => string = null) : JQuery<HTMLSelectElement> {
+function createSelect(items: any[], placeholder: string|null, onChange: (selectedItem: any) => void, fmtTitle: ((item: any) => string)|null = null) : JQuery<HTMLSelectElement> {
 	const $select = $('<select required/>') as JQuery<HTMLSelectElement>;
 
 	if (placeholder !== null) {

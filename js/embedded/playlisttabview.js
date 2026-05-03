@@ -9,7 +9,7 @@
  */
 
 import musicIconSvgData from '../../img/music-dark.svg?raw';
-import * as Backbone from "backbone";
+import * as Backbone from 'backbone';
 
 OCA.Music = OCA.Music || {};
 
