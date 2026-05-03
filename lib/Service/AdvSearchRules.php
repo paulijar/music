@@ -265,8 +265,9 @@ class AdvSearchRules {
 	public static function convertInput(string $input, string $rule) : string {
 		switch ($rule) {
 			case 'last_play':
-				// days diff to ISO date
-				$date = new \DateTime("$input days ago");
+				// days diff to ISO date; support also fractional days
+				$secs = (int)((float)$input * 24 * 60 * 60);
+				$date = new \DateTime("$secs seconds ago");
 				return $date->format(BaseMapper::SQL_DATE_FORMAT);
 			case 'time':
 				// minutes to seconds
