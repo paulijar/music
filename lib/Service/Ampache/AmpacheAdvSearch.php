@@ -73,7 +73,6 @@ class AmpacheAdvSearch {
 		foreach ($rules as &$rule) {
 			$rule['rule'] = self::resolveRuleAlias($rule['rule']);
 			$rule['operator'] = self::interpretOperator($rule['operator'], $rule['rule']);
-			$rule['input'] = AdvSearchRules::convertInput($rule['input'], $rule['rule']);
 		}
 
 		return $rules;

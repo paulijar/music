@@ -54,7 +54,7 @@
 				</select>
 
 				<input ng-if="ruleType(rule.rule) == 'text'" type="text" ng-model="rule.input"/>
-				<input ng-if="['numeric', 'numeric_limit'].includes(ruleType(rule.rule))" type="number" ng-model="rule.input"/>
+				<input ng-if="['numeric', 'numeric_limit', 'days'].includes(ruleType(rule.rule))" type="number" ng-model="rule.input"/>
 				<input ng-if="ruleType(rule.rule) == 'date'" type="date" ng-model="rule.input"/>
 				<select ng-if="ruleType(rule.rule) == 'numeric_rating'" ng-model="rule.input">
 					<option ng-repeat="val in [0,1,2,3,4,5]" ng-value="val">{{ val }} Stars</option>

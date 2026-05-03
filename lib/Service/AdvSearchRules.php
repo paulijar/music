@@ -12,7 +12,6 @@
 
 namespace OCA\Music\Service;
 
-use OCA\Music\Db\BaseMapper;
 use OCP\IL10N;
 
 class AdvSearchRules {
@@ -263,21 +262,4 @@ class AdvSearchRules {
 		return null;
 	}
 
-	/**
-	 * Some search rule inputs need to be converted before they are used in the DB query.
-	 */
-	public static function convertInput(string $input, string $rule) : string {
-		switch ($rule) {
-			case 'last_play':
-				// days diff to ISO date; support also fractional days
-				$secs = (int)((float)$input * 24 * 60 * 60);
-				$date = new \DateTime("$secs seconds ago");
-				return $date->format(BaseMapper::SQL_DATE_FORMAT);
-			case 'time':
-				// minutes to seconds
-				return (string)(int)((float)$input * 60);
-			default:
-				return $input;
-		}
-	}
 }
