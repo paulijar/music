@@ -15,211 +15,24 @@ namespace OCA\Music\Service\Ampache;
 use OCA\Music\BusinessLayer\PlaylistBusinessLayer;
 use OCA\Music\Db\BaseMapper;
 use OCA\Music\Middleware\AmpacheException;
+use OCA\Music\Service\AdvSearchRules;
 use OCP\IL10N;
 
 class AmpacheAdvSearch {
 
 	public function __construct(
 		private IL10N $l10n,
+		private AdvSearchRules $advSearchRules,
 		private PlaylistBusinessLayer $playlistBusinessLayer
 	) {
 	}
 
+	/**
+	 * Get the available search rules for the given entity type, along with their types and widget information.
+	 * @return array<array{name: string, label: string, type: string, widget: array{0: string, 1: array|string}, title: string}>
+	 */
 	public function searchRules(string $entityType, string $userId) : array {
-		$l10n = $this->l10n;
-
-		$allRules = [
-			'song' => [
-				'' => [
-					'anywhere' => $l10n->t('Any searchable text')
-				],
-				$l10n->t('Track metadata') => [
-					'title'			=> $l10n->t('Name'),
-					'album'			=> $l10n->t('Album name'),
-					'artist'		=> $l10n->t('Artist name'),
-					'album_artist'	=> $l10n->t('Album artist name'),
-					'track'			=> $l10n->t('Track number'),
-					'year'			=> $l10n->t('Year'),
-					'time'			=> $l10n->t('Duration (seconds)'),
-					'bitrate'		=> $l10n->t('Bit rate'),
-					'song_genre'	=> $l10n->t('Track genre'),
-					'album_genre'	=> $l10n->t('Album genre'),
-					'artist_genre'	=> $l10n->t('Artist genre'),
-					'no_genre'		=> $l10n->t('Has no genre'),
-				],
-				$l10n->t('File data') => [
-					'file'				=> $l10n->t('File name'),
-					'added'				=> $l10n->t('Add date'),
-					'updated'			=> $l10n->t('Update date'),
-					'recent_added'		=> $l10n->t('Recently added'),
-					'recent_updated'	=> $l10n->t('Recently updated'),
-				],
-				$l10n->t('Rating') => [
-					'favorite'			=> $l10n->t('Favorite'),
-					'favorite_album'	=> $l10n->t('Favorite album'),
-					'favorite_artist'	=> $l10n->t('Favorite artist'),
-					'rating'			=> $l10n->t('Rating'),
-					'albumrating'		=> $l10n->t('Album rating'),
-					'artistrating'		=> $l10n->t('Artist rating'),
-				],
-				$l10n->t('Play history') => [
-					'played_times'		=> $l10n->t('Played times'),
-					'last_play'			=> $l10n->t('Last played'),
-					'recent_played'		=> $l10n->t('Recently played'),
-					'myplayed'			=> $l10n->t('Is played'),
-					'myplayedalbum'		=> $l10n->t('Is played album'),
-					'myplayedartist'	=> $l10n->t('Is played artist'),
-				],
-				$l10n->t('Playlist') => [
-					'playlist' 		=> $l10n->t('Playlist'),
-					'playlist_name'	=> $l10n->t('Playlist name'),
-				]
-			],
-			'album' => [
-				$l10n->t('Album metadata') => [
-					'title'			=> $l10n->t('Name'),
-					'artist'		=> $l10n->t('Album artist name'),
-					'song_artist'	=> $l10n->t('Track artist name'),
-					'song'			=> $l10n->t('Track name'),
-					'year'			=> $l10n->t('Year'),
-					'time'			=> $l10n->t('Duration (seconds)'),
-					'song_count'	=> $l10n->t('Track count'),
-					'disk_count'	=> $l10n->t('Disk count'),
-					'album_genre'	=> $l10n->t('Album genre'),
-					'song_genre'	=> $l10n->t('Track genre'),
-					'no_genre'		=> $l10n->t('Has no genre'),
-					'has_image'		=> $l10n->t('Has image'),
-				],
-				$l10n->t('File data') => [
-					'file'			 	=> $l10n->t('File name'),
-					'added'			 	=> $l10n->t('Add date'),
-					'updated'		 	=> $l10n->t('Update date'),
-					'recent_added'	 	=> $l10n->t('Recently added'),
-					'recent_updated'	=> $l10n->t('Recently updated'),
-				],
-				$l10n->t('Rating') => [
-					'favorite'		=> $l10n->t('Favorite'),
-					'rating'		=> $l10n->t('Rating'),
-					'songrating'	=> $l10n->t('Track rating'),
-					'artistrating'	=> $l10n->t('Artist rating'),
-				],
-				$l10n->t('Play history') => [
-					'played_times'		=> $l10n->t('Played times'),
-					'last_play'			=> $l10n->t('Last played'),
-					'recent_played'		=> $l10n->t('Recently played'),
-					'myplayed'			=> $l10n->t('Is played'),
-					'myplayedartist'	=> $l10n->t('Is played artist'),
-				],
-				$l10n->t('Playlist') => [
-					'playlist'		=> $l10n->t('Playlist'),
-					'playlist_name'	=> $l10n->t('Playlist name'),
-				]
-			],
-			'artist' => [
-				$l10n->t('Artist metadata') => [
-					'title'			=> $l10n->t('Name'),
-					'album'			=> $l10n->t('Album name'),
-					'song'			=> $l10n->t('Track name'),
-					'time'			=> $l10n->t('Duration (seconds)'),
-					'album_count'	=> $l10n->t('Album count'),
-					'song_count'	=> $l10n->t('Track count'),
-					'genre'			=> $l10n->t('Artist genre'),
-					'song_genre'	=> $l10n->t('Track genre'),
-					'no_genre'		=> $l10n->t('Has no genre'),
-					'has_image'		=> $l10n->t('Has image'),
-				],
-				$l10n->t('File data') => [
-					'file'				=> $l10n->t('File name'),
-					'added'				=> $l10n->t('Add date'),
-					'updated'			=> $l10n->t('Update date'),
-					'recent_added'		=> $l10n->t('Recently added'),
-					'recent_updated'	=> $l10n->t('Recently updated'),
-				],
-				$l10n->t('Rating') => [
-					'favorite'		=> $l10n->t('Favorite'),
-					'rating'		=> $l10n->t('Rating'),
-					'songrating'	=> $l10n->t('Track rating'),
-					'albumrating'	=> $l10n->t('Album rating'),
-				],
-				$l10n->t('Play history') => [
-					'played_times'	=> $l10n->t('Played times'),
-					'last_play'		=> $l10n->t('Last played'),
-					'recent_played'	=> $l10n->t('Recently played'),
-					'myplayed'		=> $l10n->t('Is played'),
-				],
-				$l10n->t('Playlist') => [
-					'playlist'		=> $l10n->t('Playlist'),
-					'playlist_name'	=> $l10n->t('Playlist name'),
-				]
-			],
-			'playlist' => [
-				'' => [
-					'title'				=> $l10n->t('Name'),
-					'added'				=> $l10n->t('Add date'),
-					'updated'			=> $l10n->t('Update date'),
-					'recent_added'		=> $l10n->t('Recently added'),
-					'recent_updated'	=> $l10n->t('Recently updated'),
-					'favorite'			=> $l10n->t('Favorite'),
-				]
-			],
-			'genre' => [
-				'' => [
-					'title'				=> $l10n->t('Name'),
-					'album_count'		=> $l10n->t('Album count'),
-					'song_count'		=> $l10n->t('Track count'),
-					'added'				=> $l10n->t('Add date'),
-					'updated'			=> $l10n->t('Update date'),
-					'recent_added'		=> $l10n->t('Recently added'),
-					'recent_updated'	=> $l10n->t('Recently updated'),
-				]
-			],
-			'podcast_episode' => [
-				$l10n->t('Podcast metadata') => [
-					'title'		=> $l10n->t('Name'),
-					'podcast'	=> $l10n->t('Podcast channel'),
-					'time'		=> $l10n->t('Duration (seconds)'),
-				],
-				$l10n->t('History') => [
-					'pubdate'			=> $l10n->t('Date published'),
-					'added'				=> $l10n->t('Add date'),
-					'updated'			=> $l10n->t('Update date'),
-					'recent_added'		=> $l10n->t('Recently added'),
-					'recent_updated'	=> $l10n->t('Recently updated'),
-				],
-				$l10n->t('Rating') => [
-					'favorite'	=> $l10n->t('Favorite'),
-					'rating'	=> $l10n->t('Rating'),
-				],
-			],
-			'podcast' => [
-				$l10n->t('Podcast metadata') => [
-					'title'				=> $l10n->t('Name'),
-					'podcast_episode'	=> $l10n->t('Podcast episode'),
-					'time'				=> $l10n->t('Duration (seconds)'),
-				],
-				$l10n->t('History') => [
-					'pubdate'			=> $l10n->t('Date published'),
-					'added'				=> $l10n->t('Add date'),
-					'updated'			=> $l10n->t('Update date'),
-					'recent_added'		=> $l10n->t('Recently added'),
-					'recent_updated'	=> $l10n->t('Recently updated'),
-				],
-				$l10n->t('Rating') => [
-					'favorite'	=> $l10n->t('Favorite'),
-					'rating'	=> $l10n->t('Rating'),
-				],
-			],
-			'live_stream' /* proprietary extension */ => [
-				'' => [
-					'title'				=> $l10n->t('Name'),
-					'stream_url'		=> $l10n->t('Stream URL'),
-					'added'				=> $l10n->t('Add date'),
-					'updated'			=> $l10n->t('Update date'),
-					'recent_added'		=> $l10n->t('Recently added'),
-					'recent_updated'	=> $l10n->t('Recently updated'),
-				],
-			],
-		];
+		$allRules = $this->advSearchRules->getRules();
 
 		$result = [];
 
@@ -241,6 +54,7 @@ class AmpacheAdvSearch {
 	}
 
 	/**
+	 * Parse and convert the search rules given as HTTP parameters to a structured format that can be used for searching.
 	 * @param array<string> $restParams
 	 * @return array<array{rule: string, operator: string, input: string}>
 	 */
@@ -258,6 +72,9 @@ class AmpacheAdvSearch {
 		return $rules;
 	}
 
+	/**
+	 * @return array<array{rule: string, operator: int, input: string}>
+	 */
 	private static function getRuleParams(array $urlParams) : array {
 		$rules = [];
 
@@ -373,45 +190,7 @@ class AmpacheAdvSearch {
 	}
 
 	private static function typeForRule(string $rule) : string {
-		$rulesPerType = [
-			'text' => [
-				'anywhere', 'title', 'song', 'album', 'artist', 'podcast', 'podcast_episode', 'album_artist', 'song_artist',
-				'favorite', 'favorite_album', 'favorite_artist', 'genre', 'song_genre', 'album_genre', 'artist_genre',
-				'playlist_name', 'type', 'file', 'mbid', 'mbid_album', 'mbid_artist', 'mbid_song', 'stream_url' /* proprietary extension */
-			],
-			// text but not supported: 'composer', 'summary', 'placeformed', 'release_type', 'release_status', 'barcode',
-			// 'catalog_number', 'label', 'comment', 'lyrics', 'username', 'category'
-
-			'numeric' => [
-				'track', 'year', 'original_year', 'myrating', 'rating', 'songrating', 'albumrating', 'artistrating',
-				'played_times', 'album_count', 'song_count', 'disk_count', 'time', 'bitrate'
-			],
-			// numeric but not supported: 'yearformed', 'skipped_times', 'play_skip_ratio', 'image_height', 'image_width'
-
-			'numeric_limit' => ['recent_played', 'recent_added', 'recent_updated'],
-
-			'date' => ['added', 'updated', 'pubdate'],
-
-			'days' => ['last_play'],
-			// days but not supported: 'last_play_or_skip'
-
-			'boolean' => [
-				'played', 'myplayed', 'myplayedalbum', 'myplayedartist', 'has_image', 'no_genre',
-				'my_flagged', 'my_flagged_album', 'my_flagged_artist'
-			],
-			// boolean but not supported: 'smartplaylist', 'possible_duplicate', 'possible_duplicate_album'
-
-			'boolean_numeric' => ['playlist', 'album_artist_id' /* proprietary extension */],
-			// boolean numeric but not supported: 'license', 'state', 'catalog'
-		];
-
-		foreach ($rulesPerType as $type => $rules) {
-			if (\in_array($rule, $rules)) {
-				return $type;
-			}
-		}
-
-		throw new AmpacheException("Search rule '$rule' not supported", 400);
+		return AdvSearchRules::typeForRule($rule) ?? throw new AmpacheException("Search rule '$rule' not supported", 400);
 	}
 
 	private function widgetForRule(string $rule, string $type, string $userId) : array {
