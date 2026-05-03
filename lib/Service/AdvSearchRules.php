@@ -24,7 +24,7 @@ class AdvSearchRules {
 		$l10n = $this->l10n;
 
 		return [
-			'song' => [
+			'track' => [
 				'' => [
 					'anywhere' => $l10n->t('Any searchable text')
 				],
@@ -186,7 +186,7 @@ class AdvSearchRules {
 					'rating'	=> $l10n->t('Rating'),
 				],
 			],
-			'podcast' => [
+			'podcast_channel' => [
 				$l10n->t('Podcast metadata') => [
 					'title'				=> $l10n->t('Name'),
 					'podcast_episode'	=> $l10n->t('Podcast episode'),
@@ -204,7 +204,7 @@ class AdvSearchRules {
 					'rating'	=> $l10n->t('Rating'),
 				],
 			],
-			'live_stream' /* proprietary extension */ => [
+			'radio_station' /* not part of the Ampache specification */ => [
 				'' => [
 					'title'				=> $l10n->t('Name'),
 					'stream_url'		=> $l10n->t('Stream URL'),
@@ -222,16 +222,18 @@ class AdvSearchRules {
 			'text' => [
 				'anywhere', 'title', 'song', 'album', 'artist', 'podcast', 'podcast_episode', 'album_artist', 'song_artist',
 				'favorite', 'favorite_album', 'favorite_artist', 'genre', 'song_genre', 'album_genre', 'artist_genre',
-				'playlist_name', 'type', 'file', 'mbid', 'mbid_album', 'mbid_artist', 'mbid_song', 'stream_url' /* proprietary extension */
+				'playlist_name', 'type', 'file', 'mbid', 'mbid_album', 'mbid_artist', 'mbid_song', 'stream_url' /* not in Ampache spec */
 			],
 			// text but not supported: 'composer', 'summary', 'placeformed', 'release_type', 'release_status', 'barcode',
 			// 'catalog_number', 'label', 'comment', 'lyrics', 'username', 'category'
 
 			'numeric' => [
-				'track', 'year', 'original_year', 'myrating', 'rating', 'songrating', 'albumrating', 'artistrating',
-				'played_times', 'album_count', 'song_count', 'disk_count', 'time', 'bitrate'
+				'track', 'year', 'original_year', 'played_times', 'album_count', 'song_count', 'disk_count', 'time', 'bitrate'
 			],
 			// numeric but not supported: 'yearformed', 'skipped_times', 'play_skip_ratio', 'image_height', 'image_width'
+
+			// in the Ampache API, these are just 'numeric'
+			'numeric_rating' => ['myrating', 'rating', 'songrating', 'albumrating', 'artistrating'],
 
 			'numeric_limit' => ['recent_played', 'recent_added', 'recent_updated'],
 
@@ -246,8 +248,10 @@ class AdvSearchRules {
 			],
 			// boolean but not supported: 'smartplaylist', 'possible_duplicate', 'possible_duplicate_album'
 
-			'boolean_numeric' => ['playlist', 'album_artist_id' /* proprietary extension */],
+			'boolean_numeric' => ['album_artist_id' /* not in Ampache spec */],
 			// boolean numeric but not supported: 'license', 'state', 'catalog'
+
+			'playlist' => ['playlist'], // in the Ampache API, this is just 'boolean_numeric'
 		];
 
 		foreach ($rulesPerType as $type => $rules) {

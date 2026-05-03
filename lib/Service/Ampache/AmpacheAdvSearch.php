@@ -13,7 +13,6 @@
 namespace OCA\Music\Service\Ampache;
 
 use OCA\Music\BusinessLayer\PlaylistBusinessLayer;
-use OCA\Music\Db\BaseMapper;
 use OCA\Music\Middleware\AmpacheException;
 use OCA\Music\Service\AdvSearchRules;
 use OCP\IL10N;
@@ -34,16 +33,24 @@ class AmpacheAdvSearch {
 	public function searchRules(string $entityType, string $userId) : array {
 		$allRules = $this->advSearchRules->getRules();
 
+		// some entity types have different names in the Ampache API compared to the internal ones
+		$entityType = match ($entityType) {
+			'song' => 'track',
+			'podcast' => 'podcast_channel',
+			'live_stream' => 'radio_station',
+			default => $entityType
+		};
+
 		$result = [];
 
 		foreach ($allRules[$entityType] as $title => $rules) {
 			foreach ($rules as $name => $label) {
 				$type = self::typeForRule($name);
-				$widget = $this->widgetForRule($name, $type, $userId);
+				$widget = $this->widgetForRuleType($type, $userId);
 				$result[] = [
 					'name' => $name,
 					'label' => $label,
-					'type' => $type,
+					'type' => self::ampacheRuleType($type),
 					'widget' => $widget,
 					'title' => $title
 				];
@@ -127,7 +134,7 @@ class AmpacheAdvSearch {
 	// NOTE: alias rule names should be resolved to their base form before calling this
 	private static function interpretOperator(int $rule_operator, string $rule) : string {
 		// Operator mapping is different for different types of rules
-		$type = self::typeForRule($rule);
+		$type = self::ampacheRuleType(self::typeForRule($rule));
 
 		$mapping = [
 			'text' => [
@@ -179,28 +186,32 @@ class AmpacheAdvSearch {
 		return AdvSearchRules::typeForRule($rule) ?? throw new AmpacheException("Search rule '$rule' not supported", 400);
 	}
 
-	private function widgetForRule(string $rule, string $type, string $userId) : array {
-		if (\in_array($rule, ['myrating', 'rating', 'songrating', 'albumrating', 'artistrating'])) {
+	private static function ampacheRuleType(string $type) : string {
+		return match ($type) {
+			'numeric_rating' => 'numeric',
+			'playlist' => 'boolean_numeric',
+			default => $type
+		};
+	}
+
+	private function widgetForRuleType(string $type, string $userId) : array {
+		if ($type == 'numeric_rating') {
 			return ['select', \array_map(fn($val) => $this->l10n->n('%n Star', '%n Stars', $val), [0,1,2,3,4,5])];
 		} elseif ($type == 'text') {
 			return ['input', 'text'];
-		} elseif ($type == 'numeric' || $type == 'numeric_limit' || $type == 'days') {
+		} elseif (\in_array($type, ['numeric', 'numeric_limit', 'days', 'boolean_numeric'])) {
 			return ['input', 'number'];
 		} elseif ($type == 'date') {
 			return ['input', 'datetime-local'];
 		} elseif ($type == 'boolean') {
 			return ['input', 'hidden'];
-		} elseif ($type == 'boolean_numeric') {
-			if ($rule == 'playlist') {
-				$playlists = $this->playlistBusinessLayer->findAll($userId);
-				$options = [];
-				foreach ($playlists as $playlist) {
-					$options[(string)$playlist->getId()] = $playlist->getName();
-				}
-				return ['select', $options];
-			} else {
-				return ['input', 'number'];
+		} elseif ($type == 'playlist') {
+			$playlists = $this->playlistBusinessLayer->findAll($userId);
+			$options = [];
+			foreach ($playlists as $playlist) {
+				$options[(string)$playlist->getId()] = $playlist->getName();
 			}
+			return ['select', $options];
 		}
 		throw new \LogicException("Unexpected type '$type'");
 	}
