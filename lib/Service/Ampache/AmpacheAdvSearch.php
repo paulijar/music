@@ -66,7 +66,7 @@ class AmpacheAdvSearch {
 		foreach ($rules as &$rule) {
 			$rule['rule'] = self::resolveRuleAlias($rule['rule']);
 			$rule['operator'] = self::interpretOperator($rule['operator'], $rule['rule']);
-			$rule['input'] = self::convertInput($rule['input'], $rule['rule']);
+			$rule['input'] = AdvSearchRules::convertInput($rule['input'], $rule['rule']);
 		}
 
 		return $rules;
@@ -173,20 +173,6 @@ class AmpacheAdvSearch {
 
 		return $mapping[$type][$rule_operator]
 			?? throw new AmpacheException("Search operator '$rule_operator' not supported for '$type' type rule '$rule", 400);
-	}
-
-	private static function convertInput(string $input, string $rule) : string {
-		switch ($rule) {
-			case 'last_play':
-				// days diff to ISO date
-				$date = new \DateTime("$input days ago");
-				return $date->format(BaseMapper::SQL_DATE_FORMAT);
-			case 'time':
-				// minutes to seconds
-				return (string)(int)((float)$input * 60);
-			default:
-				return $input;
-		}
 	}
 
 	private static function typeForRule(string $rule) : string {

@@ -12,6 +12,7 @@
 
 namespace OCA\Music\Service;
 
+use OCA\Music\Db\BaseMapper;
 use OCP\IL10N;
 
 class AdvSearchRules {
@@ -34,7 +35,7 @@ class AdvSearchRules {
 					'album_artist'	=> $l10n->t('Album artist name'),
 					'track'			=> $l10n->t('Track number'),
 					'year'			=> $l10n->t('Year'),
-					'time'			=> $l10n->t('Duration (seconds)'),
+					'time'			=> $l10n->t('Duration (minutes)'),
 					'bitrate'		=> $l10n->t('Bit rate'),
 					'song_genre'	=> $l10n->t('Track genre'),
 					'album_genre'	=> $l10n->t('Album genre'),
@@ -76,7 +77,7 @@ class AdvSearchRules {
 					'song_artist'	=> $l10n->t('Track artist name'),
 					'song'			=> $l10n->t('Track name'),
 					'year'			=> $l10n->t('Year'),
-					'time'			=> $l10n->t('Duration (seconds)'),
+					'time'			=> $l10n->t('Duration (minutes)'),
 					'song_count'	=> $l10n->t('Track count'),
 					'disk_count'	=> $l10n->t('Disk count'),
 					'album_genre'	=> $l10n->t('Album genre'),
@@ -114,7 +115,7 @@ class AdvSearchRules {
 					'title'			=> $l10n->t('Name'),
 					'album'			=> $l10n->t('Album name'),
 					'song'			=> $l10n->t('Track name'),
-					'time'			=> $l10n->t('Duration (seconds)'),
+					'time'			=> $l10n->t('Duration (minutes)'),
 					'album_count'	=> $l10n->t('Album count'),
 					'song_count'	=> $l10n->t('Track count'),
 					'genre'			=> $l10n->t('Artist genre'),
@@ -171,7 +172,7 @@ class AdvSearchRules {
 				$l10n->t('Podcast metadata') => [
 					'title'		=> $l10n->t('Name'),
 					'podcast'	=> $l10n->t('Podcast channel'),
-					'time'		=> $l10n->t('Duration (seconds)'),
+					'time'		=> $l10n->t('Duration (minutes)'),
 				],
 				$l10n->t('History') => [
 					'pubdate'			=> $l10n->t('Date published'),
@@ -189,7 +190,7 @@ class AdvSearchRules {
 				$l10n->t('Podcast metadata') => [
 					'title'				=> $l10n->t('Name'),
 					'podcast_episode'	=> $l10n->t('Podcast episode'),
-					'time'				=> $l10n->t('Duration (seconds)'),
+					'time'				=> $l10n->t('Duration (minutes)'),
 				],
 				$l10n->t('History') => [
 					'pubdate'			=> $l10n->t('Date published'),
@@ -256,5 +257,22 @@ class AdvSearchRules {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Some search rule inputs need to be converted before they are used in the DB query.
+	 */
+	public static function convertInput(string $input, string $rule) : string {
+		switch ($rule) {
+			case 'last_play':
+				// days diff to ISO date
+				$date = new \DateTime("$input days ago");
+				return $date->format(BaseMapper::SQL_DATE_FORMAT);
+			case 'time':
+				// minutes to seconds
+				return (string)(int)((float)$input * 60);
+			default:
+				return $input;
+		}
 	}
 }
