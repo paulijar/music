@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the ownCloud music package.
+# This file is distributed under the same license as the nc-music package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: ownCloud music 5.0.0\n"
-"Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2026-05-04 23:10+0300\n"
+"Project-Id-Version: nc-music 3.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/nc-music/music/issues\n"
+"POT-Creation-Date: 2026-05-05 23:25+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2064,6 +2064,12 @@ msgstr ""
 #: Service/AdvSearchRules.php:191
 msgid "Podcast episode"
 msgstr ""
+
+#: Service/Ampache/AmpacheAdvSearch.php:198
+msgid "%n Star"
+msgid_plural "%n Stars"
+msgstr[0] ""
+msgstr[1] ""
 
 #: scrobble-getsession-result.php:21
 msgid "You can now close this window"
