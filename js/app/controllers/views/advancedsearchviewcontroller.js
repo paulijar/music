@@ -149,6 +149,12 @@ angular.module('Music').controller('AdvancedSearchViewController', [
 
 		$scope.searchRules = [];
 
+		$scope.ratingLabel = function(rating) {
+			// Use the standard Nextcloud localization mechanism instead of gettextCatalog to reuse the translation from
+			// the back-end (used for Ampache API). Plural strings in gettextCatalog use different placeholder syntax.
+			return window.n('music', '%n Star', '%n Stars', rating);
+		};
+
 		$scope.addSearchRule = function() {
 			const rule = $scope.searchRuleTypes[$scope.entityType][0].options[0];
 			const operator = $scope.searchRuleOperators[rule.type][0];
