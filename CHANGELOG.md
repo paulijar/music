@@ -23,6 +23,7 @@
 - Subsonic API:
   * Response of `getArtistInfo` and `getArtistInfo2` being malformed when no details available
     [#129](https://github.com/nc-music/music/issues/129)
+  * XML responses of `getArtistInfo`, `getArtistInfo2`, `getAlbumInfo`, and `getAlbumInfo2` showing property `openSubsonic` as an element instead of attribute
 
 ## 3.0.0 - 2026-02-23
 
