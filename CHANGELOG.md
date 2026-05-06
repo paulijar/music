@@ -20,6 +20,9 @@
 
 ### Fixed
 - Embedded Files player hiding bottom of the file list on NC 31+
+- Subsonic API:
+  * Response of `getArtistInfo` and `getArtistInfo2` being malformed when no details available
+    [#129](https://github.com/nc-music/music/issues/129)
 
 ## 3.0.0 - 2026-02-23
 
