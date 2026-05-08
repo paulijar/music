@@ -20,7 +20,8 @@
 
 ### Fixed
 - Embedded Files player hiding bottom of the file list on NC 31+
-- Fix navigation pane being collapsed on screen exactly 1024 px wide even though the toggle button is visible only on widths < 1024 px
+- Navigation pane being collapsed on screen exactly 1024 px wide even though the toggle button is visible only on widths < 1024 px
+- Navigation pane toggle becoming unresponsive if the navigation pane was closed with the toggle on touch screen
 - Subsonic API:
   * Response of `getArtistInfo` and `getArtistInfo2` being malformed when no details available
     [#129](https://github.com/nc-music/music/issues/129)
