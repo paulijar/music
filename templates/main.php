@@ -29,7 +29,8 @@ HtmlUtil::addWebpackStyle('app');
 	<div ng-controller="MainController">
 		<?php HtmlUtil::printPartial('navigation') ?>
 
-		<div id="app-content">
+		<div id="app-content" class="no-snapper"> <!-- disable NC snapper as we ship our own -->
+			<div id="app-navigation-toggle" ng-controller="SnapController" ng-click="toggle()" class="icon-menu" style="display: none"></div>
 
 			<div id="app-view" ng-view resize-notifier
 				ng-class="{started: started, 'icon-loading': loadIndicatorVisible()}">
