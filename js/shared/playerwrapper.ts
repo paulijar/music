@@ -104,7 +104,7 @@ export class PlayerWrapper {
 		this.#html5audio.onended = () => {
 			this.#playing = false;
 			this.trigger('end');
-		}
+		};
 
 		this.#html5audio.oncanplay = () => {
 			this.#ready = true;
