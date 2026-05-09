@@ -455,12 +455,7 @@ function ($rootScope, $scope, $timeout, $window, ArtistFactory,
 			}
 		}
 
-		// Most of our navigation pane items are not <a> or <button> elements, meaning that the core
-		// does not collapse the navigation pane automatically upon navigation. The Settings link is an
-		// exception. Firing the collapsing twice also caused some severe issues.
-		if (destination !== '#/settings') {
-			$scope.collapseNavigationPaneOnMobile();
-		}
+		$scope.collapseNavigationPaneOnMobile();
 	};
 
 	// Compact/normal layout of the Albums view
@@ -495,8 +490,7 @@ function ($rootScope, $scope, $timeout, $window, ArtistFactory,
 	$scope.collapseNavigationPaneOnMobile = function() {
 		if ($scope.mobileNavigationPaneExpanded()) {
 			$timeout(() => {
-				// There is a fake button within the navigation pane which can be "clicked" to make the core collapse the pane
-				$('#hidden-close-app-navigation-button').trigger('click');
+				$rootScope.$emit('closeSnapper');
 				// Remove any active input focus to ensure that the focus is not left to an input field within the collapsed pane
 				$(document.activeElement).trigger('blur');
 			});

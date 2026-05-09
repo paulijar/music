@@ -11,8 +11,8 @@
 import * as SnapJs from 'vendor/snapjs/snap';
 import { isRTL } from '@nextcloud/l10n';
 
-angular.module('Music').controller('SnapController', [
-function () {
+angular.module('Music').controller('SnapController', ['$rootScope', '$scope',
+function ($rootScope, $scope) {
 	const SNAPPER_OPEN = isRTL() ? 'right' : 'left';
 	const SNAPPER_CLOSE = isRTL() ? 'left' : 'right';
 
@@ -23,22 +23,16 @@ function () {
 		minPosition: -300, // used for RTL
 		minDragDistance: 100
 	});
-	$('#app-navigation-toggle').on('click', () => {
+
+	$scope.toggle = () => {
 		if (snapper.state().state == SNAPPER_OPEN) {
 			snapper.close();
 		} else {
 			snapper.open(SNAPPER_OPEN);
 		}
-	});
-	// close sidebar when switching navigation entry
-	const $appNavigation = $('#app-navigation');
-	$appNavigation.on('click', 'a, :button', (event) => {
-		const $target = $(event.target);
-		// don't hide navigation if the clicked element or its ancestors have the .app-navigation-noclose class
-		if (!$target.is('.app-navigation-noclose') && !$target.closest('.app-navigation-noclose').length) {
-			snapper.close();
-		}
-	});
+	};
+
+	$rootScope.$on('closeSnapper', () => snapper.close());
 
 	const toggleSnapperOnSize = () => {
 		if ($(window).width() >= 1024) {
@@ -53,4 +47,5 @@ function () {
 
 	// initial call
 	toggleSnapperOnSize();
+
 }]);
