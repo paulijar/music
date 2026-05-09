@@ -564,7 +564,7 @@ function ($rootScope, $scope, $timeout, $window, ArtistFactory,
 		else if (appViewWidth <= 500 && $window.innerWidth < 1024) {
 			setMasterLayout(['mobile']);
 		}
-		else if (appViewWidth < 1025) {
+		else if (appViewWidth < 1024) {
 			setMasterLayout(['tablet']);
 		}
 		else {
