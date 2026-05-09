@@ -9,20 +9,25 @@
  */
 
 import * as SnapJs from 'vendor/snapjs/snap';
+import { isRTL } from '@nextcloud/l10n';
 
 angular.module('Music').controller('SnapController', [
 function () {
+	const SNAPPER_OPEN = isRTL() ? 'right' : 'left';
+	const SNAPPER_CLOSE = isRTL() ? 'left' : 'right';
+
 	const snapper = new SnapJs.Snap({
 		element: document.getElementById('app-content'),
-		disable: 'right',
+		disable: SNAPPER_CLOSE,
 		maxPosition: 300,
+		minPosition: -300, // used for RTL
 		minDragDistance: 100
 	});
 	$('#app-navigation-toggle').on('click', () => {
-		if (snapper.state().state == 'left') {
+		if (snapper.state().state == SNAPPER_OPEN) {
 			snapper.close();
 		} else {
-			snapper.open('left');
+			snapper.open(SNAPPER_OPEN);
 		}
 	});
 	// close sidebar when switching navigation entry
