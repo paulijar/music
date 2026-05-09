@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ master ]
 
+permissions:
+  contents: read
+
 jobs:
   intgr-tests:
 
@@ -27,7 +30,7 @@ jobs:
           - nc: 33.0.0
             php: 8.5
             db: sqlite
-          - nc: 34.0.0beta2
+          - nc: 34.0.0beta4
             php: 8.5
             db: pgsql
 
