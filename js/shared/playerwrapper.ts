@@ -184,10 +184,6 @@ export class PlayerWrapper {
 		this.#auroraWorkaroundAudio.src = OCA.Music.DummyAudio.getData();
 	}
 
-	#isIe() : boolean {
-		return $('html').hasClass('ie'); // are we running on Internet Explorer
-	}
-
 	#onPlayStarted() : void {
 		this.trigger('play');
 	}
@@ -270,12 +266,7 @@ export class PlayerWrapper {
 					this.#hls.stopLoad();
 					this.#hls.detachMedia();
 				}
-				// On IE, setting the src to empty string would blow up the whole audio element and it wouldn't
-				// recover without a page reload. On the other hand, IE doesn't support mediaSession API so this
-				// step isn't crucial.
-				if (!this.#isIe()) {
-					this.#html5audio.src = '';
-				}
+				this.#html5audio.src = '';
 				this.#html5audio.currentTime = 0;
 				break;
 			case 'aurora':
@@ -283,9 +274,7 @@ export class PlayerWrapper {
 					this.#aurora.stop();
 					this.#aurora = null;
 					this.#auroraWorkaroundAudio.pause();
-					if (!this.#isIe()) {
-						this.#auroraWorkaroundAudio.src = '';
-					}
+					this.#auroraWorkaroundAudio.src = '';
 				}
 				break;
 		}
