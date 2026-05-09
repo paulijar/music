@@ -12,13 +12,13 @@ import * as SnapJs from 'vendor/snapjs/snap';
 
 angular.module('Music').controller('SnapController', [
 function () {
-	var snapper = new SnapJs.Snap({
+	const snapper = new SnapJs.Snap({
 		element: document.getElementById('app-content'),
 		disable: 'right',
 		maxPosition: 300,
 		minDragDistance: 100
 	});
-	$('#app-navigation-toggle').click(function () {
+	$('#app-navigation-toggle').on('click', () => {
 		if (snapper.state().state == 'left') {
 			snapper.close();
 		} else {
@@ -26,26 +26,16 @@ function () {
 		}
 	});
 	// close sidebar when switching navigation entry
-	var $appNavigation = $('#app-navigation');
-	$appNavigation.delegate('a, :button', 'click', function (event) {
-		var $target = $(event.target);
-		// don't hide navigation when changing settings or adding things
-		if ($target.is('.app-navigation-noclose') ||
-			$target.closest('.app-navigation-noclose').length) {
-			return;
+	const $appNavigation = $('#app-navigation');
+	$appNavigation.on('click', 'a, :button', (event) => {
+		const $target = $(event.target);
+		// don't hide navigation if the clicked element or its ancestors have the .app-navigation-noclose class
+		if (!$target.is('.app-navigation-noclose') && !$target.closest('.app-navigation-noclose').length) {
+			snapper.close();
 		}
-		if ($target.is('.add-new') ||
-			$target.closest('.add-new').length) {
-			return;
-		}
-		if ($target.is('#app-settings') ||
-			$target.closest('#app-settings').length) {
-			return;
-		}
-		snapper.close();
 	});
 
-	var toggleSnapperOnSize = function () {
+	const toggleSnapperOnSize = () => {
 		if ($(window).width() >= 1024) {
 			snapper.close();
 			snapper.disable();
@@ -54,7 +44,7 @@ function () {
 		}
 	};
 
-	$(window).resize(_.debounce(toggleSnapperOnSize, 250));
+	$(window).on('resize', _.debounce(toggleSnapperOnSize, 250));
 
 	// initial call
 	toggleSnapperOnSize();
