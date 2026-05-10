@@ -54,7 +54,7 @@ HtmlUtil::addWebpackStyle('app');
 					<h2 translate>New music available</h2>
 					<p translate>Click here to start the scan</p>
 				</div>
-				<a class="close icon-close" alt="Close" ng-click="hideScanBar($event)"></a>
+				<a class="close icon-close" aria-label="{{ Close | translate }}" ng-click="hideScanBar($event)"></a>
 			</div>
 
 			<div id="toRescan" class="emptycontent clickable" ng-show="!scanning && !unscannedFiles.length && dirtyFiles.length && viewingLibrary()" ng-click="startScanning(dirtyFiles)">
@@ -63,7 +63,7 @@ HtmlUtil::addWebpackStyle('app');
 					<h2 translate>Some of the previously scanned files may have changed</h2>
 					<p translate>Click here to rescan these files</p>
 				</div>
-				<a class="close icon-close" alt="Close" ng-click="hideScanBar($event)"></a>
+				<a class="close icon-close" aria-label="{{ Close | translate }}" ng-click="hideScanBar($event)"></a>
 			</div>
 
 			<div id="toRemove" class="emptycontent clickable" ng-show="!scanning && !unscannedFiles.length && !dirtyFiles.length && obsoleteFiles.length && viewingLibrary()" ng-click="removeObsolete()">
@@ -74,7 +74,7 @@ HtmlUtil::addWebpackStyle('app');
 					</h2>
 					<p translate translate-n="obsoleteFiles.length" translate-plural="Click here to remove these files">Click here to remove this file</p>
 				</div>
-				<a class="close icon-close" alt="Close" ng-click="hideScanBar($event)"></a>
+				<a class="close icon-close" aria-label="{{ Close | translate }}" ng-click="hideScanBar($event)"></a>
 			</div>
 
 			<div id="scanning" class="emptycontent" ng-show="scanning && viewingLibrary()">

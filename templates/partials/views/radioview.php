@@ -20,9 +20,9 @@
 				</div>
 			</div>
 			<button class="action icon-details" ng-click="showRadioStationDetails(station)"
-				alt="{{ 'Details' | translate }}" title="{{ 'Details' | translate }}"></button>
+				aria-label="{{ 'Details' | translate }}" title="{{ 'Details' | translate }}"></button>
 			<button class="action icon-delete" ng-click="deleteStation(station)" ng-show="!station.busy"
-				alt="{{ 'Delete' | translate }}" title="{{ 'Delete' | translate }}"></button>
+				aria-label="{{ 'Delete' | translate }}" title="{{ 'Delete' | translate }}"></button>
 			<span class="icon-loading-small" ng-show="station.busy"></span>
 		</li>
 	</ul>
