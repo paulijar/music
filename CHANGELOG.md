@@ -5,6 +5,7 @@
 ### Changed
 - Periodically refresh "Now playing" song to Last.fm while playing (Last.fm forgets the song after 4 minutes which was an issue on longer songs or when the song was paused)
 - On narrow screen, use similar "mobile portrait" layout in the Files player as in the Music app proper
+- On narrow screen, keep the player controls visible also when the navigation pane is expanded
 - Don't hide empty genres, but instead, remove them in the background cleanup task
 - Advanced search:
   * Enable searching for genres

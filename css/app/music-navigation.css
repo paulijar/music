@@ -111,6 +111,7 @@
 }
 
 .app-music #app-navigation-toggle {
+	position: absolute;
 	height: 66px;
 	top: 0;
 }
