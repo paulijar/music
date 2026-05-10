@@ -287,9 +287,9 @@ function ($rootScope, $scope, $timeout, $window, ArtistFactory,
 		$scope.scanningScanned = 0;
 		$scope.scanningTotal = filesToScan.length;
 
-		if (fileIds == $scope.unscannedFiles) {
+		if (fileIds === $scope.unscannedFiles) {
 			$scope.unscannedFiles = null;
-		} else if (fileIds == $scope.dirtyFiles) {
+		} else if (fileIds === $scope.dirtyFiles) {
 			$scope.dirtyFiles = null;
 		}
 		$scope.scanning = true;

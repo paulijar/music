@@ -283,7 +283,7 @@ angular.module('Music').controller('AdvancedSearchViewController', [
 		$scope.onTrackClick = function(trackId) {
 			// play/pause if currently playing list item clicked
 			const currentTrack = $scope.$parent.currentTrack;
-			if (currentTrack && currentTrack.id === trackId && currentTrack.type == 'song') {
+			if (currentTrack && currentTrack.id === trackId && currentTrack.type === 'song') {
 				playQueueService.publish('togglePlayback');
 			}
 			// on any other list item, start playing the list from this item
@@ -313,8 +313,12 @@ angular.module('Music').controller('AdvancedSearchViewController', [
 			// TODO: play/pause if currently playing album clicked?
 			const tracks = getTracksFromResult();
 			const album = _.find($scope.results.albums, { id: albumId });
-			const index = _.findIndex(tracks, { id: album.tracks[0].id });
-			play(tracks, index);
+			if (Array.isArray(album?.tracks) && album.tracks.length > 0) {
+				const index = _.findIndex(tracks, { id: album.tracks?.[0]?.id });
+				if (index >= 0) {
+					play(tracks, index);
+				}
+			}
 		};
 
 		$scope.getAlbumData = function(listItem, index, _scope) {
@@ -337,8 +341,10 @@ angular.module('Music').controller('AdvancedSearchViewController', [
 			// TODO: play/pause if currently playing artist clicked?
 			const tracks = getTracksFromResult();
 			const artistTracks = libraryService.findTracksByArtist(artistId);
-			const index = _.findIndex(tracks, { id: artistTracks[0].id });
-			play(tracks, index);
+			if (artistTracks.length > 0) {
+				const index = _.findIndex(tracks, { id: artistTracks[0].id });
+				play(tracks, index);
+			}
 		};
 
 		$scope.getArtistData = function(listItem, index, _scope) {
@@ -399,7 +405,7 @@ angular.module('Music').controller('AdvancedSearchViewController', [
 
 		$scope.onPodcastEpisodeClick = function(episodeId) {
 			const currentTrack = $scope.$parent.currentTrack;
-			if (currentTrack && currentTrack.id === episodeId && currentTrack.type == 'podcast') {
+			if (currentTrack && currentTrack.id === episodeId && currentTrack.type === 'podcast') {
 				playQueueService.publish('togglePlayback');
 			}
 			// on any other list item, start playing the list from this item
@@ -441,7 +447,7 @@ angular.module('Music').controller('AdvancedSearchViewController', [
 
 		$scope.onRadioStationClick = function(stationId) {
 			const currentTrack = $scope.$parent.currentTrack;
-			if (currentTrack && currentTrack.id === stationId && currentTrack.type == 'radio') {
+			if (currentTrack && currentTrack.id === stationId && currentTrack.type === 'radio') {
 				playQueueService.publish('togglePlayback');
 			}
 			// on any other list item, start playing the list from this item
