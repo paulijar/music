@@ -35,8 +35,8 @@ HtmlUtil::addWebpackStyle('app');
 				ng-class="{started: started, 'icon-loading': loadIndicatorVisible()}">
 			</div>
 
-			<div id="controls-container" style="position: sticky;">
-				<div id="app-navigation-toggle" ng-controller="SnapController" ng-click="toggle()" class="icon-menu" style="display: none"></div>
+			<div id="controls-container">
+				<div id="app-navigation-toggle" ng-controller="SnapController" ng-click="toggle()" class="icon-menu"></div>
 				<?php HtmlUtil::printPartial('controls'); ?>
 			</div>
 
