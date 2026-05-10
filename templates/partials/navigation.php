@@ -55,7 +55,8 @@ HtmlUtil::printNgTemplate('navigationitem');
 				<div class="label app-navigation-noclose" ng-click="startSearch()" ng-hide="showSearch" translate>Search</div>
 				<div class="input-container" ng-show="showSearch">
 					<input id="search-input" type="text" placeholder="{{ 'Search' | translate }}"
-						ng-model="searchInput" on-enter="collapseNavigationPaneOnMobile()"
+						ng-model="searchInput" enterkeyhint="search"
+						on-enter="collapseNavigationPaneOnMobile()"
 						on-esc="clearSearch(); collapseNavigationPaneOnMobile()" />
 					<button id="clear-search" class="icon-close" ng-click="clearSearch()"></button>
 				</div>
