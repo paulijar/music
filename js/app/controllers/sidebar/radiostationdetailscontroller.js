@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2021 - 2025
+ * @copyright Pauli Järvinen 2021 - 2026
  */
 
 
@@ -138,7 +138,7 @@ angular.module('Music').controller('RadioStationDetailsController', [
 		// Commit the edited content
 		$scope.commitEdit = function() {
 			// do not allow committing if the stream URL is empty
-			if ($scope.streamUrl.length > 0) {
+			if ($scope.streamUrl?.length > 0) {
 				const newData = {name: $scope.stationName, streamUrl: $scope.streamUrl};
 
 				if ($scope.station === null) { // creating new
