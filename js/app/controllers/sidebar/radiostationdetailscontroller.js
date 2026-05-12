@@ -27,13 +27,13 @@ angular.module('Music').controller('RadioStationDetailsController', [
 		resetContents();
 
 		$scope.$watch('contentId', function(stationId) {
-			if (!$scope.station || stationId != $scope.station.id) {
+			if (!$scope.station || stationId !== $scope.station.id) {
 				resetContents();
 
 				if (stationId === null) {
 					$scope.editing = true;
 					$timeout(function() {
-						$('#radio-name-editor').focus();
+						$('#radio-name-editor').trigger('focus');
 					});
 				} else {
 					const station = libraryService.getRadioStation(stationId);
@@ -82,7 +82,7 @@ angular.module('Music').controller('RadioStationDetailsController', [
 				} else {
 					const [, artistName, songTitle] = matches;
 					$scope.setLastfmPlaceholder(songTitle, artistName);
-					if (metadata.title != $scope.station.nowPlaying?.title || $scope.station.nowPlaying?.lastfm == null) {
+					if (metadata.title !== $scope.station.nowPlaying?.title || $scope.station.nowPlaying?.lastfm == null) {
 						$scope.station.nowPlaying = {title: metadata?.title, lastfm: null};
 						updateDetails($scope.station, songTitle, artistName);
 					} else {
@@ -98,12 +98,12 @@ angular.module('Music').controller('RadioStationDetailsController', [
 			const titleOnFetch = station.nowPlaying.title;
 			Restangular.one('details').get({song: songTitle, artist: artistName}).then(
 				(response) => {
-					// ignore the response if the current song of the station has changed in teh meantimne
-					if (station.nowPlaying.title == titleOnFetch) {
+					// ignore the response if the current song of the station has changed in the meantime
+					if (station.nowPlaying.title === titleOnFetch) {
 						station.nowPlaying.lastfm = response.lastfm;
 
-						// Update the visible info only if the current station has not changed while fethcing the details
-						if ($scope.station == station) {
+						// Update the visible info only if the current station has not changed while fetching the details
+						if ($scope.station === station) {
 							setLastfmInfo(response.lastfm);
 						}
 					}
@@ -130,7 +130,7 @@ angular.module('Music').controller('RadioStationDetailsController', [
 				$scope.editing = true;
 				// Move the focus to the clicked input field
 				$timeout(function() {
-					$(targetEditor).focus();
+					$(targetEditor).trigger('focus');
 				});
 			}
 		};
