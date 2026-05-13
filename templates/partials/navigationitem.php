@@ -29,40 +29,22 @@
 			<span class="icon-loading-small" ng-show="playlist.busy"></span>
 			<div class="popovermenu bubble" ng-show="$parent.popupShownForNaviItem == destination">
 				<ul>
-					<li ng-click="$parent.showDetails(playlist)">
-						<a><span class="icon-details icon"></span><span translate>Details</span></a>
-					</li>
-					<li ng-click="$parent.startEdit(playlist)">
-						<a><span class="icon-rename icon"></span><span translate>Rename</span></a>
-					</li>
-					<li ng-click="$parent.importFromFile(playlist)">
-						<a><span class="icon-from-file icon svg"></span><span translate>Import from file</span></a>
-					</li>
-					<li ng-click="$parent.exportToFile(playlist)">
-						<a><span class="icon-to-file icon svg"></span><span translate>Export to file</span></a>
-					</li>
+					<popup-menu-item action="$parent.showDetails(playlist)" platform-icon="'details'" text="'Details' | translate"></popup-menu-item>
+					<popup-menu-item action="$parent.startEdit(playlist)" platform-icon="'rename'" text="'Rename' | translate"></popup-menu-item>
+					<popup-menu-item action="$parent.importFromFile(playlist)" icon="'from-file'" text="'Import from file' | translate"></popup-menu-item>
+					<popup-menu-item action="$parent.exportToFile(playlist)" icon="'to-file'" text="'Export to file' | translate"></popup-menu-item>
 					<li ng-click="subMenuShown = !subMenuShown; $event.stopPropagation()">
 						<a><span class="icon-sort-by-alpha icon svg"></span><span translate>Sort …</span></a>
 						<div class="popovermenu bubble submenu" ng-show="subMenuShown">
 							<ul>
-								<li ng-click="$parent.sortPlaylist(playlist, 'track')">
-									<a><span translate>by title</span></a>
-								</li>
-								<li ng-click="$parent.sortPlaylist(playlist, 'artist')">
-									<a><span translate>by artist</span></a>
-								</li>
-								<li ng-click="$parent.sortPlaylist(playlist, 'album')">
-									<a><span translate>by album</span></a>
-								</li>
+								<popup-menu-item action="$parent.sortPlaylist(playlist, 'track')" text="'by title' | translate"></popup-menu-item>
+								<popup-menu-item action="$parent.sortPlaylist(playlist, 'artist')" text="'by artist' | translate"></popup-menu-item>
+								<popup-menu-item action="$parent.sortPlaylist(playlist, 'album')" text="'by album' | translate"></popup-menu-item>
 							</ul>
 						</div>
 					</li>
-					<li ng-click="$parent.removeDuplicates(playlist)">
-						<a><span class="icon-close icon"></span><span translate>Remove duplicates</span></a>
-					</li>
-					<li ng-click="$parent.remove(playlist)">
-						<a><span class="icon-delete icon"></span><span translate>Delete</span></a>
-					</li>
+					<popup-menu-item action="$parent.removeDuplicates(playlist)" platform-icon="'close'" text="'Remove duplicates' | translate"></popup-menu-item>
+					<popup-menu-item action="$parent.remove(playlist)" platform-icon="'delete'" text="'Delete' | translate"></popup-menu-item>
 				</ul>
 			</div>
 		</div>
@@ -72,18 +54,10 @@
 			<span class="icon-loading-small" ng-show="$parent.radioBusy"></span>
 			<div class="popovermenu bubble" ng-show="$parent.popupShownForNaviItem == destination">
 				<ul>
-					<li ng-click="$parent.showRadioHint()">
-						<a><span class="icon-details icon"></span><span translate>Getting started</span></a>
-					</li>
-					<li ng-click="$parent.importFromFileToRadio()">
-						<a><span class="icon-from-file icon svg"></span><span translate>Import from file</span></a>
-					</li>
-					<li ng-click="$parent.exportRadioToFile()">
-						<a><span class="icon-to-file icon svg"></span><span translate>Export to file</span></a>
-					</li>
-					<li ng-click="$parent.addRadio()">
-						<a><span class="icon-add icon"></span><span translate>Add manually</span></a>
-					</li>
+					<popup-menu-item action="$parent.showRadioHint()" platform-icon="'details'" text="'Getting started' | translate"></popup-menu-item>
+					<popup-menu-item action="$parent.importFromFileToRadio()" icon="'from-file'" text="'Import from file' | translate"></popup-menu-item>
+					<popup-menu-item action="$parent.exportRadioToFile()" icon="'to-file'" text="'Export to file' | translate"></popup-menu-item>
+					<popup-menu-item action="$parent.addRadio()" platform-icon="'add'" text="'Add manually' | translate"></popup-menu-item>
 				</ul>
 			</div>
 		</div>
@@ -93,18 +67,10 @@
 			<span class="icon-loading-small" ng-show="$parent.podcastsBusy"></span>
 			<div class="popovermenu bubble" ng-show="$parent.popupShownForNaviItem == destination">
 				<ul>
-					<li ng-click="$parent.addPodcast()">
-						<a><span class="icon-add icon"></span><span translate>Add from RSS feed</span></a>
-					</li>
-					<li ng-click="$parent.importPodcastsFromFile()">
-						<a><span class="icon-from-file icon svg"></span><span translate>Import from file</span></a>
-					</li>
-					<li ng-click="$parent.exportPodcastsToFile($event)" ng-class="{ disabled: !$parent.anyPodcastChannels() }">
-						<a><span class="icon-to-file icon svg"></span><span translate>Export to file</span></a>
-					</li>
-					<li ng-click="$parent.reloadPodcasts($event)" ng-class="{ disabled: !$parent.anyPodcastChannels() }">
-						<a><span class="icon-reload icon svg"></span><span translate>Reload channels</span></a>
-					</li>
+					<popup-menu-item action="$parent.addPodcast()" platform-icon="'add'" text="'Add from RSS feed' | translate"></popup-menu-item>
+					<popup-menu-item action="$parent.importPodcastsFromFile()" icon="'from-file'" text="'Import from file' | translate"></popup-menu-item>
+					<popup-menu-item action="$parent.exportPodcastsToFile($event)" icon="'to-file'" text="'Export to file' | translate" ng-class="{ disabled: !$parent.anyPodcastChannels() }"></popup-menu-item>
+					<popup-menu-item action="$parent.reloadPodcasts($event)" icon="'reload'" text="'Reload channels' | translate" ng-class="{ disabled: !$parent.anyPodcastChannels() }"></popup-menu-item>
 				</ul>
 			</div>
 		</div>
@@ -113,12 +79,8 @@
 				ng-click="$parent.onNaviItemMoreButton(destination); $event.stopPropagation()"></span>
 			<div class="popovermenu bubble" ng-show="$parent.popupShownForNaviItem == destination">
 				<ul>
-					<li ng-click="$parent.toggleAlbumsCompactLayout(false)">
-						<a><span class="icon" ng-class="$parent.albumsCompactLayout ? 'icon-radio-button' : 'icon-radio-button-checked'"></span><span translate>Normal layout</span></a>
-					</li>
-					<li ng-click="$parent.toggleAlbumsCompactLayout(true)">
-						<a><span class="icon" ng-class="$parent.albumsCompactLayout ? 'icon-radio-button-checked' : 'icon-radio-button'"></span><span translate>Compact layout</span></a>
-					</li>
+					<popup-menu-item action="$parent.toggleAlbumsCompactLayout(false)" platform-icon="$parent.albumsCompactLayout ? 'radio-button' : 'radio-button-checked'" text="'Normal layout' | translate"></popup-menu-item>
+					<popup-menu-item action="$parent.toggleAlbumsCompactLayout(true)" platform-icon="$parent.albumsCompactLayout ? 'radio-button-checked' : 'radio-button'" text="'Compact layout' | translate"></popup-menu-item>
 				</ul>
 			</div>
 		</div>
@@ -127,12 +89,8 @@
 				ng-click="$parent.onNaviItemMoreButton(destination); $event.stopPropagation()"></span>
 			<div class="popovermenu bubble" ng-show="$parent.popupShownForNaviItem == destination">
 				<ul>
-					<li ng-click="$parent.toggleFoldersFlatLayout(false)">
-						<a><span class="icon" ng-class="$parent.foldersFlatLayout ? 'icon-radio-button' : 'icon-radio-button-checked'"></span><span translate>Tree layout</span></a>
-					</li>
-					<li ng-click="$parent.toggleFoldersFlatLayout(true)">
-						<a><span class="icon" ng-class="$parent.foldersFlatLayout ? 'icon-radio-button-checked' : 'icon-radio-button'"></span><span translate>Flat layout</span></a>
-					</li>
+					<popup-menu-item action="$parent.toggleFoldersFlatLayout(false)" platform-icon="$parent.foldersFlatLayout ? 'radio-button' : 'radio-button-checked'" text="'Tree layout' | translate"></popup-menu-item>
+					<popup-menu-item action="$parent.toggleFoldersFlatLayout(true)" platform-icon="$parent.foldersFlatLayout ? 'radio-button-checked' : 'radio-button'" text="'Flat layout' | translate"></popup-menu-item>
 				</ul>
 			</div>
 		</div>
@@ -141,15 +99,9 @@
 				ng-click="$parent.onNaviItemMoreButton(destination); $event.stopPropagation()"></span>
 			<div class="popovermenu bubble" ng-show="$parent.popupShownForNaviItem == destination">
 				<ul>
-					<li ng-click="$parent.reloadSmartListView()">
-						<a><span class="icon-reload icon svg"></span><span translate>Reload</span></a>
-					</li>
-					<li ng-click="$parent.showSmartListFilters()">
-						<a><span class="icon-filter icon svg"></span><span translate>Filters</span></a>
-					</li>
-					<li ng-click="$parent.saveSmartList()">
-						<a><span class="icon-playlist icon svg"></span><span translate>Save playlist</span></a>
-					</li>
+					<popup-menu-item action="$parent.reloadSmartListView()" icon="'reload'" text="'Reload' | translate"></popup-menu-item>
+					<popup-menu-item action="$parent.showSmartListFilters()" icon="'filter'" text="'Filters' | translate"></popup-menu-item>
+					<popup-menu-item action="$parent.saveSmartList()" icon="'playlist'" text="'Save playlist' | translate"></popup-menu-item>
 				</ul>
 			</div>
 		</div>
