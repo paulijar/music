@@ -11,13 +11,12 @@
 angular.module('Music').directive('popupMenuItem', function() {
 	return {
 		scope: {
-			action: '&',
 			icon: '<', // mutually exclusive with platformIcon
 			platformIcon: '<', // mutually exclusive with icon
 			text: '<',
 		},
 		template: `
-			<li ng-click="action()">
+			<li>
 				<a>
 					<span ng-if="icon || platformIcon" class="icon-{{icon || platformIcon}}" icon" ng-class="{svg: !platformIcon}"></span>
 					<span>{{text}}</span>
