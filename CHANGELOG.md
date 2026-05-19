@@ -23,6 +23,8 @@
 - Embedded Files player hiding bottom of the file list on NC 31+
 - Navigation pane being collapsed on screen exactly 1024 px wide even though the toggle button is visible only on widths < 1024 px
 - Navigation pane toggle becoming unresponsive if the navigation pane was closed with the toggle on touch screen
+- Some HLS-type radio streams not playing because URLs contained in `#EXT-X-*` headers were handled incorrectly
+  [#133](https://github.com/nc-music/music/issues/133)
 - Subsonic API:
   * Response of `getArtistInfo` and `getArtistInfo2` being malformed when no details available
     [#129](https://github.com/nc-music/music/issues/129)
