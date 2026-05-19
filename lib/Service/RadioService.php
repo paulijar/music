@@ -6,9 +6,9 @@
  * This file is licensed under the Affero General Public License version 3 or
  * later. See the COPYING file.
  *
- * @author Moahmed-Ismail MEJRI <imejri@hotmail.com>
+ * @author Mohamed-Ismail MEJRI <imejri@hotmail.com>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Moahmed-Ismail MEJRI 2022
+ * @copyright Mohamed-Ismail MEJRI 2022
  * @copyright Pauli Järvinen 2022 - 2026
  */
 
