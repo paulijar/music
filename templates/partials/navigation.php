@@ -60,17 +60,9 @@ HtmlUtil::printNgTemplate('navigationitem');
 						on-esc="clearSearch(); collapseNavigationPaneOnMobile()" />
 					<button id="clear-search" class="icon-close" ng-click="clearSearch()"></button>
 				</div>
-				<div class="actions" title="">
-					<span class="icon-more"
-						ng-click="onNaviItemMoreButton('search'); $event.stopPropagation()"></span>
-					<div class="popovermenu bubble" ng-show="popupShownForNaviItem == 'search'">
-						<ul>
-							<li ng-click="navigateTo('#/search')">
-								<a><span class="icon-search icon"></span><span translate>Advanced search</span></a>
-							</li>
-						</ul>
-					</div>
-				</div>
+				<popup-menu>
+					<popup-menu-item ng-click="navigateTo('#/search')" platform-icon="'search'" text="'Advanced search' | translate"></popup-menu-item>
+				</popup-menu>
 			</div>
 		</li>
 		<li id="music-nav-settings" class="docked-navigation-item" ng-class="{active: currentView=='#/settings'}">

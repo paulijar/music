@@ -1,0 +1,38 @@
+/**
+ * Nextcloud Music app
+ *
+ * This file is licensed under the Affero General Public License version 3 or
+ * later. See the COPYING file.
+ *
+ * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
+ * @copyright 2026 Pauli Järvinen
+ */
+
+angular.module('Music').directive('popupMenu', ['$document', '$timeout', function($document, $timeout) {
+	return {
+		restrict: 'E',
+		transclude: true,
+		scope: {
+			busy: '<',
+		},
+		link: function(scope) {
+			scope.visible = false;
+
+			$document.click(function(_event) {
+				$timeout(() => scope.visible = false);
+			});
+		},
+		template: `
+			<div class="actions" title="">
+				<span class="icon-more" ng-show="!busy"
+					ng-click="visible = !visible; $event.stopPropagation()"></span>
+				<span class="icon-loading-small" ng-show="busy"></span>
+				<div class="popovermenu bubble" ng-show="visible" ng-click="visible = false; $event.stopPropagation()">
+					<ul>
+						<ng-transclude></ng-transclude>
+					</ul>
+				</div>
+			</div>`,
+		replace: true
+	};
+}]);
