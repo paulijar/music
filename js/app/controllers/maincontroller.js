@@ -192,7 +192,7 @@ function ($rootScope, $scope, $timeout, $window, ArtistFactory,
 				break;
 			}
 			const errMsg = gettextCatalog.getString('Failed to load the collection:');
-			OC.Notification.showTemporary(errMsg + ' ' + reason);
+			OCA.Music.Dialogs.showNotification(errMsg + ' ' + reason);
 		});
 
 	};
@@ -242,7 +242,7 @@ function ($rootScope, $scope, $timeout, $window, ArtistFactory,
 		},
 		function(error) {
 			$scope.checkingUnscanned = false;
-			OC.Notification.showTemporary(
+			OCA.Music.Dialogs.showNotification(
 					gettextCatalog.getString('Failed to check for new audio files (error {{ code }}); check the server logs for details', {code: error.status})
 			);
 		});

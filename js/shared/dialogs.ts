@@ -78,4 +78,8 @@ OCA.Music.Dialogs = class {
 			100
 		);
 	}
+
+	static showNotification(message : string) {
+		OC.Notification.showTemporary(message);
+	}
 };
