@@ -10,6 +10,7 @@
 - Podcasts:
   * On RSS XML parsing, allow also incorrect URI for the iTunes namespace as long the as the prefix is `itunes`
     [#132](https://github.com/nc-music/music/issues/132)
+  * Get the cover image from the element `<itunes:image>` if `<image>` not present in the RSS XML
 - Advanced search:
   * Enable searching for genres
 - Ampache API:

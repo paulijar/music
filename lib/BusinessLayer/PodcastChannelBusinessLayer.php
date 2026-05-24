@@ -131,7 +131,7 @@ class PodcastChannelBusinessLayer extends BusinessLayer {
 		$channel->setCopyright( StringUtil::truncate((string)$xmlNode->copyright, 256) );
 		$channel->setAuthor( StringUtil::truncate((string)($xmlNode->author ?: $itunesNodes->author), 256) );
 		$channel->setDescription( (string)($xmlNode->description ?: $itunesNodes->summary) );
-		$channel->setImageUrl( (string)$xmlNode->image->url );
+		$channel->setImageUrl( (string)($xmlNode->image->url ?: $itunesNodes->image->attributes()?->href) );
 		$channel->setCategory( \implode(', ', \array_map(
 			fn($category) => $category->attributes()['text'],
 			\iterator_to_array($itunesNodes->category, false)
