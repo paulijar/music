@@ -7,6 +7,9 @@
 - On narrow screen, use similar "mobile portrait" layout in the Files player as in the Music app proper
 - On narrow screen, keep the player controls visible also when the navigation pane is expanded
 - Don't hide empty genres, but instead, remove them in the background cleanup task
+- Podcasts:
+  * On RSS XML parsing, allow also incorrect URI for the iTunes namespace as long the as the prefix is `itunes`
+    [#132](https://github.com/nc-music/music/issues/132)
 - Advanced search:
   * Enable searching for genres
 - Ampache API:

@@ -117,6 +117,11 @@ class PodcastChannelBusinessLayer extends BusinessLayer {
 
 	private static function parseChannelDataFromXml(\SimpleXMLElement $xmlNode, PodcastChannel $channel) : void {
 		$itunesNodes = $xmlNode->children('http://www.itunes.com/dtds/podcast-1.0.dtd');
+		if (!$itunesNodes) {
+			// Find by the prefix "itunes" if the namespace is not declared with the standard URI. Some feeds
+			// have been seen to use non-standard character casing on the URI, even though it's not correct.
+			$itunesNodes = $xmlNode->children('itunes', true);
+		}
 
 		$channel->setPublished( self::parseDateTime($xmlNode->pubDate) );
 		$channel->setLastBuildDate( self::parseDateTime($xmlNode->lastBuildDate) );
