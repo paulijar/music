@@ -89,7 +89,7 @@ HtmlUtil::printNgTemplate('navigationitem');
 				<popup-menu-item ng-click="remove(playlist)" platform-icon="'delete'" text="'Delete' | translate"></popup-menu-item>
 			</popup-menu>
 		</li>
-		<li id="music-nav-search" class="docked-navigation-item item-with-actions" ng-class="{active: currentView=='#/search'}"
+		<li id="music-nav-search" class="docked-navigation-item music-navigation-item" ng-class="{active: currentView=='#/search'}"
 			title="{{ showSearch ? null : '[CTRL+F]' }}">
 			<div class="music-navigation-item-content">
 				<div class="icon-search" ng-click="startSearch()"></div>
