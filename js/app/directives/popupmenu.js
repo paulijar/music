@@ -23,7 +23,7 @@ angular.module('Music').directive('popupMenu', ['$document', '$timeout', functio
 			});
 		},
 		template: `
-			<div class="actions" title="">
+			<div class="actions" title="" ng-class="{'menu-open': visible}">
 				<span class="icon-more" ng-show="!busy"
 					ng-click="visible = !visible; $event.stopPropagation()"></span>
 				<span class="icon-loading-small" ng-show="busy"></span>
