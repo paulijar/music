@@ -76,15 +76,11 @@ HtmlUtil::printNgTemplate('navigationitem');
 				<popup-menu-item ng-click="startEdit(playlist)" platform-icon="'rename'" text="'Rename' | translate"></popup-menu-item>
 				<popup-menu-item ng-click="importFromFile(playlist)" icon="'from-file'" text="'Import from file' | translate"></popup-menu-item>
 				<popup-menu-item ng-click="exportToFile(playlist)" icon="'to-file'" text="'Export to file' | translate"></popup-menu-item>
-				<popup-menu-item ng-click="subMenuShown = !subMenuShown; $event.stopPropagation()" icon="'sort-by-alpha'" text="'Sort …' | translate">
-					<div class="popovermenu bubble submenu" ng-show="subMenuShown">
-						<ul>
-							<popup-menu-item ng-click="sortPlaylist(playlist, 'track')" text="'by title' | translate"></popup-menu-item>
-							<popup-menu-item ng-click="sortPlaylist(playlist, 'artist')" text="'by artist' | translate"></popup-menu-item>
-							<popup-menu-item ng-click="sortPlaylist(playlist, 'album')" text="'by album' | translate"></popup-menu-item>
-						</ul>
-					</div>
-				</popup-menu-item>
+				<popup-sub-menu icon="'sort-by-alpha'" text="'Sort …' | translate">
+					<popup-menu-item ng-click="sortPlaylist(playlist, 'track')" text="'by title' | translate"></popup-menu-item>
+					<popup-menu-item ng-click="sortPlaylist(playlist, 'artist')" text="'by artist' | translate"></popup-menu-item>
+					<popup-menu-item ng-click="sortPlaylist(playlist, 'album')" text="'by album' | translate"></popup-menu-item>
+				</popup-sub-menu>
 				<popup-menu-item ng-click="removeDuplicates(playlist)" platform-icon="'close'" text="'Remove duplicates' | translate"></popup-menu-item>
 				<popup-menu-item ng-click="remove(playlist)" platform-icon="'delete'" text="'Delete' | translate"></popup-menu-item>
 			</popup-menu>
