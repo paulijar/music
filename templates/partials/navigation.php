@@ -8,14 +8,14 @@ HtmlUtil::printNgTemplate('navigationitem');
 	<ul>
 		<li navigation-item text="'Albums' | translate" destination="'#'" title="{{ albumCountText() }}" icon="'album'">
 			<popup-menu>
-				<popup-menu-item ng-click="toggleAlbumsCompactLayout(false)" platform-icon="albumsCompactLayout ? 'radio-button' : 'radio-button-checked'" text="'Normal layout' | translate"></popup-menu-item>
-				<popup-menu-item ng-click="toggleAlbumsCompactLayout(true)" platform-icon="albumsCompactLayout ? 'radio-button-checked' : 'radio-button'" text="'Compact layout' | translate"></popup-menu-item>
+				<popup-menu-item ng-click="toggleAlbumsCompactLayout(false)" platform-icon="albumsCompactLayout ? 'radio-button' : 'radio-button-checked'">{{ 'Normal layout' | translate }}</popup-menu-item>
+				<popup-menu-item ng-click="toggleAlbumsCompactLayout(true)" platform-icon="albumsCompactLayout ? 'radio-button-checked' : 'radio-button'">{{ 'Compact layout' | translate }}</popup-menu-item>
 			</popup-menu>
 		</li>
 		<li navigation-item text="'Folders' | translate" destination="'#/folders'" title="{{ folderCountText() }}" icon="'folder-nav'">
 			<popup-menu>
-				<popup-menu-item ng-click="toggleFoldersFlatLayout(false)" platform-icon="foldersFlatLayout ? 'radio-button' : 'radio-button-checked'" text="'Tree layout' | translate"></popup-menu-item>
-				<popup-menu-item ng-click="toggleFoldersFlatLayout(true)" platform-icon="foldersFlatLayout ? 'radio-button-checked' : 'radio-button'" text="'Flat layout' | translate"></popup-menu-item>
+				<popup-menu-item ng-click="toggleFoldersFlatLayout(false)" platform-icon="foldersFlatLayout ? 'radio-button' : 'radio-button-checked'">{{ 'Tree layout' | translate }}</popup-menu-item>
+				<popup-menu-item ng-click="toggleFoldersFlatLayout(true)" platform-icon="foldersFlatLayout ? 'radio-button-checked' : 'radio-button'">{{ 'Flat layout' | translate }}</popup-menu-item>
 			</popup-menu>
 		</li>
 		<li navigation-item text="'Genres' | translate" destination="'#/genres'" title="{{ genresCountText() }}" icon="'audiotrack'"></li>
@@ -23,26 +23,26 @@ HtmlUtil::printNgTemplate('navigationitem');
 		<li class="app-navigation-separator"></li>
 		<li navigation-item text="'Internet radio' | translate" destination="'#/radio'" title="{{ radioCountText() }}" icon="'radio'">
 			<popup-menu busy="radioBusy">
-				<popup-menu-item ng-click="showRadioHint()" platform-icon="'details'" text="'Getting started' | translate"></popup-menu-item>
-				<popup-menu-item ng-click="importFromFileToRadio()" icon="'from-file'" text="'Import from file' | translate"></popup-menu-item>
-				<popup-menu-item ng-click="exportRadioToFile()" icon="'to-file'" text="'Export to file' | translate"></popup-menu-item>
-				<popup-menu-item ng-click="addRadio()" platform-icon="'add'" text="'Add manually' | translate"></popup-menu-item>
+				<popup-menu-item ng-click="showRadioHint()" platform-icon="'details'">{{ 'Getting started' | translate }}</popup-menu-item>
+				<popup-menu-item ng-click="importFromFileToRadio()" icon="'from-file'">{{ 'Import from file' | translate }}</popup-menu-item>
+				<popup-menu-item ng-click="exportRadioToFile()" icon="'to-file'">{{ 'Export to file' | translate }}</popup-menu-item>
+				<popup-menu-item ng-click="addRadio()" platform-icon="'add'">{{ 'Add manually' | translate }}</popup-menu-item>
 			</popup-menu>
 		</li>
 		<li navigation-item text="'Podcasts' | translate" destination="'#/podcasts'" title="{{ podcastsCountText() }}" icon="'podcast'">
 			<popup-menu busy="podcastsBusy">
-				<popup-menu-item ng-click="addPodcast()" platform-icon="'add'" text="'Add from RSS feed' | translate"></popup-menu-item>
-				<popup-menu-item ng-click="importPodcastsFromFile()" icon="'from-file'" text="'Import from file' | translate"></popup-menu-item>
-				<popup-menu-item ng-click="exportPodcastsToFile($event)" icon="'to-file'" text="'Export to file' | translate" ng-class="{ disabled: !anyPodcastChannels() }"></popup-menu-item>
-				<popup-menu-item ng-click="reloadPodcasts($event)" icon="'reload'" text="'Reload channels' | translate" ng-class="{ disabled: !anyPodcastChannels() }"></popup-menu-item>
+				<popup-menu-item ng-click="addPodcast()" platform-icon="'add'">{{ 'Add from RSS feed' | translate }}</popup-menu-item>
+				<popup-menu-item ng-click="importPodcastsFromFile()" icon="'from-file'">{{ 'Import from file' | translate }}</popup-menu-item>
+				<popup-menu-item ng-click="exportPodcastsToFile($event)" icon="'to-file'" ng-class="{ disabled: !anyPodcastChannels() }">{{ 'Export to file' | translate }}</popup-menu-item>
+				<popup-menu-item ng-click="reloadPodcasts($event)" icon="'reload'" ng-class="{ disabled: !anyPodcastChannels() }">{{ 'Reload channels' | translate }}</popup-menu-item>
 			</popup-menu>
 		</li>
 		<li class="app-navigation-separator"></li>
 		<li navigation-item text="'Smart playlist' | translate" destination="'#/smartlist'" title="{{ smartListTrackCountText() }}" icon="'smart-playlist'">
 			<popup-menu>
-				<popup-menu-item ng-click="reloadSmartListView()" icon="'reload'" text="'Reload' | translate"></popup-menu-item>
-				<popup-menu-item ng-click="showSmartListFilters()" icon="'filter'" text="'Filters' | translate"></popup-menu-item>
-				<popup-menu-item ng-click="saveSmartList()" icon="'playlist'" text="'Save playlist' | translate"></popup-menu-item>
+				<popup-menu-item ng-click="reloadSmartListView()" icon="'reload'">{{ 'Reload' | translate }}</popup-menu-item>
+				<popup-menu-item ng-click="showSmartListFilters()" icon="'filter'">{{ 'Filters' | translate }}</popup-menu-item>
+				<popup-menu-item ng-click="saveSmartList()" icon="'playlist'">{{ 'Save playlist' | translate }}</popup-menu-item>
 			</popup-menu>
 		</li>
 		<li class="music-navigation-item" ui-on-drop="dropOnPlaylist($data, null)" drag-hover-class="drag-hover">
@@ -72,17 +72,17 @@ HtmlUtil::printNgTemplate('navigationitem');
 			icon="'playlist'"
 		>
 			<popup-menu ng-init="subMenuShown = false" ng-show="showEditForm == null" busy="playlist.busy">
-				<popup-menu-item ng-click="showDetails(playlist)" platform-icon="'details'" text="'Details' | translate"></popup-menu-item>
-				<popup-menu-item ng-click="startEdit(playlist)" platform-icon="'rename'" text="'Rename' | translate"></popup-menu-item>
-				<popup-menu-item ng-click="importFromFile(playlist)" icon="'from-file'" text="'Import from file' | translate"></popup-menu-item>
-				<popup-menu-item ng-click="exportToFile(playlist)" icon="'to-file'" text="'Export to file' | translate"></popup-menu-item>
+				<popup-menu-item ng-click="showDetails(playlist)" platform-icon="'details'">{{ 'Details' | translate }}</popup-menu-item>
+				<popup-menu-item ng-click="startEdit(playlist)" platform-icon="'rename'">{{ 'Rename' | translate }}</popup-menu-item>
+				<popup-menu-item ng-click="importFromFile(playlist)" icon="'from-file'">{{ 'Import from file' | translate }}</popup-menu-item>
+				<popup-menu-item ng-click="exportToFile(playlist)" icon="'to-file'">{{ 'Export to file' | translate }}</popup-menu-item>
 				<popup-sub-menu icon="'sort-by-alpha'" text="'Sort …' | translate">
-					<popup-menu-item ng-click="sortPlaylist(playlist, 'track')" text="'by title' | translate"></popup-menu-item>
-					<popup-menu-item ng-click="sortPlaylist(playlist, 'artist')" text="'by artist' | translate"></popup-menu-item>
-					<popup-menu-item ng-click="sortPlaylist(playlist, 'album')" text="'by album' | translate"></popup-menu-item>
+					<popup-menu-item ng-click="sortPlaylist(playlist, 'track')">{{ 'by title' | translate }}</popup-menu-item>
+					<popup-menu-item ng-click="sortPlaylist(playlist, 'artist')">{{ 'by artist' | translate }}</popup-menu-item>
+					<popup-menu-item ng-click="sortPlaylist(playlist, 'album')">{{ 'by album' | translate }}</popup-menu-item>
 				</popup-sub-menu>
-				<popup-menu-item ng-click="removeDuplicates(playlist)" platform-icon="'close'" text="'Remove duplicates' | translate"></popup-menu-item>
-				<popup-menu-item ng-click="remove(playlist)" platform-icon="'delete'" text="'Delete' | translate"></popup-menu-item>
+				<popup-menu-item ng-click="removeDuplicates(playlist)" platform-icon="'close'">{{ 'Remove duplicates' | translate }}</popup-menu-item>
+				<popup-menu-item ng-click="remove(playlist)" platform-icon="'delete'">{{ 'Delete' | translate }}</popup-menu-item>
 			</popup-menu>
 		</li>
 		<li id="music-nav-search" class="docked-navigation-item music-navigation-item" ng-class="{active: currentView=='#/search'}"
@@ -98,7 +98,7 @@ HtmlUtil::printNgTemplate('navigationitem');
 					<button id="clear-search" class="icon-close" ng-click="clearSearch()"></button>
 				</div>
 				<popup-menu>
-					<popup-menu-item ng-click="navigateTo('#/search')" platform-icon="'search'" text="'Advanced search' | translate"></popup-menu-item>
+					<popup-menu-item ng-click="navigateTo('#/search')" platform-icon="'search'">{{ 'Advanced search' | translate }}</popup-menu-item>
 				</popup-menu>
 			</div>
 		</li>

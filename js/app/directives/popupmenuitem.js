@@ -15,15 +15,13 @@ angular.module('Music').directive('popupMenuItem', function() {
 		scope: {
 			icon: '<', // mutually exclusive with platformIcon
 			platformIcon: '<', // mutually exclusive with icon
-			text: '<',
 		},
 		template: `
 			<li>
 				<a>
 					<span ng-if="icon || platformIcon" class="icon-{{icon || platformIcon}}" icon" ng-class="{svg: !platformIcon}"></span>
-					<span>{{text}}</span>
+					<span ng-transclude></span>
 				</a>
-				<ng-transclude></ng-transclude>
 			</li>`,
 		replace: true
 	};
