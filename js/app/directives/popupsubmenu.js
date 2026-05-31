@@ -8,7 +8,7 @@
  * @copyright 2026 Pauli Järvinen
  */
 
-angular.module('Music').directive('popupSubMenu', function() {
+angular.module('Music').directive('popupSubMenu', ['$rootScope', function($rootScope) {
 	return {
 		restrict: 'E',
 		transclude: true,
@@ -19,9 +19,18 @@ angular.module('Music').directive('popupSubMenu', function() {
 		},
 		link: function(scope) {
 			scope.expanded = false;
+
+			$rootScope.$on('popup-menu:close', function(_event, _source) {
+				scope.expanded = false;
+			});
+
+			scope.onClick = function(event) {
+				scope.expanded = !scope.expanded;
+				event.stopPropagation();
+			};
 		},
 		template: `
-			<li ng-click="expanded = !expanded; $event.stopPropagation()" >
+			<li ng-click="onClick($event)" >
 				<a>
 					<span ng-if="icon || platformIcon" class="icon-{{icon || platformIcon}}" icon" ng-class="{svg: !platformIcon}"></span>
 					<span>{{text}}</span>
@@ -34,4 +43,4 @@ angular.module('Music').directive('popupSubMenu', function() {
 			</li>`,
 		replace: true
 	};
-});
+}]);

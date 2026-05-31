@@ -8,7 +8,7 @@
  * @copyright 2026 Pauli Järvinen
  */
 
-angular.module('Music').directive('popupMenu', ['$document', '$timeout', function($document, $timeout) {
+angular.module('Music').directive('popupMenu', ['$rootScope', function($rootScope) {
 	return {
 		restrict: 'E',
 		transclude: true,
@@ -16,18 +16,26 @@ angular.module('Music').directive('popupMenu', ['$document', '$timeout', functio
 			busy: '<',
 		},
 		link: function(scope) {
-			scope.visible = false;
+			scope.expanded = false;
 
-			$document.click(function(_event) {
-				$timeout(() => scope.visible = false);
+			scope.onExpansionButtonClick = function(event) {
+				scope.expanded = !scope.expanded;
+				$rootScope.$emit('popup-menu:close', scope);
+				event.stopPropagation();
+			};
+
+			$rootScope.$on('popup-menu:close', function(_event, source) {
+				if (source !== scope) {
+					scope.expanded = false;
+				}
 			});
 		},
 		template: `
-			<div class="actions" title="" ng-class="{'menu-open': visible}">
+			<div class="actions" title="" ng-class="{'menu-open': expanded}">
 				<span class="icon-more" ng-show="!busy"
-					ng-click="visible = !visible; $event.stopPropagation()"></span>
+					ng-click="onExpansionButtonClick($event)"></span>
 				<span class="icon-loading-small" ng-show="busy"></span>
-				<div class="popovermenu bubble" ng-show="visible" ng-click="visible = false; $event.stopPropagation()">
+				<div class="popovermenu bubble" ng-show="expanded" ng-click="expanded = false; $event.stopPropagation()">
 					<ul>
 						<ng-transclude></ng-transclude>
 					</ul>

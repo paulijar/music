@@ -8,7 +8,7 @@
  * @copyright 2026 Pauli Järvinen
  */
 
-angular.module('Music').directive('popupMenuItem', function() {
+angular.module('Music').directive('popupMenuItem', ['$rootScope', function($rootScope) {
 	return {
 		restrict: 'E',
 		transclude: true,
@@ -16,8 +16,14 @@ angular.module('Music').directive('popupMenuItem', function() {
 			icon: '<', // mutually exclusive with platformIcon
 			platformIcon: '<', // mutually exclusive with icon
 		},
+		link: function(scope) {
+			scope.onClick = function(event) {
+				$rootScope.$emit('popup-menu:close', scope);
+				event.stopPropagation();
+			};
+		},
 		template: `
-			<li>
+			<li ng-click="onClick($event)">
 				<a>
 					<span ng-if="icon || platformIcon" class="icon-{{icon || platformIcon}}" icon" ng-class="{svg: !platformIcon}"></span>
 					<span ng-transclude></span>
@@ -25,4 +31,4 @@ angular.module('Music').directive('popupMenuItem', function() {
 			</li>`,
 		replace: true
 	};
-});
+}]);
