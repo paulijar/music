@@ -36,7 +36,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
@@ -57,7 +57,7 @@ jobs:
 
     - name: Restore cached SW package
       id: server-cache-restore
-      uses: actions/cache/restore@v4
+      uses: actions/cache/restore@v5
       with:
         path: /tmp/nc_music_ci/server
         key: nextcloud-${{ matrix.nc }}
@@ -69,7 +69,7 @@ jobs:
     - name: Save SW package to cache
       id: server-cache-save
       if: steps.server-cache-restore.outputs.cache-hit != 'true'
-      uses: actions/cache/save@v4
+      uses: actions/cache/save@v5
       with:
         path: /tmp/nc_music_ci/server
         key: nextcloud-${{ matrix.nc }}
