@@ -49,7 +49,7 @@ class ExternalScrobbler implements IScrobbler {
 		if ($status !== 'ok') {
 			if ($xml instanceof \SimpleXMLElement) {
 				$error = (string)$xml->error;
-				$code = (int)$xml->code;
+				$code = (int)$xml->error['code'];
 			} else {
 				$error = 'Empty response';
 				$code = 0;
@@ -130,7 +130,7 @@ class ExternalScrobbler implements IScrobbler {
 		$xml = $this->execRequest($this->generateMethodParams('track.scrobble', $scrobbleData));
 
 		if ((string)$xml['status'] !== 'ok') {
-			$this->logger->warning("Failed to scrobble to {$this->name}, error: " . (string)$xml->error);
+			$this->logger->warning("Failed to scrobble to {$this->name}, error: {$xml->error['code']} '{$xml->error}'");
 		}
 	}
 
@@ -156,7 +156,7 @@ class ExternalScrobbler implements IScrobbler {
 		$xml = $this->execRequest($this->generateMethodParams('track.updateNowPlaying', $nowPlayingData));
 
 		if ((string)$xml['status'] !== 'ok') {
-			$this->logger->warning("Failed to set now playing track on {$this->name}, error: " . (string)$xml->error);
+			$this->logger->warning("Failed to set now playing track on {$this->name}, error: {$xml->error['code']} '{$xml->error}'");
 		}
 	}
 
