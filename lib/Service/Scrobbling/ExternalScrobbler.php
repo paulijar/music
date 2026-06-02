@@ -108,10 +108,16 @@ class ExternalScrobbler implements IScrobbler {
 			return;
 		}
 
+		if (empty($track->getArtistName())) {
+			$this->logger->info("Skip scrobbling track {$track->getId()} '{$track->getTitle()}' with unknown artist to {$this->name}");
+			return;
+		}
+
 		// Last.fm's docs say a track must be >30 seconds in order to scrobble
 		// This scrobbler uses the Last.fm Scrobbler 2.0 spec, so we follow that rule
 		// https://www.last.fm/api/scrobbling#when-is-a-scrobble-a-scrobble
 		if ($track->getLength() <= 30) {
+			$this->logger->info("Track '{$track->getTitle()}' by '{$track->getArtistName()}' is too short to scrobble to {$this->name}");
 			return;
 		}
 
@@ -134,6 +140,11 @@ class ExternalScrobbler implements IScrobbler {
 		$userId = $track->getUserId();
 		$sessionKey = $this->getApiSession($userId);
 		if (!$sessionKey) {
+			return;
+		}
+
+		if (empty($track->getArtistName())) {
+			$this->logger->info("Skip setting now playing track {$track->getId()} '{$track->getTitle()}' with unknown artist to {$this->name}");
 			return;
 		}
 
