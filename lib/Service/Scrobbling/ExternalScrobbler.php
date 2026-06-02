@@ -136,7 +136,6 @@ class ExternalScrobbler implements IScrobbler {
 
 	public function setNowPlaying(Track $track, ?DateTime $timeOfPlay = null): void
 	{
-		$timeOfPlay = $timeOfPlay ?? new \DateTime();
 		$userId = $track->getUserId();
 		$sessionKey = $this->getApiSession($userId);
 		if (!$sessionKey) {
@@ -149,12 +148,12 @@ class ExternalScrobbler implements IScrobbler {
 		}
 
 		$this->albumBusinessLayer->injectAlbumsToTracks([$track], $userId);
-		$scrobbleData = \array_merge([
-			'sk' => $sessionKey,
-			'timestamp' => $timeOfPlay->getTimestamp()
+		$nowPlayingData = \array_merge([
+			'sk' => $sessionKey
 		], $this->generateTrackData($track));
+		// Unlike `scrobble`, `updateNowPlaying` does not take a timestamp. The parameter $timeOfPlay inherited from IScrobbler is ignored here.
 
-		$xml = $this->execRequest($this->generateMethodParams('track.updateNowPlaying', $scrobbleData));
+		$xml = $this->execRequest($this->generateMethodParams('track.updateNowPlaying', $nowPlayingData));
 
 		if ((string)$xml['status'] !== 'ok') {
 			$this->logger->warning("Failed to set now playing track on {$this->name}, error: " . (string)$xml->error);
