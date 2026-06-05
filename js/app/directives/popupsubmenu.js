@@ -32,7 +32,7 @@ angular.module('Music').directive('popupSubMenu', ['$rootScope', function($rootS
 		template: `
 			<li ng-click="onClick($event)" >
 				<a>
-					<span ng-if="icon || platformIcon" class="icon-{{icon || platformIcon}}" icon" ng-class="{svg: !platformIcon}"></span>
+					<span ng-if="icon || platformIcon" class="icon-{{icon || platformIcon}} icon" ng-class="{svg: !platformIcon}"></span>
 					<span>{{text}}</span>
 				</a>
 				<div class="popovermenu bubble submenu" ng-show="expanded">

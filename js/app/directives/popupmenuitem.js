@@ -25,7 +25,7 @@ angular.module('Music').directive('popupMenuItem', ['$rootScope', function($root
 		template: `
 			<li ng-click="onClick($event)">
 				<a>
-					<span ng-if="icon || platformIcon" class="icon-{{icon || platformIcon}}" icon" ng-class="{svg: !platformIcon}"></span>
+					<span ng-if="icon || platformIcon" class="icon-{{icon || platformIcon}} icon" ng-class="{svg: !platformIcon}"></span>
 					<span ng-transclude></span>
 				</a>
 			</li>`,
