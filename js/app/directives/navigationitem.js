@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright 2017 - 2020 Pauli Järvinen
+ * @copyright 2017 - 2026 Pauli Järvinen
  */
 
 angular.module('Music').directive('navigationItem', function() {
@@ -16,6 +16,7 @@ angular.module('Music').directive('navigationItem', function() {
 			destination: '=',
 			playlist: '='
 		},
+		transclude: true,
 		templateUrl: 'navigationitem.html',
 		replace: true
 	};

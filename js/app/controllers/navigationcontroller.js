@@ -7,7 +7,7 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Morris Jobke 2013
- * @copyright Pauli Järvinen 2017 - 2025
+ * @copyright Pauli Järvinen 2017 - 2026
  */
 
 
@@ -21,7 +21,6 @@ angular.module('Music').controller('NavigationController', [
 
 		$scope.newPlaylistName = '';
 		$scope.newPlaylistTrackIds = [];
-		$scope.popupShownForNaviItem = null;
 		$scope.radioBusy = false;
 		$scope.podcastsBusy = false;
 
@@ -31,11 +30,6 @@ angular.module('Music').controller('NavigationController', [
 		$scope.showSearch = false;
 		// same as above, but for the playlist renaming. Holds the number of the playlist, which is currently edited
 		$scope.showEditForm = null;
-
-		// hide 'more' popup menu of a playlist when user clicks anywhere on the page
-		$document.click(function(_event) {
-			$timeout(() => $scope.popupShownForNaviItem = null);
-		});
 
 		// Start creating playlist
 		$scope.startCreate = function() {
@@ -103,22 +97,6 @@ angular.module('Music').controller('NavigationController', [
 			}
 			return true;
 		}, {capture: true});
-
-		// Show/hide the more actions menu on a navigation item
-		$scope.onNaviItemMoreButton = function(naviDestination) {
-			if ($scope.popupShownForNaviItem == naviDestination) {
-				$scope.popupShownForNaviItem = null;
-			} else {
-				$scope.popupShownForNaviItem = naviDestination;
-
-				// clicking on any action in the popup closes the popup menu and stops the propagation (to avoid the unwanted view switches)
-				$('.popovermenu').off('click');
-				$('.popovermenu').on('click', 'li', function(event) {
-					$timeout(() => $scope.popupShownForNaviItem = null);
-					event.stopPropagation();
-				});
-			}
-		};
 
 		$scope.showDetails = function(playlist) {
 			$rootScope.$emit('showPlaylistDetails', playlist.id);

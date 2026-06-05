@@ -11,9 +11,9 @@
  */
 
 angular.module('Music').controller('MainController', [
-'$rootScope', '$scope', '$timeout', '$window', 'ArtistFactory', 
+'$rootScope', '$scope', '$document', '$timeout', '$window', 'ArtistFactory', 
 'playQueueService', 'libraryService', 'inViewService', 'gettextCatalog', 'Restangular',
-function ($rootScope, $scope, $timeout, $window, ArtistFactory, 
+function ($rootScope, $scope, $document, $timeout, $window, ArtistFactory, 
 		playQueueService, libraryService, inViewService, gettextCatalog, Restangular) {
 
 	// retrieve language from backend - is set in ng-app HTML element
@@ -45,6 +45,11 @@ function ($rootScope, $scope, $timeout, $window, ArtistFactory,
 		$rootScope.playingView = null;
 		$scope.currentTrack = null;
 		$scope.currentTrackIndex = -1;
+	});
+
+	// close all pop-up menus when clicking outside of them
+	$document.on('click', function(_event) {
+		$timeout(() => $rootScope.$emit('popup-menu:close'));
 	});
 
 	$scope.getViewIdFromUrl = function() {
