@@ -1,3 +1,11 @@
+## [Unreleased]
+
+### Added
+
+### Changed
+
+### Fixed
+
 ## 3.1.0 - 2026-06-02
 
 ### Added
@@ -9,7 +17,7 @@
 - On narrow screen, keep the player controls visible also when the navigation pane is expanded
 - Don't hide empty genres, but instead, remove them in the background cleanup task
 - Podcasts:
-  * On RSS XML parsing, allow also incorrect URI for the iTunes namespace as long the as the prefix is `itunes`
+  * On RSS XML parsing, allow also incorrect URI for the iTunes namespace as long as the prefix is `itunes`
     [#132](https://github.com/nc-music/music/issues/132)
   * Get the cover image from the element `<itunes:image>` if `<image>` not present in the RSS XML
   * Show the placeholder image on the web UI if no channel cover art available
