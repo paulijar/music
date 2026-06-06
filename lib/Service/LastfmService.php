@@ -96,9 +96,6 @@ class LastfmService {
 		return $this->findTrackInfo($track->getTitle(), $track->getArtistName() ?? "");
 	}
 
-	/**
-	 * @throws BusinessLayerException if track with the given ID is not found
-	 */
 	public function findTrackInfo(string $trackTitle, string $artistName) : array {
 		return $this->getInfoFromLastFm([
 				'method' => 'track.getInfo',
