@@ -1,6 +1,8 @@
 ## [Unreleased]
 
 ### Added
+- Possibility to configure the default volume with the config.php key `music.default_volume`
+  [#109](https://github.com/nc-music/music/issues/109)
 
 ### Changed
 

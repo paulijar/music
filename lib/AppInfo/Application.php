@@ -34,6 +34,7 @@ use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
+use OCP\AppFramework\Services\IInitialState;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
 use OCP\IRequest;
@@ -62,6 +63,9 @@ class Application extends App implements IBootstrap {
 	public function boot(IBootContext $context) : void {
 		$this->init();
 		$this->registerEmbeddedPlayer();
+
+		$initialState = $this->get(IInitialState::class);
+		$initialState->provideInitialState('default_volume', $this->get(IConfig::class)->getSystemValue('music.default_volume', 50));
 	}
 
 	public function init() : void {

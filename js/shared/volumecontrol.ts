@@ -15,6 +15,7 @@ const soundOffIconPath = require('../../img/sound-off.svg') as string;
 const soundIconPath = require('../../img/sound.svg') as string;
 
 declare function t(module : string, text : string) : string;
+declare var OCP : any;
 
 interface VolumeControlOptions {
 	tooltipSuffix? : string;
@@ -31,7 +32,10 @@ export class VolumeControl {
 	constructor(player : PlayerWrapper, options : VolumeControlOptions = {}) {
 		this.#player = player;
 		this.#createHtml(options);
-		this.setVolume(parseInt(OCA.Music.Storage.get('volume')) || 50); // volume can be 0~100
+		this.#lastVolume = parseInt(OCA.Music.Storage.get('volume'))
+						|| parseInt(OCP.InitialState.loadState('music', 'default_volume'))
+						|| 50;
+		this.setVolume(this.#lastVolume);
 	}
 
 	addToContainer(container : JQuery<HTMLElement>) {
