@@ -1395,6 +1395,9 @@ class SubsonicController extends ApiController {
 		if ($artist->getOwnAlbumCount() > 0) {
 			$roles[] = 'albumartist';
 		}
+		if ($artist->getCompositionCount() > 0) {
+			$roles[] = 'composer';
+		}
 
 		$result = [
 			'name' => $artist->getNameString($this->l10n),

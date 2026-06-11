@@ -39,6 +39,7 @@ class ArtistMapper extends BaseMapper {
 		return "SELECT
 					`*PREFIX*music_artists`.*,
 					{$this->sqlCoalesce('`trackCount`', '0')} AS `trackCount`,
+					{$this->sqlCoalesce('`compositionCount`', '0')} AS `compositionCount`,
 					{$this->sqlCoalesce('`ownAlbumCount`', '0')} AS `ownAlbumCount`
 				FROM `*PREFIX*music_artists`
 				LEFT JOIN (
@@ -47,6 +48,12 @@ class ArtistMapper extends BaseMapper {
 					GROUP BY `artist_id`
 				) `track_counts`
 				ON `*PREFIX*music_artists`.`id` = `track_counts`.`artist_id`
+				LEFT JOIN (
+					SELECT `composer_id`, COUNT(`id`) AS `compositionCount`
+					FROM `*PREFIX*music_tracks`
+					GROUP BY `composer_id`
+				) `composition_counts`
+				ON `*PREFIX*music_artists`.`id` = `composition_counts`.`composer_id`
 				LEFT JOIN (
 					SELECT `album_artist_id`, COUNT(`id`) AS `ownAlbumCount`
 					FROM `*PREFIX*music_albums`

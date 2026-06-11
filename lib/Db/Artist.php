@@ -33,6 +33,7 @@ use OCP\IURLGenerator;
  * 
  * @method int getTrackCount()
  * @method int getOwnAlbumCount()
+ * @method int getCompositionCount()
  */
 class Artist extends Entity {
 	public ?string $name = null;
@@ -45,6 +46,7 @@ class Artist extends Entity {
 	// not from the music_artists table but still part of the standard content of this entity:
 	public int $trackCount = 0;
 	public int $ownAlbumCount = 0;
+	public int $compositionCount = 0;
 
 	// not part of the standard content, injected separately when needed
 	private ?string $lastfmUrl = null;
@@ -58,6 +60,7 @@ class Artist extends Entity {
 		$this->addType('rating', 'int');
 		$this->addType('trackCount', 'int');
 		$this->addType('ownAlbumCount', 'int');
+		$this->addType('compositionCount', 'int');
 	}
 
 	public function getLastfmUrl() : ?string {
