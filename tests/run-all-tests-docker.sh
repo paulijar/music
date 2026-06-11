@@ -75,7 +75,6 @@ php occ app:enable music --force
 
 # ── Download and scan test content ──
 echo "--- Downloading test audio ---"
-apt-get install -y -qq python3-mutagen > /dev/null 2>&1
 ./apps/music/tests/scripts/downloadTestData.sh /tmp/oc_music_ci/data/ampache
 
 echo "--- Scanning files ---"
