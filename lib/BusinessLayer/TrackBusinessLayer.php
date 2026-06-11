@@ -49,7 +49,7 @@ class TrackBusinessLayer extends BusinessLayer implements IScrobbler {
 	}
 
 	/**
-	 * Returns all tracks filtered by artist (both album and track artists are considered)
+	 * Returns all tracks filtered by artist (both album and track artists as well as composers are considered)
 	 * @param int|int[] $artistId
 	 * @return Track[]
 	 */
