@@ -112,29 +112,29 @@ class PodcastService {
 
 	/**
 	 * Add a followed podcast for a user from an RSS feed
-	 * @return array{status: int, channel: ?PodcastChannel}
+	 * @return array{status: int, channel: ?PodcastChannel, message: string}
 	 */
 	public function subscribe(string $url, string $userId) : array {
-		$content = HttpUtil::loadFromUrl($url)['content'];
+		['content' => $content, 'status_code' => $statusCode, 'message' => $statusMessage] = HttpUtil::loadFromUrl($url);
 		if ($content === false) {
-			return ['status' => self::STATUS_INVALID_URL, 'channel' => null];
+			return ['status' => self::STATUS_INVALID_URL, 'channel' => null, 'message' => "Error loading the URL: $statusCode $statusMessage"];
 		}
 
 		$xmlTree = \simplexml_load_string($content, \SimpleXMLElement::class, LIBXML_NOCDATA);
 		if ($xmlTree === false || !$xmlTree->channel) {
-			return ['status' => self::STATUS_INVALID_RSS, 'channel' => null];
+			return ['status' => self::STATUS_INVALID_RSS, 'channel' => null, 'message' => 'The document at given URL is not a valid podcast RSS feed'];
 		}
 
 		try {
 			$channel = $this->channelBusinessLayer->create($userId, $url, $content, $xmlTree->channel);
 		} catch (\OCA\Music\AppFramework\Db\UniqueConstraintViolationException $ex) {
-			return ['status' => self::STATUS_ALREADY_EXISTS, 'channel' => null];
+			return ['status' => self::STATUS_ALREADY_EXISTS, 'channel' => null, 'message' => 'User already has this podcast channel subscribed'];
 		}
 
 		$episodes = $this->updateEpisodesFromXml($xmlTree->channel->item, $userId, $channel->getId());
 		$channel->setEpisodes($episodes);
 
-		return ['status' => self::STATUS_OK, 'channel' => $channel];
+		return ['status' => self::STATUS_OK, 'channel' => $channel, 'message' => ''];
 	}
 
 	/**
@@ -160,7 +160,7 @@ class PodcastService {
 	 * @param bool $force Value true will cause the channel to be parsed and updated to the database even
 	 *					in case the RSS hasn't been changed at all since the previous update. This might be
 	 *					useful during the development or if the previous update was unexpectedly aborted.
-	 * @return array{status: int, updated: bool, channel: ?PodcastChannel}
+	 * @return array{status: int, updated: bool, channel: ?PodcastChannel, message: string}
 	 */
 	public function updateChannel(int $id, string $userId, ?string $prevHash = null, bool $force = false) : array {
 		$updated = false;
@@ -176,9 +176,10 @@ class PodcastService {
 
 		if ($channel !== null) {
 			$xmlTree = null;
-			$content = HttpUtil::loadFromUrl($channel->getRssUrl())['content'];
+			['content' => $content, 'status_code' => $statusCode, 'message' => $statusMessage] = HttpUtil::loadFromUrl($channel->getRssUrl());
 			if ($content === false) {
 				$status = self::STATUS_INVALID_URL;
+				$message = "$statusCode $statusMessage";
 			} else {
 				$xmlTree = \simplexml_load_string($content, \SimpleXMLElement::class, LIBXML_NOCDATA);
 			}
@@ -187,6 +188,7 @@ class PodcastService {
 				$this->logger->warning("RSS feed for the channel {$channel->id} was invalid");
 				$this->channelBusinessLayer->markUpdateChecked($channel);
 				$status = self::STATUS_INVALID_RSS;
+				$message = 'Could not parse the RSS feed from the URL';
 			} elseif ($this->channelBusinessLayer->updateChannel($channel, $content, $xmlTree->channel, $force)) {
 				// update the episodes too if channel content has actually changed or update is forced
 				$episodes = $this->updateEpisodesFromXml($xmlTree->channel->item, $userId, $id);
@@ -203,7 +205,8 @@ class PodcastService {
 		return [
 			'status' => $status,
 			'updated' => $updated,
-			'channel' => $channel
+			'channel' => $channel,
+			'message' => $message ?? ''
 		];
 	}
 

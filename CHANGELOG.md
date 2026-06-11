@@ -5,6 +5,8 @@
   [#109](https://github.com/nc-music/music/issues/109)
 
 ### Changed
+- Show some error details in the browser console when subscribing a podcast channel fails
+  [#132](https://github.com/nc-music/music/issues/132)
 
 ### Fixed
 

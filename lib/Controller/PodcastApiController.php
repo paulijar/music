@@ -81,11 +81,11 @@ class PodcastApiController extends Controller {
 			case PodcastService::STATUS_OK:
 				return new JSONResponse($result['channel']->toApi($this->urlGenerator));
 			case PodcastService::STATUS_INVALID_URL:
-				return new ErrorResponse(Http::STATUS_BAD_REQUEST, "Invalid URL $url");
+				return new ErrorResponse(Http::STATUS_BAD_REQUEST, $result['message']);
 			case PodcastService::STATUS_INVALID_RSS:
-				return new ErrorResponse(Http::STATUS_BAD_REQUEST, "The document at URL $url is not a valid podcast RSS feed");
+				return new ErrorResponse(Http::STATUS_BAD_REQUEST, $result['message']);
 			case PodcastService::STATUS_ALREADY_EXISTS:
-				return new ErrorResponse(Http::STATUS_CONFLICT, 'User already has this podcast channel subscribed');
+				return new ErrorResponse(Http::STATUS_CONFLICT, $result['message']);
 			default:
 				return new ErrorResponse(Http::STATUS_INTERNAL_SERVER_ERROR, "Unexpected status code {$result['status']}");
 		}

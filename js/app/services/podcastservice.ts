@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2021 - 2025
+ * @copyright Pauli Järvinen 2021 - 2026
  */
 
 import * as ng from 'angular';
@@ -107,11 +107,13 @@ function($rootScope : MusicRootScope, $timeout : ng.ITimeoutService, $q : ng.IQS
 			(error) => {
 				let errMsg;
 				if (error.status === 400) {
-					errMsg = gettextCatalog.getString('Invalid RSS feed URL');
+					errMsg = gettextCatalog.getString('Error loading the feed URL, see the browser console for more details');
+					console.error(`Server experienced an error loading the podcast RSS feed from the URL ${url}, details: ${JSON.stringify(error.data)}`);
 				} else if (error.status === 409) {
 					errMsg = gettextCatalog.getString('This channel is already subscribed');
 				} else {
-					errMsg = gettextCatalog.getString('Failed to add the podcast channel');
+					errMsg = gettextCatalog.getString('Failed to add the podcast channel, see the browser console for more details');
+					console.error(`Error adding podcast channel from the URL ${url}, status: ${error.status} ${error.statusText}, details: ${JSON.stringify(error.data)}`);
 				}
 				OCA.Music.Dialogs.showNotification(errMsg);
 				deferred.reject();
