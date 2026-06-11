@@ -36,6 +36,7 @@ class AdvSearchRules {
 					'year'			=> $l10n->t('Year'),
 					'time'			=> $l10n->t('Duration (minutes)'),
 					'bitrate'		=> $l10n->t('Bit rate'),
+					'bpm'			=> $l10n->t('BPM'),
 					'song_genre'	=> $l10n->t('Track genre'),
 					'album_genre'	=> $l10n->t('Album genre'),
 					'artist_genre'	=> $l10n->t('Artist genre'),
@@ -227,7 +228,7 @@ class AdvSearchRules {
 			// 'catalog_number', 'label', 'comment', 'lyrics', 'username', 'category'
 
 			'numeric' => [
-				'track', 'year', 'original_year', 'played_times', 'album_count', 'song_count', 'disk_count', 'time', 'bitrate'
+				'track', 'year', 'original_year', 'played_times', 'album_count', 'song_count', 'disk_count', 'time', 'bitrate', 'bpm' /* not in Ampache spec */
 			],
 			// numeric but not supported: 'yearformed', 'skipped_times', 'play_skip_ratio', 'image_height', 'image_width'
 
