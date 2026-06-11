@@ -24,13 +24,13 @@ jobs:
           - nc: 31.0.12
             php: 8.2
             db: pgsql
-          - nc: 32.0.3
-            php: 8.4
+          - nc: 32.0.11
+            php: 8.3
             db: mysql
-          - nc: 33.0.0
-            php: 8.5
+          - nc: 33.0.5
+            php: 8.4
             db: sqlite
-          - nc: 34.0.0rc2
+          - nc: 34.0.0
             php: 8.5
             db: pgsql
 
