@@ -10,9 +10,9 @@ use OCP\Migration\SimpleMigrationStep;
 use OCP\Migration\IOutput;
 
 /**
- * Migrate the DB schema to Music v3.1.0 level from the v3.0.0 level
+ * Migrate the DB schema to Music v3.2.0 level from the v2.1.0 level
  */
-class Version030100Date20260310120000 extends SimpleMigrationStep {
+class Version030200Date20260611220000 extends SimpleMigrationStep {
 
 	/**
 	 * @param IOutput $output
