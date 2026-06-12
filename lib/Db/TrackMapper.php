@@ -602,6 +602,7 @@ class TrackMapper extends BaseMapper {
 			'anywhere'			=> self::formatAdvSearchAnywhereCond($sqlOp, $conv),
 			'album'				=> "$conv(`album`.`name`) $sqlOp $conv(?)",
 			'artist'			=> "$conv(`artist`.`name`) $sqlOp $conv(?)",
+			'composer'			=> "$conv(`composer`.`name`) $sqlOp $conv(?)",
 			'album_artist'		=> "`album_id` IN (SELECT `al`.`id` from `*PREFIX*music_albums` `al` JOIN `*PREFIX*music_artists` `ar` ON `al`.`album_artist_id` = `ar`.`id` WHERE $conv(`ar`.`name`) $sqlOp $conv(?))",
 			'album_artist_id'	=> "$sqlOp `album_id` IN (SELECT `id` from `*PREFIX*music_albums` WHERE `album_artist_id` = ?)", // our own API extension
 			'track'				=> "`number` $sqlOp ?",

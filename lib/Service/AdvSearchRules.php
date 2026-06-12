@@ -32,6 +32,7 @@ class AdvSearchRules {
 					'album'			=> $l10n->t('Album name'),
 					'artist'		=> $l10n->t('Artist name'),
 					'album_artist'	=> $l10n->t('Album artist name'),
+					'composer'		=> $l10n->t('Composer name'),
 					'track'			=> $l10n->t('Track number'),
 					'year'			=> $l10n->t('Year'),
 					'time'			=> $l10n->t('Duration (minutes)'),
@@ -221,10 +222,10 @@ class AdvSearchRules {
 		$rulesPerType = [
 			'text' => [
 				'anywhere', 'title', 'song', 'album', 'artist', 'podcast', 'podcast_episode', 'album_artist', 'song_artist',
-				'favorite', 'favorite_album', 'favorite_artist', 'genre', 'song_genre', 'album_genre', 'artist_genre',
+				'favorite', 'favorite_album', 'favorite_artist', 'genre', 'song_genre', 'album_genre', 'artist_genre', 'composer',
 				'playlist_name', 'type', 'file', 'mbid', 'mbid_album', 'mbid_artist', 'mbid_song', 'stream_url' /* not in Ampache spec */
 			],
-			// text but not supported: 'composer', 'summary', 'placeformed', 'release_type', 'release_status', 'barcode',
+			// text but not supported: 'summary', 'placeformed', 'release_type', 'release_status', 'barcode',
 			// 'catalog_number', 'label', 'comment', 'lyrics', 'username', 'category'
 
 			'numeric' => [
