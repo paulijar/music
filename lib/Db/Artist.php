@@ -132,7 +132,8 @@ class Artist extends Entity {
 			'id' => $this->getId(),
 			'name' => $this->getNameString($l10n),
 			'albums' => $albums,
-			'cover' => $this->coverToAPI($urlGenerator)
+			'cover' => $this->coverToAPI($urlGenerator),
+			'roles' => $this->getRoles(),
 		];
 	}
 
@@ -148,5 +149,22 @@ class Artist extends Entity {
 
 	public static function unknownNameString(IL10N $l10n) : string {
 		return (string) $l10n->t('Unknown artist');
+	}
+
+	/**
+	 * @return string[] the roles of this artist, e.g. 'artist', 'albumartist', 'composer'
+	 */
+	public function getRoles() : array {
+		$roles = [];
+		if ($this->getTrackCount() > 0) {
+			$roles[] = 'artist';
+		}
+		if ($this->getOwnAlbumCount() > 0) {
+			$roles[] = 'albumartist';
+		}
+		if ($this->getCompositionCount() > 0) {
+			$roles[] = 'composer';
+		}
+		return $roles;
 	}
 }

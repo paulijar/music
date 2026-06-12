@@ -24,7 +24,7 @@
 	<div>
 		<label for="filter-artists" translate>Artists</label>
 		<select id="filter-artists" multiple data-placeholder=" " ng-model="artists">
-			<option ng-repeat="artist in allArtists" value="{{ artist.id }}">{{ artist.name }}</option>
+			<option ng-repeat="artist in allArtists | filter : {roles: 'artist'} : true" value="{{ artist.id }}">{{ artist.name }}</option>
 		</select>
 	</div>
 

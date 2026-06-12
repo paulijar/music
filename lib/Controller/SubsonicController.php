@@ -1388,17 +1388,6 @@ class SubsonicController extends ApiController {
 	private function artistToApi(Artist $artist) : array {
 		$id = $artist->getId();
 
-		$roles = [];
-		if ($artist->getTrackCount() > 0) {
-			$roles[] = 'artist';
-		}
-		if ($artist->getOwnAlbumCount() > 0) {
-			$roles[] = 'albumartist';
-		}
-		if ($artist->getCompositionCount() > 0) {
-			$roles[] = 'composer';
-		}
-
 		$result = [
 			'name' => $artist->getNameString($this->l10n),
 			'id' => $id ? ('artist-' . $id) : '-1', // getArtistInfo may show artists without ID
@@ -1408,7 +1397,7 @@ class SubsonicController extends ApiController {
 			'averageRating' => $artist->getRating() ?: null,
 			'sortName' => $this->nameWithoutArticle($artist->getName()) ?? '', // OpenSubsonic
 			'mediaType' => 'artist', // OpenSubsonic, only specified for the "old" API but we don't separate the APIs here
-			'roles' => $roles, // OpenSubsonic
+			'roles' => $artist->getRoles(), // OpenSubsonic
 		];
 
 		if (!empty($artist->getCoverFileId())) {
