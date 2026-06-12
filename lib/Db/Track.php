@@ -296,8 +296,10 @@ class Track extends Entity {
 	 * older clients. The $track entity must have the Album reference injected prior to calling this.
 	 *
 	 * @param string[] $ignoredArticles
+	 * @param bool $legacyCompatibilityMode if true, the `contributors` sub-element is omitted from the result;
+	 * 										DSub would parse the response incorrectly if it had nested `artist` element(s)
 	 */
-	public function toSubsonicApi(IL10N $l10n, array $ignoredArticles) : array {
+	public function toSubsonicApi(IL10N $l10n, array $ignoredArticles, bool $legacyCompatibilityMode) : array {
 		$albumId = $this->getAlbumId();
 		$album = $this->getAlbum();
 		$hasCoverArt = ($album !== null && !empty($album->getCoverFileId()));
@@ -329,7 +331,7 @@ class Track extends Entity {
 			'averageRating' => $this->getRating() ?: null,
 			'genre' => empty($this->getGenreId()) ? null : $this->getGenreNameString($l10n),
 			'bpm' => $this->getBpm() ?: null,
-			'contributors' => $this->buildContributors(), // OpenSubsonic
+			'contributors' => $legacyCompatibilityMode ? null : $this->buildContributors(), // OpenSubsonic
 			'displayComposer' => $this->getComposerName() ?: null, // OpenSubsonic
 			'coverArt' => !$hasCoverArt ? null : 'album-' . $albumId,
 			'playCount' => $this->getPlayCount(),

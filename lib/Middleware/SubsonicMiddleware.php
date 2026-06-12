@@ -53,6 +53,7 @@ class SubsonicMiddleware extends Middleware {
 		// The security access logic is not applied to the CORS pre-flight calls with the 'OPTIONS'
 		if ($controller instanceof SubsonicController && $methodName !== 'preflightedCors') {
 			$this->setupResponseFormat($controller);
+			$this->setupClient($controller);
 			$this->checkAuthentication($controller);
 		}
 	}
@@ -77,6 +78,15 @@ class SubsonicMiddleware extends Middleware {
 		}
 
 		$controller->setResponseFormat($format, $callback);
+	}
+
+	private function setupClient(SubsonicController $controller) : void {
+		$client = $this->request->getParam('c');
+		if (empty($client)) {
+			throw new SubsonicException("Required parameter 'c' (client name) is missing", 10);
+		} else {
+			$controller->setClient($client);
+		}
 	}
 
 	/**
