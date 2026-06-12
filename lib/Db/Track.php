@@ -238,6 +238,7 @@ class Track extends Entity {
 			'artist' => $renderAlbumOrArtistRef($this->getArtistId() ?: 0, $this->getArtistNameString($l10n)),
 			'albumartist' => $renderAlbumOrArtistRef($album->getAlbumArtistId() ?: 0, $album->getAlbumArtistNameString($l10n)),
 			'album' => $renderAlbumOrArtistRef($album->getId() ?: 0, $album->getNameString($l10n)),
+			'composer' => $this->getComposerName() ?: null,
 			'url' => $createPlayUrl($this),
 			'time' => $this->getLength(),
 			'year' => $this->getYear(),
