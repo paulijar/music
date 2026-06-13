@@ -635,6 +635,7 @@ class TrackMapper extends BaseMapper {
 			'playlist_name'		=> "EXISTS (SELECT 1 from `*PREFIX*music_playlists` `p` WHERE $conv(`p`.`name`) $sqlOp $conv(?) AND `p`.`track_ids` LIKE " . $this->sqlConcat("'%|'", "`*PREFIX*music_tracks`.`id`", "'|%'") . ')',
 			'recent_played'		=> "`*PREFIX*music_tracks`.`id` IN (SELECT * FROM (SELECT `id` FROM `*PREFIX*music_tracks` WHERE `user_id` = ? ORDER BY `last_played` DESC LIMIT $sqlOp) mysqlhack)",
 			'file'				=> "$conv(`file`.`name`) $sqlOp $conv(?)",
+			'comment'			=> "$conv(`comment`) $sqlOp $conv(?)",
 			'mbid_album'		=> "`album`.`mbid` $sqlOp ?",
 			'mbid_artist'		=> "`artist`.`mbid` $sqlOp ?"
 		];
@@ -651,11 +652,12 @@ class TrackMapper extends BaseMapper {
 	private static function formatAdvSearchAnywhereCond(string $sqlOp, string $conv) : string {
 		$fields = [
 			"`*PREFIX*music_tracks`.`title`",
+			"`*PREFIX*music_tracks`.`comment`",
 			"`file`.`name`",
 			"`artist`.`name`",
 			"`composer`.`name`",
 			"`album`.`name`",
-			"`genre`.`name`"
+			"`genre`.`name`",
 		];
 		$parts = \array_map(fn($field) => "$conv($field) $sqlOp $conv(?)", $fields);
 
