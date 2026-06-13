@@ -9,7 +9,7 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Morris Jobke 2013, 2014
- * @copyright Pauli Järvinen 2016 - 2025
+ * @copyright Pauli Järvinen 2016 - 2026
  */
 
 namespace OCA\Music\Db;
@@ -58,6 +58,8 @@ use OCP\IURLGenerator;
  * @method void setBpm(?int $bpm)
  * @method ?int getComposerId()
  * @method void setComposerId(?int $composerId)
+ * @method ?string getComment()
+ * @method void setComment(?string $comment)
  *
  * @method string getFilename()
  * @method int getSize()
@@ -88,6 +90,7 @@ class Track extends Entity {
 	public int $dirty = 0;
 	public ?int $bpm = null;
 	public ?int $composerId = null;
+	public ?string $comment = null;
 
 	// not from the music_tracks table but still part of the standard content of this entity:
 	public string $filename = '';
