@@ -653,6 +653,7 @@ class TrackMapper extends BaseMapper {
 			"`*PREFIX*music_tracks`.`title`",
 			"`file`.`name`",
 			"`artist`.`name`",
+			"`composer`.`name`",
 			"`album`.`name`",
 			"`genre`.`name`"
 		];
