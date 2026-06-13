@@ -29,6 +29,13 @@
 	</div>
 
 	<div>
+		<label for="filter-composers" translate>Composers</label>
+		<select id="filter-composers" multiple data-placeholder=" " ng-model="composers">
+			<option ng-repeat="artist in allArtists | filter : {roles: 'composer'} : true" value="{{ artist.id }}">{{ artist.name }}</option>
+		</select>
+	</div>
+
+	<div>
 		<label for="filter-favorite" translate>Favorite</label>
 		<select id="filter-favorite" ng-model="smartListParams.favorite">
 			<option value=""></option>

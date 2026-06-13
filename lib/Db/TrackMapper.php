@@ -339,6 +339,7 @@ class TrackMapper extends BaseMapper {
 	 * Returns all tracks specified by various criteria, all of which are optional
 	 * @param int[] $genres Array of genre IDs
 	 * @param int[] $artists Array of artist IDs
+	 * @param int[] $composers Array of composer IDs
 	 * @param int|null $fromYear Earliest release year to include
 	 * @param int|null $toYear Latest release year to include
 	 * @param int|null $favorite Bit mask of FAVORITE_TRACK, FAVORITE_ALBUM, FAVORITE_ARTIST (given favorite types are ORed in the query)
@@ -347,7 +348,7 @@ class TrackMapper extends BaseMapper {
 	 * @return Track[] Tracks matching the criteria
 	 */
 	public function findAllByCriteria(
-			array $genres, array $artists, ?int $fromYear, ?int $toYear, ?int $favorite,
+			array $genres, array $artists, array $composers, ?int $fromYear, ?int $toYear, ?int $favorite,
 			int $sortBy, bool $invertSort, string $userId, ?int $limit=null, ?int $offset=null) : array {
 
 		$sqlConditions = [];
@@ -361,6 +362,11 @@ class TrackMapper extends BaseMapper {
 		if (!empty($artists)) {
 			$sqlConditions[] = '`artist_id` IN ' . $this->questionMarks(\count($artists));
 			$params = \array_merge($params, $artists);
+		}
+
+		if (!empty($composers)) {
+			$sqlConditions[] = '`composer_id` IN ' . $this->questionMarks(\count($composers));
+			$params = \array_merge($params, $composers);
 		}
 
 		if (!empty($fromYear)) {

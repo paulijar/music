@@ -153,13 +153,14 @@ class PlaylistApiController extends Controller {
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function generate(
-			?bool $useLatestParams, ?string $history, ?string $genres, ?string $artists,
+			?bool $useLatestParams, ?string $history, ?string $genres, ?string $artists, ?string $composers,
 			?int $fromYear, ?int $toYear, ?string $favorite=null, int $size=100, string|int|bool|null $historyStrict='false') : JSONResponse {
 
 		if ($useLatestParams) {
 			$history = $this->configManager->getUserValue($this->userId, $this->appName, 'smartlist_history') ?: null;
 			$genres = $this->configManager->getUserValue($this->userId, $this->appName, 'smartlist_genres') ?: null;
 			$artists = $this->configManager->getUserValue($this->userId, $this->appName, 'smartlist_artists') ?: null;
+			$composers = $this->configManager->getUserValue($this->userId, $this->appName, 'smartlist_composers') ?: null;
 			$fromYear = (int)$this->configManager->getUserValue($this->userId, $this->appName, 'smartlist_from_year') ?: null;
 			$toYear = (int)$this->configManager->getUserValue($this->userId, $this->appName, 'smartlist_to_year') ?: null;
 			$favorite = $this->configManager->getUserValue($this->userId, $this->appName, 'smartlist_favorite') ?: null;
@@ -169,6 +170,7 @@ class PlaylistApiController extends Controller {
 			$this->configManager->setUserValue($this->userId, $this->appName, 'smartlist_history', $history ?? '');
 			$this->configManager->setUserValue($this->userId, $this->appName, 'smartlist_genres', $genres ?? '');
 			$this->configManager->setUserValue($this->userId, $this->appName, 'smartlist_artists', $artists ?? '');
+			$this->configManager->setUserValue($this->userId, $this->appName, 'smartlist_composers', $composers ?? '');
 			$this->configManager->setUserValue($this->userId, $this->appName, 'smartlist_from_year', (string)$fromYear);
 			$this->configManager->setUserValue($this->userId, $this->appName, 'smartlist_to_year', (string)$toYear);
 			$this->configManager->setUserValue($this->userId, $this->appName, 'smartlist_favorite', $favorite ?? '');
@@ -180,9 +182,10 @@ class PlaylistApiController extends Controller {
 		// ensure the artists and genres contain only valid IDs
 		$genres = $this->genreBusinessLayer->findAllIds($this->userId, self::toIntArray($genres));
 		$artists = $this->artistBusinessLayer->findAllIds($this->userId, self::toIntArray($artists));
+		$composers = $this->artistBusinessLayer->findAllIds($this->userId, self::toIntArray($composers));
 
 		$playlist = $this->playlistBusinessLayer->generate(
-				$history, $historyStrict, $genres, $artists, $fromYear, $toYear, $favorite, $size, $this->userId);
+				$history, $historyStrict, $genres, $artists, $composers, $fromYear, $toYear, $favorite, $size, $this->userId);
 		$result = $playlist->toApi($this->urlGenerator);
 
 		$result['params'] = [
@@ -190,6 +193,7 @@ class PlaylistApiController extends Controller {
 			'historyStrict' => $historyStrict,
 			'genres' => \implode(',', $genres) ?: null,
 			'artists' => \implode(',', $artists) ?: null,
+			'composers' => \implode(',', $composers) ?: null,
 			'fromYear' => $fromYear ?: null,
 			'toYear' => $toYear ?: null,
 			'favorite' => $favorite ?: null,
