@@ -83,6 +83,7 @@ class SubsonicController extends ApiController {
 	private const FOLDER_ID_ARTISTS = -1;
 	private const FOLDER_ID_FOLDERS = -2;
 
+	private ?string $client;
 	private ?string $userId;
 	private ?int $keyId;
 	private array $ignoredArticles;
@@ -119,10 +120,18 @@ class SubsonicController extends ApiController {
 	) {
 		parent::__construct($appName, $request, 'POST, GET', 'Authorization, Content-Type, Accept, X-Requested-With');
 
+		$this->client = null;
 		$this->userId = null;
 		$this->keyId = null;
 		$this->ignoredArticles = [];
 		$this->format = 'xml'; // default, should be immediately overridden by SubsonicMiddleware
+	}
+
+	/**
+	 * Called by the middleware to set the client name extracted from the request
+	 */
+	public function setClient(string $client) : void {
+		$this->client = $client;
 	}
 
 	/**
@@ -265,9 +274,9 @@ class SubsonicController extends ApiController {
 	}
 
 	#[SubsonicAPI]
-	protected function getArtists(string $c) : array {
+	protected function getArtists() : array {
 		// Feishin is expecting to get also non-album artists from this function although that's not what the original Subsonic does
-		return $this->getIndexesForArtists('artists', $c == 'Feishin');
+		return $this->getIndexesForArtists('artists', $this->client === 'Feishin');
 	}
 
 	#[SubsonicAPI]
@@ -1388,14 +1397,6 @@ class SubsonicController extends ApiController {
 	private function artistToApi(Artist $artist) : array {
 		$id = $artist->getId();
 
-		$roles = [];
-		if ($artist->getTrackCount() > 0) {
-			$roles[] = 'artist';
-		}
-		if ($artist->getOwnAlbumCount() > 0) {
-			$roles[] = 'albumartist';
-		}
-
 		$result = [
 			'name' => $artist->getNameString($this->l10n),
 			'id' => $id ? ('artist-' . $id) : '-1', // getArtistInfo may show artists without ID
@@ -1405,7 +1406,7 @@ class SubsonicController extends ApiController {
 			'averageRating' => $artist->getRating() ?: null,
 			'sortName' => $this->nameWithoutArticle($artist->getName()) ?? '', // OpenSubsonic
 			'mediaType' => 'artist', // OpenSubsonic, only specified for the "old" API but we don't separate the APIs here
-			'roles' => $roles, // OpenSubsonic
+			'roles' => $artist->getRoles(), // OpenSubsonic
 		];
 
 		if (!empty($artist->getCoverFileId())) {
@@ -1473,7 +1474,7 @@ class SubsonicController extends ApiController {
 		$musicFolder = $this->librarySettings->getFolder($userId);
 		$this->fileSystemService->injectFolderPathsToTracks($tracks, $userId, $musicFolder);
 		$this->albumBusinessLayer->injectAlbumsToTracks($tracks, $userId);
-		return \array_map(fn($t) => $t->toSubsonicApi($this->l10n, $this->ignoredArticles), $tracks);
+		return \array_map(fn($t) => $t->toSubsonicApi($this->l10n, $this->ignoredArticles, $this->client === 'DSub'), $tracks);
 	}
 
 	private function trackToApi(Track $track) : array {

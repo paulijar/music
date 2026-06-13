@@ -97,7 +97,7 @@ class AlbumBusinessLayer extends BusinessLayer {
 	}
 
 	/**
-	 * Returns all albums filtered by artist (both album and track artists are considered)
+	 * Returns all albums filtered by artist (both album and track artists as well as composers are considered)
 	 * @return Album[] albums
 	 */
 	public function findAllByArtist(int $artistId, string $userId, ?int $limit=null, ?int $offset=null) : array {

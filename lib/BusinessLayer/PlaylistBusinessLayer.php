@@ -199,6 +199,7 @@ class PlaylistBusinessLayer extends BusinessLayer {
 	 *             'recently-played' meas "The most recently played" instead of "Among the most recently played"
 	 * @param int[] $genres Array of genre IDs
 	 * @param int[] $artists Array of artist IDs
+	 * @param int[] $composers Array of composer IDs
 	 * @param int|null $fromYear Earliest release year to include
 	 * @param int|null $toYear Latest release year to include
 	 * @param string|null $favorite One of: 'track', 'album', 'artists', 'track_album_artist', null
@@ -206,7 +207,7 @@ class PlaylistBusinessLayer extends BusinessLayer {
 	 * @param string $userId the name of the user
 	 */
 	public function generate(
-			?string $history, bool $historyStrict, array $genres, array $artists,
+			?string $history, bool $historyStrict, array $genres, array $artists, array $composers,
 			?int $fromYear, ?int $toYear, ?string $favorite, int $size, string $userId) : Playlist {
 
 		$now = new \DateTime();
@@ -223,7 +224,7 @@ class PlaylistBusinessLayer extends BusinessLayer {
 
 		$favoriteMask = self::favoriteMask($favorite);
 
-		$tracks = $this->trackMapper->findAllByCriteria($genres, $artists, $fromYear, $toYear, $favoriteMask, $sortBy, $invertSort, $userId, $limit);
+		$tracks = $this->trackMapper->findAllByCriteria($genres, $artists, $composers, $fromYear, $toYear, $favoriteMask, $sortBy, $invertSort, $userId, $limit);
 
 		if ($sortBy !== SortBy::None && !$historyStrict) {
 			// When generating by non-strict history, use a pool of tracks at maximum twice the size of final list.

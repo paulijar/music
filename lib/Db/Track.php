@@ -54,6 +54,10 @@ use OCP\IURLGenerator;
  * @method void setLastPlayed(?string $timestamp)
  * @method int getDirty()
  * @method void setDirty(int $dirty)
+ * @method ?int getBpm()
+ * @method void setBpm(?int $bpm)
+ * @method ?int getComposerId()
+ * @method void setComposerId(?int $composerId)
  *
  * @method string getFilename()
  * @method int getSize()
@@ -61,6 +65,7 @@ use OCP\IURLGenerator;
  * @method ?string getAlbumName()
  * @method ?string getArtistName()
  * @method ?string getGenreName()
+ * @method ?string getComposerName()
  * @method int getFolderId()
  */
 class Track extends Entity {
@@ -81,6 +86,8 @@ class Track extends Entity {
 	public int $playCount = 0;
 	public ?string $lastPlayed = null;
 	public int $dirty = 0;
+	public ?int $bpm = null;
+	public ?int $composerId = null;
 
 	// not from the music_tracks table but still part of the standard content of this entity:
 	public string $filename = '';
@@ -89,6 +96,7 @@ class Track extends Entity {
 	public ?string $albumName = null;
 	public ?string $artistName = null;
 	public ?string $genreName = null;
+	public ?string $composerName = null;
 	public int $folderId = 0;
 
 	// the rest of the variables are injected separately when needed
@@ -110,6 +118,8 @@ class Track extends Entity {
 		$this->addType('playCount', 'int');
 		$this->addType('rating', 'int');
 		$this->addType('dirty', 'int');
+		$this->addType('bpm', 'int');
+		$this->addType('composerId', 'int');
 		$this->addType('size', 'int');
 		$this->addType('fileModTime', 'int');
 		$this->addType('folderId', 'int');
@@ -188,6 +198,7 @@ class Track extends Entity {
 			'number' => $this->getNumber(),
 			'disk' => $this->getDisk(),
 			'artistId' => $this->getArtistId(),
+			'composerId' => $this->getComposerId(),
 			'length' => $this->getLength(),
 			'files' => [$this->getMimetype() => $this->getFileId()],
 			'id' => $this->getId(),
@@ -228,6 +239,7 @@ class Track extends Entity {
 			'artist' => $renderAlbumOrArtistRef($this->getArtistId() ?: 0, $this->getArtistNameString($l10n)),
 			'albumartist' => $renderAlbumOrArtistRef($album->getAlbumArtistId() ?: 0, $album->getAlbumArtistNameString($l10n)),
 			'album' => $renderAlbumOrArtistRef($album->getId() ?: 0, $album->getNameString($l10n)),
+			'composer' => $this->getComposerName() ?: null,
 			'url' => $createPlayUrl($this),
 			'time' => $this->getLength(),
 			'year' => $this->getYear(),
@@ -285,8 +297,10 @@ class Track extends Entity {
 	 * older clients. The $track entity must have the Album reference injected prior to calling this.
 	 *
 	 * @param string[] $ignoredArticles
+	 * @param bool $legacyCompatibilityMode if true, the `contributors` sub-element is omitted from the result;
+	 * 										DSub would parse the response incorrectly if it had nested `artist` element(s)
 	 */
-	public function toSubsonicApi(IL10N $l10n, array $ignoredArticles) : array {
+	public function toSubsonicApi(IL10N $l10n, array $ignoredArticles, bool $legacyCompatibilityMode) : array {
 		$albumId = $this->getAlbumId();
 		$album = $this->getAlbum();
 		$hasCoverArt = ($album !== null && !empty($album->getCoverFileId()));
@@ -317,11 +331,22 @@ class Track extends Entity {
 			'userRating' => $this->getRating() ?: null,
 			'averageRating' => $this->getRating() ?: null,
 			'genre' => empty($this->getGenreId()) ? null : $this->getGenreNameString($l10n),
+			'bpm' => $this->getBpm() ?: null,
+			'contributors' => $legacyCompatibilityMode ? null : $this->buildContributors(), // OpenSubsonic
+			'displayComposer' => $this->getComposerName() ?: null, // OpenSubsonic
 			'coverArt' => !$hasCoverArt ? null : 'album-' . $albumId,
 			'playCount' => $this->getPlayCount(),
 			'played' => Util::formatZuluDateTime($this->getLastPlayed()) ?? '', // OpenSubsonic
 			'sortName' => StringUtil::splitPrefixAndBasename($this->getTitle(), $ignoredArticles)['basename'], // OpenSubsonic
 		];
+	}
+
+	private function buildContributors() : array {
+		$contributors = [];
+		if ($this->getComposerId() !== null) {
+			$contributors[] = ['role' => 'composer', 'artist' => ['id' => 'artist-' . $this->getComposerId(), 'name' => $this->getComposerName()]];
+		}
+		return $contributors;
 	}
 
 	public function getAdjustedTrackNumber(bool $enablePlaylistNumbering=true) : ?int {

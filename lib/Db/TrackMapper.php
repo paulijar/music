@@ -36,7 +36,8 @@ class TrackMapper extends BaseMapper {
 	 */
 	protected function selectEntities(string $condition, ?string $extension=null) : string {
 		return "SELECT `*PREFIX*music_tracks`.*, `file`.`name` AS `filename`, `file`.`size`, `file`.`mtime` AS `file_mod_time`, `file`.`parent` AS `folder_id`,
-						`album`.`name` AS `album_name`, `artist`.`name` AS `artist_name`, `genre`.`name` AS `genre_name`
+						`album`.`name` AS `album_name`, `artist`.`name` AS `artist_name`, `genre`.`name` AS `genre_name`,
+						`composer`.`name` AS `composer_name`
 				FROM `*PREFIX*music_tracks`
 				INNER JOIN `*PREFIX*filecache` `file`
 				ON `*PREFIX*music_tracks`.`file_id` = `file`.`fileid`
@@ -46,6 +47,8 @@ class TrackMapper extends BaseMapper {
 				ON `*PREFIX*music_tracks`.`artist_id` = `artist`.`id`
 				LEFT JOIN `*PREFIX*music_genres` `genre`
 				ON `*PREFIX*music_tracks`.`genre_id` = `genre`.`id`
+				LEFT JOIN `*PREFIX*music_artists` `composer`
+				ON `*PREFIX*music_tracks`.`composer_id` = `composer`.`id`
 				WHERE $condition $extension";
 	}
 
@@ -73,17 +76,17 @@ class TrackMapper extends BaseMapper {
 	}
 
 	/**
-	 * Returns all tracks of the given artist (both album and track artists are considered)
+	 * Returns all tracks of the given artist (both album and track artists as well as composers are considered)
 	 * @param int[] $artistIds
 	 * @return Track[]
 	 */
 	public function findAllByArtist(array $artistIds, string $userId, ?int $limit=null, ?int $offset=null) : array {
 		$questionMarks = $this->questionMarks(\count($artistIds));
 		$sql = $this->selectUserEntities(
-			"`artist_id` IN $questionMarks OR `album_id` IN (SELECT `id` from `*PREFIX*music_albums` WHERE `album_artist_id` IN $questionMarks)",
+			"`artist_id` IN $questionMarks OR `composer_id` IN $questionMarks OR `album_id` IN (SELECT `id` from `*PREFIX*music_albums` WHERE `album_artist_id` IN $questionMarks)",
 			'ORDER BY LOWER(`title`)'
 		);
-		$params = \array_merge([$userId], $artistIds, $artistIds);
+		$params = \array_merge([$userId], $artistIds, $artistIds, $artistIds);
 		return $this->findEntities($sql, $params, $limit, $offset);
 	}
 
@@ -220,6 +223,14 @@ class TrackMapper extends BaseMapper {
 		return (int)$row['count'];
 	}
 
+	public function countByComposer(int $artistId) : int {
+		$sql = 'SELECT COUNT(*) AS `count` FROM `*PREFIX*music_tracks` WHERE `composer_id` = ?';
+		$result = $this->execute($sql, [$artistId]);
+		$row = $result->fetch();
+		$result->closeCursor();
+		return (int)$row['count'];
+	}
+
 	public function countByAlbum(int $albumId) : int {
 		$sql = 'SELECT COUNT(*) AS `count` FROM `*PREFIX*music_tracks` WHERE `album_id` = ?';
 		$result = $this->execute($sql, [$albumId]);
@@ -328,6 +339,7 @@ class TrackMapper extends BaseMapper {
 	 * Returns all tracks specified by various criteria, all of which are optional
 	 * @param int[] $genres Array of genre IDs
 	 * @param int[] $artists Array of artist IDs
+	 * @param int[] $composers Array of composer IDs
 	 * @param int|null $fromYear Earliest release year to include
 	 * @param int|null $toYear Latest release year to include
 	 * @param int|null $favorite Bit mask of FAVORITE_TRACK, FAVORITE_ALBUM, FAVORITE_ARTIST (given favorite types are ORed in the query)
@@ -336,7 +348,7 @@ class TrackMapper extends BaseMapper {
 	 * @return Track[] Tracks matching the criteria
 	 */
 	public function findAllByCriteria(
-			array $genres, array $artists, ?int $fromYear, ?int $toYear, ?int $favorite,
+			array $genres, array $artists, array $composers, ?int $fromYear, ?int $toYear, ?int $favorite,
 			int $sortBy, bool $invertSort, string $userId, ?int $limit=null, ?int $offset=null) : array {
 
 		$sqlConditions = [];
@@ -350,6 +362,11 @@ class TrackMapper extends BaseMapper {
 		if (!empty($artists)) {
 			$sqlConditions[] = '`artist_id` IN ' . $this->questionMarks(\count($artists));
 			$params = \array_merge($params, $artists);
+		}
+
+		if (!empty($composers)) {
+			$sqlConditions[] = '`composer_id` IN ' . $this->questionMarks(\count($composers));
+			$params = \array_merge($params, $composers);
 		}
 
 		if (!empty($fromYear)) {
@@ -591,6 +608,7 @@ class TrackMapper extends BaseMapper {
 			'anywhere'			=> self::formatAdvSearchAnywhereCond($sqlOp, $conv),
 			'album'				=> "$conv(`album`.`name`) $sqlOp $conv(?)",
 			'artist'			=> "$conv(`artist`.`name`) $sqlOp $conv(?)",
+			'composer'			=> "$conv(`composer`.`name`) $sqlOp $conv(?)",
 			'album_artist'		=> "`album_id` IN (SELECT `al`.`id` from `*PREFIX*music_albums` `al` JOIN `*PREFIX*music_artists` `ar` ON `al`.`album_artist_id` = `ar`.`id` WHERE $conv(`ar`.`name`) $sqlOp $conv(?))",
 			'album_artist_id'	=> "$sqlOp `album_id` IN (SELECT `id` from `*PREFIX*music_albums` WHERE `album_artist_id` = ?)", // our own API extension
 			'track'				=> "`number` $sqlOp ?",
@@ -608,6 +626,7 @@ class TrackMapper extends BaseMapper {
 			'myplayedartist'	=> "`artist_id` IN (SELECT * FROM (SELECT `artist_id` from `*PREFIX*music_tracks` GROUP BY `artist_id` HAVING MAX(`last_played`) $sqlOp) mysqlhack)", // operator "IS NULL" or "IS NOT NULL"
 			'time'				=> "`length` $sqlOp ?",
 			'bitrate'			=> "`bitrate` $sqlOp ?",
+			'bpm'				=> "`bpm` $sqlOp ?",
 			'song_genre'		=> "$conv(`genre`.`name`) $sqlOp $conv(?)",
 			'album_genre'		=> "`album_id` IN (SELECT * FROM (SELECT `album_id` FROM `*PREFIX*music_tracks` `t` JOIN `*PREFIX*music_genres` `g` ON `t`.`genre_id` = `g`.`id` GROUP BY `album_id` HAVING $conv(" . $this->sqlGroupConcat('`g`.`name`') . ") $sqlOp $conv(?)) mysqlhack)",
 			'artist_genre'		=> "`artist_id` IN (SELECT * FROM (SELECT `artist_id` FROM `*PREFIX*music_tracks` `t` JOIN `*PREFIX*music_genres` `g` ON `t`.`genre_id` = `g`.`id` GROUP BY `artist_id` HAVING $conv(" . $this->sqlGroupConcat('`g`.`name`') . ") $sqlOp $conv(?)) mysqlhack)",
@@ -634,6 +653,7 @@ class TrackMapper extends BaseMapper {
 			"`*PREFIX*music_tracks`.`title`",
 			"`file`.`name`",
 			"`artist`.`name`",
+			"`composer`.`name`",
 			"`album`.`name`",
 			"`genre`.`name`"
 		];

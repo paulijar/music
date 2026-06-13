@@ -101,6 +101,7 @@ class MusicApiControllerTest extends ControllerTestUtility {
 		$track->setId($trackId);
 		$track->setTitle('The title');
 		$track->setArtistId(3);
+		$track->setComposerId(55);
 		$track->setArtistName('The track artist');
 		$track->setAlbumId(1);
 		$track->setNumber(4);
@@ -121,6 +122,7 @@ class MusicApiControllerTest extends ControllerTestUtility {
 			'number' => 4,
 			'disk' => 1,
 			'artistId' => 3,
+			'composerId' => 55,
 			'length' => 123,
 			'files' => [
 				'audio/mp3' => $fileId

@@ -171,7 +171,8 @@ class Maintenance {
 		return $this->db->executeUpdate(
 			'DELETE FROM `*PREFIX*music_artists`
 				WHERE NOT EXISTS (SELECT 1 FROM `*PREFIX*music_albums` WHERE `*PREFIX*music_artists`.`id` = `album_artist_id` LIMIT 1)
-				AND   NOT EXISTS (SELECT 1 FROM `*PREFIX*music_tracks` WHERE `*PREFIX*music_artists`.`id` = `artist_id` LIMIT 1)'
+				AND   NOT EXISTS (SELECT 1 FROM `*PREFIX*music_tracks` WHERE `*PREFIX*music_artists`.`id` = `artist_id` LIMIT 1)
+				AND   NOT EXISTS (SELECT 1 FROM `*PREFIX*music_tracks` WHERE `*PREFIX*music_artists`.`id` = `composer_id` LIMIT 1)'
 		);
 	}
 

@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2023, 2024
+ * @copyright Pauli Järvinen 2023 - 2026
  */
 
 
@@ -20,11 +20,13 @@ angular.module('Music').controller('SmartListFiltersController', [
 		// directly as model as we need conversions between string and array formats
 		$scope.genres = [];
 		$scope.artists = [];
+		$scope.composers = [];
 
 		$scope.$watch('smartListParams', () => {
 			if ($scope.smartListParams !== null) {
 				$scope.genres = $scope.smartListParams.genres?.split(',') ?? [];
 				$scope.artists = $scope.smartListParams.artists?.split(',') ?? [];
+				$scope.composers = $scope.smartListParams.composers?.split(',') ?? [];
 			}
 		});
 
@@ -33,6 +35,7 @@ angular.module('Music').controller('SmartListFiltersController', [
 		$timeout(() => {
 			$('#filter-genres').chosen();
 			$('#filter-artists').chosen();
+			$('#filter-composers').chosen();
 			$('#filter-history').chosen({allow_single_deselect: true, disable_search: true, placeholder_text_single: ' '});
 			$('#filter-favorite').chosen({allow_single_deselect: true, disable_search: true, placeholder_text_single: ' '});
 			const $chosenInputs = $('#smartlist-filters .chosen-container');
@@ -67,6 +70,7 @@ angular.module('Music').controller('SmartListFiltersController', [
 			if ($scope.fieldsValid) {
 				$scope.smartListParams.genres = $scope.genres.join(',');
 				$scope.smartListParams.artists = $scope.artists.join(',');
+				$scope.smartListParams.composers = $scope.composers.join(',');
 				$scope.reloadSmartList();
 				// also navigate to the Smart Playlist view if not already open
 				$scope.navigateTo('#smartlist');
@@ -75,7 +79,7 @@ angular.module('Music').controller('SmartListFiltersController', [
 			}
 		};
 
-		// $rootScope listeneres must be unsubscribed manually when the control is destroyed
+		// $rootScope listeners must be unsubscribed manually when the control is destroyed
 		let unsubFuncs = [];
 		function subscribe(event, handler) {
 			unsubFuncs.push( $rootScope.$on(event, handler) );

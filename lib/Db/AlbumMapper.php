@@ -256,7 +256,7 @@ class AlbumMapper extends BaseMapper {
 
 	/**
 	 * returns albums of a specified artist
-	 * The artist may be an album_artist or the artist of a track
+	 * The artist may be an album_artist or the artist or composer of a track
 	 *
 	 * @param integer $artistId
 	 * @return Album[]
@@ -270,10 +270,10 @@ class AlbumMapper extends BaseMapper {
 						UNION
 					SELECT DISTINCT `track`.`album_id`
 					FROM `*PREFIX*music_tracks` `track`
-					WHERE `track`.`artist_id` = ?
+					WHERE `track`.`artist_id` = ? OR `track`.`composer_id` = ?
 				) AND `*PREFIX*music_albums`.`user_id` = ?',
 				'ORDER BY LOWER(`*PREFIX*music_albums`.`name`)');
-		$params = [$artistId, $artistId, $userId];
+		$params = [$artistId, $artistId, $artistId, $userId];
 		return $this->findEntities($sql, $params, $limit, $offset);
 	}
 
