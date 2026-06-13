@@ -39,9 +39,11 @@ export interface Track extends BaseTrack {
 	title : string;
 	album : Album;
 	artistId : number;
+	composerId : number|null;
 	number : number|null;
 	disk : number;
 	artist : Artist;
+	composer : Artist|null;
 	folder : Folder;
 	genre : Genre;
 	favorite : boolean;
@@ -224,6 +226,7 @@ export class LibraryService {
 					track.album = album;
 					track.type = 'song';
 					track.favorite = false;
+					track.composer = track.composerId ? this.getArtist(track.composerId) : null;
 					Object.defineProperty(track, 'formattedNumber', {
 						get: () => this.#formatTrackNumber(track)
 					});
@@ -250,6 +253,8 @@ export class LibraryService {
 			album : null,
 			artistId : null,
 			artist : null,
+			composerId : null,
+			composer : null,
 			folder : null,
 			genre : null,
 			number : null,
@@ -736,6 +741,9 @@ export class LibraryService {
 	}
 	findTracksByArtist(artistId : number) : Track[] {
 		return _(this.#tracksInAlphaOrder).filter(e => e.track.artistId == artistId).map('track').value();
+	}
+	findTracksByComposer(composerId : number) : Track[] {
+		return _(this.#tracksInAlphaOrder).filter(e => e.track.composerId == composerId).map('track').value();
 	}
 	collectionLoaded() : boolean {
 		return this.#collection !== null;

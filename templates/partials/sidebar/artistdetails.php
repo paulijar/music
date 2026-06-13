@@ -10,10 +10,10 @@
 		<li class="tabHeader" ng-class="{selected: selectedTab=='info'}" ng-click="selectedTab='info'">
 			<a translate>Info</a>
 		</li>
-		<li class="tabHeader" ng-class="{selected: selectedTab=='albums'}" ng-click="selectedTab='albums'">
+		<li class="tabHeader" ng-class="{selected: selectedTab=='albums'}" ng-click="selectedTab='albums'" ng-show="artist.albums.length + featuredAlbums.length > 0">
 			<a translate>Albums</a>
 		</li>
-		<li class="tabHeader" ng-class="{selected: selectedTab=='tracks'}" ng-click="selectedTab='tracks'" ng-show="artistTracks.length">
+		<li class="tabHeader" ng-class="{selected: selectedTab=='tracks'}" ng-click="selectedTab='tracks'" ng-show="artistTracks.length + composedTracks.length > 0">
 			<a translate>Tracks</a>
 		</li>
 	</ul>
@@ -22,14 +22,17 @@
 		<div class="tab" id="infoTabView" ng-show="selectedTab=='info'">
 			<h1 class="clickable" ng-show="!loading" ng-click="scrollToEntity('artist', artist)">{{artist.name}}</h1>
 			<dl id="artist-content-counts" ng-show="!loading">
-				<dt translate>Number of albums</dt>
-				<dd>{{ artist.albums.length }}</dd>
+				<dt translate ng-if="artist.albums.length">Number of albums</dt>
+				<dd ng-if="artist.albums.length">{{ artist.albums.length }}</dd>
 
-				<dt translate>Number of tracks on albums</dt>
-				<dd>{{ artistAlbumTrackCount }}</dd>
+				<dt translate ng-if="artistAlbumTrackCount">Number of tracks on albums</dt>
+				<dd ng-if="artistAlbumTrackCount">{{ artistAlbumTrackCount }}</dd>
 
-				<dt translate>Number of performed tracks</dt>
-				<dd>{{ artistTracks.length }}</dd>
+				<dt translate ng-if="artistTracks.length">Number of performed tracks</dt>
+				<dd ng-if="artistTracks.length">{{ artistTracks.length }}</dd>
+
+				<dt translate ng-if="composedTracks.length">Number of composed tracks</dt>
+				<dd ng-if="composedTracks.length">{{ composedTracks.length }}</dd>
 			</dl>
 
 			<div id="lastfm-info" ng-show="!loading && lastfmInfo">
@@ -89,10 +92,22 @@
 		</div>
 
 		<div class="tab playlist-area" id="tracksTabView" ng-show="selectedTab=='tracks'">
-			<div ng-if="!loading">
+			<div ng-if="!loading && artistTracks.length">
 				<h2 translate translate-params-artist="artist.name">Tracks by {{artist}}</h2>
 				<track-list
 					tracks="artistTracks"
+					get-track-data="getTrackData"
+					play-track="onTrackClick"
+					show-track-details="showTrackDetails"
+					get-draggable="getTrackDraggable"
+					track-id-prefix="'sidebar-track'"
+					content-type="'song'"
+				></track-list>
+			</div>
+			<div ng-if="!loading && composedTracks.length">
+				<h2 translate translate-params-artist="artist.name">Tracks composed by {{artist}}</h2>
+				<track-list
+					tracks="composedTracks"
 					get-track-data="getTrackData"
 					play-track="onTrackClick"
 					show-track-details="showTrackDetails"

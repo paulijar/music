@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2018 - 2025
+ * @copyright Pauli Järvinen 2018 - 2026
  */
 
 
@@ -170,6 +170,7 @@ angular.module('Music').controller('TrackDetailsController', [
 			case 'albumartist':		// fall through
 			case 'album_artist':	// fall through
 			case 'band':			return $scope.track.album.artist.name == tag.value;
+			case 'composer':		return $scope.track.composer?.name == tag.value;
 			default:				return false;
 			}
 		};
@@ -186,6 +187,9 @@ angular.module('Music').controller('TrackDetailsController', [
 			case 'album_artist':	// fall through
 			case 'band':
 				$rootScope.$emit('showArtistDetails', $scope.track.album.artist.id);
+				break;
+			case 'composer':
+				$rootScope.$emit('showArtistDetails', $scope.track.composerId);
 				break;
 			default:
 				// nothing

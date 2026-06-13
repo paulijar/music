@@ -198,6 +198,7 @@ class Track extends Entity {
 			'number' => $this->getNumber(),
 			'disk' => $this->getDisk(),
 			'artistId' => $this->getArtistId(),
+			'composerId' => $this->getComposerId(),
 			'length' => $this->getLength(),
 			'files' => [$this->getMimetype() => $this->getFileId()],
 			'id' => $this->getId(),

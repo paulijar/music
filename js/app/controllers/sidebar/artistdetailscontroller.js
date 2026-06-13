@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2020 - 2025
+ * @copyright Pauli Järvinen 2020 - 2026
  */
 
 
@@ -17,6 +17,7 @@ angular.module('Music').controller('ArtistDetailsController', [
 			$scope.artist = null;
 			$scope.featuredAlbums = null;
 			$scope.artistTracks = null;
+			$scope.composedTracks = null;
 			$scope.artistAlbumTrackCount = 0;
 			$scope.loading = true;
 			$scope.artAvailable = false;
@@ -38,9 +39,14 @@ angular.module('Music').controller('ArtistDetailsController', [
 				$scope.artist = libraryService.getArtist(artistId);
 				$scope.artistAlbumTrackCount = _($scope.artist.albums).map('tracks').flatten().size();
 				$scope.artistTracks = libraryService.findTracksByArtist(artistId);
+				$scope.composedTracks = libraryService.findTracksByComposer(artistId);
 				$scope.featuredAlbums = _($scope.artistTracks).map('album').uniq().difference($scope.artist.albums).value();
 
-				if ($scope.selectedTab == 'tracks' && $scope.artistTracks.length == 0) {
+				if ($scope.selectedTab == 'tracks' && $scope.artistTracks.length + $scope.composedTracks.length == 0) {
+					$scope.selectedTab = 'info';
+				}
+
+				if ($scope.selectedTab == 'albums' && $scope.artist.albums.length + $scope.featuredAlbums.length == 0) {
 					$scope.selectedTab = 'info';
 				}
 
