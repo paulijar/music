@@ -266,6 +266,7 @@ class Track extends Entity {
 			'lyrics' => $this->lyrics,
 			'mode' => null, // cbr/vbr
 			'rate' => null, // sample rate [Hz]
+			'comment' => $this->getComment() ?: null,
 			'replaygain_album_gain' => null,
 			'replaygain_album_peak' => null,
 			'replaygain_track_gain' => null,
@@ -334,7 +335,8 @@ class Track extends Entity {
 			'userRating' => $this->getRating() ?: null,
 			'averageRating' => $this->getRating() ?: null,
 			'genre' => empty($this->getGenreId()) ? null : $this->getGenreNameString($l10n),
-			'bpm' => $this->getBpm() ?: null,
+			'bpm' => $this->getBpm() ?: null, // OpenSubsonic
+			'comment' => $this->getComment() ?: null, // OpenSubsonic
 			'contributors' => $legacyCompatibilityMode ? null : $this->buildContributors(), // OpenSubsonic
 			'displayComposer' => $this->getComposerName() ?: null, // OpenSubsonic
 			'coverArt' => !$hasCoverArt ? null : 'album-' . $albumId,
