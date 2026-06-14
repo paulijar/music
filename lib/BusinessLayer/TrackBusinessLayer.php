@@ -315,7 +315,7 @@ class TrackBusinessLayer extends BusinessLayer implements IScrobbler {
 	public function addOrUpdateTrack(
 			string $title, ?int $number, ?int $discNumber, ?int $year, int $genreId, int $artistId, int $albumId,
 			int $fileId, string $mimetype, string $userId, ?int $length=null, ?int $bitrate=null,
-			?int $bpm=null, ?int $composerId=null) : Track {
+			?int $bpm=null, ?int $composerId=null, ?string $comment=null) : Track {
 		$track = new Track();
 		$track->setTitle(StringUtil::truncate($title, 256)); // some DB setups can't truncate automatically to column max size
 		$track->setNumber($number);
@@ -331,6 +331,7 @@ class TrackBusinessLayer extends BusinessLayer implements IScrobbler {
 		$track->setBitrate($bitrate);
 		$track->setBpm($bpm);
 		$track->setComposerId($composerId);
+		$track->setComment($comment);
 		$track->setDirty(0);
 		return $this->mapper->insertOrUpdate($track);
 	}

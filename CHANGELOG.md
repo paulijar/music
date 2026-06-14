@@ -8,8 +8,13 @@
   * Subsonic API: Include OpenSubsonic properties `bpm`, `displayComposer`, and `contributors[role='composer']` in all song responses @ineednousername
   * Ampache API: Include property `composer` in all song reponses
   * Advanced search: Searching tracks by composer name and BPM
+    [#90](https://github.com/nc-music/music/issues/90)
   * Smart playlists: Selecting tracks by composer
   * Viewing composer details in the artist details pane
+- Comment field support [#111](https://github.com/nc-music/music/issues/111):
+  * Track comment is stored to DB while scanning the library
+  * The `comment` property is included in all song responses in the Subsonic and Ampache APIs
+  * Advanced search can find tracks by comment
 
 ### Changed
 - Show some error details in the browser console when subscribing a podcast channel fails
