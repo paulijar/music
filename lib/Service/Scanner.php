@@ -591,8 +591,10 @@ class Scanner extends PublicEmitter {
 		$totalDbTime = 0;
 		$scanTimestamp = 0;
 		foreach ($fileIds as $fileId) {
+			// update scanning status to prevent simultaneous background cleanup execution
+			$firstRound = ($scanTimestamp === 0);
 			$scanTimestamp = (string)\microtime(true);
-			$this->cache->set($userId, 'scanning', $scanTimestamp); // update scanning status to prevent simultaneous background cleanup execution
+			$this->cache->set($userId, 'scanning', $scanTimestamp, !$firstRound);
 
 			$file = $libraryRoot->getById($fileId)[0] ?? null;
 			if ($file != null && !$this->librarySettings->pathBelongsToMusicLibrary($file->getPath(), $userId)) {

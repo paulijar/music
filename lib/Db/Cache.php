@@ -41,23 +41,34 @@ class Cache {
 	 * @param string $userId
 	 * @param string $key
 	 * @param string $data
+	 * @return int number of updated rows
 	 */
-	public function update(string $userId, string $key, string $data) : void {
+	public function update(string $userId, string $key, string $data) : int {
 		$sql = 'UPDATE `*PREFIX*music_cache` SET `data` = ?
 				WHERE `user_id` = ? AND `key` = ?';
-		$this->executeStatement($sql, [$data, $userId, $key]);
+		return $this->executeStatement($sql, [$data, $userId, $key]);
 	}
 
 	/**
+	 * Add an entry or update it if it already exists
 	 * @param string $userId
 	 * @param string $key
 	 * @param string $data
+	 * @param bool $probablyExists True if the caller thinks that a matching entry already exists. This is just a hint to
+	 * 								optimize the number of queries but the method will work correctly regardless of the value.
 	 */
-	public function set(string $userId, string $key, string $data) : void {
-		try {
-			$this->add($userId, $key, $data);
-		} catch (UniqueConstraintViolationException $e) {
-			$this->update($userId, $key, $data);
+	public function set(string $userId, string $key, string $data, bool $probablyExists = false) : void {
+		$updated = 0;
+		if ($probablyExists) {
+			$updated = $this->update($userId, $key, $data);
+		}
+
+		if ($updated === 0) {
+			try {
+				$this->add($userId, $key, $data);
+			} catch (UniqueConstraintViolationException $e) {
+				$this->update($userId, $key, $data);
+			}
 		}
 	}
 

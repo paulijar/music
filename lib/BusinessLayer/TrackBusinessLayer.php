@@ -333,7 +333,7 @@ class TrackBusinessLayer extends BusinessLayer implements IScrobbler {
 		$track->setComposerId($composerId);
 		$track->setComment($comment);
 		$track->setDirty(0);
-		return $this->mapper->insertOrUpdate($track);
+		return $this->mapper->updateOrInsert($track);
 	}
 
 	/**

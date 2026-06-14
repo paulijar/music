@@ -111,7 +111,7 @@ class TrackBusinessLayerTest extends \PHPUnit\Framework\TestCase {
 		$track->setId(1);
 
 		$this->mapper->expects($this->once())
-			->method('insertOrUpdate')
+			->method('updateOrInsert')
 			->will($this->returnValue($track));
 
 		$result = $this->trackBusinessLayer->addOrUpdateTrack('test', null, null, null, 1, 1, 1, $fileId, 'audio/mpeg', $this->userId);
@@ -122,7 +122,7 @@ class TrackBusinessLayerTest extends \PHPUnit\Framework\TestCase {
 		$fileId = 2;
 
 		$this->mapper->expects($this->once())
-			->method('insertOrUpdate')
+			->method('updateOrInsert')
 			->with($this->callback(function (Track $track) {
 				return $track->getBpm() === 120
 					&& $track->getComposerId() === 42;
@@ -143,7 +143,7 @@ class TrackBusinessLayerTest extends \PHPUnit\Framework\TestCase {
 		$fileId = 2;
 
 		$this->mapper->expects($this->once())
-			->method('insertOrUpdate')
+			->method('updateOrInsert')
 			->with($this->callback(function (Track $track) {
 				return $track->getBpm() === null
 					&& $track->getComposerId() === null;
