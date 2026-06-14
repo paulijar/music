@@ -121,7 +121,7 @@ class AmpacheUserMapper {
 		$sql = 'INSERT INTO `*PREFIX*music_ampache_users`
 				(`user_id`, `hash`, `description`) VALUES (?, ?, ?)';
 		$params = [$userId, $hash, $description];
-		$affectedRows = $this->db->executeUpdate($sql, $params);
+		$affectedRows = $this->db->executeStatement($sql, $params);
 
 		return ($affectedRows > 0) ? (int)$this->db->lastInsertId('*PREFIX*music_ampache_users') : null;
 	}
@@ -130,7 +130,7 @@ class AmpacheUserMapper {
 		$sql = 'DELETE FROM `*PREFIX*music_ampache_users`
 				WHERE `user_id` = ? AND `id` = ?';
 		$params = [$userId, $id];
-		$this->db->executeUpdate($sql, $params);
+		$this->db->executeStatement($sql, $params);
 	}
 
 	public function getAll(string $userId) : array {

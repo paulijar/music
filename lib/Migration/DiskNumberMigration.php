@@ -80,7 +80,7 @@ class DiskNumberMigration implements IRepairStep {
 				'              FROM `*PREFIX*music_albums` '.
 				'              WHERE `*PREFIX*music_tracks`.`album_id` = `*PREFIX*music_albums`.`id`) '.
 				'WHERE `disk` IS NULL';
-		return $this->db->executeUpdate($sql);
+		return $this->db->executeStatement($sql);
 	}
 
 	/**
@@ -130,7 +130,7 @@ class DiskNumberMigration implements IRepairStep {
 		$sql = 'UPDATE `*PREFIX*music_tracks` '.
 				'SET `album_id` = ? '.
 				'WHERE `album_id` = ?';
-		return $this->db->executeUpdate($sql, [$destinationAlbum, $sourceAlbum]);
+		return $this->db->executeStatement($sql, [$destinationAlbum, $sourceAlbum]);
 	}
 
 	/**
@@ -142,7 +142,7 @@ class DiskNumberMigration implements IRepairStep {
 		if ($count > 0) {
 			$sql = 'DELETE FROM `*PREFIX*music_albums` '.
 					'WHERE `id` IN '. $this->questionMarks($count);
-			$count = $this->db->executeUpdate($sql, $this->obsoleteAlbums);
+			$count = $this->db->executeStatement($sql, $this->obsoleteAlbums);
 		}
 
 		return $count;
@@ -164,7 +164,7 @@ class DiskNumberMigration implements IRepairStep {
 			$hash = \hash('md5', "$lowerName|$artist");
 
 			try {
-				$affectedRows += $this->db->executeUpdate(
+				$affectedRows += $this->db->executeStatement(
 						'UPDATE `*PREFIX*music_albums` SET `hash` = ? WHERE `id` = ?',
 						[$hash, $row['id']]
 				);
@@ -188,11 +188,11 @@ class DiskNumberMigration implements IRepairStep {
 		if ($count > 0) {
 			$sql = 'DELETE FROM `*PREFIX*music_albums` '.
 					'WHERE `id` IN '. $this->questionMarks($count);
-			$count = $this->db->executeUpdate($sql, $this->mergeFailureAlbums);
+			$count = $this->db->executeStatement($sql, $this->mergeFailureAlbums);
 
 			$sql = 'DELETE FROM `*PREFIX*music_tracks` '.
 					'WHERE `album_id` IN '. $this->questionMarks($count);
-			$this->db->executeUpdate($sql, $this->mergeFailureAlbums);
+			$this->db->executeStatement($sql, $this->mergeFailureAlbums);
 		}
 
 		return $count;
@@ -203,7 +203,7 @@ class DiskNumberMigration implements IRepairStep {
 	 */
 	private function removeDiskNumbersFromAlbums() : int {
 		$sql = 'UPDATE `*PREFIX*music_albums` SET `disk` = NULL';
-		return $this->db->executeUpdate($sql);
+		return $this->db->executeStatement($sql);
 	}
 
 	/**

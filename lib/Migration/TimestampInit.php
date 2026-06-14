@@ -51,11 +51,11 @@ class TimestampInit implements IRepairStep {
 
 	private function setCreated(string $table, string $timestamp) : int {
 		$sql = "UPDATE `$table` SET `created` = ? WHERE `created` IS NULL";
-		return $this->db->executeUpdate($sql, [$timestamp]);
+		return $this->db->executeStatement($sql, [$timestamp]);
 	}
 
 	private function setUpdated(string $table, string $timestamp) : int {
 		$sql = "UPDATE `$table` SET `updated` = ? WHERE `updated` IS NULL";
-		return $this->db->executeUpdate($sql, [$timestamp]);
+		return $this->db->executeStatement($sql, [$timestamp]);
 	}
 }

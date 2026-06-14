@@ -33,7 +33,7 @@ class Cache {
 	public function add(string $userId, string $key, string $data) : int {
 		$sql = 'INSERT INTO `*PREFIX*music_cache`
 				(`user_id`, `key`, `data`) VALUES (?, ?, ?)';
-		$this->executeUpdate($sql, [$userId, $key, $data]);
+		$this->executeStatement($sql, [$userId, $key, $data]);
 		return $this->db->lastInsertId('*PREFIX*music_cache');
 	}
 
@@ -45,7 +45,7 @@ class Cache {
 	public function update(string $userId, string $key, string $data) : void {
 		$sql = 'UPDATE `*PREFIX*music_cache` SET `data` = ?
 				WHERE `user_id` = ? AND `key` = ?';
-		$this->executeUpdate($sql, [$data, $userId, $key]);
+		$this->executeStatement($sql, [$data, $userId, $key]);
 	}
 
 	/**
@@ -89,7 +89,7 @@ class Cache {
 			$sql .= ' WHERE ' . \implode(' AND ', $conditions);
 		}
 
-		$this->executeUpdate($sql, $params);
+		$this->executeStatement($sql, $params);
 	}
 
 	/**
@@ -169,9 +169,9 @@ class Cache {
 		return $id;
 	}
 
-	private function executeUpdate(string $sql, array $params) : int {
+	private function executeStatement(string $sql, array $params) : int {
 		try {
-			return $this->db->executeUpdate($sql, $params);
+			return $this->db->executeStatement($sql, $params);
 		} catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e) {
 			throw new UniqueConstraintViolationException($e->getMessage(), $e->getCode(), $e);
 		} catch (\OCP\DB\Exception $e) {

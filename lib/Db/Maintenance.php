@@ -42,7 +42,7 @@ class Maintenance {
 		foreach ($rows as $row) {
 			$timestamp = (float)$row['data'];
 			if ($now - $timestamp > 60) {
-				$modRows += $this->db->executeUpdate(
+				$modRows += $this->db->executeStatement(
 					'DELETE FROM `*PREFIX*music_cache` WHERE `key` = \'scanning\' AND `user_id` = ?',
 					[$row['user_id']]
 				);
@@ -66,7 +66,7 @@ class Maintenance {
 	 * Remove cover_file_id from album if the corresponding file does not exist
 	 */
 	private function removeObsoleteCoverImagesFromTable(string $table) : int {
-		return $this->db->executeUpdate(
+		return $this->db->executeStatement(
 			"UPDATE `*PREFIX*$table` SET `cover_file_id` = NULL
 			WHERE `cover_file_id` IS NOT NULL AND `cover_file_id` IN (
 				SELECT `cover_file_id` FROM (
@@ -107,7 +107,7 @@ class Maintenance {
 		$tgtTable = '*PREFIX*' . $tgtTable;
 		$refTable = '*PREFIX*' . $refTable;
 
-		return $this->db->executeUpdate(
+		return $this->db->executeStatement(
 			"DELETE FROM `$tgtTable` WHERE `id` IN (
 				SELECT `id` FROM (
 					SELECT `$tgtTable`.`id`
@@ -168,7 +168,7 @@ class Maintenance {
 	private function removeObsoleteArtists() : int {
 		// Note: This originally used the NOT IN operation but that was terribly inefficient on PostgreSQL,
 		// see https://github.com/owncloud/music/issues/997
-		return $this->db->executeUpdate(
+		return $this->db->executeStatement(
 			'DELETE FROM `*PREFIX*music_artists`
 				WHERE NOT EXISTS (SELECT 1 FROM `*PREFIX*music_albums` WHERE `*PREFIX*music_artists`.`id` = `album_artist_id` LIMIT 1)
 				AND   NOT EXISTS (SELECT 1 FROM `*PREFIX*music_tracks` WHERE `*PREFIX*music_artists`.`id` = `artist_id` LIMIT 1)
@@ -255,8 +255,7 @@ class Maintenance {
 			$sql .=  ' WHERE `user_id` = ?';
 			$params[] = $userId;
 		}
-		$this->db->executeUpdate($sql, $params);
-
+		$this->db->executeStatement($sql, $params);
 	}
 
 	/**
