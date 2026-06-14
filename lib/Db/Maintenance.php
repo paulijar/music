@@ -37,10 +37,10 @@ class Maintenance {
 		$rows = $result->fetchAll();
 		$result->closeCursor();
 
-		$now = \time();
+		$now = \microtime(true);
 		$modRows = 0;
 		foreach ($rows as $row) {
-			$timestamp = (int)$row['data'];
+			$timestamp = (float)$row['data'];
 			if ($now - $timestamp > 60) {
 				$modRows += $this->db->executeUpdate(
 					'DELETE FROM `*PREFIX*music_cache` WHERE `key` = \'scanning\' AND `user_id` = ?',

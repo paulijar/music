@@ -66,22 +66,29 @@ class Cache {
 	 *
 	 * @param string $userId User to target, omit to target all users
 	 * @param string $key Key to target, omit to target all keys
+	 * @param string $data Data to target, omit to target all data values
 	 */
-	public function remove(?string $userId = null, ?string $key = null) : void {
+	public function remove(?string $userId = null, ?string $key = null, ?string $data = null) : void {
 		$sql = 'DELETE FROM `*PREFIX*music_cache`';
+		$conditions = [];
 		$params = [];
-		if ($userId !== null) {
-			$sql .= ' WHERE `user_id` = ?';
-			$params[] = $userId;
 
-			if ($key !== null) {
-				$sql .= ' AND `key` = ?';
-				$params[] = $key;
-			}
-		} elseif ($key !== null) {
-			$sql .= ' WHERE `key` = ?';
+		if ($userId !== null) {
+			$conditions[] = '`user_id` = ?';
+			$params[] = $userId;
+		}
+		if ($key !== null) {
+			$conditions[] = '`key` = ?';
 			$params[] = $key;
 		}
+		if ($data !== null) {
+			$conditions[] = '`data` = ?';
+			$params[] = $data;
+		}
+		if (!empty($conditions)) {
+			$sql .= ' WHERE ' . \implode(' AND ', $conditions);
+		}
+
 		$this->executeUpdate($sql, $params);
 	}
 
