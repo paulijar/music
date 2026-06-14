@@ -21,6 +21,7 @@
   [#132](https://github.com/nc-music/music/issues/132)
 - Avoid PostgreSQL logging tons of unique constraint violations on typical library scan
   [owncloud/music#1135](https://github.com/owncloud/music/issues/1135)
+- In the track details pane, collapse the more exotic tags by default and show them by clicking "Show more…"
 
 ### Fixed
 

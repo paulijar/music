@@ -158,9 +158,25 @@ angular.module('Music').controller('TrackDetailsController', [
 			case 'track':			return 7;
 			case 'totaltracks':		return 8;
 			case 'tracktotal':		return 8;
-			case 'comment':			return 100;
-			default:				return 10;
+			case 'genre':			return 9;
+			case 'year':			return 10;
+			case 'publisher':		return 11;
+			case 'comment':			return 12;
+			default:				return 100;
 			}
+		};
+
+		$scope.tagAlwaysShown = function(tag) {
+			// Show only the most important tags by default and hide the rest behind a "show more" button
+			return tag.value && $scope.tagRank(tag) < 100;
+		};
+
+		$scope.tagShownWhenExpanded = function(tag) {
+			return tag.value && $scope.tagRank(tag) >= 100;
+		};
+
+		$scope.anyCollapsibleTags = function(tags) {
+			return _.some(tags, (tag) => $scope.tagShownWhenExpanded(tag));
 		};
 
 		$scope.tagHasDetails = function(tag) {

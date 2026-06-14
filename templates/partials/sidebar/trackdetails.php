@@ -23,13 +23,20 @@
 
 		<div class="tab" id="generalTabView" ng-show="selectedTab=='general'">
 			<dl class="tags">
-				<dt ng-repeat-start="tag in details.tags | orderBy:tagRank" ng-if="tag.value">{{ formatDetailName(tag.key) }}</dt>
-				<dd ng-repeat-end ng-show="tag.value" ng-class="{clickable: tagHasDetails(tag)}" ng-click="showTagDetails(tag)"
+				<dt ng-repeat-start="tag in details.tags | orderBy:tagRank | filter:tagAlwaysShown">{{ formatDetailName(tag.key) }}</dt>
+				<dd ng-repeat-end ng-class="{clickable: tagHasDetails(tag)}" ng-click="showTagDetails(tag)"
 				>{{ formatDetailValue(tag.value) }}<button class="icon-info" ng-if="tagHasDetails(tag)"></button></dd>
 	
 				<dt ng-if="details.length">length</dt>
 				<dd ng-if="details.length">{{ details.length | playTime }}</dd>
 			</dl>
+			<p class="show-more-less" ng-if-start="anyCollapsibleTags(details.tags)" ng-init="collapsed = true" ng-click="collapsed = false" ng-show="collapsed" translate>Show more…</p>
+			<dl class="tags" ng-show="!collapsed">
+				<dt ng-repeat-start="tag in details.tags | orderBy:tagRank | filter:tagShownWhenExpanded">{{ formatDetailName(tag.key) }}</dt>
+				<dd ng-repeat-end ng-class="{clickable: tagHasDetails(tag)}" ng-click="showTagDetails(tag)"
+				>{{ formatDetailValue(tag.value) }}<button class="icon-info" ng-if="tagHasDetails(tag)"></button></dd>
+			</dl>
+			<p class="show-more-less" ng-if-end ng-show="!collapsed" ng-click="collapsed = true" translate>Show less …</p>
 		</div>
 
 		<div class="tab" id="lyricsTabView" ng-show="selectedTab=='lyrics'">

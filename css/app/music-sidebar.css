@@ -131,6 +131,14 @@
 	padding-inline-end: 0;
 }
 
+#app-sidebar .show-more-less {
+	text-align: center;
+	width: 100%;
+	opacity: 0.5;
+	cursor: pointer;
+	font-style: italic;
+}
+
 #app-sidebar .clickable button {
 	border: none;
 	background-color: transparent;
