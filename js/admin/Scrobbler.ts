@@ -4,6 +4,8 @@ import { MusicAdminSection } from './AdminSection';
 declare var OCP : any;
 declare function t(app : string, text : string, vars?: Object) : string;
 
+const SETTINGS_ENDPOINT_PREFIX = 'apps/music/api/settings/scrobbler_credentials/'
+
 class ScrobblerAdmin implements MusicAdminSection {
 
 	#identifier: string;
@@ -19,11 +21,9 @@ class ScrobblerAdmin implements MusicAdminSection {
 	}
 
 	mount(element: HTMLElement) {
-		const containerEl = document.createElement('div');
-		containerEl.classList.add('settings-section');
 		const formEl = document.createElement('form');
 		formEl.classList.add('scrobbler', this.#identifier);
-		containerEl.insertAdjacentElement('afterbegin', formEl);
+		formEl.name = this.#identifier;
 
 		const keyLabel = escape(t('music', 'API Key'));
 		const secretLabel = escape(t('music', 'API Secret'));
@@ -41,10 +41,13 @@ class ScrobblerAdmin implements MusicAdminSection {
 				<input name="api_secret" aria-label="${serviceLabel} ${secretLabel}" id="${identifierEsc}_api_secret" type="password" value="${escape(this.#api_secret)}" />
 			</div>
 			<div class="field">
-				<button type="submit" title="${escape(t('music', 'Update API credentials for {service}', { service: this.#name }))}">${escape(t('music', 'Save'))}</button>
+				<button disabled name="submit_button" type="submit" title="${escape(t('music', 'Update API credentials for {service}', { service: this.#name }))}">${escape(t('music', 'Save'))}</button>
 			</div>
 		</fieldset>
 `);
+		const containerEl = document.createElement('div');
+		containerEl.classList.add('settings-section');
+		containerEl.insertAdjacentElement('afterbegin', formEl);
 		element.appendChild(containerEl);
 		this.#attachListener(formEl);
 	}
@@ -52,53 +55,43 @@ class ScrobblerAdmin implements MusicAdminSection {
 	#attachListener(formEl: HTMLFormElement) {
 		const apiKeyEl = <HTMLInputElement> formEl.elements.namedItem('api_key');
 		const apiSecretEl = <HTMLInputElement> formEl.elements.namedItem('api_secret');
+		const submitButton = <HTMLButtonElement> formEl.elements.namedItem('submit_button');
 
-		formEl.addEventListener('submit', function (e: SubmitEvent) {
+		formEl.addEventListener('submit', async (e: SubmitEvent) => {
 			e.preventDefault();
+			if (submitButton.disabled) {
+				return false;
+			}
 
-			[...formEl.querySelectorAll('input:invalid')].map(removeErrorState);
-			// Update the api key, then update the api secret if the key update succeeded.
-			OCP.AppConfig.setValue('music', apiKeyEl.id, apiKeyEl.value, {
-				success: () => {
-					OCP.AppConfig.setValue('music', apiSecretEl.id, apiSecretEl.value, {
-						error: (err: any) => {
-							setErrorState(apiSecretEl, parseErr(err));
-						}
-					});
+			const url = OC.generateUrl(SETTINGS_ENDPOINT_PREFIX + formEl.name);
+			const result = await fetch(url, {
+				method: 'POST',
+				headers: {
+					requesttoken: OC.requestToken,
+					'content-type': 'application/json'
 				},
-				error: (err: any) => {
-					setErrorState(apiKeyEl, parseErr(err));
-				}
+				body: JSON.stringify({
+					apiKey: apiKeyEl.value,
+					apiSecret: apiSecretEl.value
+				})
 			});
+
+			if (!result.ok) {
+				OC.Notification.show((await result.json()).error, {type: 'toast-error'});
+				return;
+			}
+
+			OC.Notification.showTemporary(`Updated ${this.#name} credentials!`, {type: 'toast-success'});
+			this.#api_key = apiKeyEl.value;
+			this.#api_secret = apiSecretEl.value;
+			submitButton.disabled = true;
 		});
 
-		// reset validation state upon receiving new input
-		formEl.addEventListener('input', (e: InputEvent) => removeErrorState((<HTMLInputElement> e.target)));
+		// disable the submit button when form inputs match initial values
+		formEl.addEventListener('input', () => {
+			submitButton.disabled = apiKeyEl.value === this.#api_key && apiSecretEl.value === this.#api_secret
+        });
 	}
-}
-
-function setErrorState(el: HTMLInputElement, message: string): void {
-	el.setCustomValidity(message);
-	el.reportValidity();
-}
-
-function removeErrorState(el: HTMLInputElement): void {
-	el.setCustomValidity('');
-}
-
-/**
- * Parse error from OCP.AppConfig.setValue
- *
- * Older versions of NextCloud use jQuery, which returns an XML document.
- * Depending on the nature of the error, the relevant message may not be present
- * on the data node. In that case, use a generic message.
- * Newer versions use Axios, which returns a plain object
- */
-function parseErr(err: {responseXML: XMLDocument}|{message: string}): string {
-	if ('responseXML' in err) {
-		return err.responseXML.querySelector('data message')?.textContent || t('music', 'Unknown error, please refer to the Nextcloud log');
-	}
-	return err.message;
 }
 
 export default class ScrobblersAdmin implements MusicAdminSection {

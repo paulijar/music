@@ -144,6 +144,7 @@ return ['routes' => [
 	['name' => 'setting#createUserKey',		'url' => '/api/settings/user/keys',					'verb' => 'POST'],
 	['name' => 'setting#removeUserKey',		'url' => '/api/settings/user/keys/{id}',			'verb' => 'DELETE'],
 	['name' => 'setting#createUserKeyCors',	'url' => '/api/settings/userkey/generate',			'verb' => 'POST'], # external API, keep inconsistent url to maintain compatibility
+	['name' => 'setting#setScrobblerCredentials', 'url' => '/api/settings/scrobbler_credentials/{serviceIdentifier}', 'verb' => 'POST'],
 
 	// Ampache API https://ampache.org/api/
 	['name' => 'ampache#xmlApi',			'url' => '/ampache/server/xml.server.php',	'verb' => 'GET'],

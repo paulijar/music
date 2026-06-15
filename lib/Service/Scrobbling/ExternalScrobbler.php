@@ -93,11 +93,25 @@ class ExternalScrobbler implements IScrobbler {
 	}
 
 	public function getApiKey() : ?string {
-		return $this->config->getAppValue('music', "{$this->identifier}_api_key");
+		return $this->config->getSystemValue("music.{$this->identifier}_api_key", null);
+	}
+
+	/**
+	 * @throws \OCP\HintException if config.php isn't writable
+	 */
+	public function setApiKey(string $apiKey) : void {
+		$this->config->setSystemValue("music.{$this->identifier}_api_key", $apiKey);
 	}
 
 	public function getApiSecret() : ?string {
-		return $this->config->getAppValue('music', "{$this->identifier}_api_secret");
+		return $this->config->getSystemValue("music.{$this->identifier}_api_secret", null);
+	}
+
+	/**
+	 * @throws \OCP\HintException if config.php isn't writable
+	 */
+	public function setApiSecret(string $apiSecret) : void {
+		$this->config->setSystemValue("music.{$this->identifier}_api_secret", $apiSecret);
 	}
 
 	public function recordTrackPlayed(Track $track, ?\DateTime $timeOfPlay = null) : void {
