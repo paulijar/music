@@ -94,7 +94,7 @@ angular.module('Music').controller('ArtistDetailsController', [
 
 								const mbid = result.artist.mbid;
 								if (mbid) {
-									$scope.mbid = `<a target="_blank" href="https://musicbrainz.org/artist/${mbid}">${mbid}</a>`;
+									$scope.mbid = $scope.mbidLink(mbid);
 								}
 							}
 

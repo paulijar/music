@@ -74,7 +74,7 @@ angular.module('Music').controller('AlbumDetailsController', [
 
 									const mbid = result.album.mbid;
 									if (mbid) {
-										$scope.mbid = `<a target="_blank" href="https://musicbrainz.org/release/${mbid}">${mbid}</a>`;
+										$scope.mbid = $scope.mbidLink(mbid);
 									}
 
 									if (!$scope.album.cover && 'image' in result.album) {
