@@ -21,11 +21,11 @@
 
 	<div class="tabsContainer" ng-show="details">
 
-		<div class="tab" id="generalTabView" ng-show="selectedTab=='general'">
+		<div class="tab" id="general-tab-view" ng-show="selectedTab=='general'">
 			<dl class="tags">
 				<dt ng-repeat-start="tag in details.tags | orderBy:tagRank | filter:tagAlwaysShown">{{ formatDetailName(tag.key) }}</dt>
 				<dd ng-repeat-end ng-class="{clickable: tagHasDetails(tag)}" ng-click="showTagDetails(tag)"
-				>{{ formatDetailValue(tag.value) }}<button class="icon-info" ng-if="tagHasDetails(tag)"></button></dd>
+				>{{ formatDetailValue(tag.value, tag.key) }}<button class="icon-info" ng-if="tagHasDetails(tag)"></button></dd>
 	
 				<dt ng-if="details.length">length</dt>
 				<dd ng-if="details.length">{{ details.length | playTime }}</dd>
@@ -33,19 +33,19 @@
 			<p class="show-more-less" ng-if-start="anyCollapsibleTags(details.tags)" ng-init="collapsed = true" ng-click="collapsed = false" ng-show="collapsed" translate>Show more…</p>
 			<dl class="tags" ng-show="!collapsed">
 				<dt ng-repeat-start="tag in details.tags | orderBy:tagRank | filter:tagShownWhenExpanded">{{ formatDetailName(tag.key) }}</dt>
-				<dd ng-repeat-end ng-class="{clickable: tagHasDetails(tag)}" ng-click="showTagDetails(tag)"
-				>{{ formatDetailValue(tag.value) }}<button class="icon-info" ng-if="tagHasDetails(tag)"></button></dd>
+				<dd ng-repeat-end ng-class="{clickable: tagHasDetails(tag)}" ng-click="showTagDetails(tag)" ng-bind-html="formatDetailValue(tag.value, tag.key)"
+				><button class="icon-info" ng-if="tagHasDetails(tag)"></button></dd>
 			</dl>
 			<p class="show-more-less" ng-if-end ng-show="!collapsed" ng-click="collapsed = true" translate>Show less …</p>
 		</div>
 
-		<div class="tab" id="lyricsTabView" ng-show="selectedTab=='lyrics'">
+		<div class="tab" id="lyrics-tab-view" ng-show="selectedTab=='lyrics'">
 			<div class="lyrics" ng-if="!details.lyrics.synced">{{ formatDetailValue(details.lyrics.unsynced) }}</div>
 			<div class="lyrics" ng-if="details.lyrics.synced"
 				ng-repeat="row in details.lyrics.synced" data-timestamp="{{row.time}}">{{row.text}}</div>
 		</div>
 
-		<div class="tab" id="technicalTabView" ng-show="selectedTab=='technical'">
+		<div class="tab" id="technical-tab-view" ng-show="selectedTab=='technical'">
 			<dl class="fileinfo">
 				<dt ng-repeat-start="info in details.fileinfo">{{ formatDetailName(info.key) }}</dt>
 				<dd title="{{ valueTooltip(info.value, info.key) }}" ng-repeat-end>{{ formatDetailValue(info.value, info.key) }}</dd>

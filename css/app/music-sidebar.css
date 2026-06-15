@@ -194,7 +194,7 @@
 	margin-bottom: 32px;
 }
 
-#app-sidebar #lyricsTabView {
+#app-sidebar #lyrics-tab-view {
 	width: 100%;
 }
 
@@ -301,6 +301,7 @@
 	cursor: pointer;
 }
 
+#app-sidebar #general-tab-view a,
 #app-sidebar #lastfm-info a,
 #app-sidebar #podcast-details a,
 #app-sidebar #podcast-details a *,
@@ -311,6 +312,7 @@
 	display: inline-block;
 }
 
+#app-sidebar #general-tab-view a:after,
 #app-sidebar #lastfm-info a:after,
 #app-sidebar #podcast-details a:after,
 #app-sidebar #radio-station-details .tabsContainer a:after,

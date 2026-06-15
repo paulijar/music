@@ -110,6 +110,8 @@ angular.module('Music').controller('TrackDetailsController', [
 				return (value/1000).toFixed(1) + ' kHz';
 			} else if (key == 'bitrate') {
 				return (value/1000).toFixed(0) + ' kbps';
+			} else if (key?.match(/^MusicBrainz .* Id$/)) {
+				return $scope.mbidLink(value);
 			} else if (isFloat(value)) {
 				// limit the number of shown digits on floating point numbers
 				return Number(value.toPrecision(6));
