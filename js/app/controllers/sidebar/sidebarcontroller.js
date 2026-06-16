@@ -173,7 +173,7 @@ angular.module('Music').controller('SidebarController', [
 
 		$scope.mbidLink = function(mbid) {
 			return `<a target="_blank" href="https://musicbrainz.org/mbid/${mbid}">${mbid}</a>`;
-		}
+		};
 
 		$scope.setLastfmPlaceholder = function(trackTitle, artistName) {
 			$scope.lastfmTrack = trackTitle;
