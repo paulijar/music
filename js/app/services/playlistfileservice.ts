@@ -12,14 +12,7 @@ import * as ng from 'angular';
 import { gettextCatalog } from 'angular-gettext';
 import { MusicRootScope } from 'app/config/musicrootscope';
 import { IService } from 'restangular';
-import { LibraryService } from './libraryservice';
-
-interface Playlist {
-	id : number;
-	name : string;
-	tracks : any[];
-	busy : boolean;
-}
+import { LibraryService, Playlist } from './libraryservice';
 
 ng.module('Music').service('playlistFileService', [
 '$rootScope', '$q', 'libraryService', 'gettextCatalog', 'Restangular',

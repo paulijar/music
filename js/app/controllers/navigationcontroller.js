@@ -12,10 +12,10 @@
 
 
 angular.module('Music').controller('NavigationController', [
-	'$rootScope', '$scope', '$document', 'Restangular', '$timeout', '$location',
-	'playQueueService', 'playlistFileService', 'podcastService', 'libraryService', 'gettextCatalog',
-	function ($rootScope, $scope, $document, Restangular, $timeout, $location,
-			playQueueService, playlistFileService, podcastService, libraryService, gettextCatalog) {
+	'$rootScope', '$scope', '$timeout', '$location', 'gettextCatalog',
+	'playQueueService', 'playlistService', 'playlistFileService', 'podcastService', 'libraryService',
+	function ($rootScope, $scope, $timeout, $location, gettextCatalog,
+			playQueueService, playlistService, playlistFileService, podcastService, libraryService) {
 
 		$rootScope.loading = true;
 
@@ -43,8 +43,10 @@ angular.module('Music').controller('NavigationController', [
 		// Commit creating playlist
 		$scope.commitCreate = function() {
 			if ($scope.newPlaylistName.length > 0) {
-				createPlaylist($scope.newPlaylistName, $scope.newPlaylistTrackIds);
-				$scope.closeCreate();
+				playlistService.createPlaylist($scope.newPlaylistName, $scope.newPlaylistTrackIds).then((newPlaylist) => {
+					$scope.closeCreate();
+					$scope.navigateTo(`#playlist/${newPlaylist.id}`);
+				});
 			}
 		};
 
@@ -74,8 +76,8 @@ angular.module('Music').controller('NavigationController', [
 				$scope.showSearch = false;
 			}
 		});
-		
-		/** 
+
+		/**
 		 * Catch ctrl+f except when a view not supporting search is active or the search input is already
 		 * focused. In the latter case, let the cloud core and/or browser do its default handling.
 		 * Note: This event is bound in the *capturing* phase instead of the typical *bubbling* phase.
@@ -109,18 +111,17 @@ angular.module('Music').controller('NavigationController', [
 			// Move the focus to the input field. This has to be made asynchronously
 			// because the field does not exist yet, it is added by ng-if binding
 			// later during this digest loop.
-			$timeout(() => $('.edit-list').focus());
+			$timeout(() => $('.edit-list').trigger('focus'));
 		};
 
 		// Commit renaming of playlist
 		$scope.commitEdit = function(playlist) {
 			if (playlist.name.length > 0) {
-				Restangular.one('playlists', playlist.id).customPUT({name: playlist.name}).then(function (result) {
-					playlist.updated = result.updated;
+				playlistService.updatePlaylistName(playlist).then(() => {
+					$scope.showEditForm = null;
+					libraryService.sortPlaylists();
+					$scope.navigateTo(`#playlist/${playlist.id}`);
 				});
-				$scope.showEditForm = null;
-				libraryService.sortPlaylists();
-				$timeout(() => $scope.navigateTo(`#playlist/${playlist.id}`));
 			}
 		};
 
@@ -148,18 +149,20 @@ angular.module('Music').controller('NavigationController', [
 		// Remove playlist
 		$scope.remove = function(playlist) {
 			OC.dialogs.confirm(
-					gettextCatalog.getString('Are you sure to remove the playlist "{{ name }}"?', { name: playlist.name }),
-					gettextCatalog.getString('Remove playlist'),
-					function(confirmed) {
-						if (confirmed) {
-							Restangular.one('playlists', playlist.id).remove();
-
-							// remove the element also from the AngularJS list
-							libraryService.removePlaylist(playlist);
-						}
-					},
-					true
-				);
+				gettextCatalog.getString('Are you sure to remove the playlist "{{ name }}"?', { name: playlist.name }),
+				gettextCatalog.getString('Remove playlist'),
+				function(confirmed) {
+					if (confirmed) {
+						playlistService.deletePlaylist(playlist).then(() => {
+							// if the currently shown view is the playlist being removed, navigate away from it
+							if ($rootScope.currentView == '#/playlist/' + playlist.id) {
+								$scope.navigateTo('#/');
+							}
+						});
+					}
+				},
+				true
+			);
 		};
 
 		// Export playlist to file
@@ -256,11 +259,13 @@ angular.module('Music').controller('NavigationController', [
 
 		$scope.saveSmartList = function() {
 			const smartlist = libraryService.getSmartList();
-			createPlaylist(
+			playlistService.createPlaylist(
 				gettextCatalog.getString('Generated {{ datetime }}', { datetime: OCA.Music.Utils.formatDateTime(smartlist.created) }),
 				_.map(smartlist.tracks, 'track.id'),
 				gettextCatalog.getString('Used filters: {{ params }}', { params: angular.toJson(_.omitBy(smartlist.params, _.isNil), 2) })
-			);
+			).then((newPlaylist) => {
+				$scope.navigateTo(`#playlist/${newPlaylist.id}`);
+			});
 		};
 
 		// Play/pause playlist
@@ -392,18 +397,6 @@ angular.module('Music').controller('NavigationController', [
 			}
 		}
 
-		function createPlaylist(name, trackIds, comment=undefined) {
-			const args = {
-				name: name,
-				trackIds: trackIds.join(','),
-				comment: comment
-			};
-			Restangular.all('playlists').post(args).then(function(playlist) {
-				libraryService.addPlaylist(playlist);
-				$timeout(() => $scope.navigateTo(`#playlist/${playlist.id}`));
-			});
-		}
-
 		function trackIdsFromAlbum(albumId) {
 			let album = libraryService.getAlbum(albumId);
 			return _.map(album.tracks, 'id');
@@ -437,21 +430,7 @@ angular.module('Music').controller('NavigationController', [
 				$scope.startCreate();
 			}
 			else {
-				_.forEach(trackIds, function(trackId) {
-					libraryService.addToPlaylist(playlist.id, trackId);
-				});
-
-				// Update the currently playing list if necessary
-				if ($rootScope.playingView == '#/playlist/' + playlist.id) {
-					let newTracks = _.map(trackIds, function(trackId) {
-						return { track: libraryService.getTrack(trackId) };
-					});
-					playQueueService.onTracksAdded(newTracks);
-				}
-
-				Restangular.one('playlists', playlist.id).all('add').post({track: trackIds.join(',')}).then(function (result) {
-					playlist.updated = result.updated;
-				});
+				playlistService.addTracksToPlaylist(playlist, trackIds);
 			}
 		}
 
@@ -462,10 +441,7 @@ angular.module('Music').controller('NavigationController', [
 				playQueueService.onPlaylistModified(playlist.tracks, playingIndex);
 			}
 
-			let trackIds = _.map(playlist.tracks, 'track.id');
-			Restangular.one('playlists', playlist.id).customPUT({ trackIds: trackIds.join(',') }).then(function (result) {
-				playlist.updated = result.updated;
-			});
+			playlistService.updatePlaylistTracks(playlist);
 		}
 
 		$rootScope.$on('viewActivated', function() {

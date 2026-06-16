@@ -64,6 +64,9 @@ export interface Playlist {
 	name : string;
 	favorite : boolean;
 	tracks : PlaylistEntry<Track>[];
+	created : string;
+	updated : string;
+	busy? : boolean;
 }
 
 export interface AdvSearchResult {
@@ -583,9 +586,11 @@ export class LibraryService {
 	sortPlaylists() : void {
 		this.#sortByTextField(this.#playlists, 'name');
 	}
-	addPlaylist(playlist : any) : void {
-		this.#playlists.push(this.#wrapPlaylist(playlist));
+	addPlaylist(playlist : any) : Playlist {
+		let pl = this.#wrapPlaylist(playlist);
+		this.#playlists.push(pl);
 		this.sortPlaylists();
+		return pl;
 	}
 	removePlaylist(playlist : any) : void {
 		this.#playlists.splice(this.#playlists.indexOf(playlist), 1);
