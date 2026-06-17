@@ -50,6 +50,9 @@ HtmlUtil::printNgTemplate('navigationitem');
 				<div class="icon-add" ng-click="startCreate()" ng-if="!newPlaylistTrackIds.length"></div>
 				<div class="track-count-badge" ng-if="newPlaylistTrackIds.length">{{ newPlaylistTrackIds.length }}</div>
 				<div class="label" ng-click="startCreate()" ng-hide="showCreateForm" translate>New Playlist</div>
+				<popup-menu ng-hide="showCreateForm">
+					<popup-menu-item ng-click="importFromFile();" icon="'from-file'">{{ 'Import from file' | translate }}</popup-menu-item>
+				</popup-menu>
 				<div class="input-container with-buttons" ng-show="showCreateForm">
 					<input id="new-list-input" type="text" maxlength="256"
 						placeholder="{{ 'New Playlist' | translate }}" ng-model="newPlaylistName"

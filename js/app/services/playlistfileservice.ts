@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2021 - 2025
+ * @copyright Pauli Järvinen 2021 - 2026
  */
 
 import * as ng from 'angular';
@@ -15,8 +15,10 @@ import { IService } from 'restangular';
 import { LibraryService, Playlist } from './libraryservice';
 
 ng.module('Music').service('playlistFileService', [
-'$rootScope', '$q', 'libraryService', 'gettextCatalog', 'Restangular',
-function($rootScope : MusicRootScope, $q : ng.IQService, libraryService : LibraryService, gettextCatalog : gettextCatalog, Restangular : IService) {
+'$rootScope', '$q', 'libraryService', 'playlistService', 'gettextCatalog', 'Restangular',
+function(
+	$rootScope : MusicRootScope, $q : ng.IQService, libraryService : LibraryService, 
+	playlistService : any, gettextCatalog : gettextCatalog, Restangular : IService) {
 
 	function queryOverwrite(path : string, onSelection : CallableFunction) {
 		const fileName = path.split('/').pop();
@@ -83,7 +85,7 @@ function($rootScope : MusicRootScope, $q : ng.IQService, libraryService : Librar
 		// Export playlist to file
 		exportPlaylist(playlist : Playlist) : void {
 
-			let selPath : string = null;
+			let selPath : string|null = null;
 
 			showFolderPicker(
 				gettextCatalog.getString('Export playlist to a file in the selected folder'),
@@ -123,7 +125,7 @@ function($rootScope : MusicRootScope, $q : ng.IQService, libraryService : Librar
 		exportRadio() : ng.IPromise<any> {
 			let deferred = $q.defer();
 
-			let selPath : string = null;
+			let selPath : string|null = null;
 
 			showFolderPicker(
 				gettextCatalog.getString('Export radio stations to a file in the selected folder'),
@@ -164,29 +166,38 @@ function($rootScope : MusicRootScope, $q : ng.IQService, libraryService : Librar
 		},
 
 		// Import playlist contents from a file
-		importPlaylist: function(playlist : Playlist) : void {
+		importPlaylist: function(playlist : Playlist|null) : void {
 			function onFileSelected(file : string) {
-				playlist.busy = true;
-				Restangular.one('playlists', playlist.id).all('import').post({filePath: file}).then(
-					(result) => {
-						libraryService.replacePlaylist(result.playlist);
-						let message = gettextCatalog.getString('Imported {{ count }} tracks from the file {{ file }}.',
-																{ count: result.imported_count, file: file });
-						if (result.failed_count > 0) {
-							message += ' ' + gettextCatalog.getString('{{ count }} files were skipped.',
-																		{ count: result.failed_count });
+				if (playlist === null) {
+					const title = OCA.Music.Utils.dropFileExtension(file.split('/').pop()) || gettextCatalog.getString('Imported playlist');
+					playlistService.createPlaylist(title, []).then((newPlaylist : Playlist) => {
+						playlist = newPlaylist;
+						onFileSelected(file);
+					});
+				}
+				else {
+					playlist.busy = true;
+					Restangular.one('playlists', playlist.id).all('import').post({filePath: file}).then(
+						(result) => {
+							libraryService.replacePlaylist(result.playlist);
+							let message = gettextCatalog.getString('Imported {{ count }} tracks from the file {{ file }}.',
+																	{ count: result.imported_count, file: file });
+							if (result.failed_count > 0) {
+								message += ' ' + gettextCatalog.getString('{{ count }} files were skipped.',
+																			{ count: result.failed_count });
+							}
+							OCA.Music.Dialogs.showNotification(message);
+							$rootScope.$emit('playlistUpdated', playlist.id);
+							playlist.busy = false;
+						},
+						(_error) => {
+							OCA.Music.Dialogs.showNotification(
+									gettextCatalog.getString('Failed to import playlist from the file {{ file }}',
+															{ file: file }));
+							playlist.busy = false;
 						}
-						OCA.Music.Dialogs.showNotification(message);
-						$rootScope.$emit('playlistUpdated', playlist.id);
-						playlist.busy = false;
-					},
-					(_error) => {
-						OCA.Music.Dialogs.showNotification(
-								gettextCatalog.getString('Failed to import playlist from the file {{ file }}',
-														{ file: file }));
-						playlist.busy = false;
-					}
-				);
+					);
+				}
 			}
 
 			function selectFile() {
@@ -196,7 +207,7 @@ function($rootScope : MusicRootScope, $q : ng.IQService, libraryService : Librar
 				);
 			}
 
-			if (playlist.tracks.length > 0) {
+			if (playlist && playlist.tracks.length > 0) {
 				OC.dialogs.confirm(
 						gettextCatalog.getString('The playlist already contains some tracks. Imported tracks' +
 												' will be appended after the existing contents. Proceed?'),

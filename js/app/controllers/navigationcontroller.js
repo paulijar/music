@@ -171,7 +171,7 @@ angular.module('Music').controller('NavigationController', [
 		};
 
 		// Import playlist contents from a file
-		$scope.importFromFile = function(playlist) {
+		$scope.importFromFile = function(playlist = null) {
 			playlistFileService.importPlaylist(playlist);
 		};
 
