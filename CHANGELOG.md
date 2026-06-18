@@ -15,6 +15,8 @@
   * Track comment is stored to DB while scanning the library
   * The `comment` property is included in all song responses in the Subsonic and Ampache APIs
   * Advanced search can find tracks by comment
+- Context menu with the "Import from file" action on the "New Playlist" navigation item
+  [#80 (comment)](https://github.com/nc-music/music/issues/80#issuecomment-3725231400)
 
 ### Changed
 - Show some error details in the browser console when subscribing a podcast channel fails
