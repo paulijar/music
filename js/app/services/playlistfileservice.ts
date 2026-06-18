@@ -166,13 +166,17 @@ function(
 		},
 
 		// Import playlist contents from a file
-		importPlaylist: function(playlist : Playlist|null) : void {
+		importPlaylist: function(playlist : Playlist|null) : ng.IPromise<Playlist> {
+			let deferred = $q.defer<Playlist>();
+
 			function onFileSelected(file : string) {
 				if (playlist === null) {
 					const title = OCA.Music.Utils.dropFileExtension(file.split('/').pop()) || gettextCatalog.getString('Imported playlist');
 					playlistService.createPlaylist(title, []).then((newPlaylist : Playlist) => {
 						playlist = newPlaylist;
 						onFileSelected(file);
+					}, () => {
+						deferred.reject();
 					});
 				}
 				else {
@@ -189,12 +193,14 @@ function(
 							OCA.Music.Dialogs.showNotification(message);
 							$rootScope.$emit('playlistUpdated', playlist.id);
 							playlist.busy = false;
+							deferred.resolve(playlist);
 						},
 						(_error) => {
 							OCA.Music.Dialogs.showNotification(
 									gettextCatalog.getString('Failed to import playlist from the file {{ file }}',
 															{ file: file }));
 							playlist.busy = false;
+							deferred.reject();
 						}
 					);
 				}
@@ -223,6 +229,8 @@ function(
 			else {
 				selectFile();
 			}
+
+			return deferred.promise;
 		},
 
 		// Import radio stations from a playlist file

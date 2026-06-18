@@ -172,7 +172,9 @@ angular.module('Music').controller('NavigationController', [
 
 		// Import playlist contents from a file
 		$scope.importFromFile = function(playlist = null) {
-			playlistFileService.importPlaylist(playlist);
+			playlistFileService.importPlaylist(playlist).then(pl => {
+				$scope.navigateTo(`#playlist/${pl.id}`);
+			});
 		};
 
 		// Export radio stations to a file
