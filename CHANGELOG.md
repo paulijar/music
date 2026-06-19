@@ -28,6 +28,7 @@
   * Make all MusicBrainz Ids from the tags into links to the MusicBrainz site (like previously done with MbIds from Last.fm)
 
 ### Fixed
+- Deprecation warnings printed on PHP 8.3+ while executing the Music background tasks
 
 ## 3.1.0 - 2026-06-02
 

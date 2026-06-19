@@ -32,7 +32,7 @@ class Cleanup extends TimedJob {
 		$app = \OC::$server->query(Application::class);
 
 		$logger = $app->get(Logger::class);
-		$logger->debug('Run ' . \get_class());
+		$logger->debug('Run ' . static::class);
 
 		// remove orphaned entities
 		$app->get(Maintenance::class)->cleanUp();
