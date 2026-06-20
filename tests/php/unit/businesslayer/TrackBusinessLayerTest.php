@@ -177,7 +177,7 @@ class TrackBusinessLayerTest extends \PHPUnit\Framework\TestCase {
 			->method('countByAlbum');
 
 		$result = $this->trackBusinessLayer->deleteTracks([$fileId]);
-		$this->assertEquals(false, $result);
+		$this->assertFalse($result);
 	}
 
 	public function testDeleteTracksDeleteArtist() {
