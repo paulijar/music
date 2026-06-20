@@ -53,7 +53,7 @@ angular.module('Music').controller('ArtistDetailsController', [
 				let art = $('#app-sidebar .albumart');
 				art.css('background-image', '');
 
-				// Because of the asynchronous nature of teh REST queries, it is possible that the
+				// Because of the asynchronous nature of the REST queries, it is possible that the
 				// current artist has already changed again by the time we get the result. If that has
 				// happened, then the result should be ignored.
 				Restangular.one('artists', artistId).one('cover').get().then(

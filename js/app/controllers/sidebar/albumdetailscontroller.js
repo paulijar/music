@@ -49,7 +49,7 @@ angular.module('Music').controller('AlbumDetailsController', [
 
 					$scope.featuredArtists = _($scope.album.tracks).map('artist').uniq().sortBy('name').value();
 
-					// Because of the asynchronous nature of teh REST queries, it is possible that the
+					// Because of the asynchronous nature of the REST queries, it is possible that the
 					// current album has already changed again by the time we get the result. If that has
 					// happened, then the result should be ignored.
 					Restangular.one('albums', albumId).one('details').get().then(
