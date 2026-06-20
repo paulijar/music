@@ -88,6 +88,16 @@ class ExtractorGetID3 {
 
 			$this->getID3->CopyTagsToComments($metadata);
 
+			// getID3 does not automatically fill the 'MusicBrainz Recording Id' comment tag from the UFID frame
+			if (!isset($metadata['comments']['MusicBrainz Recording Id'])) {
+				foreach ($metadata['id3v2']['UFID'] ?? [] as $ufid) {
+					if (($ufid['ownerid'] ?? null) === 'http://musicbrainz.org') {
+						$metadata['comments']['MusicBrainz Recording Id'] = [$ufid['data']];
+						break;
+					}
+				}
+			}
+
 			if (\array_key_exists('error', $metadata)) {
 				foreach ($metadata['error'] as $error) {
 					$this->logger->debug('getID3 error occurred');
