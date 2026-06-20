@@ -26,6 +26,7 @@
 - Track details pane:
   * Collapse the more exotic tags by default and show them by clicking "Show more…"
   * Make all MusicBrainz Ids from the tags into links to the MusicBrainz site (like previously done with MbIds from Last.fm)
+  * On tag names, abbreaviate "musicbrainz" as "mb" to not truncate the more important parts of the name
 
 ### Fixed
 - Deprecation warnings printed on PHP 8.3+ while executing the Music background tasks
