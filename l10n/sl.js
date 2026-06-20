@@ -23,7 +23,7 @@ OC.L10N.register(
     "Previous" : "Predhodna",
     "Repeat" : "Ponovi",
     "Revoke API password" : "Razveljavi geslo API",
-    "Scanning music …" : "Poteka preiskovanje glasbe ...",
+    "Scanning music…" : "Poteka preiskovanje glasbe…",
     "Shuffle" : "Premešaj",
     "Some not playable tracks were skipped." : "Nekateri posnetki, ki jih ni mogoče predvajati, so bili preskočeni.",
     "This setting specifies the folder which will be scanned for music." : "Nastavitev določa mapo, ki bo preiskana za glasbo.",

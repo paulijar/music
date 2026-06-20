@@ -1381,7 +1381,7 @@ msgid "Save with given file name"
 msgstr "Сохранить с указанным именем файла"
 
 #: templates/main.php:70
-msgid "Scanning music …"
+msgid "Scanning music…"
 msgstr "Сканирую музыку…"
 
 #: templates/partials/navigation.php:54 templates/partials/navigation.php:56
@@ -1440,12 +1440,12 @@ msgid "Settings"
 msgstr "Настройки"
 
 #: js/app/controllers/views/podcastsviewcontroller.js:114
-msgid "Show all {{ count }} episodes …"
+msgid "Show all {{ count }} episodes…"
 msgstr "Показать все {{ count }} эпизодов…"
 
 #: js/app/directives/tracklist.js:53
-msgid "Show all {{ count }} songs …"
-msgstr "Показать все {{ count }} песен …"
+msgid "Show all {{ count }} songs…"
+msgstr "Показать все {{ count }} песен…"
 
 #: templates/partials/sidebar/artistdetails.php:54
 #: templates/partials/views/settingsview.php:117
@@ -1466,7 +1466,7 @@ msgid "Show in Files"
 msgstr "Показать в 'Файлы'"
 
 #: js/app/directives/tracklist.js:50
-msgid "Show less …"
+msgid "Show less…"
 msgstr "Свернуть…"
 
 #: templates/partials/views/settingsview.php:23
@@ -1515,8 +1515,8 @@ msgid "Song change notifications"
 msgstr "Уведомления о смене трека"
 
 #: templates/partials/navigationitem.php:45
-msgid "Sort …"
-msgstr "Сортировать …"
+msgid "Sort…"
+msgstr "Сортировать…"
 
 #: js/app/controllers/views/advancedsearchviewcontroller.js:325
 msgid "Sounds like"

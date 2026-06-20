@@ -23,7 +23,7 @@ OC.L10N.register(
     "Previous" : "Poprzedni",
     "Repeat" : "Powtarzaj",
     "Revoke API password" : "Odwołaj hasło API",
-    "Scanning music …" : "Skanowanie muzyki ...",
+    "Scanning music…" : "Skanowanie muzyki…",
     "Shuffle" : "Losowo",
     "Some not playable tracks were skipped." : "Niektóre nieodtwarzalne ścieżki zostały pominięte.",
     "This setting specifies the folder which will be scanned for music." : "To ustawienie określa folder, który będzie skanowany pod kątem muzyki.",

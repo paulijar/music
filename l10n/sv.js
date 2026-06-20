@@ -23,7 +23,7 @@ OC.L10N.register(
     "Previous" : "Föregående",
     "Repeat" : "Upprepa",
     "Revoke API password" : "Upphäv API-lösenord",
-    "Scanning music …" : "Skannar musik...",
+    "Scanning music…" : "Skannar musik…",
     "Shuffle" : "Blanda",
     "Some not playable tracks were skipped." : "Några icke spelbara spår hoppades över",
     "This setting specifies the folder which will be scanned for music." : "Denna inställning specificerar vilken mapp som kommer skannas efter musik",

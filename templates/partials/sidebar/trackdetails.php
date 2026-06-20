@@ -36,7 +36,7 @@
 				<dd ng-repeat-end ng-class="{clickable: tagHasDetails(tag)}" ng-click="showTagDetails(tag)" ng-bind-html="formatDetailValue(tag.value, tag.key)"
 				><button class="icon-info" ng-if="tagHasDetails(tag)"></button></dd>
 			</dl>
-			<p class="show-more-less" ng-if-end ng-show="!collapsed" ng-click="collapsed = true" translate>Show less …</p>
+			<p class="show-more-less" ng-if-end ng-show="!collapsed" ng-click="collapsed = true" translate>Show less…</p>
 		</div>
 
 		<div class="tab" id="lyrics-tab-view" ng-show="selectedTab=='lyrics'">

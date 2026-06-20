@@ -23,7 +23,7 @@ OC.L10N.register(
     "Previous" : "E mëparshmja",
     "Repeat" : "Përsërite",
     "Revoke API password" : "Shfuqizojeni fjalëkalimin API",
-    "Scanning music …" : "Po skanohet muzika…",
+    "Scanning music…" : "Po skanohet muzika…",
     "Shuffle" : "Përzieji",
     "Some not playable tracks were skipped." : "Disa pjesë që s’luheshin dot u anashkaluan.",
     "This setting specifies the folder which will be scanned for music." : "Ky rregullim përcakton dosjen që do të kontrollohet për muzikë.",

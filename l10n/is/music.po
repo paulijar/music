@@ -108,8 +108,8 @@ msgid "Revoke API password"
 msgstr "Afturkalla API-lykilorð"
 
 #: ../templates/main.php:151
-msgid "Scanning music …"
-msgstr "Skanna tónlist …"
+msgid "Scanning music…"
+msgstr "Skanna tónlist…"
 
 #: ../templates/main.php:116
 msgid "Shuffle"

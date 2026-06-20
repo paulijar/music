@@ -80,7 +80,7 @@ HtmlUtil::addWebpackStyle('app');
 			<div id="scanning" class="emptycontent" ng-show="scanning && viewingLibrary()">
 				<div class="icon-loading svg"></div>
 				<div>
-					<h2 translate>Scanning music …</h2>
+					<h2 translate>Scanning music…</h2>
 					<p translate>{{ scanningScanned }} of {{ scanningTotal }}</p>
 				</div>
 			</div>

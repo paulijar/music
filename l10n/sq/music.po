@@ -110,7 +110,7 @@ msgid "Revoke API password"
 msgstr "Shfuqizojeni fjalëkalimin API"
 
 #: ../templates/main.php:151
-msgid "Scanning music …"
+msgid "Scanning music…"
 msgstr "Po skanohet muzika…"
 
 #: ../templates/main.php:116

@@ -784,7 +784,7 @@ msgid "Revoke API password"
 msgstr "撤销 API 密码"
 
 #: ../templates/main.php:60
-msgid "Scanning music …"
+msgid "Scanning music…"
 msgstr "扫描音乐中……"
 
 #: ../js/app/controllers/searchcontroller.js:132
@@ -813,11 +813,11 @@ msgid "Settings"
 msgstr "设置"
 
 #: ../js/app/controllers/views/podcastsviewcontroller.js:113
-msgid "Show all {{ count }} episodes …"
+msgid "Show all {{ count }} episodes…"
 msgstr "显示所有{{ count }}个选集"
 
 #: ../js/app/directives/tracklist.js:38
-msgid "Show all {{ count }} songs …"
+msgid "Show all {{ count }} songs…"
 msgstr "显示所有{{ count }}首歌曲"
 
 #: ../templates/partials/sidebar/artistdetails.php:38
@@ -835,7 +835,7 @@ msgid "Show in Files"
 msgstr "在文件中显示"
 
 #: ../js/app/directives/tracklist.js:35
-msgid "Show less …"
+msgid "Show less…"
 msgstr "显示更少"
 
 #: ../templates/partials/views/settingsview.php:23
@@ -872,7 +872,7 @@ msgid "Song change notifications"
 msgstr "歌曲变更通知"
 
 #: ../templates/partials/navigationitem.php:48
-msgid "Sort …"
+msgid "Sort…"
 msgstr "排序"
 
 #: ../templates/partials/views/settingsview.php:22

@@ -23,7 +23,7 @@ OC.L10N.register(
     "Previous" : "Попередній",
     "Repeat" : "Повторювати",
     "Revoke API password" : "Відкликати API пароль",
-    "Scanning music …" : "Сканування музики …",
+    "Scanning music…" : "Сканування музики…",
     "Shuffle" : "Перемішати",
     "Some not playable tracks were skipped." : "Деякі треки, що не відтворюються, були пропущені.",
     "This setting specifies the folder which will be scanned for music." : "Цей параметр вказує теку, в якій буде проведено пошук музики.",

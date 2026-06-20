@@ -23,7 +23,7 @@ OC.L10N.register(
     "Previous" : "Προηγούμενο",
     "Repeat" : "Επανάληψη",
     "Revoke API password" : "Ανάκληση κωδικού πρόσβασης API",
-    "Scanning music …" : "Σάρωση μουσικής ...",
+    "Scanning music…" : "Σάρωση μουσικής…",
     "Shuffle" : "Τυχαία αναπαραγωγή",
     "Some not playable tracks were skipped." : "Μερικά μη αναγνώσιμα τραγούδια έχουν παρακαμφθεί.",
     "This setting specifies the folder which will be scanned for music." : "Αυτή η ρύθμιση προσδιορίζει το φάκελο που θα σαρωθεί για μουσική.",

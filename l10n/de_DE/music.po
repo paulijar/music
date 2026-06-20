@@ -812,7 +812,7 @@ msgid "Revoke API password"
 msgstr "API-Passwort verwerfen"
 
 #: ../templates/main.php:59
-msgid "Scanning music …"
+msgid "Scanning music…"
 msgstr "Untersuche Musik…"
 
 #: ../js/app/controllers/searchcontroller.js:131
@@ -841,11 +841,11 @@ msgid "Settings"
 msgstr "Einstellungen"
 
 #: ../js/app/controllers/podcastsviewcontroller.js:113
-msgid "Show all {{ count }} episodes …"
+msgid "Show all {{ count }} episodes…"
 msgstr "Alle {{ count }} Episoden anzeigen…"
 
 #: ../js/app/directives/tracklist.js:38
-msgid "Show all {{ count }} songs …"
+msgid "Show all {{ count }} songs…"
 msgstr "Alle {{ count }} Titel anzeigen…"
 
 #: ../templates/partials/artistdetails.php:38
@@ -866,7 +866,7 @@ msgid "Show in Files"
 msgstr "In Dateien anzeigen"
 
 #: ../js/app/directives/tracklist.js:35
-msgid "Show less …"
+msgid "Show less…"
 msgstr "Weniger anzeigen…"
 
 #: ../templates/partials/settingsview.php:23
@@ -905,7 +905,7 @@ msgid "Song change notifications"
 msgstr "Benachrichtigung über Songwechsel"
 
 #: ../templates/partials/navigationitem.php:48
-msgid "Sort …"
+msgid "Sort…"
 msgstr "Sortieren…"
 
 #: ../templates/partials/settingsview.php:22

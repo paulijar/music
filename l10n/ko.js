@@ -23,7 +23,7 @@ OC.L10N.register(
     "Previous" : "이전",
     "Repeat" : "반복",
     "Revoke API password" : "API 암호 취소",
-    "Scanning music …" : "음악 검색 중 …",
+    "Scanning music…" : "음악 검색 중…",
     "Shuffle" : "임의 재생",
     "Some not playable tracks were skipped." : "재생할 수 없는 곡을 건너뛰었습니다.",
     "This setting specifies the folder which will be scanned for music." : "이 설정은 음악을 검색할 폴더를 지정합니다.",

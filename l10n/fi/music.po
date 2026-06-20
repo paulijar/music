@@ -1232,8 +1232,8 @@ msgid "Save with given file name"
 msgstr "Tallenna annetulla tiedostonimellä"
 
 #: templates/main.php:83
-msgid "Scanning music …"
-msgstr "Skannataan musiikkia …"
+msgid "Scanning music…"
+msgstr "Skannataan musiikkia…"
 
 #: templates/partials/navigation.php:55 templates/partials/navigation.php:57
 #: templates/partials/views/advancedsearchview.php:72
@@ -1295,11 +1295,11 @@ msgid "Settings"
 msgstr "Asetukset"
 
 #: js/app/controllers/views/podcastsviewcontroller.js:114
-msgid "Show all {{ count }} episodes …"
+msgid "Show all {{ count }} episodes…"
 msgstr "Näytä kaikki {{ count }} jaksoa…"
 
 #: js/app/directives/tracklist.js:60
-msgid "Show all {{ count }} songs …"
+msgid "Show all {{ count }} songs…"
 msgstr "Näytä kaikki {{ count }} kappaletta…"
 
 #: templates/partials/sidebar/artistdetails.php:54
@@ -1320,7 +1320,7 @@ msgid "Show in Files"
 msgstr "Näytä Tiedostoissa"
 
 #: js/app/directives/tracklist.js:57
-msgid "Show less …"
+msgid "Show less…"
 msgstr "Näytä vähemmän…"
 
 #: templates/partials/views/settingsview.php:23
@@ -1369,8 +1369,8 @@ msgid "Song change notifications"
 msgstr "Ilmoitukset kappaleen vaihtuessa"
 
 #: templates/partials/navigationitem.php:45
-msgid "Sort …"
-msgstr "Järjestä …"
+msgid "Sort…"
+msgstr "Järjestä…"
 
 #: js/app/controllers/views/advancedsearchviewcontroller.js:112
 msgid "Sounds like"

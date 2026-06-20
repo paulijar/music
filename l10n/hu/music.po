@@ -1372,8 +1372,8 @@ msgid "Save with given file name"
 msgstr "Mentés a megadott fájlnévvel"
 
 #: templates/main.php:70
-msgid "Scanning music …"
-msgstr "Zenék feltérképezése …"
+msgid "Scanning music…"
+msgstr "Zenék feltérképezése…"
 
 #: templates/partials/navigation.php:54 templates/partials/navigation.php:56
 #: templates/partials/views/advancedsearchview.php:62
@@ -1431,12 +1431,12 @@ msgid "Settings"
 msgstr "Beállítások"
 
 #: js/app/controllers/views/podcastsviewcontroller.js:114
-msgid "Show all {{ count }} episodes …"
-msgstr "Mutassa mind a(z) {{ count }} epizódot …"
+msgid "Show all {{ count }} episodes…"
+msgstr "Mutassa mind a(z) {{ count }} epizódot…"
 
 #: js/app/directives/tracklist.js:53
-msgid "Show all {{ count }} songs …"
-msgstr "Mutassa mind a(z) {{ count }} dalt …"
+msgid "Show all {{ count }} songs…"
+msgstr "Mutassa mind a(z) {{ count }} dalt…"
 
 #: templates/partials/sidebar/artistdetails.php:54
 #: templates/partials/views/settingsview.php:117
@@ -1457,8 +1457,8 @@ msgid "Show in Files"
 msgstr "Mutassa a Fájlokban"
 
 #: js/app/directives/tracklist.js:50
-msgid "Show less …"
-msgstr "Mutasson kevesebbet …"
+msgid "Show less…"
+msgstr "Mutasson kevesebbet…"
 
 #: templates/partials/views/settingsview.php:23
 msgid "Show more…"
@@ -1506,8 +1506,8 @@ msgid "Song change notifications"
 msgstr "Dalváltási értesítések"
 
 #: templates/partials/navigationitem.php:45
-msgid "Sort …"
-msgstr "Rendezés …"
+msgid "Sort…"
+msgstr "Rendezés…"
 
 #: js/app/controllers/views/advancedsearchviewcontroller.js:325
 msgid "Sounds like"

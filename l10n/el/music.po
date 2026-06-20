@@ -112,8 +112,8 @@ msgid "Revoke API password"
 msgstr "Ανάκληση κωδικού πρόσβασης API"
 
 #: ../templates/main.php:151
-msgid "Scanning music …"
-msgstr "Σάρωση μουσικής ..."
+msgid "Scanning music…"
+msgstr "Σάρωση μουσικής…"
 
 #: ../templates/main.php:116
 msgid "Shuffle"

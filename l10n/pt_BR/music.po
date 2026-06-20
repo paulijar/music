@@ -110,8 +110,8 @@ msgid "Revoke API password"
 msgstr "Revogar senha API"
 
 #: ../templates/main.php:151
-msgid "Scanning music …"
-msgstr "Buscando música ..."
+msgid "Scanning music…"
+msgstr "Buscando música…"
 
 #: ../templates/main.php:116
 msgid "Shuffle"

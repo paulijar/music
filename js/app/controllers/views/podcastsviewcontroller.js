@@ -111,7 +111,7 @@ angular.module('Music').controller('PodcastsViewController', [
 			};
 		};
 		$scope.getMoreEpisodesText = function(count) {
-			return gettextCatalog.getString('Show all {{ count }} episodes …', { count: count });
+			return gettextCatalog.getString('Show all {{ count }} episodes…', { count: count });
 		};
 
 		playQueueService.subscribe('playlistEnded', function() {

@@ -115,8 +115,8 @@ msgid "Revoke API password"
 msgstr "API パスワードを無効にする"
 
 #: ../templates/main.php:151
-msgid "Scanning music …"
-msgstr "ミュージックをスキャン中..."
+msgid "Scanning music…"
+msgstr "ミュージックをスキャン中…"
 
 #: ../templates/main.php:116
 msgid "Shuffle"

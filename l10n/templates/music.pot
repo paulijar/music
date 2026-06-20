@@ -1165,7 +1165,7 @@ msgid "Save with given file name"
 msgstr ""
 
 #: templates/main.php:83
-msgid "Scanning music …"
+msgid "Scanning music…"
 msgstr ""
 
 #: templates/partials/navigation.php:55 templates/partials/navigation.php:57
@@ -1224,11 +1224,11 @@ msgid "Settings"
 msgstr ""
 
 #: js/app/controllers/views/podcastsviewcontroller.js:114
-msgid "Show all {{ count }} episodes …"
+msgid "Show all {{ count }} episodes…"
 msgstr ""
 
 #: js/app/directives/tracklist.js:60
-msgid "Show all {{ count }} songs …"
+msgid "Show all {{ count }} songs…"
 msgstr ""
 
 #: templates/partials/sidebar/artistdetails.php:54
@@ -1247,7 +1247,7 @@ msgid "Show in Files"
 msgstr ""
 
 #: js/app/directives/tracklist.js:57
-msgid "Show less …"
+msgid "Show less…"
 msgstr ""
 
 #: templates/partials/views/settingsview.php:23
@@ -1294,7 +1294,7 @@ msgid "Song change notifications"
 msgstr ""
 
 #: templates/partials/navigationitem.php:45
-msgid "Sort …"
+msgid "Sort…"
 msgstr ""
 
 #: js/app/controllers/views/advancedsearchviewcontroller.js:112

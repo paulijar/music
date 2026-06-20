@@ -1416,7 +1416,7 @@ msgid "Save playlist"
 msgstr "Enregistrer la liste de lecture"
 
 #: templates/main.php:62
-msgid "Scanning music …"
+msgid "Scanning music…"
 msgstr "Balayage de la musique…"
 
 #: templates/partials/navigation.php:54 templates/partials/navigation.php:56
@@ -1475,11 +1475,11 @@ msgid "Settings"
 msgstr "Paramètres"
 
 #: js/app/controllers/views/podcastsviewcontroller.js:113
-msgid "Show all {{ count }} episodes …"
+msgid "Show all {{ count }} episodes…"
 msgstr "Afficher les {{ count }} épisodes…"
 
 #: js/app/directives/tracklist.js:53
-msgid "Show all {{ count }} songs …"
+msgid "Show all {{ count }} songs…"
 msgstr "Afficher les {{ count }} titres…"
 
 #: templates/partials/sidebar/artistdetails.php:54
@@ -1501,7 +1501,7 @@ msgid "Show in Files"
 msgstr "Afficher dans Fichiers"
 
 #: js/app/directives/tracklist.js:50
-msgid "Show less …"
+msgid "Show less…"
 msgstr "Afficher moins…"
 
 #: templates/partials/views/settingsview.php:23
@@ -1550,7 +1550,7 @@ msgid "Song change notifications"
 msgstr "Notification lors du changement de chanson"
 
 #: templates/partials/navigationitem.php:45
-msgid "Sort …"
+msgid "Sort…"
 msgstr "Trier…"
 
 #: js/app/controllers/views/advancedsearchviewcontroller.js:324

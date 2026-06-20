@@ -79,7 +79,7 @@ HtmlUtil::printNgTemplate('navigationitem');
 				<popup-menu-item ng-click="startEdit(playlist);" platform-icon="'rename'">{{ 'Rename' | translate }}</popup-menu-item>
 				<popup-menu-item ng-click="importFromFile(playlist);" icon="'from-file'">{{ 'Import from file' | translate }}</popup-menu-item>
 				<popup-menu-item ng-click="exportToFile(playlist);" icon="'to-file'">{{ 'Export to file' | translate }}</popup-menu-item>
-				<popup-sub-menu icon="'sort-by-alpha'" text="'Sort …' | translate">
+				<popup-sub-menu icon="'sort-by-alpha'" text="'Sort…' | translate">
 					<popup-menu-item ng-click="sortPlaylist(playlist, 'track');">{{ 'by title' | translate }}</popup-menu-item>
 					<popup-menu-item ng-click="sortPlaylist(playlist, 'artist');">{{ 'by artist' | translate }}</popup-menu-item>
 					<popup-menu-item ng-click="sortPlaylist(playlist, 'album');">{{ 'by album' | translate }}</popup-menu-item>

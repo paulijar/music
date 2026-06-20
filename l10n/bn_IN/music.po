@@ -108,7 +108,7 @@ msgid "Revoke API password"
 msgstr "এপিআই পাসওয়ার্ড প্রত্যাহার করা"
 
 #: ../templates/main.php:151
-msgid "Scanning music …"
+msgid "Scanning music…"
 msgstr ""
 
 #: ../templates/main.php:116

@@ -109,7 +109,7 @@ msgid "Revoke API password"
 msgstr "Revogar o contrasinal da API"
 
 #: ../templates/main.php:151
-msgid "Scanning music …"
+msgid "Scanning music…"
 msgstr ""
 
 #: ../templates/main.php:116

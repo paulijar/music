@@ -23,7 +23,7 @@ OC.L10N.register(
     "Previous" : "Eelmine",
     "Repeat" : "Korda",
     "Revoke API password" : "Keeldu API paroolist",
-    "Scanning music …" : "Muusika otsimine ...",
+    "Scanning music…" : "Muusika otsimine…",
     "Shuffle" : "Juhuslik esitus",
     "Some not playable tracks were skipped." : "Mõned mittemängitavad lood jäeti vahele.",
     "This setting specifies the folder which will be scanned for music." : "See seade määrab kausta, kust muusikat otsitakse.",

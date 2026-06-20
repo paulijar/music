@@ -54,10 +54,10 @@ function ($rootScope, $interpolate, gettextCatalog, albumartService) {
 	}
 
 	// Localized strings
-	const lessText = gettextCatalog.getString('Show less …');
+	const lessText = gettextCatalog.getString('Show less…');
 	const detailsText = gettextCatalog.getString('Details');
 	const moreText = function(count) { // this is the default implementation, may be overridden with attributes
-		return gettextCatalog.getString('Show all {{ count }} songs …', { count: count });
+		return gettextCatalog.getString('Show all {{ count }} songs…', { count: count });
 	};
 
 	// Search support

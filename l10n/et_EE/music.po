@@ -109,8 +109,8 @@ msgid "Revoke API password"
 msgstr "Keeldu API paroolist"
 
 #: ../templates/main.php:151
-msgid "Scanning music …"
-msgstr "Muusika otsimine ..."
+msgid "Scanning music…"
+msgstr "Muusika otsimine…"
 
 #: ../templates/main.php:116
 msgid "Shuffle"

@@ -23,7 +23,7 @@ OC.L10N.register(
     "Previous" : "קודם",
     "Repeat" : "חזרה",
     "Revoke API password" : "ביטול סיסמת API",
-    "Scanning music …" : "סורק מוזיקה...",
+    "Scanning music…" : "סורק מוזיקה…",
     "Shuffle" : "ערבב",
     "Some not playable tracks were skipped." : "מספר קטעי מוסיקה לא תקינים דולגו",
     "This setting specifies the folder which will be scanned for music." : "ההגדרות של התיקייה עליה תבוצע סריקת המוזיקה",

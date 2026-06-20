@@ -23,7 +23,7 @@ OC.L10N.register(
     "Previous" : "Anterior",
     "Repeat" : "Repetir",
     "Revoke API password" : "Revogar palavra-passe da API",
-    "Scanning music …" : "A pesquisar música...",
+    "Scanning music…" : "A pesquisar música…",
     "Shuffle" : "Baralhar",
     "Some not playable tracks were skipped." : "Foram ignoradas algumas faixas com problemas",
     "This setting specifies the folder which will be scanned for music." : "Esta definição especifica a pasta onde vai ser rastreada a música.",

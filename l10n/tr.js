@@ -23,7 +23,7 @@ OC.L10N.register(
     "Previous" : "Önceki",
     "Repeat" : "Tekrarla",
     "Revoke API password" : "API parolasını geçersiz kıl",
-    "Scanning music …" : "Müzik taranıyor ...",
+    "Scanning music…" : "Müzik taranıyor…",
     "Shuffle" : "Karıştır",
     "Some not playable tracks were skipped." : "Bazı oynatılamayan parçalar atlandı.",
     "This setting specifies the folder which will be scanned for music." : "Bu ayar, müzik için taranacak klasörü belirtir.",

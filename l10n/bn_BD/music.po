@@ -108,7 +108,7 @@ msgid "Revoke API password"
 msgstr "API কুটশব্দ বাতিল কর"
 
 #: ../templates/main.php:151
-msgid "Scanning music …"
+msgid "Scanning music…"
 msgstr ""
 
 #: ../templates/main.php:116
