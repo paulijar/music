@@ -229,10 +229,10 @@ abstract class Mapper {
 	 * @param array $params the params which should replace the ? in the sql query
 	 * @param int $limit the maximum number of rows
 	 * @param int $offset from which row we want to start
-	 * @return \OCP\DB\IPreparedStatement the database query result
+	 * @return \OCP\DB\IResult the database query result
 	 * @since 7.0.0
 	 */
-	protected function execute($sql, array $params=[], $limit=null, $offset=null) : \OCP\DB\IPreparedStatement {
+	protected function execute($sql, array $params=[], $limit=null, $offset=null) : \OCP\DB\IResult {
 		$query = $this->db->prepare($sql, $limit, $offset);
 
 		if ($this->isAssocArray($params)) {
@@ -249,9 +249,7 @@ abstract class Mapper {
 			}
 		}
 
-		$query->execute();
-
-		return $query;
+		return $query->execute();
 	}
 
 	/**
