@@ -110,7 +110,7 @@ angular.module('Music').controller('TrackDetailsController', [
 				return (value/1000).toFixed(1) + ' kHz';
 			} else if (key == 'bitrate') {
 				return (value/1000).toFixed(0) + ' kbps';
-			} else if (key?.match(/^MusicBrainz .* Id$/)) {
+			} else if (key?.match(/^MusicBrainz.*Id$/i)) {
 				return $scope.mbidLink(value);
 			} else if (isFloat(value)) {
 				// limit the number of shown digits on floating point numbers
@@ -131,7 +131,7 @@ angular.module('Music').controller('TrackDetailsController', [
 
 		$scope.formatDetailName = function(rawName) {
 			// replace MusicBrainz in tag names with "MB" to avoid truncation of long names in the sidebar
-			rawName = rawName.replace('MusicBrainz ', 'MB ');
+			rawName = rawName.replace(/MusicBrainz/i, 'MB');
 
 			switch (rawName) {
 			case 'band':			return 'album artist';
@@ -168,9 +168,9 @@ angular.module('Music').controller('TrackDetailsController', [
 			case 'publisher':		return 11;
 			case 'comment':			return 12;
 			default:
-				if (tag.key.match(/^MusicBrainz .* Id$/)) {
+				if (tag.key.match(/^MusicBrainz.*Id$/i)) {
 					return 150;
-				} else if (tag.key.startsWith('MusicBrainz')) {
+				} else if (tag.key.match(/^MusicBrainz/i)) {
 					return 149;
 				} else if (tag.key.startsWith('replaygain')) {
 					return 200;
