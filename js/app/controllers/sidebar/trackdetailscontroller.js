@@ -167,7 +167,16 @@ angular.module('Music').controller('TrackDetailsController', [
 			case 'year':			return 10;
 			case 'publisher':		return 11;
 			case 'comment':			return 12;
-			default:				return 100;
+			default:
+				if (tag.key.match(/^MusicBrainz .* Id$/)) {
+					return 150;
+				} else if (tag.key.startsWith('MusicBrainz')) {
+					return 149;
+				} else if (tag.key.startsWith('replaygain')) {
+					return 200;
+				} else {
+					return 100;
+				}
 			}
 		};
 
