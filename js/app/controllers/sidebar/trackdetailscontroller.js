@@ -106,7 +106,9 @@ angular.module('Music').controller('TrackDetailsController', [
 		$scope.$watch('selectedTab', $scope.$parent.adjustFixedPositions);
 
 		$scope.formatDetailValue = function(value, key=null) {
-			if (key == 'sample_rate') {
+			if (Array.isArray(value)) {
+				return value.map((item) => $scope.formatDetailValue(item, key)).join('<br/>');
+			} else if (key == 'sample_rate') {
 				return (value/1000).toFixed(1) + ' kHz';
 			} else if (key == 'bitrate') {
 				return (value/1000).toFixed(0) + ' kbps';

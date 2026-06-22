@@ -98,7 +98,17 @@ class ExtractorGetID3 {
 				}
 			}
 
-			if (\array_key_exists('error', $metadata)) {
+			// GetID3 copies incorrectly the multi-valued id3v2 tags involved_people_list and musician_credits_list; these have a structure
+			// like [role1, name1, role2, name2, ...] where the order and possibly repeated roles and names are important but getID3 discards
+			// any duplicates. To work around, copy these tags on our own without any modifications.
+			if (isset($metadata['tags']['id3v2']['involved_people_list'])) {
+				$metadata['comments']['involved_people_list'] = $metadata['tags']['id3v2']['involved_people_list'];
+			}
+			if (isset($metadata['tags']['id3v2']['musician_credits_list'])) {
+				$metadata['comments']['musician_credits_list'] = $metadata['tags']['id3v2']['musician_credits_list'];
+			}
+
+			if (isset($metadata['error'])) {
 				foreach ($metadata['error'] as $error) {
 					$this->logger->debug('getID3 error occurred');
 					// sometimes $error is string but can't be concatenated to another string and weirdly just hide the log message

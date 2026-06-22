@@ -45,18 +45,17 @@ class DetailsService {
 				'tags' => $comments
 			];
 
-			// binary data has to be encoded
-			if (\array_key_exists('picture', $result['tags'])) {
-				$result['tags']['picture'] = self::encodePictureTag($result['tags']['picture']);
-			}
-
 			// 'streams' contains duplicate data
 			unset($result['fileinfo']['streams']);
 
 			// one track number is enough
-			if (\array_key_exists('track', $result['tags'])
-				&& \array_key_exists('track_number', $result['tags'])) {
+			if (isset($result['tags']['track']) && isset($result['tags']['track_number'])) {
 				unset($result['tags']['track']);
+			}
+
+			// one total tracks is enough
+			if (isset($result['tags']['tracktotal']) && isset($result['tags']['totaltracks'])) {
+				unset($result['tags']['tracktotal']);
 			}
 
 			// special handling for lyrics tags
@@ -254,8 +253,9 @@ class DetailsService {
 	}
 
 	/**
-	 * In the 'comments' field from the extractor, the value for each key is a 1-element
-	 * array containing the actual tag value. Remove these intermediate arrays.
+	 * In the 'comments' field from the extractor, the value on most of the keys is a 1-element
+	 * array containing the actual tag value, but some tags may be multi-valued and have a longer
+	 * array. Remove all the intermediary 1-item arrays but retain the larger ones.
 	 */
 	private static function flattenComments(array $array) : array {
 		// key 'text' is an exception, its value is an associative array
@@ -264,7 +264,9 @@ class DetailsService {
 		foreach ($array as $key => $value) {
 			if ($key === 'text') {
 				$textArray = $value;
-			} else {
+			} elseif ($key === 'picture') {
+				$array[$key] = self::encodePictureTag($value[0]); // binary-valued field needs special handling
+			} elseif (\count($value) === 1) {
 				$array[$key] = $value[0];
 			}
 		}
