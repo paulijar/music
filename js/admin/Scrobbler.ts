@@ -37,8 +37,10 @@ class ScrobblerAdmin implements MusicAdminSection {
 				<input name="api_key" aria-label="${serviceLabel} ${keyLabel}" id="${identifierEsc}_api_key" type="text" value="${escape(this.#api_key)}" />
 			</div>
 			<div class="field">
+				<input type="checkbox" name="show_api_secret" id="${identifierEsc}_show_api_secret"/>
+				<label for="${identifierEsc}_show_api_secret">${escape(t('music', 'Show API Secret'))}</label>
 				<label for="${identifierEsc}_api_secret">${secretLabel}</label>
-				<input name="api_secret" aria-label="${serviceLabel} ${secretLabel}" id="${identifierEsc}_api_secret" type="password" value="${escape(this.#api_secret)}" />
+				<input name="api_secret" aria-label="${serviceLabel} ${secretLabel}" id="${identifierEsc}_api_secret" type="text" value="${escape(this.#api_secret)}" />
 			</div>
 			<div class="field">
 				<button disabled name="submit_button" type="submit" title="${escape(t('music', 'Update API credentials for {service}', { service: this.#name }))}">${escape(t('music', 'Save'))}</button>

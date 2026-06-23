@@ -9,36 +9,85 @@
  */
 
 #admin-music {
-    margin-top: 40px;
+	margin-top: 40px;
 }
 
 #admin-music .scrobblers > div {
-    padding: 0 30px 30px;
+	padding: 0 30px 30px;
 }
 
 #admin-music .settings-section:not(:last-child) {
-    border-bottom: solid 1px var(--color-border);
+	border-bottom: solid 1px var(--color-border);
 }
 
 #admin-music form.scrobbler {
-    width: min-content;
+	width: min-content;
 }
 
 #admin-music a {
-    text-decoration: underline;
+	text-decoration: underline;
+}
+
+#admin-music .field {
+	align-items: center;
+	display: flex;
+	flex-flow: row wrap;
 }
 
 #admin-music .field + .field {
-    margin-top: calc(2 * var(--default-grid-baseline));
+	margin-top: calc(2 * var(--default-grid-baseline));
 }
 
-#admin-music .scrobbler .field input {
-    /* scrobbler keys and secrets are generally 32 characters, so use a value slightly larger than that */
-    width: min(40rch, calc(100vw - 60px));
+#admin-music .scrobbler .field input[type="text"] {
+	/* scrobbler keys and secrets are generally 32 characters, so use a value slightly larger than that */
+	width: min(40rch, calc(100vw - 60px));
+}
+
+#admin-music .scrobbler [name="show_api_secret"],
+#admin-music .scrobbler [name="show_api_secret"] + label {
+	order: 1
+}
+
+#admin-music .scrobbler .field [name="show_api_secret"]:checked ~ [name="api_secret"] {
+	-webkit-text-security: none;
+}
+
+#admin-music .scrobbler .field [name="api_secret"] {
+	-webkit-text-security: disc;
 }
 
 #admin-music .scrobbler .field input:invalid {
-    border-color: var(--color-border-error, var(--color-error, red));
+	border-color: var(--color-border-error, var(--color-error, red));
 }
 
+#admin-music .scrobbler button[name="peek"] {
+	position: relative;
+}
 
+#admin-music .scrobbler button[name="peek"]::after {
+	border-bottom-right-radius: 1em;
+	border-bottom: 2px solid #000;
+	border-right: 2px solid #000;
+	content: ' ';
+	display: block;
+	height: 1em;
+	transform: rotate(45deg);
+	width: 1em;
+}
+
+#admin-music .scrobbler [type="password"] + button[name="peek"]::after {
+	border-left: 2px solid #000;
+	border-top: 2px solid #000;
+	border-top-left-radius: 1em;
+}
+
+#admin-music .scrobbler [type="password"] + button[name="peek"]::before {
+	background-color: black;
+	border-radius: 0.5em;
+	content: ' ';
+	height: 0.5em;
+	left: calc(50% - 0.25em);
+	position: absolute;
+	top: calc(50% - 0.25em);
+	width: 0.5em;
+}
