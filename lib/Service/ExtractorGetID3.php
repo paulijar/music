@@ -99,13 +99,13 @@ class ExtractorGetID3 {
 			}
 
 			// GetID3 copies incorrectly the multi-valued id3v2 tags involved_people_list and musician_credits_list; these have a structure
-			// like [role1, name1, role2, name2, ...] where the order and possibly repeated roles and names are important but getID3 discards
-			// any duplicates. To work around, copy these tags on our own without any modifications.
+			// like [role1, name1, role2, name2, ...] where the order and possibly repeated roles and names are important but CopyTagsToComments
+			// discards any duplicates. Reorganize the lists into associative arrays using the original tags as source.
 			if (isset($metadata['tags']['id3v2']['involved_people_list'])) {
-				$metadata['comments']['involved_people_list'] = $metadata['tags']['id3v2']['involved_people_list'];
+				$metadata['comments']['involved_people_list'] = self::parseId3ContributorList($metadata['tags']['id3v2']['involved_people_list']);
 			}
 			if (isset($metadata['tags']['id3v2']['musician_credits_list'])) {
-				$metadata['comments']['musician_credits_list'] = $metadata['tags']['id3v2']['musician_credits_list'];
+				$metadata['comments']['musician_credits_list'] = self::parseId3ContributorList($metadata['tags']['id3v2']['musician_credits_list']);
 			}
 
 			if (isset($metadata['error'])) {
@@ -183,6 +183,20 @@ class ExtractorGetID3 {
 			if ($value !== null && $value !== '') {
 				$result[$tag] = $value;
 			}
+		}
+		return $result;
+	}
+
+	/**
+	 * @param string[] $contributors E.g. ['role1', 'name1a', 'role1', 'name1b', 'role2', 'name2', ...]
+	 * @return array<string, string[]> E.g. ['role1' => ['name1a', 'name1b'], 'role2' => ['name2']]
+	 */
+	private static function parseId3ContributorList(array $contributors) : array {
+		$result = [];
+		while (\count($contributors)) {
+			$role = \array_shift($contributors);
+			$name = \array_shift($contributors);
+			$result[$role][] = $name;
 		}
 		return $result;
 	}

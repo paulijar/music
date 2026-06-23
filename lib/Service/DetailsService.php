@@ -266,7 +266,7 @@ class DetailsService {
 				$textArray = $value;
 			} elseif ($key === 'picture') {
 				$array[$key] = self::encodePictureTag($value[0]); // binary-valued field needs special handling
-			} elseif (\count($value) === 1) {
+			} elseif (\count($value) === 1 && isset($value[0])) {
 				$array[$key] = $value[0];
 			}
 		}

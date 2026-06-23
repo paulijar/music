@@ -108,6 +108,8 @@ angular.module('Music').controller('TrackDetailsController', [
 		$scope.formatDetailValue = function(value, key=null) {
 			if (Array.isArray(value)) {
 				return value.map((item) => $scope.formatDetailValue(item, key)).join('<br/>');
+			} else if (value instanceof Object) {
+				return Object.entries(value).map(([k, v]) => `${k}: ${v.join('; ')}`).join('<br/>');
 			} else if (key == 'sample_rate') {
 				return (value/1000).toFixed(1) + ' kHz';
 			} else if (key == 'bitrate') {
