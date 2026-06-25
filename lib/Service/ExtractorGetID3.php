@@ -15,6 +15,7 @@
 namespace OCA\Music\Service;
 
 use OCA\Music\AppFramework\Core\Logger;
+use OCP\IConfig;
 
 use OCP\Files\File;
 
@@ -25,7 +26,7 @@ class ExtractorGetID3 {
 
 	private ?\getID3 $getID3 = null; // lazy-loaded
 
-	public function __construct(private Logger $logger) {
+	public function __construct(private IConfig $config, private Logger $logger) {
 	}
 
 	/**
@@ -45,7 +46,23 @@ class ExtractorGetID3 {
 			// Therefore the filesize (determined by getID3) could be wrong
 			// (for files over ~2 GB) but this isn't used in any way.
 			$this->getID3->option_max_2gb_check = false;
+
+			// Supported tag types may be configured in config.php. ID3v1 is disabled by default because it's
+			// ancient and often produces incorrect results, especially with non-Latin scripts (because ID3v1
+			// is supposed to be always in ISO-8859-1 but it has often been abused).
+			$this->getID3->option_tag_id3v1 = $this->getBooleanConfig('music.tag_enabled_id3v1', false);
+			$this->getID3->option_tag_id3v2 = $this->getBooleanConfig('music.tag_enabled_id3v2', true);
+			$this->getID3->option_tag_lyrics3 = $this->getBooleanConfig('music.tag_enabled_lyrics3', true);
+			$this->getID3->option_tag_apetag = $this->getBooleanConfig('music.tag_enabled_ape', true);
 		}
+	}
+
+	private function getBooleanConfig(string $key, bool $default) : bool {
+		$value = $this->config->getSystemValue($key, $default);
+		if (\is_string($value)) {
+			return \filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? $default;
+		}
+		return (bool)$value;
 	}
 
 	/**
