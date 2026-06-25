@@ -258,22 +258,12 @@ class DetailsService {
 	 * array. Remove all the intermediary 1-item arrays but retain the larger ones.
 	 */
 	private static function flattenComments(array $array) : array {
-		// key 'text' is an exception, its value is an associative array
-		$textArray = null;
-
 		foreach ($array as $key => $value) {
-			if ($key === 'text') {
-				$textArray = $value;
-			} elseif ($key === 'picture') {
+			if ($key === 'picture') {
 				$array[$key] = self::encodePictureTag($value[0]); // binary-valued field needs special handling
 			} elseif (\count($value) === 1 && isset($value[0])) {
 				$array[$key] = $value[0];
 			}
-		}
-
-		if (!empty($textArray)) {
-			$array = \array_merge($array, $textArray);
-			unset($array['text']);
 		}
 
 		return $array;

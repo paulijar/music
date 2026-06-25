@@ -108,6 +108,15 @@ class ExtractorGetID3 {
 				$metadata['comments']['musician_credits_list'] = self::parseId3ContributorList($metadata['tags']['id3v2']['musician_credits_list']);
 			}
 
+			// GetID3 doesn't split up null-delimited strings inside ID3v2.4 TXXX frames to multiple values while it apparently does it on
+			// (at least some) other frames. Do that on our own and move the TXXX tags among the other tags from the `text` container.
+			if (isset($metadata['tags']['id3v2']['text'])) {
+				foreach ($metadata['tags']['id3v2']['text'] as $txxxKey => $txxxValue) {
+					$metadata['comments'][$txxxKey] = \explode("\0", $txxxValue);
+				}
+				unset($metadata['comments']['text']);
+			}
+
 			if (isset($metadata['error'])) {
 				foreach ($metadata['error'] as $error) {
 					$this->logger->debug('getID3 error occurred');
@@ -133,16 +142,8 @@ class ExtractorGetID3 {
 		return $pic;
 	}
 
-	/**
-	 * @param array $fileInfo
-	 * @param string $tag
-	 * @param bool $binaryValued
-	 * @return string|int|array|null
-	 */
-	public static function getTag(array $fileInfo, string $tag, bool $binaryValued = false) {
-		$value = $fileInfo['comments'][$tag][0]
-				?? $fileInfo['comments']['text'][$tag]
-				?? null;
+	public static function getTag(array $fileInfo, string $tag, bool $binaryValued = false) : string|int|array|null {
+		$value = $fileInfo['comments'][$tag][0] ?? null; // TODO: better handling for multi-valued tags
 
 		if (\is_string($value) && !$binaryValued) {
 			// Ensure that the tag contains only valid utf-8 characters.
@@ -157,12 +158,9 @@ class ExtractorGetID3 {
 	}
 
 	/**
-	 * @param array $fileInfo
 	 * @param string[] $tags
-	 * @param string|array|null $defaultValue
-	 * @return string|int|array|null
 	 */
-	public static function getFirstOfTags(array $fileInfo, array $tags, $defaultValue = null) {
+	public static function getFirstOfTags(array $fileInfo, array $tags, string|array|null $defaultValue = null) : string|int|array|null {
 		foreach ($tags as $tag) {
 			$value = self::getTag($fileInfo, $tag);
 			if ($value !== null && $value !== '') {
