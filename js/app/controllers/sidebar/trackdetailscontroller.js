@@ -29,7 +29,7 @@ angular.module('Music').controller('TrackDetailsController', [
 
 		function toArray(obj) {
 			return _.map(obj, function(val, key) {
-				return {key: key, value: val};
+				return {key: key.toLowerCase(), value: val};
 			});
 		}
 
@@ -114,7 +114,7 @@ angular.module('Music').controller('TrackDetailsController', [
 				return (value/1000).toFixed(1) + ' kHz';
 			} else if (key == 'bitrate') {
 				return (value/1000).toFixed(0) + ' kbps';
-			} else if (key?.match(/^MusicBrainz.*Id$/i)) {
+			} else if (key?.match(/^musicbrainz.*id$/)) {
 				return $scope.mbidLink(value);
 			} else if (isFloat(value)) {
 				// limit the number of shown digits on floating point numbers
@@ -134,8 +134,8 @@ angular.module('Music').controller('TrackDetailsController', [
 		};
 
 		$scope.formatDetailName = function(rawName) {
-			// replace MusicBrainz in tag names with "MB" to avoid truncation of long names in the sidebar
-			rawName = rawName.replace(/MusicBrainz/i, 'MB');
+			// replace musicbrainz in tag names with "mb" to avoid truncation of long names in the sidebar
+			rawName = rawName.replace(/musicbrainz/, 'mb');
 
 			switch (rawName) {
 			case 'band':			return 'album artist';
@@ -146,7 +146,7 @@ angular.module('Music').controller('TrackDetailsController', [
 			case 'discnumber':		return 'disc number';
 			case 'dataformat':		return 'format';
 			case 'channelmode':		return 'channel mode';
-			default:				return rawName.replace(/_/g, ' ').toLowerCase();
+			default:				return rawName.replace(/_/g, ' ');
 			}
 		};
 
@@ -159,6 +159,8 @@ angular.module('Music').controller('TrackDetailsController', [
 			case 'album_artist':	return 4;
 			case 'band':			return 4;
 			case 'composer':		return 5;
+			case 'lyricist':		return 5;
+			case 'writer':			return 5;
 			case 'part_of_a_set':	return 6;
 			case 'discnumber':		return 6;
 			case 'disc_number':		return 6;
@@ -172,9 +174,9 @@ angular.module('Music').controller('TrackDetailsController', [
 			case 'publisher':		return 11;
 			case 'comment':			return 12;
 			default:
-				if (tag.key.match(/^MusicBrainz.*Id$/i)) {
+				if (tag.key.match(/^musicbrainz.*id$/)) {
 					return 150;
-				} else if (tag.key.match(/^MusicBrainz/i)) {
+				} else if (tag.key.match(/^musicbrainz/)) {
 					return 149;
 				} else if (tag.key.startsWith('replaygain')) {
 					return 200;
