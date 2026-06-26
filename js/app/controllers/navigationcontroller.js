@@ -316,6 +316,11 @@ angular.module('Music').controller('NavigationController', [
 		};
 
 		// Add all tracks on all albums by an artist to the playlist
+		$scope.addAlbumArtist = function(playlist, artistId) {
+			addTracks(playlist, trackIdsFromAlbumArtist(artistId));
+		};
+
+		// All all tracks somehow connected to an artist to the playlist
 		$scope.addArtist = function(playlist, artistId) {
 			addTracks(playlist, trackIdsFromArtist(artistId));
 		};
@@ -343,6 +348,8 @@ angular.module('Music').controller('NavigationController', [
 				addTracks(playlist, droppedItem.tracks);
 			} else if ('album' in droppedItem) {
 				$scope.addAlbum(playlist, droppedItem.album);
+			} else if ('albumartist' in droppedItem) {
+				$scope.addAlbumArtist(playlist, droppedItem.albumartist);
 			} else if ('artist' in droppedItem) {
 				$scope.addArtist(playlist, droppedItem.artist);
 			} else if ('folder' in droppedItem) {
@@ -404,9 +411,14 @@ angular.module('Music').controller('NavigationController', [
 			return _.map(album.tracks, 'id');
 		}
 
-		function trackIdsFromArtist(artistId) {
+		function trackIdsFromAlbumArtist(artistId) {
 			let artist = libraryService.getArtist(artistId);
 			return _(artist.albums).map('id').map(trackIdsFromAlbum).flatten().value();
+		}
+
+		function trackIdsFromArtist(artistId) {
+			let tracks = libraryService.findTracksInvolvingArtist(artistId);
+			return _.map(tracks, 'id');
 		}
 
 		function trackIdsFromFolder(folderId) {

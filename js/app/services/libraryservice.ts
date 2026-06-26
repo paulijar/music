@@ -750,6 +750,9 @@ export class LibraryService {
 	findTracksByComposer(composerId : number) : Track[] {
 		return _(this.#tracksInAlphaOrder).filter(e => e.track.composerId == composerId).map('track').value();
 	}
+	findTracksInvolvingArtist(artistId : number) : Track[] {
+		return _.uniq(this.findTracksByArtist(artistId).concat(this.findTracksByComposer(artistId)));
+	}
 	collectionLoaded() : boolean {
 		return this.#collection !== null;
 	}

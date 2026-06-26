@@ -7,7 +7,7 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Morris Jobke 2014
- * @copyright Pauli Järvinen 2017 - 2025
+ * @copyright Pauli Järvinen 2017 - 2026
  */
 
 angular.module('Music').controller('AlbumsViewController', [
@@ -140,7 +140,7 @@ angular.module('Music').controller('AlbumsViewController', [
 		};
 
 		$scope.getArtistDraggable = function(artist) {
-			return getDraggable('artist', artist);
+			return getDraggable('albumartist', artist);
 		};
 
 		$scope.decoratedYear = function(album) {
@@ -199,7 +199,7 @@ angular.module('Music').controller('AlbumsViewController', [
 			} else {
 				// No such artist element, this is probably just a performing artist on some track.
 				// Find the first album with a track performed by this artist.
-				const tracks = libraryService.findTracksByArtist(artistId);
+				const tracks = libraryService.findTracksInvolvingArtist(artistId);
 				scrollToAlbumOfTrack(tracks[0].id);
 			}
 			
@@ -260,7 +260,7 @@ angular.module('Music').controller('AlbumsViewController', [
 						} else {
 							// If the artist has no albums, then it can't be used as a play scope.
 							// Find the first track performed by this artist.
-							let tracks = libraryService.findTracksByArtist(id);
+							let tracks = libraryService.findTracksInvolvingArtist(id);
 							$scope.playTrack(tracks[0].id);
 							scrollToAlbumOfTrack(tracks[0].id);
 						}

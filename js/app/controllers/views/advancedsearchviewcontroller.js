@@ -247,7 +247,7 @@ angular.module('Music').controller('AdvancedSearchViewController', [
 		function getTracksFromResult() {
 			const trackResults = $scope.results.tracks;
 			const tracksFromAlbums = _($scope.results.albums).map('tracks').flatten().value();
-			const tracksFromArtists = _($scope.results.artists).map(a => libraryService.findTracksByArtist(a.id)).flatten().value();
+			const tracksFromArtists = _($scope.results.artists).map(a => libraryService.findTracksInvolvingArtist(a.id)).flatten().value();
 			const tracksFromPlaylists = _($scope.results.playlists).map('tracks').flatten().map('track').value();
 			const tracksFromGenres = _($scope.results.genres).map('tracks').flatten().map('track').value();
 			const episodeResults = $scope.results.podcastEpisodes;
@@ -340,7 +340,7 @@ angular.module('Music').controller('AdvancedSearchViewController', [
 		$scope.onArtistClick = function(artistId) {
 			// TODO: play/pause if currently playing artist clicked?
 			const tracks = getTracksFromResult();
-			const artistTracks = libraryService.findTracksByArtist(artistId);
+			const artistTracks = libraryService.findTracksInvolvingArtist(artistId);
 			if (artistTracks.length > 0) {
 				const index = _.findIndex(tracks, { id: artistTracks[0].id });
 				play(tracks, index);
