@@ -76,7 +76,7 @@
 			<order>10</order>
 		</navigation>
 	</navigations>
-        <settings>
+	<settings>
 		<admin>OCA\Music\Settings\AdminSettings</admin>
 		<admin-section>OCA\Music\Settings\AdminSection</admin-section>
 	</settings>

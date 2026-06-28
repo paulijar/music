@@ -1,7 +1,7 @@
 export interface MusicAdminSectionConstructor {
-  new (): MusicAdminSection;
+	new (): MusicAdminSection;
 }
 
 export interface MusicAdminSection {
-  mount(element: HTMLElement): void;
+	mount(element: HTMLElement): void;
 }
