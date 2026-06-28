@@ -32,9 +32,8 @@ class DetailsService {
 			$data = $this->extractor->extract($file);
 			$audio = $data['audio'] ?? [];
 			$comments = $data['comments'] ?? [];
-
-			// remove intermediate arrays
-			$comments = self::flattenComments($comments);
+			$picture = isset($comments['picture']) ? self::encodePictureTag($comments['picture'][0]) : null;
+			unset($comments['picture']);
 
 			// cleanup strings from invalid characters
 			\array_walk($audio, [$this, 'sanitizeString']);
@@ -42,7 +41,8 @@ class DetailsService {
 
 			$result = [
 				'fileinfo' => $audio,
-				'tags' => $comments
+				'tags' => $comments,
+				'picture' => $picture
 			];
 
 			// 'streams' contains duplicate data
@@ -56,6 +56,11 @@ class DetailsService {
 			// one total tracks is enough
 			if (isset($result['tags']['tracktotal']) && isset($result['tags']['totaltracks'])) {
 				unset($result['tags']['tracktotal']);
+			}
+
+			// one total discs is enough
+			if (isset($result['tags']['disctotal']) && isset($result['tags']['totaldiscs'])) {
+				unset($result['tags']['disctotal']);
 			}
 
 			// special handling for lyrics tags
@@ -176,12 +181,12 @@ class DetailsService {
 	 * ['time' => int (ms), 'text' => string].
 	 */
 	private static function transformLyrics(array $tags, ?string $lrcFileContent) : ?array {
-		$lyrics = $tags['LYRICS'] ?? $tags['lyrics'] ?? null; // may be synced or unsynced
+		$lyrics = $tags['LYRICS'][0] ?? $tags['lyrics'][0] ?? null; // may be synced or unsynced
 		$syncedLyrics = LyricsParser::parseSyncedLyrics($lrcFileContent) ?? LyricsParser::parseSyncedLyrics($lyrics);
-		$unsyncedLyrics = $tags['unsynchronised_lyric']
-						?? $tags['unsynced lyrics']
-						?? $tags['unsynced_lyrics']
-						?? $tags['unsyncedlyrics']
+		$unsyncedLyrics = $tags['unsynchronised_lyric'][0]
+						?? $tags['unsynced lyrics'][0]
+						?? $tags['unsynced_lyrics'][0]
+						?? $tags['unsyncedlyrics'][0]
 						?? LyricsParser::syncedToUnsynced($syncedLyrics)
 						?? $lrcFileContent
 						?? $lyrics;
@@ -250,22 +255,5 @@ class DetailsService {
 			$item = \str_replace("\r\n", "\n", $item);
 			$item = \str_replace("\r", "\n", $item);
 		}
-	}
-
-	/**
-	 * In the 'comments' field from the extractor, the value on most of the keys is a 1-element
-	 * array containing the actual tag value, but some tags may be multi-valued and have a longer
-	 * array. Remove all the intermediary 1-item arrays but retain the larger ones.
-	 */
-	private static function flattenComments(array $array) : array {
-		foreach ($array as $key => $value) {
-			if ($key === 'picture') {
-				$array[$key] = self::encodePictureTag($value[0]); // binary-valued field needs special handling
-			} elseif (\count($value) === 1 && isset($value[0])) {
-				$array[$key] = $value[0];
-			}
-		}
-
-		return $array;
 	}
 }

@@ -24,8 +24,8 @@
 		<div class="tab" id="general-tab-view" ng-show="selectedTab=='general'">
 			<dl class="tags">
 				<dt ng-repeat-start="tag in details.tags | orderBy:[tagRank, 'key'] | filter:tagAlwaysShown">{{ ::formatDetailName(tag.key) }}</dt>
-				<dd ng-repeat-end ng-class="{clickable: tagHasDetails(tag)}" ng-click="showTagDetails(tag)"
-				><span ng-bind-html="::formatDetailValue(tag.value, tag.key)"></span><button class="icon-info" ng-if="::tagHasDetails(tag)"></button></dd>
+				<dd ng-repeat-end><span ng-repeat="valueLine in tag.value track by $index" ng-class="{clickable: tagHasDetails(tag.key, valueLine)}" ng-click="showTagDetails(tag.key, valueLine)"
+				><br ng-if="!$first"/><span ng-bind-html="::formatDetailValue(valueLine, tag.key)"></span><button class="icon-info" ng-if="::tagHasDetails(tag.key, valueLine)"></button></span></dd>
 	
 				<dt ng-if="details.length">length</dt>
 				<dd ng-if="details.length">{{ details.length | playTime }}</dd>
@@ -33,22 +33,23 @@
 			<p class="show-more-less" ng-if-start="anyCollapsibleTags(details.tags)" ng-init="collapsed = true" ng-click="collapsed = false" ng-show="collapsed" translate>Show more…</p>
 			<dl class="tags" ng-show="!collapsed">
 				<dt ng-repeat-start="tag in details.tags | orderBy:[tagRank, 'key'] | filter:tagShownWhenExpanded">{{ ::formatDetailName(tag.key) }}</dt>
-				<dd ng-repeat-end ng-class="{clickable: tagHasDetails(tag)}" ng-click="showTagDetails(tag)"
-				><span ng-bind-html="::formatDetailValue(tag.value, tag.key)"></span><button class="icon-info" ng-if="::tagHasDetails(tag)"></button></dd>
+				<dd ng-repeat-end><span ng-repeat="valueLine in tag.value track by $index" ng-class="{clickable: tagHasDetails(tag.key, valueLine)}" ng-click="showTagDetails(tag.key, valueLine)"
+				><br ng-if="!$first"/><span ng-bind-html="::formatDetailValue(valueLine, tag.key)"></span><button class="icon-info" ng-if="::tagHasDetails(tag.key, valueLine)"></button></span></dd>
 			</dl>
 			<p class="show-more-less" ng-if-end ng-show="!collapsed" ng-click="collapsed = true" translate>Show less…</p>
 		</div>
 
 		<div class="tab" id="lyrics-tab-view" ng-show="selectedTab=='lyrics'">
-			<div class="lyrics" ng-if="!details.lyrics.synced">{{ formatDetailValue(details.lyrics.unsynced) }}</div>
+			<div class="lyrics" ng-if="!details.lyrics.synced">{{ details.lyrics.unsynced }}</div>
 			<div class="lyrics" ng-if="details.lyrics.synced"
 				ng-repeat="row in details.lyrics.synced" data-timestamp="{{row.time}}">{{row.text}}</div>
 		</div>
 
 		<div class="tab" id="technical-tab-view" ng-show="selectedTab=='technical'">
 			<dl class="fileinfo">
-				<dt ng-repeat-start="info in details.fileinfo">{{ ::formatDetailName(info.key) }}</dt>
-				<dd title="{{ valueTooltip(info.value, info.key) }}" ng-repeat-end>{{ ::formatDetailValue(info.value, info.key) }}</dd>
+				<dt ng-repeat-start="tag in details.fileinfo">{{ ::formatDetailName(tag.key) }}</dt>
+				<dd ng-repeat-end><span ng-repeat="valueLine in tag.value track by $index" ng-class="{clickable: tagHasDetails(tag.key, valueLine)}" ng-click="showTagDetails(tag.key, valueLine)"
+				><br ng-if="!$first"/><span ng-bind-html="::formatDetailValue(valueLine, tag.key)"></span><button class="icon-info" ng-if="::tagHasDetails(tag.key, valueLine)"></button></span></dd>
 			</dl>
 		</div>
 

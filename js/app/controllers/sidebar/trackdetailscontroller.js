@@ -28,8 +28,8 @@ angular.module('Music').controller('TrackDetailsController', [
 		}
 
 		function toArray(obj) {
-			return _.map(obj, function(val, key) {
-				return {key: key.toLowerCase(), value: val};
+			return _.map(obj, (val, key) => {
+				return {key: key.toLowerCase(), value: Array.isArray(val) ? val : [val]};
 			});
 		}
 
@@ -49,11 +49,10 @@ angular.module('Music').controller('TrackDetailsController', [
 				$('#path').attr('href', OC.generateUrl('/f/' + fileId));
 
 				Restangular.one('files', fileId).one('details').get().then(function(result) {
-					if (result.tags.picture) {
-						albumart.css('background-image', 'url("' + result.tags.picture + '")');
+					if (result.picture) {
+						albumart.css('background-image', 'url("' + result.picture + '")');
 						albumart.css('height', ''); // remove the inline height and use the one from the css file
 					}
-					delete result.tags.picture;
 
 					result.tags = toArray(result.tags);
 					result.fileinfo = toArray(result.fileinfo);
@@ -106,9 +105,7 @@ angular.module('Music').controller('TrackDetailsController', [
 		$scope.$watch('selectedTab', $scope.$parent.adjustFixedPositions);
 
 		$scope.formatDetailValue = function(value, key=null) {
-			if (Array.isArray(value)) {
-				return value.map((item) => $scope.formatDetailValue(item, key)).join('<br/>');
-			} else if (value instanceof Object) {
+			if (value instanceof Object) {
 				return Object.entries(value).map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join('; ') : v}`).join('<br/>');
 			} else if (key == 'sample_rate') {
 				return (value/1000).toFixed(1) + ' kHz';
@@ -199,34 +196,41 @@ angular.module('Music').controller('TrackDetailsController', [
 			return _.some(tags, (tag) => $scope.tagShownWhenExpanded(tag));
 		};
 
-		$scope.tagHasDetails = function(tag) {
-			switch (tag.key) {
-			case 'artist':			return $scope.track.artist.name == tag.value;
-			case 'album':			return $scope.track.album.name == tag.value;
-			case 'albumartist':		// fall through
-			case 'album_artist':	// fall through
-			case 'band':			return $scope.track.album.artist.name == tag.value;
-			case 'composer':		return $scope.track.composer?.name == tag.value;
-			default:				return false;
+		$scope.tagHasDetails = function(tagKey, tagValue) {
+			switch (tagKey) {
+			case 'album':
+				return $scope.track.album.name == tagValue;
+			case 'artist':
+			case 'albumartist':
+			case 'album_artist':
+			case 'band':
+			case 'composer':
+			case 'lyricist':
+			case 'writer':
+				return (libraryService.findArtistByName(tagValue) !== null);
+			default:
+				return false;
 			}
 		};
 
-		$scope.showTagDetails = function(tag) {
-			switch (tag.key) {
-			case 'artist':
-				$rootScope.$emit('showArtistDetails', $scope.track.artistId);
-				break;
+		$scope.showTagDetails = function(tagKey, tagValue) {
+			switch (tagKey) {
 			case 'album':
 				$rootScope.$emit('showAlbumDetails', $scope.track.album.id);
 				break;
-			case 'albumartist':		// fall through
-			case 'album_artist':	// fall through
+			case 'artist':
+			case 'albumartist':
+			case 'album_artist':
 			case 'band':
-				$rootScope.$emit('showArtistDetails', $scope.track.album.artist.id);
-				break;
 			case 'composer':
-				$rootScope.$emit('showArtistDetails', $scope.track.composerId);
+			case 'lyricist':
+			case 'writer': {
+				const artist = libraryService.findArtistByName(tagValue);
+				if (artist !== null) {
+					$rootScope.$emit('showArtistDetails', artist.id);
+				}
 				break;
+			}
 			default:
 				// nothing
 			}

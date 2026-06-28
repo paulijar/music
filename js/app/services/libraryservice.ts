@@ -753,6 +753,9 @@ export class LibraryService {
 	findTracksInvolvingArtist(artistId : number) : Track[] {
 		return _.uniq(this.findTracksByArtist(artistId).concat(this.findTracksByComposer(artistId)));
 	}
+	findArtistByName(name : string) : Artist|null {
+		return _.find(this.#artistsIndex, {name: name}) ?? null;
+	}
 	collectionLoaded() : boolean {
 		return this.#collection !== null;
 	}
