@@ -12,11 +12,6 @@
 
 use OCA\Music\Utility\HtmlUtil;
 
-/**
- * @var array $_
- * @var \OCP\IL10N $l
- */
-
 HtmlUtil::addWebpackScript('app');
 HtmlUtil::addWebpackScript('admin_settings');
 HtmlUtil::addWebpackStyle('app');
