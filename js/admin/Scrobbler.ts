@@ -37,13 +37,13 @@ class ScrobblerAdmin implements MusicAdminSection {
 				<input name="api_key" aria-label="${serviceLabel} ${keyLabel}" id="${identifierEsc}_api_key" type="text" value="${escape(this.#api_key)}" />
 			</div>
 			<div class="field">
-				<input type="checkbox" name="show_api_secret" id="${identifierEsc}_show_api_secret"/>
+				<input switch type="checkbox" name="show_api_secret" id="${identifierEsc}_show_api_secret"/>
 				<label for="${identifierEsc}_show_api_secret">${escape(t('music', 'Show API Secret'))}</label>
 				<label for="${identifierEsc}_api_secret">${secretLabel}</label>
-				<input name="api_secret" aria-label="${serviceLabel} ${secretLabel}" id="${identifierEsc}_api_secret" type="text" value="${escape(this.#api_secret)}" />
+				<input name="api_secret" aria-label="${serviceLabel} ${secretLabel}" id="${identifierEsc}_api_secret" type="password" value="${escape(this.#api_secret)}" />
 			</div>
 			<div class="field">
-				<button disabled name="submit_button" type="submit" title="${escape(t('music', 'Update API credentials for {service}', { service: this.#name }))}">${escape(t('music', 'Save'))}</button>
+				<button disabled name="submit_button" type="submit">${escape(t('music', 'Update API credentials for {service}', { service: this.#name }))}</button>
 			</div>
 		</fieldset>
 `);
@@ -58,12 +58,15 @@ class ScrobblerAdmin implements MusicAdminSection {
 		const apiKeyEl = <HTMLInputElement> formEl.elements.namedItem('api_key');
 		const apiSecretEl = <HTMLInputElement> formEl.elements.namedItem('api_secret');
 		const submitButton = <HTMLButtonElement> formEl.elements.namedItem('submit_button');
+		const showSecretCheck = <HTMLInputElement> formEl.elements.namedItem('show_api_secret');
 
 		formEl.addEventListener('submit', async (e: SubmitEvent) => {
 			e.preventDefault();
 			if (submitButton.disabled) {
 				return false;
 			}
+			showSecretCheck.checked = false;
+			apiSecretEl.type = 'password';
 
 			const url = OC.generateUrl(SETTINGS_ENDPOINT_PREFIX + formEl.name);
 			const result = await fetch(url, {
@@ -90,9 +93,12 @@ class ScrobblerAdmin implements MusicAdminSection {
 		});
 
 		// disable the submit button when form inputs match initial values
-		formEl.addEventListener('input', () => {
+		formEl.addEventListener('input', e => {
 			submitButton.disabled = apiKeyEl.value === this.#api_key && apiSecretEl.value === this.#api_secret
-        });
+			if (e.target === showSecretCheck) {
+				apiSecretEl.type = showSecretCheck.checked ? 'text' : 'password';
+			}
+		});
 	}
 }
 

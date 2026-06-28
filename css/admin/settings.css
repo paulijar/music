@@ -38,7 +38,8 @@
 	margin-top: calc(2 * var(--default-grid-baseline));
 }
 
-#admin-music .scrobbler .field input[type="text"] {
+#admin-music .scrobbler .field input[type="text"],
+#admin-music .scrobbler .field input[type="password"] {
 	/* scrobbler keys and secrets are generally 32 characters, so use a value slightly larger than that */
 	width: min(40rch, calc(100vw - 60px));
 }
@@ -46,13 +47,5 @@
 #admin-music .scrobbler [name="show_api_secret"],
 #admin-music .scrobbler [name="show_api_secret"] + label {
 	order: 1
-}
-
-#admin-music .scrobbler .field [name="show_api_secret"]:checked ~ [name="api_secret"] {
-	-webkit-text-security: none;
-}
-
-#admin-music .scrobbler .field [name="api_secret"] {
-	-webkit-text-security: disc;
 }
 
