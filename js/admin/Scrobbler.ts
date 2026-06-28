@@ -79,11 +79,11 @@ class ScrobblerAdmin implements MusicAdminSection {
 			});
 
 			if (!result.ok) {
-				OC.Notification.show((await result.json()).error, {type: 'toast-error'});
+				OCA.Music.Dialogs.showErrorNotification((await result.json()).error);
 				return;
 			}
 
-			OC.Notification.showTemporary(`Updated ${this.#name} credentials!`, {type: 'toast-success'});
+			OCA.Music.Dialogs.showNotification(t('music', 'Updated {name} credentials!', {name: this.#name}));
 			this.#api_key = apiKeyEl.value;
 			this.#api_secret = apiSecretEl.value;
 			submitButton.disabled = true;
