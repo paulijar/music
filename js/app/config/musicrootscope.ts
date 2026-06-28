@@ -14,9 +14,9 @@ import * as ng from 'angular';
  * Extension of the AngularJS IRootScopeService with some app-specific fields
  */
 export interface MusicRootScope extends ng.IRootScopeService {
-    currentView : string;
-    playing : boolean;
+	currentView : string;
+	playing : boolean;
 	playingView : string;
-    loading : boolean;
-    loadingCollection : boolean;
+	loading : boolean;
+	loadingCollection : boolean;
 }
