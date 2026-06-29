@@ -127,7 +127,11 @@ export default class ScrobblersAdmin implements MusicAdminSection {
 		root.insertAdjacentHTML('afterbegin', `
 		<div class="scrobbler-intro">
 			<h2>${t('music', 'Scrobbler Configuration')}</h2>
-			<p>${t('music', 'Configure API connection to begin scrobbling. Check the <a target="_blank" href="https://github.com/nc-music/music/wiki/">documentation</a> for more details.')}</p>
+			<p>${t(
+				'music',
+				'Configure API connection to begin scrobbling. Check the <a target="_blank" href="{url}">documentation</a> for more details.',
+				{url: 'https://github.com/nc-music/music/wiki/Setting-up-Last.fm-connection'}
+			)}</p>
 		</div>
 		`);
 		// DOMPurify removes the target attribute
