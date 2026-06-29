@@ -31,6 +31,8 @@ use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\Attribute\UseSession;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\HintException;
+use OCP\IL10N;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\Security\ISecureRandom;
@@ -55,7 +57,8 @@ class SettingController extends Controller {
 		private ISecureRandom $secureRandom,
 		private IURLGenerator $urlGenerator,
 		private Logger $logger,
-		private array $externalScrobblers
+		private array $externalScrobblers,
+		private IL10N $l10n,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -158,6 +161,36 @@ class SettingController extends Controller {
 		}
 
 		return $services;
+	}
+
+	#[NoCSRFRequired]
+	public function setScrobblerCredentials(string $serviceIdentifier, string $apiKey = '', string $apiSecret = '') : JSONResponse {
+		try {
+			$updated = false;
+			foreach ($this->externalScrobblers as $externalScrobbler) {
+				if ($externalScrobbler->getIdentifier() === $serviceIdentifier) {
+					$externalScrobbler->setApiKey($apiKey);
+					$externalScrobbler->setApiSecret($apiSecret);
+					$updated = true;
+					break;
+				}
+			}
+
+			if (!$updated) {
+				return new JSONResponse([
+					'error' => $this->l10n->t('Could not find Scrobbler with identifier \'%s\'', [$serviceIdentifier])
+				], 404);
+			}
+		} catch (HintException $e) {
+			return new JSONResponse([
+				'error' => $this->l10n->t('Unable to update config file. Error from Server: \'%s\'', [$e->getMessage()])
+			], 403);
+		} catch (\Throwable $t) {
+			return new JSONResponse([
+				'error' => $this->l10n->t('Unexpected error. Error from server: \'%s\'', [$t->getMessage()])
+			], 400);
+		}
+		return new JSONResponse([]);
 	}
 
 	private function storeUserKey(?string $description, string $password) : ?int {

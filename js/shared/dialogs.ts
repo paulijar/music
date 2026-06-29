@@ -89,4 +89,14 @@ OCA.Music.Dialogs = class {
 			close: true,
 		}).showToast();
 	}
+
+	static showErrorNotification(message : string) {
+		Toastify({
+			ariaLive: 'assertive',
+			className: 'dialogs toast-error',
+			close: true,
+			duration: -1,
+			text: message,
+		}).showToast();
+	}
 };
