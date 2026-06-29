@@ -321,6 +321,7 @@ function ($rootScope, $scope, $document, $timeout, $window, ArtistFactory,
 		if ($scope.smartListParams !== null) {
 			$scope.smartListParams.genres = [];
 			$scope.smartListParams.artists = [];
+			$scope.smartListParams.composers = [];
 		}
 	};
 
