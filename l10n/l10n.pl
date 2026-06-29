@@ -86,6 +86,7 @@ my @dirs = ();
 # Append Music app directories which are not handled by angular-gettext
 push(@dirs, $pwd . "/lib");
 push(@dirs, $pwd . "/templates");
+push(@dirs, $pwd . "/js/admin");
 push(@dirs, $pwd . "/js/dashboard");
 push(@dirs, $pwd . "/js/embedded");
 push(@dirs, $pwd . "/js/shared");
