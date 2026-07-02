@@ -11,9 +11,9 @@
  */
 
 angular.module('Music').controller('MainController', [
-'$rootScope', '$scope', '$document', '$timeout', '$window', 'ArtistFactory', 
+'$rootScope', '$scope', '$document', '$timeout', '$window', 'libraryFactory', 
 'playQueueService', 'libraryService', 'inViewService', 'gettextCatalog', 'Restangular',
-function ($rootScope, $scope, $document, $timeout, $window, ArtistFactory, 
+function ($rootScope, $scope, $document, $timeout, $window, libraryFactory, 
 		playQueueService, libraryService, inViewService, gettextCatalog, Restangular) {
 
 	// retrieve language from backend - is set in ng-app HTML element
@@ -132,20 +132,11 @@ function ($rootScope, $scope, $document, $timeout, $window, ArtistFactory,
 		$rootScope.$emit('collectionUpdating');
 
 		// load the music collection
-		ArtistFactory.getArtists().then(function(artists) {
-			libraryService.setCollection(artists);
-			$scope.artists = libraryService.getCollection();
-
-			// Emit the event asynchronously so that the DOM tree has already been
-			// manipulated and rendered by the browser when observers get the event.
-			$timeout(function() {
-				$rootScope.$emit('collectionLoaded');
-			});
+		libraryFactory.getCollection().then(function(collection) {
+			$scope.artists = collection;
 
 			// Load playlists once the collection has been loaded
-			Restangular.all('playlists').getList({type: 'music-app'}).then(function(playlists) {
-				libraryService.setPlaylists(playlists);
-				$scope.playlists = libraryService.getAllPlaylists();
+			libraryFactory.getPlaylists().then(function(_playlists) {
 				$rootScope.$emit('playlistsLoaded');
 
 				// fetch favorites once library, playlists, and podcasts are all loaded
@@ -337,17 +328,6 @@ function ($rootScope, $scope, $document, $timeout, $window, ArtistFactory,
 			$scope.smartListParams.genres = [];
 			$scope.smartListParams.artists = [];
 			$scope.smartListParams.composers = [];
-		}
-	};
-
-	$scope.loadFoldersAndThen = function(callback) {
-		if (libraryService.foldersLoaded()) {
-			$timeout(callback);
-		} else {
-			Restangular.one('folders').get().then(function (folders) {
-				libraryService.setFolders(folders);
-				callback();
-			});
 		}
 	};
 

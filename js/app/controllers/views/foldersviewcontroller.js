@@ -5,13 +5,13 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2019 - 2024
+ * @copyright Pauli Järvinen 2019 - 2026
  */
 
 
 angular.module('Music').controller('FoldersViewController', [
-	'$rootScope', '$scope', '$timeout', '$document', 'playQueueService', 'libraryService',
-	function ($rootScope, $scope, $timeout, $document, playQueueService, libraryService) {
+	'$rootScope', '$scope', '$timeout', 'playQueueService', 'libraryService', 'libraryFactory',
+	function ($rootScope, $scope, $timeout, playQueueService, libraryService, libraryFactory) {
 
 		$scope.folders = null;
 		$scope.rootFolder = null;
@@ -152,30 +152,18 @@ angular.module('Music').controller('FoldersViewController', [
 			playQueueService.unsubscribeAll(this);
 		});
 
-		// Init happens either immediately (after making the loading animation visible)
-		// or once collection has been loaded
-		if (libraryService.collectionLoaded()) {
-			$timeout(initView);
-		}
-
 		subscribe('collectionUpdating', function() {
 			$scope.folders = null;
 			$scope.rootFolder = null;
 		});
 
-		subscribe('collectionLoaded', function () {
-			$timeout(initView);
-		});
+		libraryFactory.getRootFolder().then(() => $timeout(initView));
 
 		function initView() {
+			$scope.folders = libraryService.getAllFoldersWithTracks();
+			$scope.rootFolder = libraryService.getRootFolder();
 			$scope.incrementalLoadLimit = 0;
-			if ($scope.$parent) {
-				$scope.$parent.loadFoldersAndThen(function() {
-					$scope.folders = libraryService.getAllFoldersWithTracks();
-					$scope.rootFolder = libraryService.getRootFolder();
-					makeContentVisible();
-				});
-			}
+			makeContentVisible();
 		}
 
 		function makeContentVisible() {

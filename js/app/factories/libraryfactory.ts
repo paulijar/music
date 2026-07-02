@@ -1,0 +1,64 @@
+/**
+ * Nextcloud Music app
+ *
+ * This file is licensed under the Affero General Public License version 3 or
+ * later. See the COPYING file.
+ *
+ * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
+ * @copyright 2026 Pauli Järvinen
+ *
+ */
+
+import * as angular from 'angular';
+import { MusicRootScope } from 'app/config/musicrootscope';
+import { IService } from 'restangular';
+import { Artist, Folder, LibraryService, Playlist } from 'app/services/libraryservice';
+
+angular.module('Music').factory('libraryFactory', ['Restangular', '$rootScope', 'libraryService', function (Restangular : IService, $rootScope : MusicRootScope, libraryService : LibraryService) {
+
+	let collectionPromise : angular.IPromise<Artist[]> | null = null;
+	let rootFolderPromise : angular.IPromise<Folder> | null = null;
+	let playlistsPromise : angular.IPromise<Playlist[]> | null = null;
+
+	return {
+		getCollection() : angular.IPromise<Artist[]> {
+			if (!collectionPromise) {
+				collectionPromise = Restangular.all('prepare_collection').post({}).then(async (reply) => {
+					$rootScope.$emit('newCoverArtToken', reply.cover_token);
+					$rootScope.$emit('updateIgnoredArticles', reply.ignored_articles);
+					const artists = await Restangular.all('collection').getList({ hash: reply.hash });
+					libraryService.setCollection(artists);
+					$rootScope.$emit('collectionLoaded');
+					return libraryService.getCollection();
+				});
+			}
+			return collectionPromise;
+		},
+
+		getRootFolder() : angular.IPromise<Folder> {
+			if (!rootFolderPromise) {
+				const fetchFoldersPromise = Restangular.all('folders').getList();
+
+				// the collection has to be set on the libraryService before the folders can be set
+				rootFolderPromise = Promise.all([this.getCollection(), fetchFoldersPromise]).then(([_collection, folders]) => {
+					libraryService.setFolders(folders);
+					return libraryService.getRootFolder();
+				});
+			}
+			return rootFolderPromise;
+		},
+
+		getPlaylists() : angular.IPromise<Playlist[]> {
+			if (!playlistsPromise) {
+				const fetchPlaylistsPromise = Restangular.all('playlists').getList({type: 'music-app'});
+
+				// the collection has to be set on the libraryService before the playlists can be set
+				playlistsPromise = Promise.all([this.getCollection(), fetchPlaylistsPromise]).then(([_collection, playlists]) => {
+					libraryService.setPlaylists(playlists);
+					return libraryService.getAllPlaylists();
+				});
+			}
+			return playlistsPromise;
+		}
+	};
+}]);

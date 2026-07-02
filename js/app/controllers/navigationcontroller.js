@@ -13,11 +13,15 @@
 
 angular.module('Music').controller('NavigationController', [
 	'$rootScope', '$scope', '$timeout', '$location', 'gettextCatalog',
-	'playQueueService', 'playlistService', 'playlistFileService', 'podcastService', 'libraryService',
+	'playQueueService', 'playlistService', 'playlistFileService', 'podcastService', 'libraryService', 'libraryFactory',
 	function ($rootScope, $scope, $timeout, $location, gettextCatalog,
-			playQueueService, playlistService, playlistFileService, podcastService, libraryService) {
+			playQueueService, playlistService, playlistFileService, podcastService, libraryService, libraryFactory) {
 
 		$rootScope.loading = true;
+
+		libraryFactory.getPlaylists().then((playlists) => {
+			$scope.playlists = playlists;
+		});
 
 		$scope.newPlaylistName = '';
 		$scope.newPlaylistTrackIds = [];
@@ -290,9 +294,7 @@ angular.module('Music').controller('NavigationController', [
 				} else if (destination == '#/smartlist') {
 					play('smartlist', libraryService.getSmartList().tracks);
 				} else if (destination == '#/folders') {
-					$scope.$parent.loadFoldersAndThen(function() {
-						play('folders', libraryService.getTracksInFolderOrder(!$scope.foldersFlatLayout));
-					});
+					libraryFactory.getRootFolder().then(() => play('folders', libraryService.getTracksInFolderOrder(!$scope.foldersFlatLayout)));
 				} else if (destination == '#/genres') {
 					play('genres', libraryService.getTracksInGenreOrder());
 				} else if (destination === '#/radio') {

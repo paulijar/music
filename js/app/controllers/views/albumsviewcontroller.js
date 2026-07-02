@@ -290,7 +290,7 @@ angular.module('Music').controller('AlbumsViewController', [
 			// show more entries only if the view is not already (being) deactivated
 			if ($rootScope.currentView && $scope.$parent) {
 				$scope.incrementalLoadLimit += INCREMENTAL_LOAD_STEP;
-				if ($scope.incrementalLoadLimit < $scope.$parent.artists.length) {
+				if ($scope.incrementalLoadLimit < libraryService.getCollection().length) {
 					$timeout(showMore);
 				} else {
 					$rootScope.loading = false;
@@ -311,7 +311,7 @@ angular.module('Music').controller('AlbumsViewController', [
 
 		// Start making artists visible immediately if the artists are already loaded.
 		// Otherwise it happens on the 'collectionLoaded' event handler.
-		if ($scope.$parent.artists) {
+		if (libraryService.collectionLoaded()) {
 			showMore();
 		}
 
