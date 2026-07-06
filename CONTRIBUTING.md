@@ -12,4 +12,4 @@ Help us to maximize the effort we can spend fixing issues and adding new feature
 
 ### Contribute Code and translations
 High-quality pull requests fixing bugs or adding previously requested features are welcome. 
-At the moment, also translations can be contributed only through PRs, see https://github.com/owncloud/music/issues/671#issuecomment-782746463 for further details.
+At the moment, also translations can be contributed only through PRs, see https://github.com/nc-music/oc-music/issues/671#issuecomment-782746463 for further details.
