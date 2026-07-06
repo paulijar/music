@@ -15,18 +15,9 @@
 namespace OCA\Music\Service;
 
 use OC\Hooks\PublicEmitter;
-
-use OCP\Files\File;
-use OCP\Files\Folder;
-use OCP\Files\IRootFolder;
-use OCP\Files\Node;
-use OCP\IConfig;
-use OCP\IL10N;
-use OCP\L10N\IFactory;
-
 use OCA\Music\AppFramework\Core\Logger;
-use OCA\Music\BusinessLayer\ArtistBusinessLayer;
 use OCA\Music\BusinessLayer\AlbumBusinessLayer;
+use OCA\Music\BusinessLayer\ArtistBusinessLayer;
 use OCA\Music\BusinessLayer\GenreBusinessLayer;
 use OCA\Music\BusinessLayer\PlaylistBusinessLayer;
 use OCA\Music\BusinessLayer\TrackBusinessLayer;
@@ -36,7 +27,13 @@ use OCA\Music\Utility\ArrayUtil;
 use OCA\Music\Utility\FilesUtil;
 use OCA\Music\Utility\StringUtil;
 use OCA\Music\Utility\Util;
-
+use OCP\Files\File;
+use OCP\Files\Folder;
+use OCP\Files\IRootFolder;
+use OCP\Files\Node;
+use OCP\IConfig;
+use OCP\IL10N;
+use OCP\L10N\IFactory;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class Scanner extends PublicEmitter {
@@ -55,7 +52,7 @@ class Scanner extends PublicEmitter {
 		private LibrarySettings $librarySettings,
 		private IRootFolder $rootFolder,
 		private IConfig $config,
-		private IFactory $l10nFactory
+		private IFactory $l10nFactory,
 	) {
 	}
 
@@ -83,13 +80,13 @@ class Scanner extends PublicEmitter {
 		$mimetype = $file->getMimeType();
 
 		if (StringUtil::startsWith($mimetype, 'image')) {
-			$this->logger->debug('image file moved: '. $file->getPath());
+			$this->logger->debug('image file moved: ' . $file->getPath());
 			// we don't need to track the identity of images and moving a file can be handled as it was
 			// a file deletion followed by a file addition
 			$this->deleteImage([$file->getId()], [$userId]);
 			$this->updateImage($file, $userId);
 		} elseif (StringUtil::startsWith($mimetype, 'audio') && !self::isPlaylistMime($mimetype)) {
-			$this->logger->debug('audio file moved: '. $file->getPath());
+			$this->logger->debug('audio file moved: ' . $file->getPath());
 			if ($this->librarySettings->pathBelongsToMusicLibrary($file->getPath(), $userId)) {
 				// In the new path, the file (now or still) belongs to the library. Even if it was already in the lib,
 				// the new path may have an influence on the album or artist name (in case of incomplete metadata).
@@ -108,7 +105,7 @@ class Scanner extends PublicEmitter {
 		$audioCount = \count($audioFiles);
 
 		if ($audioCount > 0) {
-			$this->logger->debug("folder with $audioCount audio files moved: ". $folder->getPath());
+			$this->logger->debug("folder with $audioCount audio files moved: " . $folder->getPath());
 
 			if ($this->librarySettings->pathBelongsToMusicLibrary($folder->getPath(), $userId)) {
 				// The new path of the folder belongs to the library but this doesn't necessarily mean
@@ -213,11 +210,11 @@ class Scanner extends PublicEmitter {
 			$this->cache->remove($userId, 'collection');
 		}
 
-		$this->logger->debug('imported entities - ' .
-				"artist: $artistId, albumArtist: $albumArtistId, album: $albumId, track: {$track->getId()}");
+		$this->logger->debug('imported entities - '
+				. "artist: $artistId, albumArtist: $albumArtistId, album: $albumId, track: {$track->getId()}");
 
 		return [
-			'analyze' => $time2 - $time1,
+			'analyze'   => $time2 - $time1,
 			'db update' => $time3 - $time2
 		];
 	}
@@ -320,8 +317,8 @@ class Scanner extends PublicEmitter {
 		$userCount = \count($affectedUsers);
 
 		if ($albumCount + $artistCount > 100) {
-			$this->logger->debug("Delete operation affected $albumCount albums and $artistCount artists. " .
-								"Invalidate the whole cache of all affected users ($userCount).");
+			$this->logger->debug("Delete operation affected $albumCount albums and $artistCount artists. "
+								. "Invalidate the whole cache of all affected users ($userCount).");
 			foreach ($affectedUsers as $user) {
 				$this->cache->remove($user);
 			}
@@ -354,11 +351,11 @@ class Scanner extends PublicEmitter {
 	 * @param string[]|null $userIds
 	 * @return boolean true if anything was removed
 	 */
-	public function deleteAudio(array $fileIds, ?array $userIds=null) : bool {
+	public function deleteAudio(array $fileIds, ?array $userIds = null) : bool {
 		$result = $this->trackBusinessLayer->deleteTracks($fileIds, $userIds);
 
 		if ($result) { // one or more tracks were removed
-			$this->logger->debug('library updated when audio file(s) removed: '. \implode(', ', $fileIds));
+			$this->logger->debug('library updated when audio file(s) removed: ' . \implode(', ', $fileIds));
 
 			// remove obsolete artists and albums, and track references in playlists
 			$this->albumBusinessLayer->deleteById($result['obsoleteAlbums']);
@@ -392,14 +389,14 @@ class Scanner extends PublicEmitter {
 	 * @param string[]|null $userIds
 	 * @return boolean true if anything was removed
 	 */
-	private function deleteImage(array $fileIds, ?array $userIds=null) : bool {
+	private function deleteImage(array $fileIds, ?array $userIds = null) : bool {
 		$affectedAlbums = $this->albumBusinessLayer->removeCovers($fileIds, $userIds);
 		$affectedArtists = $this->artistBusinessLayer->removeCovers($fileIds, $userIds);
 
 		$anythingAffected = (\count($affectedAlbums) + \count($affectedArtists) > 0);
 
 		if ($anythingAffected) {
-			$this->logger->debug('library covers updated when image file(s) removed: '. \implode(', ', $fileIds));
+			$this->logger->debug('library covers updated when image file(s) removed: ' . \implode(', ', $fileIds));
 
 			$affectedUsers = \array_merge(
 				ArrayUtil::extractUserIds($affectedAlbums),
@@ -424,7 +421,7 @@ class Scanner extends PublicEmitter {
 	 * @param string[]|null $userIds the IDs of the users to remove the file from; if omitted,
 	 *                               the file is removed from all users (ie. owner and sharees)
 	 */
-	public function delete(int $fileId, ?array $userIds=null) : void {
+	public function delete(int $fileId, ?array $userIds = null) : void {
 		// The removed file may or may not be of interesting type and belong to the library. It's
 		// most efficient just to try to remove it as audio or image. It will take just a few simple
 		// DB queries to notice if the file had nothing to do with our library.
@@ -441,7 +438,7 @@ class Scanner extends PublicEmitter {
 	 * @param string[]|null $userIds the IDs of the users to remove the folder from; if omitted,
 	 *                               the folder is removed from all users (ie. owner and sharees)
 	 */
-	public function deleteFolder(Folder $folder, ?array $userIds=null) : void {
+	public function deleteFolder(Folder $folder, ?array $userIds = null) : void {
 		$audioFiles = $folder->searchByMime('audio');
 		if (\count($audioFiles) > 0) {
 			$this->deleteAudio(ArrayUtil::extractIds($audioFiles), $userIds);
@@ -549,8 +546,8 @@ class Scanner extends PublicEmitter {
 		// Search files with mime 'audio/*' but filter out the playlist files and files under excluded folders
 		$files = $folder->searchByMime('audio');
 
-		$files = \array_filter($files, fn(Node $f) =>
-					!self::isPlaylistMime($f->getMimeType())
+		$files = \array_filter($files, fn (Node $f)
+					=> !self::isPlaylistMime($f->getMimeType())
 					&& $this->librarySettings->pathBelongsToMusicLibrary($f->getPath(), $userId)
 		);
 
@@ -566,9 +563,9 @@ class Scanner extends PublicEmitter {
 
 		return [
 			'unscannedFiles' => ArrayUtil::diff($availableIds, $scannedIds),
-			'obsoleteFiles' => ArrayUtil::diff($scannedIds, $availableIds),
-			'dirtyFiles' => $this->getDirtyMusicFileIds($userId, $path),
-			'scannedCount' => \count($scannedIds)
+			'obsoleteFiles'  => ArrayUtil::diff($scannedIds, $availableIds),
+			'dirtyFiles'     => $this->getDirtyMusicFileIds($userId, $path),
+			'scannedCount'   => \count($scannedIds)
 		];
 	}
 
@@ -603,7 +600,7 @@ class Scanner extends PublicEmitter {
 			}
 			if ($file instanceof File) {
 				$memBefore = $debugOutput ? \memory_get_usage(true) : 0;
-				list('analyze' => $analyzeTime, 'db update' => $dbTime)
+				['analyze' => $analyzeTime, 'db update' => $dbTime]
 					= $this->updateAudio($file, $userId, $libraryRoot, $file->getPath(), $file->getMimetype(), /*partOfScan=*/true);
 				if ($debugOutput) {
 					$memAfter = \memory_get_usage(true);
@@ -633,9 +630,9 @@ class Scanner extends PublicEmitter {
 		$this->cache->remove($userId, 'scanning', $scanTimestamp);
 
 		return [
-			'count' => $count,
+			'count'     => $count,
 			'anlz_time' => (int)($totalAnalyzeTime / 1000000),
-			'db_time' => (int)($totalDbTime / 1000000)
+			'db_time'   => (int)($totalDbTime / 1000000)
 		];
 	}
 
@@ -651,8 +648,8 @@ class Scanner extends PublicEmitter {
 
 		$count = \count($unavailableFiles);
 		if ($count > 0) {
-			$this->logger->info('The following files are no longer available within the library of the '.
-				"user $userId, removing: " . (string)\json_encode($unavailableFiles));
+			$this->logger->info('The following files are no longer available within the library of the '
+				. "user $userId, removing: " . (string)\json_encode($unavailableFiles));
 			$this->deleteAudio($unavailableFiles, [$userId]);
 		}
 		return $count;
@@ -698,7 +695,7 @@ class Scanner extends PublicEmitter {
 			if (!empty($cover)) {
 				$cover = $this->coverService->scaleDownAndCrop([
 					'mimetype' => $cover['image_mime'],
-					'content' => $cover['data']
+					'content'  => $cover['data']
 				], 200);
 			}
 			return [
@@ -765,7 +762,7 @@ class Scanner extends PublicEmitter {
 		// scratch the cache for those users whose music collection was touched
 		foreach ($affectedUsers as $user) {
 			$this->cache->remove($user, 'collection');
-			$this->logger->debug('album cover(s) were found for user '. $user);
+			$this->logger->debug('album cover(s) were found for user ' . $user);
 		}
 		return !empty($affectedUsers);
 	}
@@ -853,7 +850,7 @@ class Scanner extends PublicEmitter {
 	 * @param string|null $userId name of user, deducted from $albumId if omitted
 	 * @param Folder|null $baseFolder base folder for the search, library root of $userId is used if omitted
 	 */
-	private function findEmbeddedCoverForAlbum(int $albumId, ?string $userId=null, ?Folder $baseFolder=null) : void {
+	private function findEmbeddedCoverForAlbum(int $albumId, ?string $userId = null, ?Folder $baseFolder = null) : void {
 		if ($userId === null) {
 			$userId = $this->albumBusinessLayer->findAlbumOwner($albumId);
 		}

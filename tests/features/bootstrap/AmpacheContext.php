@@ -19,7 +19,7 @@ use Behat\Gherkin\Node\TableNode;
  */
 class AmpacheContext implements Context, SnippetAcceptingContext {
 	private $client;
-	/** @var  SimpleXMLElement */
+	/** @var SimpleXMLElement */
 	private $xml;
 	/** @var string specifies the requested resource */
 	private $resource;
@@ -29,8 +29,8 @@ class AmpacheContext implements Context, SnippetAcceptingContext {
 	/** @var array maps resources to the name of the XML element of the response */
 	private $resourceToXMLElementMapping = [
 		'artists' => 'artist',
-		'albums' => 'album',
-		'songs' => 'song',
+		'albums'  => 'album',
+		'songs'   => 'song',
 	];
 
 	/**
@@ -76,8 +76,8 @@ class AmpacheContext implements Context, SnippetAcceptingContext {
 	 * @Then I should get:
 	 */
 	public function iShouldGet(TableNode $table) {
-		$elements = $this->xml->xpath('/root/' .
-			$this->resourceToXMLElementMapping[$this->resource]);
+		$elements = $this->xml->xpath('/root/'
+			. $this->resourceToXMLElementMapping[$this->resource]);
 
 		$expectedIterator = $table->getIterator();
 		foreach ($elements as $element) {

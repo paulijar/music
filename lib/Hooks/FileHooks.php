@@ -15,17 +15,18 @@
 namespace OCA\Music\Hooks;
 
 use OCA\Music\AppFramework\Core\Logger;
-use OCP\Files\IRootFolder;
-use OCP\Files\FileInfo;
-use OCP\Files\Node;
-
 use OCA\Music\AppInfo\Application;
 use OCA\Music\BusinessLayer\TrackBusinessLayer;
 use OCA\Music\Service\Scanner;
+use OCP\Files\FileInfo;
+use OCP\Files\IRootFolder;
+use OCP\Files\Node;
 
 class FileHooks {
 
-	public function __construct(private IRootFolder $filesystemRoot) {
+	public function __construct(
+		private IRootFolder $filesystemRoot,
+	) {
 	}
 
 	/**
@@ -134,7 +135,7 @@ class FileHooks {
 	 */
 	private static function userHasMusicLib(string $userId) : bool {
 		$trackBusinessLayer = self::inject(TrackBusinessLayer::class);
-		return 0 < $trackBusinessLayer->count($userId);
+		return $trackBusinessLayer->count($userId) > 0;
 	}
 
 	private static function postRenamed(Node $source, Node $target) : void {
@@ -166,15 +167,15 @@ class FileHooks {
 	}
 
 	public static function safeUpdated(Node $node) : void {
-		self::safeExecute(fn() => self::updated($node));
+		self::safeExecute(fn () => self::updated($node));
 	}
 
 	public static function safeDeleted(Node $node) : void {
-		self::safeExecute(fn() => self::deleted($node));
+		self::safeExecute(fn () => self::deleted($node));
 	}
 
 	public static function safePostRenamed(Node $source, Node $target) : void {
-		self::safeExecute(fn() => self::postRenamed($source, $target));
+		self::safeExecute(fn () => self::postRenamed($source, $target));
 	}
 
 	public function register() : void {

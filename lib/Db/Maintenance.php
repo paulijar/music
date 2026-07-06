@@ -14,15 +14,14 @@
 
 namespace OCA\Music\Db;
 
-use OCP\IDBConnection;
-
 use OCA\Music\AppFramework\Core\Logger;
+use OCP\IDBConnection;
 
 class Maintenance {
 
 	public function __construct(
 		private IDBConnection $db,
-		private Logger $logger
+		private Logger $logger,
 	) {
 	}
 
@@ -48,7 +47,7 @@ class Maintenance {
 				);
 			}
 		}
-	
+
 		return $modRows;
 	}
 
@@ -103,7 +102,7 @@ class Maintenance {
 	 * @param string|null $extraCond
 	 * @return int Number of removed rows
 	 */
-	private function removeUnreferencedDbRows(string $tgtTable, string $refTable, string $tgtTableKey, string $refTableKey, ?string $extraCond=null) : int {
+	private function removeUnreferencedDbRows(string $tgtTable, string $refTable, string $tgtTableKey, string $refTableKey, ?string $extraCond = null) : int {
 		$tgtTable = '*PREFIX*' . $tgtTable;
 		$refTable = '*PREFIX*' . $refTable;
 
@@ -116,8 +115,7 @@ class Maintenance {
 					WHERE `$refTable`.`$refTableKey` IS NULL
 				) mysqlhack
 			)"
-			.
-			(empty($extraCond) ? '' : " AND $extraCond")
+			. (empty($extraCond) ? '' : " AND $extraCond")
 		);
 	}
 
@@ -211,28 +209,28 @@ class Maintenance {
 		if (!$skipDuringScan) {
 			$removedCovers = $this->removeObsoleteAlbumCoverImages();
 			$removedCovers += $this->removeObsoleteArtistCoverImages();
-	
+
 			$removedTracks = $this->removeObsoleteTracks();
 			$removedAlbums = $this->removeObsoleteAlbums();
 			$removedArtists = $this->removeObsoleteArtists();
 			$removedGenres = $this->removeObsoleteGenres();
 			$removedBookmarks = $this->removeObsoleteBookmarks();
 			$removedEpisodes = $this->removeObsoletePodcastEpisodes();
-	
+
 			$removedAlbums += $this->removeAlbumsWithNoArtist();
 			$removedTracks += $this->removeTracksWithNoAlbum();
 			$removedTracks += $this->removeTracksWithNoArtist();
 		}
 
 		return [
-			'scanFlags' => $removedScanFlags,
-			'covers' => $removedCovers ?? 0,
-			'artists' => $removedArtists ?? 0,
-			'albums' => $removedAlbums ?? 0,
-			'tracks' => $removedTracks ?? 0,
-			'genres' => $removedGenres ?? 0,
-			'bookmarks' => $removedBookmarks ?? 0,
-			'podcast_episodes' => $removedEpisodes ?? 0,
+			'scanFlags'                        => $removedScanFlags,
+			'covers'                           => $removedCovers ?? 0,
+			'artists'                          => $removedArtists ?? 0,
+			'albums'                           => $removedAlbums ?? 0,
+			'tracks'                           => $removedTracks ?? 0,
+			'genres'                           => $removedGenres ?? 0,
+			'bookmarks'                        => $removedBookmarks ?? 0,
+			'podcast_episodes'                 => $removedEpisodes ?? 0,
 			'skipped_because_scan_in_progress' => $skipDuringScan
 		];
 	}
@@ -252,7 +250,7 @@ class Maintenance {
 		$params = [];
 		$sql = "DELETE FROM `*PREFIX*music_$table`";
 		if (!$allUsers) {
-			$sql .=  ' WHERE `user_id` = ?';
+			$sql .= ' WHERE `user_id` = ?';
 			$params[] = $userId;
 		}
 		$this->db->executeStatement($sql, $params);
@@ -277,7 +275,7 @@ class Maintenance {
 		}
 
 		if ($allUsers) {
-			$this->logger->info("Erased music databases of all users");
+			$this->logger->info('Erased music databases of all users');
 		} else {
 			$this->logger->info("Erased music database of user $userId");
 		}

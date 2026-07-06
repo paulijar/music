@@ -16,7 +16,6 @@ namespace OCA\Music\AppInfo;
 
 use OCA\Files\Event\LoadAdditionalScriptsEvent;
 use OCA\Files_Sharing\Event\BeforeTemplateRenderedEvent;
-
 use OCA\Music\AppFramework\Core\Logger;
 use OCA\Music\BusinessLayer\AlbumBusinessLayer;
 use OCA\Music\BusinessLayer\TrackBusinessLayer;
@@ -29,7 +28,6 @@ use OCA\Music\Middleware\SubsonicMiddleware;
 use OCA\Music\Service\Scrobbling\AggregateScrobbler;
 use OCA\Music\Service\Scrobbling\ExternalScrobbler;
 use OCA\Music\Service\Scrobbling\IScrobbler;
-
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
@@ -43,7 +41,7 @@ use OCP\Security\IContentSecurityPolicyManager;
 use OCP\Security\ICrypto;
 
 class Application extends App implements IBootstrap {
-	public function __construct(array $urlParams=[]) {
+	public function __construct(array $urlParams = []) {
 		parent::__construct('music', $urlParams);
 
 		\mb_internal_encoding('UTF-8');

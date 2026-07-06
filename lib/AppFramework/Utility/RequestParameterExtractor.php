@@ -19,7 +19,7 @@ use OCP\IRequest;
 class RequestParameterExtractor {
 	public function __construct(
 		private IRequest $request,
-		private array $customFilters = []
+		private array $customFilters = [],
 	) {
 	}
 

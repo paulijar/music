@@ -41,10 +41,10 @@ class AmpacheClient {
 
 		$this->authToken = null;
 		$xml = $this->request('handshake', [
-			'auth' => $passphrase,
+			'auth'      => $passphrase,
 			'timestamp' => $time,
-			'version' => 350001,
-			'user' => $userName,
+			'version'   => 350001,
+			'user'      => $userName,
 		]);
 
 		$authToken = $xml->xpath('/root/auth');

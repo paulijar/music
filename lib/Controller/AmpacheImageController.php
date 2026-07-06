@@ -12,12 +12,12 @@
 
 namespace OCA\Music\Controller;
 
-use OCA\Music\BusinessLayer\AlbumBusinessLayer;
-use OCA\Music\BusinessLayer\ArtistBusinessLayer;
-use OCA\Music\BusinessLayer\PlaylistBusinessLayer;
 use OCA\Music\AppFramework\BusinessLayer\BusinessLayer;
 use OCA\Music\AppFramework\BusinessLayer\BusinessLayerException;
 use OCA\Music\AppFramework\Core\Logger;
+use OCA\Music\BusinessLayer\AlbumBusinessLayer;
+use OCA\Music\BusinessLayer\ArtistBusinessLayer;
+use OCA\Music\BusinessLayer\PlaylistBusinessLayer;
 use OCA\Music\Db\Entity;
 use OCA\Music\Http\ErrorResponse;
 use OCA\Music\Http\FileResponse;
@@ -46,7 +46,7 @@ class AmpacheImageController extends Controller {
 		private AlbumBusinessLayer $albumBusinessLayer,
 		private ArtistBusinessLayer $artistBusinessLayer,
 		private PlaylistBusinessLayer $playlistBusinessLayer,
-		private Logger $logger
+		private Logger $logger,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -56,7 +56,7 @@ class AmpacheImageController extends Controller {
 	#[PublicPage]
 	#[NoCSRFRequired]
 	#[CORS]
-	public function image(?string $token, ?string $object_id, string $object_type='album', ?int $size=null) : Response {
+	public function image(?string $token, ?string $object_id, string $object_type = 'album', ?int $size = null) : Response {
 		if ($token === null) {
 			// Workaround for Ample client which uses this kind of call to get the placeholder graphics
 			$response = new FileResponse(PlaceholderImage::generateForResponse('?', $object_type, 200));

@@ -20,16 +20,18 @@ use Symfony\Component\Console\Output\OutputInterface;
 class RegisterMimeTypes extends Command {
 
 	private array $mimeMappings = [
-		'aac'	=> ['audio/aac'],
-		'aif'	=> ['audio/aiff'],
-		'aifc'	=> ['audio/aiff'],
-		'aiff'	=> ['audio/aiff'],
-		'au'	=> ['audio/basic'],
-		'caf'	=> ['audio/x-caf'],
-		'wpl'	=> ['application/vnd.ms-wpl'],
+		'aac'  => ['audio/aac'],
+		'aif'  => ['audio/aiff'],
+		'aifc' => ['audio/aiff'],
+		'aiff' => ['audio/aiff'],
+		'au'   => ['audio/basic'],
+		'caf'  => ['audio/x-caf'],
+		'wpl'  => ['application/vnd.ms-wpl'],
 	];
 
-	public function __construct(private IMimeTypeLoader $mimeTypeLoader) {
+	public function __construct(
+		private IMimeTypeLoader $mimeTypeLoader,
+	) {
 		parent::__construct();
 	}
 
@@ -70,7 +72,7 @@ class RegisterMimeTypes extends Command {
 				}
 			}
 		} else {
-			$output->writeln("  Could not update the filecache");
+			$output->writeln('  Could not update the filecache');
 		}
 	}
 

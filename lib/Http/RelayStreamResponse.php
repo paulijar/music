@@ -12,12 +12,10 @@
 
 namespace OCA\Music\Http;
 
-use OCA\Music\Utility\ArrayUtil;
+use OCA\Music\Utility\HttpUtil;
 use OCP\AppFramework\Http\ICallbackResponse;
 use OCP\AppFramework\Http\IOutput;
 use OCP\AppFramework\Http\Response;
-
-use OCA\Music\Utility\HttpUtil;
 
 /**
  * Response which relays a radio stream or similar from an original source URL

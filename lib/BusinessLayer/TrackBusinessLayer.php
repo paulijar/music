@@ -20,13 +20,12 @@ use OCA\Music\AppFramework\Core\Logger;
 use OCA\Music\Db\Cache;
 use OCA\Music\Db\MatchMode;
 use OCA\Music\Db\SortBy;
-use OCA\Music\Db\TrackMapper;
 use OCA\Music\Db\Track;
+use OCA\Music\Db\TrackMapper;
 use OCA\Music\Service\FileSystemService;
 use OCA\Music\Service\Scrobbling\IScrobbler;
 use OCA\Music\Utility\ArrayUtil;
 use OCA\Music\Utility\StringUtil;
-
 use OCP\AppFramework\Db\DoesNotExistException;
 
 /**
@@ -43,7 +42,7 @@ class TrackBusinessLayer extends BusinessLayer implements IScrobbler {
 		TrackMapper $trackMapper,
 		private FileSystemService $fileSystemService,
 		private Logger $logger,
-		private Cache $cache
+		private Cache $cache,
 	) {
 		parent::__construct($trackMapper);
 	}
@@ -53,7 +52,7 @@ class TrackBusinessLayer extends BusinessLayer implements IScrobbler {
 	 * @param int|int[] $artistId
 	 * @return Track[]
 	 */
-	public function findAllByArtist(int|array $artistId, string $userId, ?int $limit=null, ?int $offset=null) : array {
+	public function findAllByArtist(int|array $artistId, string $userId, ?int $limit = null, ?int $offset = null) : array {
 		if (empty($artistId)) {
 			return [];
 		} else {
@@ -69,7 +68,7 @@ class TrackBusinessLayer extends BusinessLayer implements IScrobbler {
 	 * @param int|int[] $albumId
 	 * @return Track[]
 	 */
-	public function findAllByAlbum(int|array $albumId, string $userId, ?int $artistId=null, ?int $limit=null, ?int $offset=null) : array {
+	public function findAllByAlbum(int|array $albumId, string $userId, ?int $artistId = null, ?int $limit = null, ?int $offset = null) : array {
 		if (empty($albumId)) {
 			return [];
 		} else {
@@ -84,7 +83,7 @@ class TrackBusinessLayer extends BusinessLayer implements IScrobbler {
 	 * Returns all tracks filtered by parent folder
 	 * @return Track[]
 	 */
-	public function findAllByFolder(int $folderId, string $userId, ?int $limit=null, ?int $offset=null) : array {
+	public function findAllByFolder(int $folderId, string $userId, ?int $limit = null, ?int $offset = null) : array {
 		return $this->mapper->findAllByFolder($folderId, $userId, $limit, $offset);
 	}
 
@@ -92,7 +91,7 @@ class TrackBusinessLayer extends BusinessLayer implements IScrobbler {
 	 * Returns all tracks filtered by genre
 	 * @return Track[]
 	 */
-	public function findAllByGenre(int $genreId, string $userId, ?int $limit=null, ?int $offset=null) : array {
+	public function findAllByGenre(int $genreId, string $userId, ?int $limit = null, ?int $offset = null) : array {
 		return $this->mapper->findAllByGenre($genreId, $userId, $limit, $offset);
 	}
 
@@ -102,7 +101,7 @@ class TrackBusinessLayer extends BusinessLayer implements IScrobbler {
 	 * @param string $userId the name of the user
 	 * @return Track[]
 	 */
-	public function findAllByNameRecursive(string $name, string $userId, ?int $limit=null, ?int $offset=null) : array {
+	public function findAllByNameRecursive(string $name, string $userId, ?int $limit = null, ?int $offset = null) : array {
 		$name = \trim($name);
 		return $this->mapper->findAllByNameRecursive($name, $userId, $limit, $offset);
 	}
@@ -126,7 +125,7 @@ class TrackBusinessLayer extends BusinessLayer implements IScrobbler {
 	 * Find most frequently played tracks
 	 * @return Track[]
 	 */
-	public function findFrequentPlay(string $userId, ?int $limit=null, ?int $offset=null) : array {
+	public function findFrequentPlay(string $userId, ?int $limit = null, ?int $offset = null) : array {
 		return $this->mapper->findFrequentPlay($userId, $limit, $offset);
 	}
 
@@ -134,7 +133,7 @@ class TrackBusinessLayer extends BusinessLayer implements IScrobbler {
 	 * Find most recently played tracks
 	 * @return Track[]
 	 */
-	public function findRecentPlay(string $userId, ?int $limit=null, ?int $offset=null) : array {
+	public function findRecentPlay(string $userId, ?int $limit = null, ?int $offset = null) : array {
 		return $this->mapper->findRecentPlay($userId, $limit, $offset);
 	}
 
@@ -142,7 +141,7 @@ class TrackBusinessLayer extends BusinessLayer implements IScrobbler {
 	 * Find least recently played tracks
 	 * @return Track[]
 	 */
-	public function findNotRecentPlay(string $userId, ?int $limit=null, ?int $offset=null) : array {
+	public function findNotRecentPlay(string $userId, ?int $limit = null, ?int $offset = null) : array {
 		return $this->mapper->findNotRecentPlay($userId, $limit, $offset);
 	}
 
@@ -163,7 +162,7 @@ class TrackBusinessLayer extends BusinessLayer implements IScrobbler {
 	 * Optionally, limit the search to files residing (directly or indirectly) in the given folder.
 	 * @return int[]
 	 */
-	public function findAllFileIds(string $userId, ?int $folderId=null) : array {
+	public function findAllFileIds(string $userId, ?int $folderId = null) : array {
 		$parentIds = ($folderId !== null) ? $this->fileSystemService->findAllDescendantFolders($folderId) : null;
 		return $this->mapper->findAllFileIds($userId, $parentIds);
 	}
@@ -176,7 +175,7 @@ class TrackBusinessLayer extends BusinessLayer implements IScrobbler {
 	 * Optionally, limit the search to files residing (directly or indirectly) in the given folder.
 	 * @return int[]
 	 */
-	public function findDirtyFileIds(string $userId, ?int $folderId=null) : array {
+	public function findDirtyFileIds(string $userId, ?int $folderId = null) : array {
 		$parentIds = ($folderId !== null) ? $this->fileSystemService->findAllDescendantFolders($folderId) : null;
 		return $this->mapper->findDirtyFileIds($userId, $parentIds);
 	}
@@ -264,7 +263,7 @@ class TrackBusinessLayer extends BusinessLayer implements IScrobbler {
 	 */
 	public function setNowPlaying(Track $track, ?\DateTime $timeOfPlay = null) : void {
 		$data = [
-			'trackId' => $track->getId(),
+			'trackId'    => $track->getId(),
 			'timeOfPlay' => ($timeOfPlay ?? new \DateTime())->getTimestamp()
 		];
 		$this->cache->set($track->getUserId(), 'nowPlaying', \json_encode($data));
@@ -291,7 +290,7 @@ class TrackBusinessLayer extends BusinessLayer implements IScrobbler {
 		$track = $this->find($trackId, $userId);
 
 		return [
-			'track' => $track,
+			'track'      => $track,
 			'timeOfPlay' => $timeOfPlay
 		];
 	}
@@ -314,8 +313,8 @@ class TrackBusinessLayer extends BusinessLayer implements IScrobbler {
 	 */
 	public function addOrUpdateTrack(
 			string $title, ?int $number, ?int $discNumber, ?int $year, int $genreId, int $artistId, int $albumId,
-			int $fileId, string $mimetype, string $userId, ?int $length=null, ?int $bitrate=null,
-			?int $bpm=null, ?int $composerId=null, ?string $comment=null) : Track {
+			int $fileId, string $mimetype, string $userId, ?int $length = null, ?int $bitrate = null,
+			?int $bpm = null, ?int $composerId = null, ?string $comment = null) : Track {
 		$track = new Track();
 		$track->setTitle(StringUtil::truncate($title, 256)); // some DB setups can't truncate automatically to column max size
 		$track->setNumber($number);
@@ -340,14 +339,14 @@ class TrackBusinessLayer extends BusinessLayer implements IScrobbler {
 	 * Deletes tracks
 	 * @param int[] $fileIds file IDs of the tracks to delete
 	 * @param string[]|null $userIds the target users; if omitted, the tracks matching the
-	 *                      $fileIds are deleted from all users
-	 * @return array|false  False is returned if no such track was found; otherwise array of six arrays
-	 *         (named 'deletedTracks', 'remainingAlbums', 'remainingArtists', 'obsoleteAlbums',
-	 *         'obsoleteArtists', and 'affectedUsers'). These contain the track, album, artist, and
-	 *         user IDs of the deleted tracks. The 'obsolete' entities are such which no longer
-	 *         have any tracks while 'remaining' entities have some left.
+	 *                               $fileIds are deleted from all users
+	 * @return array|false False is returned if no such track was found; otherwise array of six arrays
+	 *                     (named 'deletedTracks', 'remainingAlbums', 'remainingArtists', 'obsoleteAlbums',
+	 *                     'obsoleteArtists', and 'affectedUsers'). These contain the track, album, artist, and
+	 *                     user IDs of the deleted tracks. The 'obsolete' entities are such which no longer
+	 *                     have any tracks while 'remaining' entities have some left.
 	 */
-	public function deleteTracks(array $fileIds, ?array $userIds=null) {
+	public function deleteTracks(array $fileIds, ?array $userIds = null) {
 		$tracks = ($userIds !== null)
 			? $this->mapper->findByFileIds($fileIds, $userIds)
 			: $this->mapper->findAllByFileIds($fileIds);
@@ -415,9 +414,9 @@ class TrackBusinessLayer extends BusinessLayer implements IScrobbler {
 	 * Marks tracks as dirty, ultimately requesting the user to rescan them
 	 * @param int[] $fileIds file IDs of the tracks to mark as dirty
 	 * @param string[]|null $userIds the target users; if omitted, the tracks matching the
-	 *                      $fileIds are marked for all users
+	 *                               $fileIds are marked for all users
 	 */
-	public function markTracksDirty(array $fileIds, ?array $userIds=null) : void {
+	public function markTracksDirty(array $fileIds, ?array $userIds = null) : void {
 		// be prepared for huge number of file IDs
 		$chunkMaxSize = self::MAX_SQL_ARGS - \count($userIds ?? []);
 		$idChunks = \array_chunk($fileIds, $chunkMaxSize);

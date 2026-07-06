@@ -14,11 +14,10 @@
 
 namespace OCA\Music\Controller;
 
+use OCA\Music\DB\Track;
 use OCA\Music\Service\Scrobbling\IScrobbler;
 use OCA\Music\Tests\Utility\ControllerTestUtility;
 use OCP\AppFramework\Http\JSONResponse;
-
-use OCA\Music\DB\Track;
 
 class MusicApiControllerTest extends ControllerTestUtility {
 	private $trackBusinessLayer;
@@ -117,14 +116,14 @@ class MusicApiControllerTest extends ControllerTestUtility {
 			->will($this->returnValue($track));
 
 		$result = [
-			'title' => 'The title',
-			'id' => 1,
-			'number' => 4,
-			'disk' => 1,
-			'artistId' => 3,
+			'title'      => 'The title',
+			'id'         => 1,
+			'number'     => 4,
+			'disk'       => 1,
+			'artistId'   => 3,
 			'composerId' => 55,
-			'length' => 123,
-			'files' => [
+			'length'     => 123,
+			'files'      => [
 				'audio/mp3' => $fileId
 			]
 		];

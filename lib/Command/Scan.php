@@ -18,21 +18,19 @@
 
 namespace OCA\Music\Command;
 
+use OCA\Music\Service\Scanner;
+use OCP\IGroupManager;
+use OCP\IUserManager;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-
-use OCP\IGroupManager;
-use OCP\IUserManager;
-
-use OCA\Music\Service\Scanner;
 
 class Scan extends BaseCommand {
 
 	public function __construct(
 		IUserManager $userManager,
 		IGroupManager $groupManager,
-		private Scanner $scanner
+		private Scanner $scanner,
 	) {
 		parent::__construct($userManager, $groupManager);
 	}
@@ -82,8 +80,8 @@ class Scan extends BaseCommand {
 
 	protected function doExecute(InputInterface $input, OutputInterface $output, array $users) : void {
 		if (!$input->getOption('debug')) {
-			$this->scanner->listen(Scanner::class, 'update', fn($path) => $output->writeln("Scanning <info>$path</info>"));
-			$this->scanner->listen(Scanner::class, 'exclude', fn($path) => $output->writeln("!! Removing <info>$path</info>"));
+			$this->scanner->listen(Scanner::class, 'update', fn ($path) => $output->writeln("Scanning <info>$path</info>"));
+			$this->scanner->listen(Scanner::class, 'exclude', fn ($path) => $output->writeln("!! Removing <info>$path</info>"));
 		}
 
 		if ($input->getOption('rescan') && $input->getOption('skip-dirty')) {
@@ -92,7 +90,7 @@ class Scan extends BaseCommand {
 
 		if ($input->getOption('all')) {
 			$users = $this->userManager->search('');
-			$users = \array_map(fn($u) => $u->getUID(), $users);
+			$users = \array_map(fn ($u) => $u->getUID(), $users);
 		}
 
 		foreach ($users as $user) {
@@ -113,7 +111,7 @@ class Scan extends BaseCommand {
 			string $user, OutputInterface $output, bool $rescan, bool $skipDirty, bool $skipArt,
 			bool $cleanObsolete, ?string $folder, bool $debug) : void {
 
-		$output->writeln("Check library scan status for <info>$user</info>"  . ($folder ? " in path '$folder'..." : '...'));
+		$output->writeln("Check library scan status for <info>$user</info>" . ($folder ? " in path '$folder'..." : '...'));
 		$startTime = \hrtime(true);
 		\extract($this->scanner->getStatusOfLibraryFiles($user, $folder)); // populate $unscannedFiles, $obsoleteFiles, $dirtyFiles, $scannedCount
 		$statusTime = (int)((\hrtime(true) - $startTime) / 1000000);
@@ -126,7 +124,7 @@ class Scan extends BaseCommand {
 		$output->writeln("  Unscanned files: $unscannedCount");
 		$output->writeln("  Dirty files: $dirtyCount" . (($dirtyCount && $skipDirty) ? ' (skipped)' : ''));
 		$output->writeln("  Obsolete files: $obsoleteCount" . (($obsoleteCount && !$cleanObsolete) ? ' (use --clean-obsolete to remove)' : ''));
-		$output->writeln("");
+		$output->writeln('');
 
 		if ($cleanObsolete && !empty($obsoleteFiles)) {
 			if ($this->scanner->deleteAudio($obsoleteFiles, [$user])) {
@@ -154,26 +152,26 @@ class Scan extends BaseCommand {
 		}
 
 		if ($skipArt) {
-			$output->writeln("Cover art search skipped");
+			$output->writeln('Cover art search skipped');
 		} else {
 			$this->searchArt($user, $folder, $output);
 		}
 	}
 
 	private function searchArt(string $user, ?string $folder, OutputInterface $output) : void {
-		$output->writeln("");
-		$output->writeln("Searching cover images for albums with no cover art set...");
+		$output->writeln('');
+		$output->writeln('Searching cover images for albums with no cover art set...');
 		$startTime = \hrtime(true);
 		if ($this->scanner->findAlbumCovers($user, $folder)) {
-			$output->writeln("  Some album cover image(s) were found and added");
+			$output->writeln('  Some album cover image(s) were found and added');
 		}
 		$albumCoverTime = (int)((\hrtime(true) - $startTime) / 1000000);
 		$output->writeln("  Search took $albumCoverTime ms");
 
-		$output->writeln("Searching cover images for artists with no cover art set...");
+		$output->writeln('Searching cover images for artists with no cover art set...');
 		$startTime = \hrtime(true);
 		if ($this->scanner->findArtistCovers($user)) {
-			$output->writeln("  Some artist cover image(s) were found and added");
+			$output->writeln('  Some artist cover image(s) were found and added');
 		}
 		$artistCoverTime = (int)((\hrtime(true) - $startTime) / 1000000);
 		$output->writeln("  Search took $artistCoverTime ms");

@@ -45,10 +45,10 @@ class XmlResponse extends Response {
 	 */
 	public function __construct(
 		private array $content,
-		private bool|array $attributeKeys=true,
-		private bool $boolAsInt=false,
-		private bool $nullAsEmpty=false,
-		private ?string $textNodeKey='value'
+		private bool|array $attributeKeys = true,
+		private bool $boolAsInt = false,
+		private bool $nullAsEmpty = false,
+		private ?string $textNodeKey = 'value',
 	) {
 		$this->setStatus(Http::STATUS_OK);
 		$this->addHeader('Content-Type', 'application/xml');
@@ -81,7 +81,7 @@ class XmlResponse extends Response {
 	 * Add child element or attribute to a given element. In case the value of the child is an array,
 	 * all the nested children will be added recursively.
 	 */
-	private function addChildElement(\DOMElement $parentElem, string $key, string|int|float|bool|array|\stdClass|null $value, bool $allowAttribute=true) : void {
+	private function addChildElement(\DOMElement $parentElem, string $key, string|int|float|bool|array|\stdClass|null $value, bool $allowAttribute = true) : void {
 		if (\is_bool($value)) {
 			if ($this->boolAsInt) {
 				$value = $value ? '1' : '0';

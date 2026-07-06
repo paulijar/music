@@ -21,7 +21,9 @@ class AggregateScrobbler implements IScrobbler {
 	/**
 	 * @param array<IScrobbler> $scrobblers
 	 */
-	public function __construct(private array $scrobblers) {
+	public function __construct(
+		private array $scrobblers,
+	) {
 	}
 
 	public function recordTrackPlayed(Track $track, ?\DateTime $timeOfPlay = null): void {

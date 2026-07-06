@@ -183,10 +183,10 @@ class Album extends Entity {
 
 	/**
 	 * Creates object used for collection API (array with name, year, cover URL and ID)
-	 * @param  IURLGenerator $urlGenerator URL Generator
-	 * @param  IL10N $l10n Localization handler
-	 * @param  string|null $cachedCoverHash Cached cover image hash if available
-	 * @param  Track[] $tracks Tracks of the album in the "toCollection" format
+	 * @param IURLGenerator $urlGenerator URL Generator
+	 * @param IL10N $l10n Localization handler
+	 * @param string|null $cachedCoverHash Cached cover image hash if available
+	 * @param Track[] $tracks Tracks of the album in the "toCollection" format
 	 * @return array collection API object
 	 */
 	public function toCollection(IURLGenerator $urlGenerator, IL10N $l10n, ?string $cachedCoverHash, array $tracks) : array {
@@ -202,8 +202,8 @@ class Album extends Entity {
 
 	/**
 	 * Creates object used by the Shiva API (array with name, year, cover URL, ID, slug, URI and artists Array)
-	 * @param  IURLGenerator $urlGenerator URL Generator
-	 * @param  IL10N $l10n Localization handler
+	 * @param IURLGenerator $urlGenerator URL Generator
+	 * @param IL10N $l10n Localization handler
 	 * @return array shiva API object
 	 */
 	public function toShivaApi(IURLGenerator $urlGenerator, IL10N $l10n) : array {
@@ -226,7 +226,7 @@ class Album extends Entity {
 	}
 
 	public static function unknownNameString(IL10N $l10n) : string {
-		return (string) $l10n->t('Unknown album');
+		return (string)$l10n->t('Unknown album');
 	}
 
 	/**
@@ -244,8 +244,8 @@ class Album extends Entity {
 	 * If the cover image is already cached, the cover is presented with a link containing the image hash.
 	 * Otherwise, the collection contains an URL which triggers the caching and then redirects to the
 	 * URL with image hash.
-	 * @param  IURLGenerator $urlGenerator URL Generator
-	 * @param  string|null $cachedCoverHash Cached cover image hash if available
+	 * @param IURLGenerator $urlGenerator URL Generator
+	 * @param string|null $cachedCoverHash Cached cover image hash if available
 	 * @return string|null
 	 */
 	private function coverToCollection(IURLGenerator $urlGenerator, ?string $cachedCoverHash) : ?string {
@@ -273,8 +273,8 @@ class Album extends Entity {
 	 * @return array
 	 */
 	private function artistsToShivaApi(IURLGenerator $urlGenerator) : array {
-		return \array_map(fn($artist) => [
-			'id' => $artist->getId(),
+		return \array_map(fn ($artist) => [
+			'id'  => $artist->getId(),
 			'uri' => $urlGenerator->linkToRoute('music.shivaApi.artist', ['id' => $artist->getId()])
 		], $this->getArtists() ?? []);
 	}

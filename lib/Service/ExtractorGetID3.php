@@ -15,9 +15,8 @@
 namespace OCA\Music\Service;
 
 use OCA\Music\AppFramework\Core\Logger;
-use OCP\IConfig;
-
 use OCP\Files\File;
+use OCP\IConfig;
 
 /**
  * an extractor class for getID3
@@ -26,7 +25,10 @@ class ExtractorGetID3 {
 
 	private ?\getID3 $getID3 = null; // lazy-loaded
 
-	public function __construct(private IConfig $config, private Logger $logger) {
+	public function __construct(
+		private IConfig $config,
+		private Logger $logger,
+	) {
 	}
 
 	/**
@@ -138,7 +140,7 @@ class ExtractorGetID3 {
 				foreach ($metadata['error'] as $error) {
 					$this->logger->debug('getID3 error occurred');
 					// sometimes $error is string but can't be concatenated to another string and weirdly just hide the log message
-					$this->logger->debug('getID3 error message: '. $error);
+					$this->logger->debug('getID3 error message: ' . $error);
 				}
 			}
 		}

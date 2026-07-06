@@ -26,7 +26,7 @@ class HttpUtil {
 	 * Use HTTP GET to load the requested URL
 	 * @return array{content: string|false, status_code: int, message: string, content_type: ?string}
 	 */
-	public static function loadFromUrl(string $url, ?int $maxLength=null, ?int $timeout_s=null) : array {
+	public static function loadFromUrl(string $url, ?int $maxLength = null, ?int $timeout_s = null) : array {
 		$context = self::createContext($timeout_s);
 		$resolved = self::resolveRedirections($url, $context); // handles also checking for allowed URL schemes
 
@@ -62,7 +62,7 @@ class HttpUtil {
 	 * @return array{url: string, status_code: int, status_msg: string, headers: array<string, string>}
 	 * 					The final URL and the headers from the URL, after any redirections. @see HttpUtil::parseHeaders
 	 */
-	public static function resolveRedirections(string $url, $context, int $maxRedirects=20) : array {
+	public static function resolveRedirections(string $url, $context, int $maxRedirects = 20) : array {
 		do {
 			$headers = self::getUrlHeaders($url, $context);
 			$status = $headers['status_code'];
@@ -123,7 +123,7 @@ class HttpUtil {
 				// intermediate redirect response and those should be discarded.
 				$parts = \explode(' ', $row, 3);
 				if (\count($parts) == 3) {
-					list(, $status_code, $status_msg) = $parts;
+					[, $status_code, $status_msg] = $parts;
 				} else {
 					$status_code = Http::STATUS_INTERNAL_SERVER_ERROR;
 					$status_msg = 'Bad response status header';
@@ -133,7 +133,7 @@ class HttpUtil {
 				// All other lines besides the initial status line should have the format "key: value"
 				$parts = \explode(':', $row, 2);
 				if (\count($parts) == 2) {
-					list($key, $value) = $parts;
+					[$key, $value] = $parts;
 					$result['headers'][\trim($key)] = \trim($value);
 				}
 			}
@@ -153,7 +153,7 @@ class HttpUtil {
 	private static function contextOptions(array $extraHeaders = []) : array {
 		$opts = [
 			'http' => [
-				'header' => self::userAgentHeader(),	// some servers don't allow requests without a user agent header
+				'header'        => self::userAgentHeader(),	// some servers don't allow requests without a user agent header
 				'ignore_errors' => true,				// don't emit warnings for bad/unavailable URL, we handle errors manually
 				'max_redirects' => 0					// we use our custom logic to resolve redirections
 			]

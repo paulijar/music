@@ -14,12 +14,11 @@
 
 namespace OCA\Music\Controller;
 
+use OCA\Music\Db\Album;
+use OCA\Music\Db\Artist;
+use OCA\Music\Db\Track;
 use OCA\Music\Tests\Utility\ControllerTestUtility;
 use OCP\AppFramework\Http\JSONResponse;
-
-use OCA\Music\Db\Artist;
-use OCA\Music\Db\Album;
-use OCA\Music\Db\Track;
 
 class ShivaApiControllerTest extends ControllerTestUtility {
 	private $trackBusinessLayer;
@@ -130,18 +129,18 @@ class ShivaApiControllerTest extends ControllerTestUtility {
 
 		$result = [
 			[
-				'name' => 'The artist name',
+				'name'  => 'The artist name',
 				'image' => '/link/to/artist/cover/3',
-				'uri' => '/link/to/artist/3',
-				'slug' => 'the-artist-name',
-				'id' => 3
+				'uri'   => '/link/to/artist/3',
+				'slug'  => 'the-artist-name',
+				'id'    => 3
 			],
 			[
-				'name' => 'The other artist name',
+				'name'  => 'The other artist name',
 				'image' => '/link/to/artist/cover/4',
-				'uri' => '/link/to/artist/4',
-				'slug' => 'the-other-artist-name',
-				'id' => 4
+				'uri'   => '/link/to/artist/4',
+				'slug'  => 'the-other-artist-name',
+				'id'    => 4
 			]
 		];
 
@@ -198,35 +197,35 @@ class ShivaApiControllerTest extends ControllerTestUtility {
 
 		$result = [
 			[
-				'name' => 'The artist name',
-				'image' => '/link/to/artist/cover/3',
-				'uri' => '/link/to/artist/3',
-				'slug' => 'the-artist-name',
-				'id' => 3,
+				'name'   => 'The artist name',
+				'image'  => '/link/to/artist/cover/3',
+				'uri'    => '/link/to/artist/3',
+				'slug'   => 'the-artist-name',
+				'id'     => 3,
 				'albums' => [
 					[
-						'name' => 'The name',
-						'cover' => '/link/to/album/cover/4',
-						'uri' => '/link/to/album/4',
-						'slug' => 'the-name',
-						'id' => 4,
-						'year' => 2013,
+						'name'    => 'The name',
+						'cover'   => '/link/to/album/cover/4',
+						'uri'     => '/link/to/album/4',
+						'slug'    => 'the-name',
+						'id'      => 4,
+						'year'    => 2013,
 						'artists' => [
 							['id' => 3, 'uri' => '/link/to/artist/3']
 						],
 						'albumArtistId' => 5,
-						'tracks' => [
+						'tracks'        => [
 							[
-								'title' => 'The title',
-								'uri' => '/link/to/track/1',
-								'slug' => 'the-title',
-								'id' => 1,
+								'title'   => 'The title',
+								'uri'     => '/link/to/track/1',
+								'slug'    => 'the-title',
+								'id'      => 1,
 								'ordinal' => 4,
 								'bitrate' => 123,
-								'length' => 123,
-								'artist' => ['id' => 3, 'uri' => '/link/to/artist/3'],
-								'album' => ['id' => 4, 'uri' => '/link/to/album/4'],
-								'files' => [
+								'length'  => 123,
+								'artist'  => ['id' => 3, 'uri' => '/link/to/artist/3'],
+								'album'   => ['id' => 4, 'uri' => '/link/to/album/4'],
+								'files'   => [
 									'audio/mp3' => '/link/to/file/3'
 								]
 							]
@@ -235,35 +234,35 @@ class ShivaApiControllerTest extends ControllerTestUtility {
 				]
 			],
 			[
-				'name' => 'The other artist name',
-				'image' => '/link/to/artist/cover/4',
-				'uri' => '/link/to/artist/4',
-				'slug' => 'the-other-artist-name',
-				'id' => 4,
+				'name'   => 'The other artist name',
+				'image'  => '/link/to/artist/cover/4',
+				'uri'    => '/link/to/artist/4',
+				'slug'   => 'the-other-artist-name',
+				'id'     => 4,
 				'albums' => [
 					[
-						'name' => 'The name',
-						'cover' => '/link/to/album/cover/4',
-						'uri' => '/link/to/album/4',
-						'slug' => 'the-name',
-						'id' => 4,
-						'year' => 2013,
+						'name'    => 'The name',
+						'cover'   => '/link/to/album/cover/4',
+						'uri'     => '/link/to/album/4',
+						'slug'    => 'the-name',
+						'id'      => 4,
+						'year'    => 2013,
 						'artists' => [
 							['id' => 3, 'uri' => '/link/to/artist/3']
 						],
 						'albumArtistId' => 5,
-						'tracks' => [
+						'tracks'        => [
 							[
-								'title' => 'The title',
-								'uri' => '/link/to/track/1',
-								'slug' => 'the-title',
-								'id' => 1,
+								'title'   => 'The title',
+								'uri'     => '/link/to/track/1',
+								'slug'    => 'the-title',
+								'id'      => 1,
 								'ordinal' => 4,
 								'bitrate' => 123,
-								'length' => 123,
-								'artist' => ['id' => 3, 'uri' => '/link/to/artist/3'],
-								'album' => ['id' => 4, 'uri' => '/link/to/album/4'],
-								'files' => [
+								'length'  => 123,
+								'artist'  => ['id' => 3, 'uri' => '/link/to/artist/3'],
+								'album'   => ['id' => 4, 'uri' => '/link/to/album/4'],
+								'files'   => [
 									'audio/mp3' => '/link/to/file/3'
 								]
 							]
@@ -308,19 +307,19 @@ class ShivaApiControllerTest extends ControllerTestUtility {
 
 		$result = [
 			[
-				'name' => 'The artist name',
-				'image' => '/link/to/artist/cover/3',
-				'uri' => '/link/to/artist/3',
-				'slug' => 'the-artist-name',
-				'id' => 3,
+				'name'   => 'The artist name',
+				'image'  => '/link/to/artist/cover/3',
+				'uri'    => '/link/to/artist/3',
+				'slug'   => 'the-artist-name',
+				'id'     => 3,
 				'albums' => [
 					[
-						'name' => 'The name',
-						'cover' => '/link/to/album/cover/4',
-						'uri' => '/link/to/album/4',
-						'slug' => 'the-name',
-						'id' => 4,
-						'year' => 2013,
+						'name'    => 'The name',
+						'cover'   => '/link/to/album/cover/4',
+						'uri'     => '/link/to/album/4',
+						'slug'    => 'the-name',
+						'id'      => 4,
+						'year'    => 2013,
 						'artists' => [
 							['id' => 3, 'uri' => '/link/to/artist/3']
 						],
@@ -329,19 +328,19 @@ class ShivaApiControllerTest extends ControllerTestUtility {
 				]
 			],
 			[
-				'name' => 'The other artist name',
-				'image' => '/link/to/artist/cover/4',
-				'uri' => '/link/to/artist/4',
-				'slug' => 'the-other-artist-name',
-				'id' => 4,
+				'name'   => 'The other artist name',
+				'image'  => '/link/to/artist/cover/4',
+				'uri'    => '/link/to/artist/4',
+				'slug'   => 'the-other-artist-name',
+				'id'     => 4,
 				'albums' => [
 					[
-						'name' => 'The name',
-						'cover' => '/link/to/album/cover/4',
-						'uri' => '/link/to/album/4',
-						'slug' => 'the-name',
-						'id' => 4,
-						'year' => 2013,
+						'name'    => 'The name',
+						'cover'   => '/link/to/album/cover/4',
+						'uri'     => '/link/to/album/4',
+						'slug'    => 'the-name',
+						'id'      => 4,
+						'year'    => 2013,
 						'artists' => [
 							['id' => 3, 'uri' => '/link/to/artist/3']
 						],
@@ -371,11 +370,11 @@ class ShivaApiControllerTest extends ControllerTestUtility {
 			->will($this->returnValue($artist));
 
 		$result = [
-			'name' => 'The artist name',
+			'name'  => 'The artist name',
 			'image' => null,
-			'uri' => '/link/to/artist/3',
-			'slug' => 'the-artist-name',
-			'id' => 3
+			'uri'   => '/link/to/artist/3',
+			'slug'  => 'the-artist-name',
+			'id'    => 3
 		];
 
 		$response = $this->controller->artist($artistId, false /*fulltree*/);
@@ -424,35 +423,35 @@ class ShivaApiControllerTest extends ControllerTestUtility {
 			->will($this->returnValue([$track]));
 
 		$result = [
-			'name' => 'The artist name',
-			'image' => null,
-			'uri' => '/link/to/artist/3',
-			'slug' => 'the-artist-name',
-			'id' => 3,
+			'name'   => 'The artist name',
+			'image'  => null,
+			'uri'    => '/link/to/artist/3',
+			'slug'   => 'the-artist-name',
+			'id'     => 3,
 			'albums' => [
 				[
-					'name' => 'The name',
-					'cover' => '/link/to/album/cover/3',
-					'uri' => '/link/to/album/3',
-					'slug' => 'the-name',
-					'id' => 3,
-					'year' => 2013,
+					'name'    => 'The name',
+					'cover'   => '/link/to/album/cover/3',
+					'uri'     => '/link/to/album/3',
+					'slug'    => 'the-name',
+					'id'      => 3,
+					'year'    => 2013,
 					'artists' => [
 						['id' => 3, 'uri' => '/link/to/artist/3']
 					],
 					'albumArtistId' => 3,
-					'tracks' => [
+					'tracks'        => [
 						[
-							'title' => 'The title',
-							'uri' => '/link/to/track/1',
-							'slug' => 'the-title',
-							'id' => 1,
+							'title'   => 'The title',
+							'uri'     => '/link/to/track/1',
+							'slug'    => 'the-title',
+							'id'      => 1,
 							'ordinal' => 4,
 							'bitrate' => 123,
-							'length' => 123,
-							'artist' => ['id' => 3, 'uri' => '/link/to/artist/3'],
-							'album' => ['id' => 1, 'uri' => '/link/to/album/1'],
-							'files' => [
+							'length'  => 123,
+							'artist'  => ['id' => 3, 'uri' => '/link/to/artist/3'],
+							'album'   => ['id' => 1, 'uri' => '/link/to/album/1'],
+							'files'   => [
 								'audio/mp3' => '/link/to/file/3'
 							]
 						]
@@ -496,24 +495,24 @@ class ShivaApiControllerTest extends ControllerTestUtility {
 
 		$result = [
 			[
-				'name' => 'The name',
-				'cover' => '/link/to/album/cover/3',
-				'uri' => '/link/to/album/3',
-				'slug' => 'the-name',
-				'id' => 3,
-				'year' => 2013,
+				'name'    => 'The name',
+				'cover'   => '/link/to/album/cover/3',
+				'uri'     => '/link/to/album/3',
+				'slug'    => 'the-name',
+				'id'      => 3,
+				'year'    => 2013,
 				'artists' => [
 					['id' => 1, 'uri' => '/link/to/artist/1']
 				],
 				'albumArtistId' => 1
 			],
 			[
-				'name' => 'The album name',
-				'cover' => '/link/to/album/cover/4',
-				'uri' => '/link/to/album/4',
-				'slug' => 'the-album-name',
-				'id' => 4,
-				'year' => null,
+				'name'    => 'The album name',
+				'cover'   => '/link/to/album/cover/4',
+				'uri'     => '/link/to/album/4',
+				'slug'    => 'the-album-name',
+				'id'      => 4,
+				'year'    => null,
 				'artists' => [
 					['id' => 3, 'uri' => '/link/to/artist/3'],
 					['id' => 5, 'uri' => '/link/to/artist/5']
@@ -576,75 +575,75 @@ class ShivaApiControllerTest extends ControllerTestUtility {
 
 		$result = [
 			[
-				'name' => 'The name',
-				'cover' => '/link/to/album/cover/3',
-				'uri' => '/link/to/album/3',
-				'slug' => 'the-name',
-				'id' => 3,
-				'year' => 2013,
+				'name'    => 'The name',
+				'cover'   => '/link/to/album/cover/3',
+				'uri'     => '/link/to/album/3',
+				'slug'    => 'the-name',
+				'id'      => 3,
+				'year'    => 2013,
 				'artists' => [
 					[
-						'name' => 'The artist name',
+						'name'  => 'The artist name',
 						'image' => null,
-						'uri' => '/link/to/artist/1',
-						'slug' => 'the-artist-name',
-						'id' => 1
+						'uri'   => '/link/to/artist/1',
+						'slug'  => 'the-artist-name',
+						'id'    => 1
 					]
 				],
 				'albumArtistId' => 5,
-				'tracks' => [
+				'tracks'        => [
 					[
-						'title' => 'The title',
-						'uri' => '/link/to/track/1',
-						'slug' => 'the-title',
-						'id' => 1,
+						'title'   => 'The title',
+						'uri'     => '/link/to/track/1',
+						'slug'    => 'the-title',
+						'id'      => 1,
 						'ordinal' => 4,
 						'bitrate' => 123,
-						'length' => 123,
-						'artist' => ['id' => 3, 'uri' => '/link/to/artist/3'],
-						'album' => ['id' => 4, 'uri' => '/link/to/album/4'],
-						'files' => [
+						'length'  => 123,
+						'artist'  => ['id' => 3, 'uri' => '/link/to/artist/3'],
+						'album'   => ['id' => 4, 'uri' => '/link/to/album/4'],
+						'files'   => [
 							'audio/mp3' => '/link/to/file/3'
 						]
 					]
 				]
 			],
 			[
-				'name' => 'The album name',
-				'cover' => '/link/to/album/cover/4',
-				'uri' => '/link/to/album/4',
-				'slug' => 'the-album-name',
-				'id' => 4,
-				'year' => 2003,
+				'name'    => 'The album name',
+				'cover'   => '/link/to/album/cover/4',
+				'uri'     => '/link/to/album/4',
+				'slug'    => 'the-album-name',
+				'id'      => 4,
+				'year'    => 2003,
 				'artists' => [
 					[
-						'name' => 'The artist name3',
+						'name'  => 'The artist name3',
 						'image' => null,
-						'uri' => '/link/to/artist/3',
-						'slug' => 'the-artist-name3',
-						'id' => 3
+						'uri'   => '/link/to/artist/3',
+						'slug'  => 'the-artist-name3',
+						'id'    => 3
 					],
 					[
-						'name' => 'The artist name5',
+						'name'  => 'The artist name5',
 						'image' => '/link/to/artist/cover/5',
-						'uri' => '/link/to/artist/5',
-						'slug' => 'the-artist-name5',
-						'id' => 5
+						'uri'   => '/link/to/artist/5',
+						'slug'  => 'the-artist-name5',
+						'id'    => 5
 					]
 				],
 				'albumArtistId' => 1,
-				'tracks' => [
+				'tracks'        => [
 					[
-						'title' => 'The title',
-						'uri' => '/link/to/track/1',
-						'slug' => 'the-title',
-						'id' => 1,
+						'title'   => 'The title',
+						'uri'     => '/link/to/track/1',
+						'slug'    => 'the-title',
+						'id'      => 1,
 						'ordinal' => 4,
 						'bitrate' => 123,
-						'length' => 123,
-						'artist' => ['id' => 3, 'uri' => '/link/to/artist/3'],
-						'album' => ['id' => 4, 'uri' => '/link/to/album/4'],
-						'files' => [
+						'length'  => 123,
+						'artist'  => ['id' => 3, 'uri' => '/link/to/artist/3'],
+						'album'   => ['id' => 4, 'uri' => '/link/to/album/4'],
+						'files'   => [
 							'audio/mp3' => '/link/to/file/3'
 						]
 					]
@@ -693,34 +692,34 @@ class ShivaApiControllerTest extends ControllerTestUtility {
 			->will($this->returnValue([$track]));
 
 		$result = [
-			'name' => 'The name',
-			'cover' => '/link/to/album/cover/3',
-			'uri' => '/link/to/album/3',
-			'slug' => 'the-name',
-			'id' => 3,
-			'year' => 2013,
+			'name'    => 'The name',
+			'cover'   => '/link/to/album/cover/3',
+			'uri'     => '/link/to/album/3',
+			'slug'    => 'the-name',
+			'id'      => 3,
+			'year'    => 2013,
 			'artists' => [
 				[
-					'name' => 'The artist name',
+					'name'  => 'The artist name',
 					'image' => '/link/to/artist/cover/1',
-					'uri' => '/link/to/artist/1',
-					'slug' => 'the-artist-name',
-					'id' => 1
+					'uri'   => '/link/to/artist/1',
+					'slug'  => 'the-artist-name',
+					'id'    => 1
 				]
 			],
 			'albumArtistId' => 1,
-			'tracks' => [
+			'tracks'        => [
 				[
-					'title' => 'The title',
-					'uri' => '/link/to/track/1',
-					'slug' => 'the-title',
-					'id' => 1,
+					'title'   => 'The title',
+					'uri'     => '/link/to/track/1',
+					'slug'    => 'the-title',
+					'id'      => 1,
 					'ordinal' => 4,
 					'bitrate' => 123,
-					'length' => 123,
-					'artist' => ['id' => 3, 'uri' => '/link/to/artist/3'],
-					'album' => ['id' => 4, 'uri' => '/link/to/album/4'],
-					'files' => [
+					'length'  => 123,
+					'artist'  => ['id' => 3, 'uri' => '/link/to/artist/3'],
+					'album'   => ['id' => 4, 'uri' => '/link/to/album/4'],
+					'files'   => [
 						'audio/mp3' => '/link/to/file/3'
 					]
 				]
@@ -752,12 +751,12 @@ class ShivaApiControllerTest extends ControllerTestUtility {
 			->will($this->returnValue($album));
 
 		$result = [
-			'name' => 'The name',
-			'cover' => '/link/to/album/cover/3',
-			'uri' => '/link/to/album/3',
-			'slug' => 'the-name',
-			'id' => 3,
-			'year' => 2013,
+			'name'    => 'The name',
+			'cover'   => '/link/to/album/cover/3',
+			'uri'     => '/link/to/album/3',
+			'slug'    => 'the-name',
+			'id'      => 3,
+			'year'    => 2013,
 			'artists' => [
 				['id' => 1, 'uri' => '/link/to/artist/1']
 			],
@@ -799,30 +798,30 @@ class ShivaApiControllerTest extends ControllerTestUtility {
 
 		$result = [
 			[
-				'title' => 'The title',
-				'uri' => '/link/to/track/1',
-				'slug' => 'the-title',
-				'id' => 1,
+				'title'   => 'The title',
+				'uri'     => '/link/to/track/1',
+				'slug'    => 'the-title',
+				'id'      => 1,
 				'ordinal' => 4,
 				'bitrate' => 123,
-				'length' => 123,
-				'artist' => ['id' => 3, 'uri' => '/link/to/artist/3'],
-				'album' => ['id' => 1, 'uri' => '/link/to/album/1'],
-				'files' => [
+				'length'  => 123,
+				'artist'  => ['id' => 3, 'uri' => '/link/to/artist/3'],
+				'album'   => ['id' => 1, 'uri' => '/link/to/album/1'],
+				'files'   => [
 					'audio/mp3' => '/link/to/file/3'
 				]
 			],
 			[
-				'title' => 'The second title',
-				'uri' => '/link/to/track/2',
-				'slug' => 'the-second-title',
-				'id' => 2,
+				'title'   => 'The second title',
+				'uri'     => '/link/to/track/2',
+				'slug'    => 'the-second-title',
+				'id'      => 2,
 				'ordinal' => 5,
 				'bitrate' => 123,
-				'length' => 103,
-				'artist' => ['id' => 2, 'uri' => '/link/to/artist/2'],
-				'album' => ['id' => 3, 'uri' => '/link/to/album/3'],
-				'files' => [
+				'length'  => 103,
+				'artist'  => ['id' => 2, 'uri' => '/link/to/artist/2'],
+				'album'   => ['id' => 3, 'uri' => '/link/to/album/3'],
+				'files'   => [
 					'audio/mp3' => '/link/to/file/4'
 				]
 			]
@@ -874,27 +873,27 @@ class ShivaApiControllerTest extends ControllerTestUtility {
 
 		$result = [
 			[
-				'title' => 'The title',
-				'uri' => '/link/to/track/1',
-				'slug' => 'the-title',
-				'id' => 1,
+				'title'   => 'The title',
+				'uri'     => '/link/to/track/1',
+				'slug'    => 'the-title',
+				'id'      => 1,
 				'ordinal' => 4,
 				'bitrate' => 123,
-				'length' => 123,
-				'artist' => [
-					'name' => 'The artist name',
+				'length'  => 123,
+				'artist'  => [
+					'name'  => 'The artist name',
 					'image' => '/link/to/artist/cover/1',
-					'uri' => '/link/to/artist/1',
-					'slug' => 'the-artist-name',
-					'id' => 1
+					'uri'   => '/link/to/artist/1',
+					'slug'  => 'the-artist-name',
+					'id'    => 1
 				],
 				'album' => [
-					'name' => 'The name',
-					'cover' => '/link/to/album/cover/3',
-					'uri' => '/link/to/album/3',
-					'slug' => 'the-name',
-					'id' => 3,
-					'year' => 2013,
+					'name'    => 'The name',
+					'cover'   => '/link/to/album/cover/3',
+					'uri'     => '/link/to/album/3',
+					'slug'    => 'the-name',
+					'id'      => 3,
+					'year'    => 2013,
 					'artists' => [
 						['id' => 1, 'uri' => '/link/to/artist/1']
 					],
@@ -932,16 +931,16 @@ class ShivaApiControllerTest extends ControllerTestUtility {
 			->will($this->returnValue($track));
 
 		$result = [
-			'title' => 'The title',
-			'uri' => '/link/to/track/1',
-			'slug' => 'the-title',
-			'id' => 1,
+			'title'   => 'The title',
+			'uri'     => '/link/to/track/1',
+			'slug'    => 'the-title',
+			'id'      => 1,
 			'ordinal' => 4,
 			'bitrate' => 123,
-			'length' => 123,
-			'artist' => ['id' => 3, 'uri' => '/link/to/artist/3'],
-			'album' => ['id' => 1, 'uri' => '/link/to/album/1'],
-			'files' => [
+			'length'  => 123,
+			'artist'  => ['id' => 3, 'uri' => '/link/to/artist/3'],
+			'album'   => ['id' => 1, 'uri' => '/link/to/album/1'],
+			'files'   => [
 				'audio/mp3' => '/link/to/file/3'
 			]
 		];
@@ -987,30 +986,30 @@ class ShivaApiControllerTest extends ControllerTestUtility {
 
 		$result = [
 			[
-				'title' => 'The title',
-				'uri' => '/link/to/track/1',
-				'slug' => 'the-title',
-				'id' => 1,
+				'title'   => 'The title',
+				'uri'     => '/link/to/track/1',
+				'slug'    => 'the-title',
+				'id'      => 1,
 				'ordinal' => 4,
 				'bitrate' => 123,
-				'length' => 123,
-				'artist' => ['id' => 3, 'uri' => '/link/to/artist/3'],
-				'album' => ['id' => 1, 'uri' => '/link/to/album/1'],
-				'files' => [
+				'length'  => 123,
+				'artist'  => ['id' => 3, 'uri' => '/link/to/artist/3'],
+				'album'   => ['id' => 1, 'uri' => '/link/to/album/1'],
+				'files'   => [
 					'audio/mp3' => '/link/to/file/111'
 				]
 			],
 			[
-				'title' => 'The second title',
-				'uri' => '/link/to/track/2',
-				'slug' => 'the-second-title',
-				'id' => 2,
+				'title'   => 'The second title',
+				'uri'     => '/link/to/track/2',
+				'slug'    => 'the-second-title',
+				'id'      => 2,
 				'ordinal' => 5,
 				'bitrate' => 123,
-				'length' => 103,
-				'artist' => ['id' => 3, 'uri' => '/link/to/artist/3'],
-				'album' => ['id' => 3, 'uri' => '/link/to/album/3'],
-				'files' => [
+				'length'  => 103,
+				'artist'  => ['id' => 3, 'uri' => '/link/to/artist/3'],
+				'album'   => ['id' => 3, 'uri' => '/link/to/album/3'],
+				'files'   => [
 					'audio/mp3' => '/link/to/file/222'
 				]
 			]
@@ -1053,30 +1052,30 @@ class ShivaApiControllerTest extends ControllerTestUtility {
 
 		$result = [
 			[
-				'title' => 'The title',
-				'uri' => '/link/to/track/1',
-				'slug' => 'the-title',
-				'id' => 1,
+				'title'   => 'The title',
+				'uri'     => '/link/to/track/1',
+				'slug'    => 'the-title',
+				'id'      => 1,
 				'ordinal' => 4,
 				'bitrate' => 123,
-				'length' => 123,
-				'artist' => ['id' => 3, 'uri' => '/link/to/artist/3'],
-				'album' => ['id' => 1, 'uri' => '/link/to/album/1'],
-				'files' => [
+				'length'  => 123,
+				'artist'  => ['id' => 3, 'uri' => '/link/to/artist/3'],
+				'album'   => ['id' => 1, 'uri' => '/link/to/album/1'],
+				'files'   => [
 					'audio/mp3' => '/link/to/file/13'
 				]
 			],
 			[
-				'title' => 'The second title',
-				'uri' => '/link/to/track/2',
-				'slug' => 'the-second-title',
-				'id' => 2,
+				'title'   => 'The second title',
+				'uri'     => '/link/to/track/2',
+				'slug'    => 'the-second-title',
+				'id'      => 2,
 				'ordinal' => 5,
 				'bitrate' => 123,
-				'length' => 103,
-				'artist' => ['id' => 2, 'uri' => '/link/to/artist/2'],
-				'album' => ['id' => 1, 'uri' => '/link/to/album/1'],
-				'files' => [
+				'length'  => 103,
+				'artist'  => ['id' => 2, 'uri' => '/link/to/artist/2'],
+				'album'   => ['id' => 1, 'uri' => '/link/to/album/1'],
+				'files'   => [
 					'audio/mp3' => '/link/to/file/55'
 				]
 			]

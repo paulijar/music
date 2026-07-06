@@ -16,7 +16,6 @@ use OCA\Music\AppFramework\Core\Logger;
 use OCA\Music\Utility\FilesUtil;
 use OCA\Music\Utility\LocalCacheTrait;
 use OCA\Music\Utility\StringUtil;
-
 use OCP\Files\Folder;
 use OCP\Files\IRootFolder;
 use OCP\IConfig;
@@ -36,7 +35,7 @@ class LibrarySettings {
 		private string $appName,
 		private IConfig $configManager,
 		private IRootFolder $rootFolder,
-		private Logger $logger
+		private Logger $logger,
 	) {
 	}
 
@@ -68,7 +67,7 @@ class LibrarySettings {
 			if ($path[0] !== '/') {
 				$path = '/' . $path;
 			}
-			if ($path[\strlen($path)-1] !== '/') {
+			if ($path[\strlen($path) - 1] !== '/') {
 				$path .= '/';
 			}
 			$this->configManager->setUserValue($userId, $this->appName, 'path', $path);
@@ -97,7 +96,7 @@ class LibrarySettings {
 	 * @return string[]
 	 */
 	public function getExcludedPaths(string $userId) : array {
-		return $this->cachedGet($userId, 'excluded_paths', function() use ($userId) {
+		return $this->cachedGet($userId, 'excluded_paths', function () use ($userId) {
 			$paths = $this->configManager->getUserValue($userId, $this->appName, 'excluded_paths');
 			if (empty($paths)) {
 				return [];
@@ -123,11 +122,11 @@ class LibrarySettings {
 	}
 
 	private function getAbsoluteLibPath(string $userId) : string {
-		return $this->cachedGet($userId, 'music_folder_abs_path', fn() => self::normalizePath($this->getFolder($userId)->getPath()));
+		return $this->cachedGet($userId, 'music_folder_abs_path', fn () => self::normalizePath($this->getFolder($userId)->getPath()));
 	}
 
 	private function getHomePath(string $userId) : string {
-		return $this->cachedGet($userId, 'home_path', fn() => $this->rootFolder->getUserFolder($userId)->getPath());
+		return $this->cachedGet($userId, 'home_path', fn () => $this->rootFolder->getUserFolder($userId)->getPath());
 	}
 
 	private function pathIsExcluded(string $filePath, string $musicPath, string $userId) : bool {

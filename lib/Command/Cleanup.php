@@ -19,7 +19,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Cleanup extends Command {
 
-	public function __construct(private Maintenance $maintenance) {
+	public function __construct(
+		private Maintenance $maintenance,
+	) {
 		parent::__construct();
 	}
 
@@ -39,7 +41,7 @@ class Cleanup extends Command {
 	protected function execute(InputInterface $input, OutputInterface $output) {
 		$output->writeln('Running cleanup task...');
 		$removedEntries = $this->maintenance->cleanUp();
-		$output->writeln("Removed entries: " . \json_encode($removedEntries));
+		$output->writeln('Removed entries: ' . \json_encode($removedEntries));
 		return 0;
 	}
 }

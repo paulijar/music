@@ -24,7 +24,9 @@ class StreamTokenService {
 
 	private ?string $secret = null; // lazy load
 
-	public function __construct(private Cache $cache) {
+	public function __construct(
+		private Cache $cache,
+	) {
 	}
 
 	public function tokenForUrl(string $url) : string {

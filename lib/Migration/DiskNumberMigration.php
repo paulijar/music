@@ -24,7 +24,7 @@ class DiskNumberMigration implements IRepairStep {
 
 	public function __construct(
 		private IDBConnection $db,
-		private IConfig $config
+		private IConfig $config,
 	) {
 		$this->obsoleteAlbums = [];
 		$this->mergeFailureAlbums = [];
@@ -45,8 +45,8 @@ class DiskNumberMigration implements IRepairStep {
 			try {
 				$this->executeMigrationSteps($output);
 			} catch (\Exception $e) {
-				$output->warning('Unexpected exception ' . \get_class($e) . ' during Music disk-number-migration. ' .
-								'The music DB may need to be rebuilt.');
+				$output->warning('Unexpected exception ' . \get_class($e) . ' during Music disk-number-migration. '
+								. 'The music DB may need to be rebuilt.');
 			}
 		}
 	}
@@ -75,11 +75,11 @@ class DiskNumberMigration implements IRepairStep {
 	 * Copy disk numbers from the albums table to the tracks table
 	 */
 	private function copyDiskNumberToTracks() : int {
-		$sql = 'UPDATE `*PREFIX*music_tracks` '.
-				'SET `disk` = (SELECT `disk` '.
-				'              FROM `*PREFIX*music_albums` '.
-				'              WHERE `*PREFIX*music_tracks`.`album_id` = `*PREFIX*music_albums`.`id`) '.
-				'WHERE `disk` IS NULL';
+		$sql = 'UPDATE `*PREFIX*music_tracks` '
+				. 'SET `disk` = (SELECT `disk` '
+				. '              FROM `*PREFIX*music_albums` '
+				. '              WHERE `*PREFIX*music_tracks`.`album_id` = `*PREFIX*music_albums`.`id`) '
+				. 'WHERE `disk` IS NULL';
 		return $this->db->executeStatement($sql);
 	}
 
@@ -89,9 +89,9 @@ class DiskNumberMigration implements IRepairStep {
 	 * the rest of the disks become obsolete.
 	 */
 	private function combineMultiDiskAlbums() : int {
-		$sql = 'SELECT `id`, `user_id`, `album_artist_id`, `name` '.
-				'FROM `*PREFIX*music_albums` '.
-				'ORDER BY `user_id`, `album_artist_id`, LOWER(`name`)';
+		$sql = 'SELECT `id`, `user_id`, `album_artist_id`, `name` '
+				. 'FROM `*PREFIX*music_albums` '
+				. 'ORDER BY `user_id`, `album_artist_id`, LOWER(`name`)';
 
 		$rows = $this->db->executeQuery($sql)->fetchAll();
 
@@ -127,9 +127,9 @@ class DiskNumberMigration implements IRepairStep {
 	 * @param int $destinationAlbum ID
 	 */
 	private function moveTracksBetweenAlbums($sourceAlbum, $destinationAlbum) : int {
-		$sql = 'UPDATE `*PREFIX*music_tracks` '.
-				'SET `album_id` = ? '.
-				'WHERE `album_id` = ?';
+		$sql = 'UPDATE `*PREFIX*music_tracks` '
+				. 'SET `album_id` = ? '
+				. 'WHERE `album_id` = ?';
 		return $this->db->executeStatement($sql, [$destinationAlbum, $sourceAlbum]);
 	}
 
@@ -140,8 +140,8 @@ class DiskNumberMigration implements IRepairStep {
 		$count = \count($this->obsoleteAlbums);
 
 		if ($count > 0) {
-			$sql = 'DELETE FROM `*PREFIX*music_albums` '.
-					'WHERE `id` IN '. $this->questionMarks($count);
+			$sql = 'DELETE FROM `*PREFIX*music_albums` '
+					. 'WHERE `id` IN ' . $this->questionMarks($count);
 			$count = $this->db->executeStatement($sql, $this->obsoleteAlbums);
 		}
 
@@ -153,8 +153,8 @@ class DiskNumberMigration implements IRepairStep {
 	 * of the calculation schema.
 	 */
 	private function reEvaluateAlbumHashes() : int {
-		$sql = 'SELECT `id`, `name`, `album_artist_id` '.
-				'FROM `*PREFIX*music_albums`';
+		$sql = 'SELECT `id`, `name`, `album_artist_id` '
+				. 'FROM `*PREFIX*music_albums`';
 		$rows = $this->db->executeQuery($sql)->fetchAll();
 
 		$affectedRows = 0;
@@ -168,7 +168,7 @@ class DiskNumberMigration implements IRepairStep {
 						'UPDATE `*PREFIX*music_albums` SET `hash` = ? WHERE `id` = ?',
 						[$hash, $row['id']]
 				);
-			} catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException | \OCP\DB\Exception $e) {
+			} catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException|\OCP\DB\Exception $e) {
 				$this->mergeFailureAlbums[] = $row['id'];
 			}
 		}
@@ -186,12 +186,12 @@ class DiskNumberMigration implements IRepairStep {
 		$count = \count($this->mergeFailureAlbums);
 
 		if ($count > 0) {
-			$sql = 'DELETE FROM `*PREFIX*music_albums` '.
-					'WHERE `id` IN '. $this->questionMarks($count);
+			$sql = 'DELETE FROM `*PREFIX*music_albums` '
+					. 'WHERE `id` IN ' . $this->questionMarks($count);
 			$count = $this->db->executeStatement($sql, $this->mergeFailureAlbums);
 
-			$sql = 'DELETE FROM `*PREFIX*music_tracks` '.
-					'WHERE `album_id` IN '. $this->questionMarks($count);
+			$sql = 'DELETE FROM `*PREFIX*music_tracks` '
+					. 'WHERE `album_id` IN ' . $this->questionMarks($count);
 			$this->db->executeStatement($sql, $this->mergeFailureAlbums);
 		}
 

@@ -39,7 +39,7 @@ class LyricsParser {
 		if (!empty($data)) {
 			$offset = 0;
 
-			$fp = \fopen("php://temp", 'r+');
+			$fp = \fopen('php://temp', 'r+');
 			\assert($fp !== false, 'Unexpected error: opening temporary stream failed');
 
 			\fputs($fp, $data);
@@ -105,7 +105,7 @@ class LyricsParser {
 	 * Convert timestamp in "mm:ss.ff" format to milliseconds
 	 */
 	private static function timestampToMs(string $timestamp) : int {
-		list($minutes, $seconds) = \sscanf($timestamp, "%d:%f");
+		[$minutes, $seconds] = \sscanf($timestamp, '%d:%f');
 		return \intval($seconds * 1000 + $minutes * 60 * 1000);
 	}
 }

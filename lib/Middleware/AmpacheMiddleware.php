@@ -14,11 +14,6 @@
 
 namespace OCA\Music\Middleware;
 
-use OCP\IConfig;
-use OCP\IRequest;
-use OCP\AppFramework\Controller;
-use OCP\AppFramework\Middleware;
-
 use OCA\Music\AppFramework\BusinessLayer\BusinessLayerException;
 use OCA\Music\AppFramework\Core\Logger;
 use OCA\Music\Controller\AmpacheController;
@@ -27,6 +22,10 @@ use OCA\Music\Db\AmpacheSessionMapper;
 use OCA\Music\Db\AmpacheUserMapper;
 use OCA\Music\Utility\Random;
 use OCA\Music\Utility\StringUtil;
+use OCP\AppFramework\Controller;
+use OCP\AppFramework\Middleware;
+use OCP\IConfig;
+use OCP\IRequest;
 
 /**
  * Handles the session management on Ampache login/logout.
@@ -44,10 +43,10 @@ class AmpacheMiddleware extends Middleware {
 		private AmpacheSessionMapper $ampacheSessionMapper,
 		private AmpacheUserMapper $ampacheUserMapper,
 		private Logger $logger,
-		private ?string $userId // non-null when within a valid Nextcloud user session
+		private ?string $userId, // non-null when within a valid Nextcloud user session
 	) {
 		$sessionExpiryTime = (int)$config->getSystemValue('music.ampache_session_expiry_time', 6000);
-		$this->sessionExpiryTime = \min($sessionExpiryTime, 365*24*60*60); // limit to one year
+		$this->sessionExpiryTime = \min($sessionExpiryTime, 365 * 24 * 60 * 60); // limit to one year
 	}
 
 	/**
@@ -71,7 +70,7 @@ class AmpacheMiddleware extends Middleware {
 				if ($methodName === 'jsonApi') {
 					$controller->setJsonMode(true);
 				}
-	
+
 				// authenticate on 'handshake' and check the session token on any other action
 				$action = $this->request->getParam('action');
 				if ($action === 'handshake') {
@@ -82,7 +81,7 @@ class AmpacheMiddleware extends Middleware {
 			}
 		}
 	}
-	
+
 	private function handleHandshake(AmpacheController $controller) : void {
 		$user = $this->request->getParam('user');
 		$timestamp = (int)$this->request->getParam('timestamp');

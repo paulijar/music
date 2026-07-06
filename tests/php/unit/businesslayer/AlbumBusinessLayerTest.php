@@ -137,7 +137,7 @@ class AlbumBusinessLayerTest extends \PHPUnit\Framework\TestCase {
 		$this->mapper->expects($this->once())
 			->method('find')
 			->with($this->equalTo($albumId), $this->equalTo($this->userId))
-			->will($this->returnValue($this->albums[$albumId-1]));
+			->will($this->returnValue($this->albums[$albumId - 1]));
 		$this->mapper->expects($this->exactly(1))
 			->method('getPerformingArtistsByAlbumId')
 			->with(
@@ -175,7 +175,7 @@ class AlbumBusinessLayerTest extends \PHPUnit\Framework\TestCase {
 			->will($this->returnValue(ArrayUtil::multiGet($this->artists, $this->artistIds[$albumId])));
 
 		$result = $this->albumBusinessLayer->find($albumId, $this->userId);
-		$this->assertEquals($this->response[$albumId-1], $result);
+		$this->assertEquals($this->response[$albumId - 1], $result);
 	}
 
 	public function testFindAllByArtist() {

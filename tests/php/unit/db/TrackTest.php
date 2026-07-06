@@ -40,16 +40,16 @@ class TrackTest extends \PHPUnit\Framework\TestCase {
 			->will($this->returnValue('someUrl'));
 
 		$this->assertEquals([
-			'id' => 1,
-			'title' => 'The title',
+			'id'      => 1,
+			'title'   => 'The title',
 			'ordinal' => 4,
-			'artist' => ['id' => 3, 'uri' => 'someUrl'],
-			'album' => ['id' => 1, 'uri' => 'someUrl'],
-			'length' => 123,
-			'files' => ['audio/mp3' => 'someUrl'],
+			'artist'  => ['id' => 3, 'uri' => 'someUrl'],
+			'album'   => ['id' => 1, 'uri' => 'someUrl'],
+			'length'  => 123,
+			'files'   => ['audio/mp3' => 'someUrl'],
 			'bitrate' => 123,
-			'slug' => 'the-title',
-			'uri' => 'someUrl'
-			], $track->toShivaApi($this->urlGenerator));
+			'slug'    => 'the-title',
+			'uri'     => 'someUrl'
+		], $track->toShivaApi($this->urlGenerator));
 	}
 }

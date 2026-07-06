@@ -19,15 +19,14 @@ use OCA\Music\Db\Album;
 use OCA\Music\Db\Artist;
 use OCA\Music\Db\Cache;
 use OCA\Music\Db\Entity;
-use OCA\Music\Db\PodcastChannel;
 use OCA\Music\Db\Playlist;
+use OCA\Music\Db\PodcastChannel;
 use OCA\Music\Db\RadioStation;
 use OCA\Music\Utility\HttpUtil;
 use OCA\Music\Utility\PlaceholderImage;
 use OCA\Music\Utility\Random;
-use OCP\Files\Folder;
 use OCP\Files\File;
-
+use OCP\Files\Folder;
 use OCP\IConfig;
 use OCP\IL10N;
 
@@ -63,7 +62,7 @@ class CoverService {
 	 *                       scaling and cropping altogether.
 	 * @return array|null Image data in format accepted by \OCA\Music\Http\FileResponse
 	 */
-	public function getCover(Entity $entity, string $userId, Folder $rootFolder, ?int $size=null, bool $allowPlaceholder=true) : ?array {
+	public function getCover(Entity $entity, string $userId, Folder $rootFolder, ?int $size = null, bool $allowPlaceholder = true) : ?array {
 		if ($entity instanceof Playlist) {
 			$trackIds = $entity->getTrackIdsAsArray();
 			$albums = $this->albumBusinessLayer->findAlbumsWithCoversForTracks($trackIds, $userId, 4);
@@ -90,13 +89,13 @@ class CoverService {
 		return $result;
 	}
 
-	public function getCoverMosaic(array $entities, string $userId, Folder $rootFolder, ?int $size=null) : ?array {
+	public function getCoverMosaic(array $entities, string $userId, Folder $rootFolder, ?int $size = null) : ?array {
 		if (\count($entities) === 0) {
 			return null;
 		} elseif (\count($entities) === 1) {
 			return $this->getCover($entities[0], $userId, $rootFolder, $size);
 		} else {
-			$covers = \array_map(fn($entity) => $this->getCover($entity, $userId, $rootFolder), $entities);
+			$covers = \array_map(fn ($entity) => $this->getCover($entity, $userId, $rootFolder), $entities);
 			return $this->createMosaic($covers, $size);
 		}
 	}
@@ -221,7 +220,7 @@ class CoverService {
 	 * Remove album cover image from cache if it is there. Silently do nothing if there
 	 * is no cached cover. All users are targeted if no $userId passed.
 	 */
-	public function removeAlbumCoverFromCache(int $albumId, ?string $userId=null) : void {
+	public function removeAlbumCoverFromCache(int $albumId, ?string $userId = null) : void {
 		$this->cache->remove($userId, 'album_cover_hash_' . $albumId);
 	}
 
@@ -229,7 +228,7 @@ class CoverService {
 	 * Remove artist cover image from cache if it is there. Silently do nothing if there
 	 * is no cached cover. All users are targeted if no $userId passed.
 	 */
-	public function removeArtistCoverFromCache(int $artistId, ?string $userId=null) : void {
+	public function removeArtistCoverFromCache(int $artistId, ?string $userId = null) : void {
 		$this->cache->remove($userId, 'artist_cover_hash_' . $artistId);
 	}
 
@@ -247,7 +246,7 @@ class CoverService {
 
 		if ($entity instanceof PodcastChannel) {
 			if ($entity->getImageUrl() !== null) {
-				list('content' => $image, 'content_type' => $mime) = HttpUtil::loadFromUrl($entity->getImageUrl());
+				['content' => $image, 'content_type' => $mime] = HttpUtil::loadFromUrl($entity->getImageUrl());
 				if ($image !== false) {
 					$response = ['mimetype' => $mime, 'content' => $image];
 				}
@@ -373,7 +372,7 @@ class CoverService {
 
 	private function createMosaic(array $covers, ?int $size) : array {
 		$size = ($size > 0) ? $size : $this->coverSize; // DO_NOT_CROP_OR_SCALE handled here the same as null, i.e. default size
-		$pieceSize = $size/2;
+		$pieceSize = $size / 2;
 		$mosaicImg = \imagecreatetruecolor($size, $size);
 		if ($mosaicImg === false) {
 			$this->logger->warning("Failed to create mosaic image of size $size x $size");

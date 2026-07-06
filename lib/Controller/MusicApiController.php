@@ -31,7 +31,6 @@ use OCA\Music\Service\Scanner;
 use OCA\Music\Service\Scrobbling\IScrobbler;
 use OCA\Music\Utility\HttpUtil;
 use OCA\Music\Utility\Util;
-
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
@@ -59,7 +58,7 @@ class MusicApiController extends Controller {
 		private LibrarySettings $librarySettings,
 		private ?string $userId, // null case should happen only when the user has already logged out
 		private Logger $logger,
-		private IScrobbler $scrobbler
+		private IScrobbler $scrobbler,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -83,8 +82,8 @@ class MusicApiController extends Controller {
 		$coverToken = $this->coverService->createAccessToken($this->user());
 
 		return new JSONResponse([
-			'hash' => $hash,
-			'cover_token' => $coverToken,
+			'hash'             => $hash,
+			'cover_token'      => $coverToken,
 			'ignored_articles' => $this->librarySettings->getIgnoredArticles($this->user())
 		]);
 	}
@@ -120,9 +119,9 @@ class MusicApiController extends Controller {
 	#[NoCSRFRequired]
 	public function genres() : JSONResponse {
 		$genres = $this->genreBusinessLayer->findAllWithTrackIds($this->user());
-		$unscanned =  $this->trackBusinessLayer->findFilesWithoutScannedGenre($this->user());
+		$unscanned = $this->trackBusinessLayer->findFilesWithoutScannedGenre($this->user());
 		return new JSONResponse([
-			'genres' => \array_map(fn($g) => $g->toApi(), $genres),
+			'genres'    => \array_map(fn ($g) => $g->toApi(), $genres),
 			'unscanned' => $unscanned
 		]);
 	}
@@ -152,7 +151,7 @@ class MusicApiController extends Controller {
 		$fileIds = \array_map('intval', \explode(',', $files));
 		$finalize = \filter_var($finalize, FILTER_VALIDATE_BOOLEAN);
 
-		list('count' => $filesScanned) = $this->scanner->scanFiles($this->user(), $fileIds);
+		['count' => $filesScanned] = $this->scanner->scanFiles($this->user(), $fileIds);
 
 		$albumCoversUpdated = false;
 		if ($finalize) {
@@ -163,7 +162,7 @@ class MusicApiController extends Controller {
 		}
 
 		return new JSONResponse([
-			'filesScanned' => $filesScanned,
+			'filesScanned'       => $filesScanned,
 			'albumCoversUpdated' => $albumCoversUpdated
 		]);
 	}
@@ -297,7 +296,7 @@ class MusicApiController extends Controller {
 
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	public function albumDetails(int $albumId, string|int|bool|null $embedCoverArt=false) : JSONResponse {
+	public function albumDetails(int $albumId, string|int|bool|null $embedCoverArt = false) : JSONResponse {
 		$embedCoverArt = \filter_var($embedCoverArt, FILTER_VALIDATE_BOOLEAN);
 		try {
 			$info = $this->lastfmService->getAlbumInfo($albumId, $this->user());
@@ -333,10 +332,10 @@ class MusicApiController extends Controller {
 	public function similarArtists(int $artistId) : JSONResponse {
 		try {
 			$similar = $this->lastfmService->getSimilarArtists($artistId, $this->user(), /*includeNotPresent=*/true);
-			return new JSONResponse(\array_map(fn($artist) => [
-				'id' => $artist->getId(),
+			return new JSONResponse(\array_map(fn ($artist) => [
+				'id'   => $artist->getId(),
 				'name' => $artist->getName(),
-				'url' => $artist->getLastfmUrl()
+				'url'  => $artist->getLastfmUrl()
 			], $similar));
 		} catch (BusinessLayerException $e) {
 			return new ErrorResponse(Http::STATUS_NOT_FOUND);

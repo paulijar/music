@@ -22,7 +22,6 @@ use OCA\Music\Db\MatchMode;
 use OCA\Music\Db\Track;
 use OCA\Music\Utility\HttpUtil;
 use OCA\Music\Utility\StringUtil;
-
 use OCP\IConfig;
 
 class LastfmService {
@@ -36,7 +35,7 @@ class LastfmService {
 		private AlbumBusinessLayer $albumBusinessLayer,
 		private ArtistBusinessLayer $artistBusinessLayer,
 		private TrackBusinessLayer $trackBusinessLayer,
-		private Logger $logger
+		private Logger $logger,
 	) {
 		$this->apiKey = $config->getSystemValue('music.lastfm_api_key');
 	}
@@ -83,7 +82,7 @@ class LastfmService {
 			return $this->getInfoFromLastFm([
 				'method' => 'album.getInfo',
 				'artist' => $album->getAlbumArtistName(),
-				'album' => $album->getName()
+				'album'  => $album->getName()
 			]);
 		}
 	}
@@ -93,15 +92,15 @@ class LastfmService {
 	 */
 	public function getTrackInfo(int $trackId, string $userId) : array {
 		$track = $this->trackBusinessLayer->find($trackId, $userId);
-		return $this->findTrackInfo($track->getTitle(), $track->getArtistName() ?? "");
+		return $this->findTrackInfo($track->getTitle(), $track->getArtistName() ?? '');
 	}
 
 	public function findTrackInfo(string $trackTitle, string $artistName) : array {
 		return $this->getInfoFromLastFm([
-				'method' => 'track.getInfo',
-				'artist' => $artistName,
-				'track' => $trackTitle,
-				'autocorrect' => 1
+			'method'      => 'track.getInfo',
+			'artist'      => $artistName,
+			'track'       => $trackTitle,
+			'autocorrect' => 1
 		]);
 	}
 
@@ -113,7 +112,7 @@ class LastfmService {
 	 * @return Artist[]
 	 * @throws BusinessLayerException if artist with the given ID is not found
 	 */
-	public function getSimilarArtists(int $artistId, string $userId, $includeNotPresent=false) : array {
+	public function getSimilarArtists(int $artistId, string $userId, $includeNotPresent = false) : array {
 		$artist = $this->artistBusinessLayer->find($artistId, $userId);
 
 		$similarOnLastfm = $this->getInfoFromLastFm([
@@ -155,7 +154,7 @@ class LastfmService {
 
 		$similarOnLastfm = $this->getInfoFromLastFm([
 			'method' => 'track.getSimilar',
-			'track' => $track->getTitle(),
+			'track'  => $track->getTitle(),
 			'artist' => $track->getArtistName()
 		]);
 
@@ -175,10 +174,10 @@ class LastfmService {
 	/**
 	 * Get artist tracks from the user's library, sorted by their popularity on Last.fm
 	 * @param int|string $artistIdOrName Either the ID of the artist or the artist's name written exactly
-	 * 									like in the DB. Any integer-typed value is treated as an ID and
-	 * 									string-typed value as a name.
+	 *                                   like in the DB. Any integer-typed value is treated as an ID and
+	 *                                   string-typed value as a name.
 	 * @param int $maxCount Number of tracks to request from Last.fm. Note that the function may return much
-	 *						less tracks if the top tracks from Last.fm are not present in the user's library.
+	 *                      less tracks if the top tracks from Last.fm are not present in the user's library.
 	 * @return Track[]
 	 */
 	public function getTopTracks(int|string $artistIdOrName, string $userId, int $maxCount) : array {
@@ -194,7 +193,7 @@ class LastfmService {
 			$lastfmResult = $this->getInfoFromLastFm([
 				'method' => 'artist.getTopTracks',
 				'artist' => $artist->getName(),
-				'limit' => (string)$maxCount
+				'limit'  => (string)$maxCount
 			]);
 			$topTracksOnLastfm = $lastfmResult['toptracks']['track'] ?? null;
 
@@ -227,11 +226,11 @@ class LastfmService {
 			$args = \array_filter($args, [StringUtil::class, 'isNonEmptyString']);
 
 			// glue arg keys and values together ...
-			$args = \array_map(fn($key, $value) => ($key . '=' . \urlencode($value)), \array_keys($args), $args);
+			$args = \array_map(fn ($key, $value) => ($key . '=' . \urlencode($value)), \array_keys($args), $args);
 			// ... and form the final query string
 			$queryString = '?' . \implode('&', $args);
 
-			list('content' => $info, 'status_code' => $statusCode, 'message' => $msg) = HttpUtil::loadFromUrl(self::LASTFM_URL . $queryString);
+			['content' => $info, 'status_code' => $statusCode, 'message' => $msg] = HttpUtil::loadFromUrl(self::LASTFM_URL . $queryString);
 
 			if ($info === false) {
 				// When an album is not found, Last.fm returns 404 but that is not a sign of broken connection.
@@ -250,10 +249,10 @@ class LastfmService {
 
 	private function errorResponse(string $message) : array {
 		return [
-			'api_key_set' => !empty($this->apiKey),
+			'api_key_set'   => !empty($this->apiKey),
 			'connection_ok' => 'unknown',
-			'status_code' => -1,
-			'status_msg' => $message
+			'status_code'   => -1,
+			'status_msg'    => $message
 		];
 	}
 }

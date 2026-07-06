@@ -34,7 +34,7 @@ class ExternalScrobbler implements IScrobbler {
 		private string $identifier,
 		private string $endpoint,
 		private string $tokenRequestUrl,
-		private string $appName
+		private string $appName,
 	) {
 	}
 
@@ -137,7 +137,7 @@ class ExternalScrobbler implements IScrobbler {
 
 		$this->albumBusinessLayer->injectAlbumsToTracks([$track], $userId);
 		$scrobbleData = \array_merge([
-			'sk' => $sessionKey,
+			'sk'        => $sessionKey,
 			'timestamp' => $timeOfPlay->getTimestamp()
 		], $this->generateTrackData($track));
 
@@ -148,8 +148,7 @@ class ExternalScrobbler implements IScrobbler {
 		}
 	}
 
-	public function setNowPlaying(Track $track, ?DateTime $timeOfPlay = null): void
-	{
+	public function setNowPlaying(Track $track, ?DateTime $timeOfPlay = null): void {
 		$userId = $track->getUserId();
 		$sessionKey = $this->getApiSession($userId);
 		if (!$sessionKey) {
@@ -225,7 +224,7 @@ class ExternalScrobbler implements IScrobbler {
 	 */
 	private function generateMethodParams(string $method, array $moreParams = [], bool $sign = true) : array {
 		$params = \array_merge($moreParams, [
-			'method' => $method,
+			'method'  => $method,
 			'api_key' => $this->getApiKey()
 		]);
 
@@ -269,7 +268,7 @@ class ExternalScrobbler implements IScrobbler {
 	private function generateTrackData(Track $track) : array {
 		$trackData = [
 			'artist' => $track->getArtistName(),
-			'track' => $track->getTitle(),
+			'track'  => $track->getTitle(),
 		];
 
 		if (!empty($track->getAlbumName())) {

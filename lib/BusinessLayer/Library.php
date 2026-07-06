@@ -17,7 +17,6 @@ use OCA\Music\Db\Album;
 use OCA\Music\Db\Artist;
 use OCA\Music\Service\CoverService;
 use OCA\Music\Utility\ArrayUtil;
-
 use OCP\IL10N;
 use OCP\IURLGenerator;
 
@@ -30,7 +29,7 @@ class Library {
 		private CoverService $coverService,
 		private IURLGenerator $urlGenerator,
 		private IL10N $l10n,
-		private Logger $logger
+		private Logger $logger,
 	) {
 	}
 
@@ -49,8 +48,8 @@ class Library {
 			$album = $albumsById[$track->getAlbumId()];
 
 			if (empty($album)) {
-				$this->logger->warning("DB error on track {$track->id} '{$track->title}': ".
-					"album with ID {$track->albumId} not found. Skipping the track.");
+				$this->logger->warning("DB error on track {$track->id} '{$track->title}': "
+					. "album with ID {$track->albumId} not found. Skipping the track.");
 				unset($tracks[$idx]);
 			} else {
 				$track->setAlbum($album);
@@ -58,8 +57,8 @@ class Library {
 		}
 
 		return [
-			'tracks' => $tracks,
-			'albums' => $albumsById,
+			'tracks'  => $tracks,
+			'albums'  => $albumsById,
 			'artists' => $artistsById
 		];
 	}

@@ -23,7 +23,8 @@ class BogusTrackRemoval implements IRepairStep {
 
 	public function __construct(
 		private IDBConnection $db,
-		private IConfig $config) {
+		private IConfig $config,
+	) {
 	}
 
 	public function getName() {
@@ -43,7 +44,7 @@ class BogusTrackRemoval implements IRepairStep {
 			$n = $this->removePlaylistFiles();
 			$output->info("$n files with audio/mpegurl or audio/x-scpls mime type removed from the music library");
 			// Clean cache
-			$this->db->executeStatement("DELETE FROM `*PREFIX*music_cache`");
+			$this->db->executeStatement('DELETE FROM `*PREFIX*music_cache`');
 		}
 	}
 
