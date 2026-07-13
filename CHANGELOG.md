@@ -41,6 +41,7 @@
 - Web UI trying to load an invalid image URL upon page load
 - Subsonic API:
   * Attribute `parent` misplaced in the response of `getMusicDirectory` when browsing by file system folders
+  * Endpoints `savePlayQueue` and `savePlayQueueByIndex` not allowing an empty list to clear the queue
 
 ## 3.1.0 - 2026-06-02
 
