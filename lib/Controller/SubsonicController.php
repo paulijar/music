@@ -1466,9 +1466,10 @@ class SubsonicController extends ApiController {
 	private function tracksToApi(array $tracks) : array {
 		$userId = $this->user();
 		$musicFolder = $this->librarySettings->getFolder($userId);
+		$isLegacyClient = \in_array($this->client, ['DSub', 'android']); // 'android' is used by the original Subsonic Music Streamer app
 		$this->fileSystemService->injectFolderPathsToTracks($tracks, $userId, $musicFolder);
 		$this->albumBusinessLayer->injectAlbumsToTracks($tracks, $userId);
-		return \array_map(fn ($t) => $t->toSubsonicApi($this->l10n, $this->ignoredArticles, $this->client === 'DSub'), $tracks);
+		return \array_map(fn ($t) => $t->toSubsonicApi($this->l10n, $this->ignoredArticles, $isLegacyClient), $tracks);
 	}
 
 	private function trackToApi(Track $track) : array {
