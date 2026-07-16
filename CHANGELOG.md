@@ -37,6 +37,7 @@
   * Show all values of multi-valued metadata tags
 
 ### Fixed
+- HTTP redirection not working (e.g. on radio streams) when the `Location` header contains a relative URL
 - Deprecation warnings printed on PHP 8.3+ while executing the Music background tasks
 - Web UI trying to load an invalid image URL upon page load
 - Subsonic API:
