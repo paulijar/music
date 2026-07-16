@@ -35,6 +35,8 @@
   * On tag names, abbreviate "musicbrainz" as "mb" to not truncate the more important parts of the name
   * Show also MusicBrainz Recording Id stored in id3v2.4 tag `UFID` (MusicBrainz Picard uses this on mp3 files)
   * Show all values of multi-valued metadata tags
+- Attempt to restart the playing radio stream if it abruptly ends
+  [nc-music#89](https://github.com/nc-music/music/issues/89)
 
 ### Fixed
 - HTTP redirection not working (e.g. on radio streams) when the `Location` header contains a relative URL
