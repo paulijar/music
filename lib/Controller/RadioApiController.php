@@ -208,7 +208,7 @@ class RadioApiController extends Controller {
 
 			switch ($type) {
 				case 'icy':
-					$metadata = $this->service->readIcyMetadata($streamUrl, 3, 5);
+					$metadata = $this->service->readIcyMetadata($streamUrl, 3);
 					break;
 				case 'shoutcast-v1':
 					$metadata = $this->service->readShoutcastV1Metadata($streamUrl);
@@ -220,7 +220,7 @@ class RadioApiController extends Controller {
 					$metadata = $this->service->readIcecastMetadata($streamUrl);
 					break;
 				default:
-					$metadata = $this->service->readIcyMetadata($streamUrl, 3, 5)
+					$metadata = $this->service->readIcyMetadata($streamUrl, 3)
 							?? $this->service->readShoutcastV2Metadata($streamUrl)
 							?? $this->service->readIcecastMetadata($streamUrl)
 							?? $this->service->readShoutcastV1Metadata($streamUrl);
