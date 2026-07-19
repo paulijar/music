@@ -39,16 +39,12 @@ class LyricsParser {
 		if (!empty($data)) {
 			$offset = 0;
 
-			$fp = \fopen('php://temp', 'r+');
-			\assert($fp !== false, 'Unexpected error: opening temporary stream failed');
+			$lines = \preg_split("/\r\n|\n|\r/", $data);
 
-			\fputs($fp, $data);
-			\rewind($fp);
-			while ($line = \fgets($fp)) {
+			foreach ($lines as $line) {
 				$lineParseResult = self::parseTimestampedLrcLine($line, $offset);
 				$parsedLyrics += $lineParseResult;
 			}
-			\fclose($fp);
 
 			// sort the parsed lyric lines according the timestamps (which are keys of the array)
 			\ksort($parsedLyrics);
