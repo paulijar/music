@@ -196,8 +196,7 @@
 			translate-params-filename="'<cloud root>/config/config.php'"
 			translate-params-admin-doc-url="'https://github.com/nc-music/music/wiki/Admin-settings'"
 		>
-			Users with administrator rights can find some server-wide settings of Music from <a href="{{adminUiUrl}}" target="_blank">Administrator settings</a>.
-			More settings are available by adding specific key-value pairs to the file <samp>{{filename}}</samp>. The available keys are documented <a href="{{adminDocUrl}}" target="_blank">here</a>.
+			Users with administrator rights can find some server-wide settings of Music from <a href="{{adminUiUrl}}" target="_blank">Administrator settings</a>. More settings are available by adding specific key-value pairs to the file <samp>{{filename}}</samp>. The available keys are documented <a href="{{adminDocUrl}}" target="_blank">here</a>.
 		</p>
 	</div>
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nc-music 3.0.0\n"
 "Report-Msgid-Bugs-To: https://github.com/nc-music/music/issues\n"
-"POT-Creation-Date: 2026-06-29 21:34+0300\n"
+"POT-Creation-Date: 2026-07-20 00:41+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -124,7 +124,7 @@ msgstr ""
 msgid "<strong>SPACE</strong> or <strong>K</strong>"
 msgstr ""
 
-#: templates/partials/views/settingsview.php:199
+#: templates/partials/views/settingsview.php:203
 msgid "About"
 msgstr ""
 
@@ -173,13 +173,13 @@ msgstr ""
 msgid "After"
 msgstr ""
 
-#: js/app/controllers/playercontroller.js:640
+#: js/app/controllers/playercontroller.js:643
 #: templates/partials/sidebar/radiostationdetails.php:68
 #: templates/partials/sidebar/trackdetails.php:65
 msgid "Album"
 msgstr ""
 
-#: js/app/controllers/playercontroller.js:633
+#: js/app/controllers/playercontroller.js:636
 #: templates/partials/navigation.php:9
 #: templates/partials/sidebar/artistdetails.php:14 musicwidget.ts:56
 msgid "Albums"
@@ -193,10 +193,10 @@ msgstr ""
 msgid "All channels were already up-to-date"
 msgstr ""
 
-#: js/app/controllers/playercontroller.js:636
+#: js/app/controllers/playercontroller.js:639
 #: templates/partials/navigation.php:22
 #: templates/partials/views/alltracksview.php:4
-#: Controller/AmpacheController.php:1567 musicwidget.ts:59
+#: Controller/AmpacheController.php:1559 musicwidget.ts:59
 msgid "All tracks"
 msgstr ""
 
@@ -208,12 +208,12 @@ msgstr ""
 msgid "Append to an existing playlist?"
 msgstr ""
 
-#: js/app/controllers/views/settingsviewcontroller.js:193
+#: js/app/controllers/views/settingsviewcontroller.js:198
 msgid ""
 "Are you sure to permanently erase all the configured internet radio stations?"
 msgstr ""
 
-#: js/app/controllers/views/settingsviewcontroller.js:223
+#: js/app/controllers/views/settingsviewcontroller.js:228
 msgid "Are you sure to permanently erase all the configured podcast channels?"
 msgstr ""
 
@@ -229,7 +229,7 @@ msgstr ""
 msgid "Are you sure to remove the radio station \"{{ name }}\"?"
 msgstr ""
 
-#: js/app/controllers/views/settingsviewcontroller.js:150
+#: js/app/controllers/views/settingsviewcontroller.js:155
 msgid ""
 "Are you sure to reset the music collection? This removes all scanned tracks "
 "and user-created playlists!"
@@ -239,7 +239,7 @@ msgstr ""
 msgid "Articles to ignore on artist names"
 msgstr ""
 
-#: js/app/controllers/playercontroller.js:641
+#: js/app/controllers/playercontroller.js:644
 #: templates/partials/sidebar/radiostationdetails.php:65
 #: templates/partials/sidebar/trackdetails.php:62
 msgid "Artist"
@@ -247,7 +247,7 @@ msgstr ""
 
 #: templates/partials/sidebar/albumdetails.php:14
 #: templates/partials/sidebar/smartlistfilters.php:25
-#: Controller/SubsonicController.php:221
+#: Controller/SubsonicController.php:214
 msgid "Artists"
 msgstr ""
 
@@ -260,7 +260,7 @@ msgid "Before"
 msgstr ""
 
 #: templates/partials/sidebar/radiostationdetails.php:54
-#: Service/AdvSearchRules.php:39
+#: Service/AdvSearchRules.php:41
 msgid "Bit rate"
 msgstr ""
 
@@ -282,7 +282,7 @@ msgid_plural "Changes were loaded for {{ count }} channels"
 msgstr[0] ""
 msgstr[1] ""
 
-#: js/app/controllers/playercontroller.js:645
+#: js/app/controllers/playercontroller.js:648
 msgid "Channel"
 msgstr ""
 
@@ -329,7 +329,7 @@ msgid "Close"
 msgstr ""
 
 #: templates/partials/sidebar/playlistdetails.php:22
-#: Service/AdvSearchRules.php:41
+#: Service/AdvSearchRules.php:43
 msgid "Comment"
 msgstr ""
 
@@ -421,7 +421,7 @@ msgstr ""
 msgid "Ends with"
 msgstr ""
 
-#: js/app/controllers/playercontroller.js:646
+#: js/app/controllers/playercontroller.js:649
 msgid "Episode"
 msgstr ""
 
@@ -469,7 +469,7 @@ msgid ""
 "logs for details"
 msgstr ""
 
-#: js/app/controllers/views/settingsviewcontroller.js:337
+#: js/app/controllers/views/settingsviewcontroller.js:342
 msgid "Failed to clear scrobbling session."
 msgstr ""
 
@@ -505,15 +505,15 @@ msgstr ""
 msgid "Failed to load the collection:"
 msgstr ""
 
-#: js/app/controllers/views/settingsviewcontroller.js:173
+#: js/app/controllers/views/settingsviewcontroller.js:178
 msgid "Failed to reset the collection:"
 msgstr ""
 
-#: js/app/controllers/views/settingsviewcontroller.js:241
+#: js/app/controllers/views/settingsviewcontroller.js:246
 msgid "Failed to reset the podcast channels:"
 msgstr ""
 
-#: js/app/controllers/views/settingsviewcontroller.js:211
+#: js/app/controllers/views/settingsviewcontroller.js:216
 msgid "Failed to reset the radio stations:"
 msgstr ""
 
@@ -535,19 +535,19 @@ msgid "Failed to update the playlist"
 msgstr ""
 
 #: templates/partials/sidebar/smartlistfilters.php:39
-#: Service/AdvSearchRules.php:55 Service/AdvSearchRules.php:98
-#: Service/AdvSearchRules.php:136 Service/AdvSearchRules.php:159
-#: Service/AdvSearchRules.php:187 Service/AdvSearchRules.php:205
+#: Service/AdvSearchRules.php:57 Service/AdvSearchRules.php:100
+#: Service/AdvSearchRules.php:138 Service/AdvSearchRules.php:161
+#: Service/AdvSearchRules.php:189 Service/AdvSearchRules.php:207
 msgid "Favorite"
 msgstr ""
 
 #: templates/partials/sidebar/smartlistfilters.php:43
-#: Service/AdvSearchRules.php:56
+#: Service/AdvSearchRules.php:58
 msgid "Favorite album"
 msgstr ""
 
 #: templates/partials/sidebar/smartlistfilters.php:44
-#: Service/AdvSearchRules.php:57
+#: Service/AdvSearchRules.php:59
 msgid "Favorite artist"
 msgstr ""
 
@@ -560,8 +560,8 @@ msgid "Favorite track, album, or artist"
 msgstr ""
 
 #: js/app/services/playlistfileservice.ts:61
-#: js/app/services/podcastservice.ts:80 Service/AdvSearchRules.php:48
-#: Service/AdvSearchRules.php:91 Service/AdvSearchRules.php:129
+#: js/app/services/podcastservice.ts:80 Service/AdvSearchRules.php:50
+#: Service/AdvSearchRules.php:93 Service/AdvSearchRules.php:131
 msgid "File name"
 msgstr ""
 
@@ -573,17 +573,17 @@ msgstr ""
 msgid "Flat layout"
 msgstr ""
 
-#: js/app/controllers/playercontroller.js:642
+#: js/app/controllers/playercontroller.js:645
 msgid "Folder"
 msgstr ""
 
-#: js/app/controllers/playercontroller.js:634
-#: templates/partials/navigation.php:15 Controller/SubsonicController.php:222
+#: js/app/controllers/playercontroller.js:637
+#: templates/partials/navigation.php:15 Controller/SubsonicController.php:215
 #: musicwidget.ts:57
 msgid "Folders"
 msgstr ""
 
-#: templates/partials/sidebar/sidebar.php:20
+#: templates/partials/sidebar/sidebar.php:21
 msgid "Follow playback"
 msgstr ""
 
@@ -603,12 +603,12 @@ msgstr ""
 msgid "Generated {{ datetime }}"
 msgstr ""
 
-#: js/app/controllers/playercontroller.js:643
+#: js/app/controllers/playercontroller.js:646
 #: templates/partials/sidebar/radiostationdetails.php:51
 msgid "Genre"
 msgstr ""
 
-#: js/app/controllers/playercontroller.js:635
+#: js/app/controllers/playercontroller.js:638
 #: templates/partials/navigation.php:21
 #: templates/partials/sidebar/smartlistfilters.php:18 musicwidget.ts:58
 msgid "Genres"
@@ -633,7 +633,7 @@ msgid ""
 msgstr ""
 
 #: templates/partials/sidebar/smartlistfilters.php:50
-#: Service/AdvSearchRules.php:179 Service/AdvSearchRules.php:197
+#: Service/AdvSearchRules.php:181 Service/AdvSearchRules.php:199
 msgid "History"
 msgstr ""
 
@@ -715,8 +715,8 @@ msgstr ""
 msgid "Internal server error"
 msgstr ""
 
-#: js/app/controllers/playercontroller.js:616
-#: js/app/controllers/playercontroller.js:638
+#: js/app/controllers/playercontroller.js:619
+#: js/app/controllers/playercontroller.js:641
 #: js/app/services/playlistfileservice.ts:134
 #: templates/partials/navigation.php:24 musicwidget.ts:61
 msgid "Internet radio"
@@ -825,8 +825,8 @@ msgstr ""
 msgid "More than (x) days ago"
 msgstr ""
 
-#: templates/partials/views/settingsview.php:204 Dashboard/MusicWidget.php:41
-#: Settings/AdminSection.php:39
+#: templates/partials/views/settingsview.php:208 Dashboard/MusicWidget.php:41
+#: Settings/AdminSection.php:37
 msgid "Music"
 msgstr ""
 
@@ -850,10 +850,10 @@ msgid "Mute / Unmute"
 msgstr ""
 
 #: templates/partials/sidebar/radiostationdetails.php:18
-#: Service/AdvSearchRules.php:31 Service/AdvSearchRules.php:77
-#: Service/AdvSearchRules.php:117 Service/AdvSearchRules.php:154
-#: Service/AdvSearchRules.php:164 Service/AdvSearchRules.php:175
-#: Service/AdvSearchRules.php:193 Service/AdvSearchRules.php:211
+#: Service/AdvSearchRules.php:33 Service/AdvSearchRules.php:79
+#: Service/AdvSearchRules.php:119 Service/AdvSearchRules.php:156
+#: Service/AdvSearchRules.php:166 Service/AdvSearchRules.php:177
+#: Service/AdvSearchRules.php:195 Service/AdvSearchRules.php:213
 msgid "Name"
 msgstr ""
 
@@ -960,8 +960,8 @@ msgstr ""
 msgid "Number of tracks on albums"
 msgstr ""
 
-#: js/app/controllers/playercontroller.js:661
-#: js/app/controllers/playercontroller.js:670
+#: js/app/controllers/playercontroller.js:664
+#: js/app/controllers/playercontroller.js:673
 msgid "Off"
 msgstr ""
 
@@ -978,11 +978,11 @@ msgstr ""
 msgid "Password:"
 msgstr ""
 
-#: js/app/controllers/views/settingsviewcontroller.js:75
+#: js/app/controllers/views/settingsviewcontroller.js:80
 msgid "Path to exclude from your music collection"
 msgstr ""
 
-#: js/app/controllers/views/settingsviewcontroller.js:40
+#: js/app/controllers/views/settingsviewcontroller.js:41
 #: templates/partials/views/settingsview.php:7
 msgid "Path to your music collection"
 msgstr ""
@@ -1021,14 +1021,14 @@ msgstr ""
 msgid "Playback rate"
 msgstr ""
 
-#: js/app/controllers/playercontroller.js:331
+#: js/app/controllers/playercontroller.js:334
 msgid "Playback speed not adjustable for the current song"
 msgstr ""
 
-#: js/app/controllers/playercontroller.js:644 Service/AdvSearchRules.php:70
-#: Service/AdvSearchRules.php:71 Service/AdvSearchRules.php:110
-#: Service/AdvSearchRules.php:111 Service/AdvSearchRules.php:147
-#: Service/AdvSearchRules.php:148 playlisttabview.js:114 playlisttabview.js:137
+#: js/app/controllers/playercontroller.js:647 Service/AdvSearchRules.php:72
+#: Service/AdvSearchRules.php:73 Service/AdvSearchRules.php:112
+#: Service/AdvSearchRules.php:113 Service/AdvSearchRules.php:149
+#: Service/AdvSearchRules.php:150 playlisttabview.js:114 playlisttabview.js:137
 msgid "Playlist"
 msgstr ""
 
@@ -1041,7 +1041,7 @@ msgstr ""
 msgid "Playlist or folder not found"
 msgstr ""
 
-#: templates/partials/views/settingsview.php:207
+#: templates/partials/views/settingsview.php:215
 msgid ""
 "Please report any bugs and issues to the <a href=\"{{issueTrackerUrl}}\" "
 "target=\"_blank\">issue tracker</a>"
@@ -1055,7 +1055,7 @@ msgstr ""
 msgid "Podcast channels exported to file {{ path }}"
 msgstr ""
 
-#: js/app/controllers/playercontroller.js:639
+#: js/app/controllers/playercontroller.js:642
 #: js/app/services/podcastservice.ts:165 templates/partials/navigation.php:32
 #: musicwidget.ts:62
 msgid "Podcasts"
@@ -1079,7 +1079,7 @@ msgstr ""
 msgid "Radio station"
 msgstr ""
 
-#: js/app/controllers/playercontroller.js:274
+#: js/app/controllers/playercontroller.js:277
 msgid "Radio station not found"
 msgstr ""
 
@@ -1092,16 +1092,16 @@ msgid "Rarely played"
 msgstr ""
 
 #: templates/partials/sidebar/smartlistfilters.php:57
-#: Service/AdvSearchRules.php:51 Service/AdvSearchRules.php:94
-#: Service/AdvSearchRules.php:132 Service/AdvSearchRules.php:157
-#: Service/AdvSearchRules.php:169 Service/AdvSearchRules.php:183
-#: Service/AdvSearchRules.php:201 Service/AdvSearchRules.php:215
+#: Service/AdvSearchRules.php:53 Service/AdvSearchRules.php:96
+#: Service/AdvSearchRules.php:134 Service/AdvSearchRules.php:159
+#: Service/AdvSearchRules.php:171 Service/AdvSearchRules.php:185
+#: Service/AdvSearchRules.php:203 Service/AdvSearchRules.php:217
 msgid "Recently added"
 msgstr ""
 
 #: templates/partials/sidebar/smartlistfilters.php:53
-#: Service/AdvSearchRules.php:65 Service/AdvSearchRules.php:106
-#: Service/AdvSearchRules.php:144
+#: Service/AdvSearchRules.php:67 Service/AdvSearchRules.php:108
+#: Service/AdvSearchRules.php:146
 msgid "Recently played"
 msgstr ""
 
@@ -1142,11 +1142,15 @@ msgstr ""
 msgid "Remove track from playlist"
 msgstr ""
 
+#: js/app/controllers/maincontroller.js:315
+msgid "Remove unavailable files"
+msgstr ""
+
 #: templates/partials/navigation.php:79
 msgid "Rename"
 msgstr ""
 
-#: js/app/controllers/playercontroller.js:666
+#: js/app/controllers/playercontroller.js:669
 #: templates/partials/controls.php:73
 msgid "Repeat"
 msgstr ""
@@ -1160,17 +1164,17 @@ msgstr ""
 msgid "Reset"
 msgstr ""
 
-#: js/app/controllers/views/settingsviewcontroller.js:194
+#: js/app/controllers/views/settingsviewcontroller.js:199
 #: templates/partials/views/settingsview.php:74
 msgid "Reset internet radio stations"
 msgstr ""
 
-#: js/app/controllers/views/settingsviewcontroller.js:151
+#: js/app/controllers/views/settingsviewcontroller.js:156
 #: templates/partials/views/settingsview.php:64
 msgid "Reset music collection"
 msgstr ""
 
-#: js/app/controllers/views/settingsviewcontroller.js:224
+#: js/app/controllers/views/settingsviewcontroller.js:229
 #: templates/partials/views/settingsview.php:83
 msgid "Reset podcast channels"
 msgstr ""
@@ -1285,7 +1289,7 @@ msgstr ""
 msgid "Show more…"
 msgstr ""
 
-#: js/app/controllers/playercontroller.js:660
+#: js/app/controllers/playercontroller.js:663
 #: templates/partials/controls.php:71
 msgid "Shuffle"
 msgstr ""
@@ -1294,7 +1298,7 @@ msgstr ""
 msgid "Similar to"
 msgstr ""
 
-#: js/app/controllers/playercontroller.js:637
+#: js/app/controllers/playercontroller.js:640
 #: templates/partials/navigation.php:41
 #: templates/partials/views/smartlistview.php:4
 msgid "Smart playlist"
@@ -1304,7 +1308,7 @@ msgstr ""
 msgid "Smart playlist filters"
 msgstr ""
 
-#: js/app/controllers/playercontroller.js:467
+#: js/app/controllers/playercontroller.js:470
 msgid "Some not playable tracks were skipped."
 msgstr ""
 
@@ -1355,12 +1359,16 @@ msgid "Stop"
 msgstr ""
 
 #: templates/partials/sidebar/radiostationdetails.php:24
-#: Service/AdvSearchRules.php:212
+#: Service/AdvSearchRules.php:214
 msgid "Stream URL"
 msgstr ""
 
 #: templates/partials/sidebar/smartlistfilters.php:60
 msgid "Strict"
+msgstr ""
+
+#: templates/partials/views/settingsview.php:213
+msgid "Support the development of Music"
 msgstr ""
 
 #: templates/partials/sidebar/albumdetails.php:41
@@ -1374,7 +1382,7 @@ msgstr ""
 msgid "Technical"
 msgstr ""
 
-#: js/app/controllers/views/settingsviewcontroller.js:364
+#: js/app/controllers/views/settingsviewcontroller.js:369
 msgid "Text copied to clipboard"
 msgstr ""
 
@@ -1403,14 +1411,6 @@ msgstr ""
 msgid ""
 "The server administrator can configure your server for scrobbling, see the "
 "<strong>Admin</strong> section below."
-msgstr ""
-
-#: templates/partials/views/settingsview.php:194
-msgid ""
-"There is no settings UI for the server-wide settings of the Music app but "
-"some settings are available by adding specific key-value pairs to the file "
-"<samp>{{filename}}</samp>. The available keys are documented <a "
-"href=\"{{url}}\" target=\"_blank\">here</a>."
 msgstr ""
 
 #: templates/partials/views/settingsview.php:88
@@ -1460,7 +1460,7 @@ msgstr ""
 msgid "Total length"
 msgstr ""
 
-#: js/app/controllers/playercontroller.js:673
+#: js/app/controllers/playercontroller.js:676
 #: templates/partials/sidebar/radiostationdetails.php:62
 #: templates/partials/sidebar/trackdetails.php:59
 msgid "Track"
@@ -1559,6 +1559,15 @@ msgstr ""
 
 #: templates/partials/views/settingsview.php:174
 msgid "Username:"
+msgstr ""
+
+#: templates/partials/views/settingsview.php:194
+msgid ""
+"Users with administrator rights can find some server-wide settings of Music "
+"from <a href=\"{{adminUiUrl}}\" target=\"_blank\">Administrator settings</"
+"a>. More settings are available by adding specific key-value pairs to the "
+"file <samp>{{filename}}</samp>. The available keys are documented <a "
+"href=\"{{adminDocUrl}}\" target=\"_blank\">here</a>."
 msgstr ""
 
 #: templates/partials/sidebar/radiostationdetails.php:48
@@ -1783,7 +1792,7 @@ msgstr ""
 msgid "updates checked"
 msgstr ""
 
-#: templates/partials/views/settingsview.php:205
+#: templates/partials/views/settingsview.php:209
 msgid "version history"
 msgstr ""
 
@@ -1832,6 +1841,16 @@ msgstr[1] ""
 #: js/app/controllers/maincontroller.js:86
 msgid "{{ count }} genre"
 msgid_plural "{{ count }} genres"
+msgstr[0] ""
+msgstr[1] ""
+
+#: js/app/controllers/maincontroller.js:311
+msgid ""
+"{{ count }} previously scanned file is no longer available. Remove it from "
+"the collection?"
+msgid_plural ""
+"{{ count }} previously scanned files are no longer available. Remove them "
+"from the collection?"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -1908,17 +1927,17 @@ msgstr ""
 msgid "Check the error log for details."
 msgstr ""
 
-#: Controller/SettingController.php:181
+#: Controller/SettingController.php:180
 #, php-format
 msgid "Could not find Scrobbler with identifier '%s'"
 msgstr ""
 
-#: Controller/SettingController.php:186
+#: Controller/SettingController.php:185
 #, php-format
 msgid "Unable to update config file. Error from Server: '%s'"
 msgstr ""
 
-#: Controller/SettingController.php:190
+#: Controller/SettingController.php:189
 #, php-format
 msgid "Unexpected error. Error from server: '%s'"
 msgstr ""
@@ -1931,195 +1950,195 @@ msgstr ""
 msgid "Unknown artist"
 msgstr ""
 
-#: Db/Bookmark.php:47
+#: Db/Bookmark.php:46
 msgid "(no comment)"
 msgstr ""
 
-#: Service/AdvSearchRules.php:28
+#: Service/AdvSearchRules.php:30
 msgid "Any searchable text"
 msgstr ""
 
-#: Service/AdvSearchRules.php:30
+#: Service/AdvSearchRules.php:32
 msgid "Track metadata"
 msgstr ""
 
-#: Service/AdvSearchRules.php:32 Service/AdvSearchRules.php:118
+#: Service/AdvSearchRules.php:34 Service/AdvSearchRules.php:120
 msgid "Album name"
 msgstr ""
 
-#: Service/AdvSearchRules.php:33
+#: Service/AdvSearchRules.php:35
 msgid "Artist name"
 msgstr ""
 
-#: Service/AdvSearchRules.php:34 Service/AdvSearchRules.php:78
+#: Service/AdvSearchRules.php:36 Service/AdvSearchRules.php:80
 msgid "Album artist name"
 msgstr ""
 
-#: Service/AdvSearchRules.php:35
+#: Service/AdvSearchRules.php:37
 msgid "Composer name"
 msgstr ""
 
-#: Service/AdvSearchRules.php:36
+#: Service/AdvSearchRules.php:38
 msgid "Track number"
 msgstr ""
 
-#: Service/AdvSearchRules.php:37 Service/AdvSearchRules.php:81
+#: Service/AdvSearchRules.php:39 Service/AdvSearchRules.php:83
 msgid "Year"
 msgstr ""
 
-#: Service/AdvSearchRules.php:38 Service/AdvSearchRules.php:82
-#: Service/AdvSearchRules.php:120 Service/AdvSearchRules.php:177
-#: Service/AdvSearchRules.php:195
+#: Service/AdvSearchRules.php:40 Service/AdvSearchRules.php:84
+#: Service/AdvSearchRules.php:122 Service/AdvSearchRules.php:179
+#: Service/AdvSearchRules.php:197
 msgid "Duration (minutes)"
 msgstr ""
 
-#: Service/AdvSearchRules.php:40
+#: Service/AdvSearchRules.php:42
 msgid "BPM"
 msgstr ""
 
-#: Service/AdvSearchRules.php:42 Service/AdvSearchRules.php:86
-#: Service/AdvSearchRules.php:124
+#: Service/AdvSearchRules.php:44 Service/AdvSearchRules.php:88
+#: Service/AdvSearchRules.php:126
 msgid "Track genre"
 msgstr ""
 
-#: Service/AdvSearchRules.php:43 Service/AdvSearchRules.php:85
+#: Service/AdvSearchRules.php:45 Service/AdvSearchRules.php:87
 msgid "Album genre"
 msgstr ""
 
-#: Service/AdvSearchRules.php:44 Service/AdvSearchRules.php:123
+#: Service/AdvSearchRules.php:46 Service/AdvSearchRules.php:125
 msgid "Artist genre"
 msgstr ""
 
-#: Service/AdvSearchRules.php:45 Service/AdvSearchRules.php:87
-#: Service/AdvSearchRules.php:125
+#: Service/AdvSearchRules.php:47 Service/AdvSearchRules.php:89
+#: Service/AdvSearchRules.php:127
 msgid "Has no genre"
 msgstr ""
 
-#: Service/AdvSearchRules.php:47 Service/AdvSearchRules.php:90
-#: Service/AdvSearchRules.php:128
+#: Service/AdvSearchRules.php:49 Service/AdvSearchRules.php:92
+#: Service/AdvSearchRules.php:130
 msgid "File data"
 msgstr ""
 
-#: Service/AdvSearchRules.php:49 Service/AdvSearchRules.php:92
-#: Service/AdvSearchRules.php:130 Service/AdvSearchRules.php:155
-#: Service/AdvSearchRules.php:167 Service/AdvSearchRules.php:181
-#: Service/AdvSearchRules.php:199 Service/AdvSearchRules.php:213
+#: Service/AdvSearchRules.php:51 Service/AdvSearchRules.php:94
+#: Service/AdvSearchRules.php:132 Service/AdvSearchRules.php:157
+#: Service/AdvSearchRules.php:169 Service/AdvSearchRules.php:183
+#: Service/AdvSearchRules.php:201 Service/AdvSearchRules.php:215
 msgid "Add date"
-msgstr ""
-
-#: Service/AdvSearchRules.php:50 Service/AdvSearchRules.php:93
-#: Service/AdvSearchRules.php:131 Service/AdvSearchRules.php:156
-#: Service/AdvSearchRules.php:168 Service/AdvSearchRules.php:182
-#: Service/AdvSearchRules.php:200 Service/AdvSearchRules.php:214
-msgid "Update date"
 msgstr ""
 
 #: Service/AdvSearchRules.php:52 Service/AdvSearchRules.php:95
 #: Service/AdvSearchRules.php:133 Service/AdvSearchRules.php:158
 #: Service/AdvSearchRules.php:170 Service/AdvSearchRules.php:184
 #: Service/AdvSearchRules.php:202 Service/AdvSearchRules.php:216
+msgid "Update date"
+msgstr ""
+
+#: Service/AdvSearchRules.php:54 Service/AdvSearchRules.php:97
+#: Service/AdvSearchRules.php:135 Service/AdvSearchRules.php:160
+#: Service/AdvSearchRules.php:172 Service/AdvSearchRules.php:186
+#: Service/AdvSearchRules.php:204 Service/AdvSearchRules.php:218
 msgid "Recently updated"
 msgstr ""
 
-#: Service/AdvSearchRules.php:54 Service/AdvSearchRules.php:58
-#: Service/AdvSearchRules.php:97 Service/AdvSearchRules.php:99
-#: Service/AdvSearchRules.php:135 Service/AdvSearchRules.php:137
-#: Service/AdvSearchRules.php:186 Service/AdvSearchRules.php:188
-#: Service/AdvSearchRules.php:204 Service/AdvSearchRules.php:206
+#: Service/AdvSearchRules.php:56 Service/AdvSearchRules.php:60
+#: Service/AdvSearchRules.php:99 Service/AdvSearchRules.php:101
+#: Service/AdvSearchRules.php:137 Service/AdvSearchRules.php:139
+#: Service/AdvSearchRules.php:188 Service/AdvSearchRules.php:190
+#: Service/AdvSearchRules.php:206 Service/AdvSearchRules.php:208
 msgid "Rating"
 msgstr ""
 
-#: Service/AdvSearchRules.php:59 Service/AdvSearchRules.php:139
+#: Service/AdvSearchRules.php:61 Service/AdvSearchRules.php:141
 msgid "Album rating"
 msgstr ""
 
-#: Service/AdvSearchRules.php:60 Service/AdvSearchRules.php:101
-msgid "Artist rating"
-msgstr ""
-
 #: Service/AdvSearchRules.php:62 Service/AdvSearchRules.php:103
-#: Service/AdvSearchRules.php:141
-msgid "Play history"
-msgstr ""
-
-#: Service/AdvSearchRules.php:63 Service/AdvSearchRules.php:104
-#: Service/AdvSearchRules.php:142
-msgid "Played times"
+msgid "Artist rating"
 msgstr ""
 
 #: Service/AdvSearchRules.php:64 Service/AdvSearchRules.php:105
 #: Service/AdvSearchRules.php:143
-msgid "Last played"
+msgid "Play history"
+msgstr ""
+
+#: Service/AdvSearchRules.php:65 Service/AdvSearchRules.php:106
+#: Service/AdvSearchRules.php:144
+msgid "Played times"
 msgstr ""
 
 #: Service/AdvSearchRules.php:66 Service/AdvSearchRules.php:107
 #: Service/AdvSearchRules.php:145
+msgid "Last played"
+msgstr ""
+
+#: Service/AdvSearchRules.php:68 Service/AdvSearchRules.php:109
+#: Service/AdvSearchRules.php:147
 msgid "Is played"
 msgstr ""
 
-#: Service/AdvSearchRules.php:67
+#: Service/AdvSearchRules.php:69
 msgid "Is played album"
 msgstr ""
 
-#: Service/AdvSearchRules.php:68 Service/AdvSearchRules.php:108
+#: Service/AdvSearchRules.php:70 Service/AdvSearchRules.php:110
 msgid "Is played artist"
 msgstr ""
 
-#: Service/AdvSearchRules.php:72 Service/AdvSearchRules.php:112
-#: Service/AdvSearchRules.php:149
+#: Service/AdvSearchRules.php:74 Service/AdvSearchRules.php:114
+#: Service/AdvSearchRules.php:151
 msgid "Playlist name"
 msgstr ""
 
-#: Service/AdvSearchRules.php:76
+#: Service/AdvSearchRules.php:78
 msgid "Album metadata"
 msgstr ""
 
-#: Service/AdvSearchRules.php:79
+#: Service/AdvSearchRules.php:81
 msgid "Track artist name"
 msgstr ""
 
-#: Service/AdvSearchRules.php:80 Service/AdvSearchRules.php:119
+#: Service/AdvSearchRules.php:82 Service/AdvSearchRules.php:121
 msgid "Track name"
 msgstr ""
 
-#: Service/AdvSearchRules.php:83 Service/AdvSearchRules.php:122
-#: Service/AdvSearchRules.php:166
+#: Service/AdvSearchRules.php:85 Service/AdvSearchRules.php:124
+#: Service/AdvSearchRules.php:168
 msgid "Track count"
 msgstr ""
 
-#: Service/AdvSearchRules.php:84
+#: Service/AdvSearchRules.php:86
 msgid "Disk count"
 msgstr ""
 
-#: Service/AdvSearchRules.php:88 Service/AdvSearchRules.php:126
+#: Service/AdvSearchRules.php:90 Service/AdvSearchRules.php:128
 msgid "Has image"
 msgstr ""
 
-#: Service/AdvSearchRules.php:100 Service/AdvSearchRules.php:138
+#: Service/AdvSearchRules.php:102 Service/AdvSearchRules.php:140
 msgid "Track rating"
 msgstr ""
 
-#: Service/AdvSearchRules.php:116
+#: Service/AdvSearchRules.php:118
 msgid "Artist metadata"
 msgstr ""
 
-#: Service/AdvSearchRules.php:121 Service/AdvSearchRules.php:165
+#: Service/AdvSearchRules.php:123 Service/AdvSearchRules.php:167
 msgid "Album count"
 msgstr ""
 
-#: Service/AdvSearchRules.php:174 Service/AdvSearchRules.php:192
+#: Service/AdvSearchRules.php:176 Service/AdvSearchRules.php:194
 msgid "Podcast metadata"
 msgstr ""
 
-#: Service/AdvSearchRules.php:176
+#: Service/AdvSearchRules.php:178
 msgid "Podcast channel"
 msgstr ""
 
-#: Service/AdvSearchRules.php:180 Service/AdvSearchRules.php:198
+#: Service/AdvSearchRules.php:182 Service/AdvSearchRules.php:200
 msgid "Date published"
 msgstr ""
 
-#: Service/AdvSearchRules.php:194
+#: Service/AdvSearchRules.php:196
 msgid "Podcast episode"
 msgstr ""
 
@@ -2133,31 +2152,38 @@ msgstr[1] ""
 msgid "You can now close this window"
 msgstr ""
 
-#: Scrobbler.ts:38
+#: MusicAdminHeaderSection.ts:26
+msgid ""
+"More administrative settings for Music are available by adding specific key-"
+"value pairs to the file <samp>{filename}</samp>. The available keys are "
+"documented <a href=\"{url}\" target=\"_blank\">here</a>."
+msgstr ""
+
+#: ScrobblersAdmin.ts:38
 msgid "API Key"
 msgstr ""
 
-#: Scrobbler.ts:39
+#: ScrobblersAdmin.ts:39
 msgid "API Secret"
 msgstr ""
 
-#: Scrobbler.ts:51
+#: ScrobblersAdmin.ts:51
 msgid "Show API Secret"
 msgstr ""
 
-#: Scrobbler.ts:56
+#: ScrobblersAdmin.ts:56
 msgid "Update API credentials for {service}"
 msgstr ""
 
-#: Scrobbler.ts:99
-msgid "Updated {name} credentials!"
+#: ScrobblersAdmin.ts:99
+msgid "Updated {service} credentials!"
 msgstr ""
 
-#: Scrobbler.ts:129
+#: ScrobblersAdmin.ts:129
 msgid "Scrobbler Configuration"
 msgstr ""
 
-#: Scrobbler.ts:132
+#: ScrobblersAdmin.ts:132
 msgid ""
 "Configure API connection to begin scrobbling. Check the <a target=\"_blank\" "
 "href=\"{url}\">documentation</a> for more details."

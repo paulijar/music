@@ -96,7 +96,7 @@ class ScrobblerAdmin implements MusicAdminSection {
 				return;
 			}
 
-			OCA.Music.Dialogs.showNotification(t('music', 'Updated {name} credentials!', {name: this.#name}));
+			OCA.Music.Dialogs.showNotification(t('music', 'Updated {service} credentials!', {service: this.#name}));
 			this.#api_key = apiKeyEl.value;
 			this.#api_secret = apiSecretEl.value;
 			submitButton.disabled = true;
