@@ -11,10 +11,10 @@
 OCA.Music instanceof Object || (OCA.Music = {});
 
 import MusicAdmin from './admin/MusicAdmin';
-import ScrobbleSettings from './admin/Scrobbler';
+import ScrobblersAdmin from './admin/ScrobblersAdmin';
 import('./shared/dialogs');
 
-const app = new MusicAdmin([ScrobbleSettings]);
+const app = new MusicAdmin([ScrobblersAdmin]);
 app.mount(document.querySelector('#admin-music'));
 /**
  * `require` all modules in the given webpack context

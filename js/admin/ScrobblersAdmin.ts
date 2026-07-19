@@ -9,7 +9,7 @@
  */
 
 import { escape } from "lodash";
-import { MusicAdminSection } from './AdminSection';
+import { MusicAdminSection } from './MusicAdminSection';
 
 declare var OCP : any;
 declare function t(app : string, text : string, vars?: Object) : string;
