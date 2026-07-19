@@ -43,6 +43,7 @@
 - Deprecation warnings printed on PHP 8.3+ while executing the Music background tasks
 - Web UI trying to load an invalid image URL upon page load
 - Negative offset being ignored when showing time-synced lyrics
+- Empty lines being hidden when viewing time-synced lyrics
 - Subsonic API:
   * Attribute `parent` misplaced in the response of `getMusicDirectory` when browsing by file system folders
   * Endpoints `savePlayQueue` and `savePlayQueueByIndex` not allowing an empty list to clear the queue
