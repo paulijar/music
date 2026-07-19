@@ -37,7 +37,7 @@ msgstr "(kirjaston pääkansio)"
 
 #: templates/partials/sidebar/artistdetails.php:5
 msgid "(no artist image available)"
-msgstr "(esittäjän kuvaa ei ole saatavilla)"
+msgstr "(artistin kuvaa ei ole saatavilla)"
 
 #: templates/fake-template.php:14
 msgid "(press and hold for more)"
@@ -169,7 +169,7 @@ msgid ""
 "Admin may set up the Last.fm API key to show artist biography here. See the "
 "Settings view for details."
 msgstr ""
-"Ylläpitäjän tulee asettaa Last.fm API-avain, jotta esittäjän taustatietoja "
+"Ylläpitäjän tulee asettaa Last.fm API-avain, jotta artistin taustatietoja "
 "voidaan näyttää täällä. Katso lisätietoja Asetuksista."
 
 #: templates/partials/navigation.php:104
@@ -248,7 +248,7 @@ msgstr ""
 
 #: templates/partials/views/settingsview.php:102
 msgid "Articles to ignore on artist names"
-msgstr "Etuliitteet, joita ei huomioida esittäjän nimessä"
+msgstr "Etuliitteet, joita ei huomioida artistin nimessä"
 
 #: js/app/controllers/playercontroller.js:644
 #: templates/partials/sidebar/radiostationdetails.php:65
@@ -1735,7 +1735,7 @@ msgstr "albumit"
 
 #: templates/partials/views/advancedsearchview.php:11
 msgid "artists"
-msgstr "esittäjät"
+msgstr "artistit"
 
 #: js/app/controllers/sidebar/podcastdetailscontroller.js:97
 msgid "author"
