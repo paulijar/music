@@ -191,8 +191,13 @@
 
 	<h2 translate>Admin</h2>
 	<div>
-		<p translate translate-params-filename="'<cloud root>/config/config.php'" translate-params-url="'https://github.com/nc-music/music/wiki/Admin-settings'">
-			There is no settings UI for the server-wide settings of the Music app but some settings are available by adding specific key-value pairs to the file <samp>{{filename}}</samp>. The available keys are documented <a href="{{url}}" target="_blank">here</a>.
+		<p translate
+			translate-params-admin-ui-url="::adminSettingsUiUrl"
+			translate-params-filename="'<cloud root>/config/config.php'"
+			translate-params-admin-doc-url="'https://github.com/nc-music/music/wiki/Admin-settings'"
+		>
+			Users with administrator rights can find some server-wide settings of Music from <a href="{{adminUiUrl}}" target="_blank">Administrator settings</a>.
+			More settings are available by adding specific key-value pairs to the file <samp>{{filename}}</samp>. The available keys are documented <a href="{{adminDocUrl}}" target="_blank">here</a>.
 		</p>
 	</div>
 

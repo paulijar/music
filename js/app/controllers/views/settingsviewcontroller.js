@@ -19,6 +19,7 @@ angular.module('Music').controller('SettingsViewController', [
 		$scope.issueTrackerUrl = 'https://github.com/nc-music/music/issues';
 		$scope.ampacheClientsUrl = 'https://github.com/nc-music/music/wiki/Ampache';
 		$scope.subsonicClientsUrl = 'https://github.com/nc-music/music/wiki/Subsonic';
+		$scope.adminSettingsUiUrl = OC.generateUrl('settings/admin/music');
 
 		$scope.desktopNotificationsSupported = (typeof Notification !== 'undefined');
 
