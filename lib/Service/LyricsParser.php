@@ -87,7 +87,7 @@ class LyricsParser {
 			$offsetMatch = [];
 			if (\preg_match('/\[offset:(-?\d+)\]/', $tags, $offsetMatch)) {
 				$offset = \intval($offsetMatch[1]);
-			} elseif (\preg_match_all('/\[(\d\d:\d\d(\.\d\d)?)\]/', $tags, $timestampMatches)) {
+			} elseif (\preg_match_all('/\[(\d\d:\d\d(\.\d{2,3})?)\]/', $tags, $timestampMatches)) {
 				// some timestamp(s) were found
 				$timestamps = $timestampMatches[1];
 
