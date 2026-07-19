@@ -328,7 +328,7 @@
     "Unset favorite" : "Poista suosikki",
     "Update" : "Päivitä",
     "Upload image named \"{{name}}\" to anywhere within your library path to see it here." : "Lataa kuvatiedosto nimellä \"{{name}}\" mihin tahansa kirjastopolkusi alla nähdäksesi kuvan tässä.",
-    "Upload music in the files app to listen to it here" : "Lähetä musiikkitiedostoja tiedostosovelluksen kautta, jonka jälkeen voit kuunnella niitä täällä",
+    "Upload music in the Files app to listen to it here" : "Lähetä musiikkitiedostoja Tiedostot-sovelluksen kautta, jonka jälkeen voit kuunnella niitä täällä",
     "Use the following credentials to connect to this Ampache/Subsonic instance." : "Käytä seuraavaa tunnusta ja salasanaa yhditäessäsi tähän Ampache/Subsonic-istuntoon.",
     "Use this address to browse your music collection from a Subsonic compatible player." : "Käytä tätä osoitetta selataksesi musiikkikokoelmaasi Subsonic-yhteensopivalta soittimelta.",
     "Use this address to browse your music collection from an Ampache compatible player." : "Käytä tätä osoitetta selataksesi musiikkikokoelmaasi Ampache-yhteensopivalta soittimelta.",

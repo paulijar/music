@@ -44,7 +44,7 @@ HtmlUtil::addWebpackStyle('app');
 				<div class="icon-audio svg"></div>
 				<div>
 					<h2 translate>No music found</h2>
-					<p translate>Upload music in the files app to listen to it here</p>
+					<p translate>Upload music in the Files app to listen to it here</p>
 				</div>
 			</div>
 

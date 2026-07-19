@@ -1632,9 +1632,9 @@ msgstr ""
 "nähdäksesi kuvan tässä."
 
 #: templates/main.php:47
-msgid "Upload music in the files app to listen to it here"
+msgid "Upload music in the Files app to listen to it here"
 msgstr ""
-"Lähetä musiikkitiedostoja tiedostosovelluksen kautta, jonka jälkeen voit "
+"Lähetä musiikkitiedostoja Tiedostot-sovelluksen kautta, jonka jälkeen voit "
 "kuunnella niitä täällä"
 
 #: templates/partials/views/settingsview.php:172
