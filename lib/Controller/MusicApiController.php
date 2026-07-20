@@ -121,11 +121,7 @@ class MusicApiController extends Controller {
 	#[NoCSRFRequired]
 	public function genres() : JSONResponse {
 		$genres = $this->genreBusinessLayer->findAllWithTrackIds($this->user());
-		$unscanned = $this->trackBusinessLayer->findFilesWithoutScannedGenre($this->user());
-		return new JSONResponse([
-			'genres'    => \array_map(fn ($g) => $g->toApi(), $genres),
-			'unscanned' => $unscanned
-		]);
+		return new JSONResponse($genres);
 	}
 
 	#[NoAdminRequired]

@@ -149,9 +149,8 @@ function ($rootScope, $scope, $document, $timeout, $window, libraryFactory,
 			$scope.reloadSmartList();
 
 			// Load also genres once the collection has been loaded
-			Restangular.one('genres').get().then(function(genres) {
-				libraryService.setGenres(genres.genres);
-				$scope.filesWithUnscannedGenre = genres.unscanned;
+			Restangular.all('genres').getList().then(function(genres) {
+				libraryService.setGenres(genres);
 				$rootScope.$emit('genresLoaded');
 			});
 

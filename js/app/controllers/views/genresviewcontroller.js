@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2020 - 2024
+ * @copyright Pauli Järvinen 2020 - 2026
  */
 
 
@@ -28,11 +28,6 @@ angular.module('Music').controller('GenresViewController', [
 		function subscribe(event, handler) {
 			unsubFuncs.push( $rootScope.$on(event, handler) );
 		}
-
-		$scope.startScanning = function() {
-			$scope.$parent.startScanning($scope.$parent.filesWithUnscannedGenre);
-			$scope.$parent.filesWithUnscannedGenre = null;
-		};
 
 		function playPlaylist(listId, tracks, startFromTrackId = undefined) {
 			let startIndex = null;
@@ -164,14 +159,6 @@ angular.module('Music').controller('GenresViewController', [
 			$scope.incrementalLoadLimit = 0;
 			$scope.genres = libraryService.getAllGenres();
 			$timeout(showMore);
-
-			// The "rescan needed" banner uses "collapsed" layout if there are any genres already available
-			let rescanPopup = $('#toRescan');
-			if ($scope.genres.length > 0) {
-				rescanPopup.addClass('collapsed');
-			} else {
-				rescanPopup.removeClass('collapsed');
-			}
 		}
 
 		/**
