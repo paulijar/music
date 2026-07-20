@@ -12,7 +12,7 @@
 import * as angular from 'angular';
 import { MusicRootScope } from 'app/config/musicrootscope';
 import { IService } from 'restangular';
-import { Artist, Folder, Genre, LibraryService, Playlist, PlaylistEntry, RadioStation } from 'app/services/libraryservice';
+import { Artist, Folder, Genre, LibraryService, Playlist, PlaylistEntry, PodcastChannel, RadioStation } from 'app/services/libraryservice';
 
 angular.module('Music').factory('libraryFactory', ['Restangular', '$rootScope', 'libraryService', function (Restangular : IService, $rootScope : MusicRootScope, libraryService : LibraryService) {
 
@@ -21,6 +21,7 @@ angular.module('Music').factory('libraryFactory', ['Restangular', '$rootScope', 
 	let playlistsPromise : angular.IPromise<Playlist[]> | null = null;
 	let genresPromise : angular.IPromise<Genre[]> | null = null;
 	let radioStationsPromise : angular.IPromise<PlaylistEntry<RadioStation>[]> | null = null;
+	let podcastChannelsPromise : angular.IPromise<PodcastChannel[]> | null = null;
 
 	return {
 		getCollection() : angular.IPromise<Artist[]> {
@@ -86,6 +87,27 @@ angular.module('Music').factory('libraryFactory', ['Restangular', '$rootScope', 
 				});
 			}
 			return radioStationsPromise;
-		}
+		},
+
+		getPodcastChannels() : angular.IPromise<PodcastChannel[]> {
+			if (!podcastChannelsPromise) {
+				podcastChannelsPromise = Restangular.all('podcasts').getList().then((channels) => {
+					libraryService.setPodcasts(channels);
+					$rootScope.$emit('podcastsLoaded');
+					return libraryService.getAllPodcastChannels();
+				});
+			}
+			return podcastChannelsPromise;
+		},
+
+		updateFavorites() : angular.IPromise<void> {
+			const fetchFavoritesPromise = Restangular.one('favorites').get();
+
+			// collection, playlists, and podcasts have to be loaded before favorites can be set, because favorites can contain items from all of those
+			return Promise.all([this.getCollection(), this.getPlaylists(), this.getPodcastChannels(), fetchFavoritesPromise]).then(
+				([_collection, _playlists, _podcastChannels, favorites]) => libraryService.setFavorites(favorites)
+			);
+		},
+
 	};
 }]);

@@ -138,11 +138,6 @@ function ($rootScope, $scope, $document, $timeout, $window, libraryFactory,
 			// Load playlists once the collection has been loaded
 			libraryFactory.getPlaylists().then(function(_playlists) {
 				$rootScope.$emit('playlistsLoaded');
-
-				// fetch favorites once library, playlists, and podcasts are all loaded
-				if (libraryService.podcastsLoaded()) {
-					updateFavorites();
-				}
 			});
 
 			// Load also the smart playlist once the collection is ready
@@ -194,25 +189,14 @@ function ($rootScope, $scope, $document, $timeout, $window, libraryFactory,
 	};
 
 	$scope.updatePodcasts = function() {
-		Restangular.one('podcasts').get().then(function(podcasts) {
-			libraryService.setPodcasts(podcasts);
-			$rootScope.$emit('podcastsLoaded');
-
-			// fetch favorites once library, playlists, and podcasts are all loaded
-			if (libraryService.collectionLoaded() && libraryService.playlistsLoaded()) {
-				updateFavorites();
-			}
-		});
+		libraryFactory.getPodcastChannels();
 	};
-
-	function updateFavorites() {
-		Restangular.one('favorites').get().then((favorites) => libraryService.setFavorites(favorites));
-	}
 
 	// initial loading of artists and radio stations
 	$scope.update();
 	$scope.updateRadio();
 	$scope.updatePodcasts();
+	libraryFactory.updateFavorites();
 
 	const FILES_TO_SCAN_PER_STEP = 20;
 	let filesToScan = null;

@@ -5,12 +5,12 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2021 - 2024
+ * @copyright Pauli Järvinen 2021 - 2026
  */
 
 angular.module('Music').controller('PodcastsViewController', [
-	'$scope', '$rootScope', 'playQueueService', 'podcastService', 'libraryService', '$timeout', 'gettextCatalog',
-	function ($scope, $rootScope, playQueueService, podcastService, libraryService, $timeout, gettextCatalog) {
+	'$scope', '$rootScope', 'playQueueService', 'podcastService', 'libraryService', 'libraryFactory', '$timeout', 'gettextCatalog',
+	function ($scope, $rootScope, playQueueService, podcastService, libraryService, libraryFactory, $timeout, gettextCatalog) {
 
 		$rootScope.currentView = $scope.getViewIdFromUrl();
 
@@ -159,23 +159,13 @@ angular.module('Music').controller('PodcastsViewController', [
 
 		subscribe('resize', updateColumnLayout);
 
-		function onContentReady() {
+		libraryFactory.getPodcastChannels().then((channels) => {
 			// show content only if the view is not already (being) deactivated
 			if ($rootScope.currentView && $scope.$parent) {
-				$scope.channels = libraryService.getAllPodcastChannels();
+				$scope.channels = channels;
 				$rootScope.loading = false;
 				$timeout(() => $rootScope.$emit('viewActivated'));
 			}
-		}
-
-		// Make the content visible immediately if the podcasts are already loaded.
-		// Otherwise it happens on the 'podcastsLoaded' event handler.
-		if (libraryService.podcastsLoaded()) {
-			onContentReady();
-		}
-
-		subscribe('podcastsLoaded', function() {
-			onContentReady();
 		});
 
 		subscribe('deactivateView', function() {
