@@ -11,8 +11,8 @@
  */
 
 angular.module('Music').controller('SettingsViewController', [
-	'$scope', '$rootScope', 'Restangular', '$q', '$timeout', 'gettextCatalog',
-	function ($scope, $rootScope, Restangular, $q, $timeout, gettextCatalog) {
+	'$scope', '$rootScope', 'Restangular', '$q', '$timeout', 'gettextCatalog', 'libraryService',
+	function ($scope, $rootScope, Restangular, $q, $timeout, gettextCatalog, libraryService) {
 
 		$scope.issueTrackerUrl = 'https://github.com/nc-music/music/issues';
 		$scope.ampacheClientsUrl = 'https://github.com/nc-music/music/wiki/Ampache';
@@ -280,7 +280,7 @@ angular.module('Music').controller('SettingsViewController', [
 						$scope.savingIgnoredArticles = false;
 						$scope.errorIgnoredArticles = false;
 						$scope.settings.ignoredArticles = articles;
-						$rootScope.$emit('updateIgnoredArticles', articles);
+						libraryService.setIgnoredArticles(articles);
 					},
 					function(_error) {
 						// error handling

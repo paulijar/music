@@ -117,10 +117,6 @@ function ($rootScope, $scope, $document, $timeout, $window, libraryFactory,
 		return !['#/settings', '#/radio', '#/podcasts'].includes($scope.getCurrentViewId());
 	};
 
-	$rootScope.$on('updateIgnoredArticles', function(_event, ignoredArticles) {
-		libraryService.setIgnoredArticles(ignoredArticles);
-	});
-
 	$scope.update = function() {
 		$scope.updateAvailable = false;
 		$rootScope.loadingCollection = true;
