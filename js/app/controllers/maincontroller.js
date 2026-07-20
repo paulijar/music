@@ -149,10 +149,7 @@ function ($rootScope, $scope, $document, $timeout, $window, libraryFactory,
 			$scope.reloadSmartList();
 
 			// Load also genres once the collection has been loaded
-			Restangular.all('genres').getList().then(function(genres) {
-				libraryService.setGenres(genres);
-				$rootScope.$emit('genresLoaded');
-			});
+			libraryFactory.getGenres();
 
 			// The "no content"/"click to scan"/"scanning" banner uses "collapsed" layout
 			// if there are any tracks already visible

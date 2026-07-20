@@ -10,8 +10,8 @@
 
 
 angular.module('Music').controller('GenresViewController', [
-	'$rootScope', '$scope', 'playQueueService', 'libraryService', '$timeout',
-	function ($rootScope, $scope, playQueueService, libraryService, $timeout) {
+	'$rootScope', '$scope', 'playQueueService', 'libraryService', 'libraryFactory', '$timeout',
+	function ($rootScope, $scope, playQueueService, libraryService, libraryFactory, $timeout) {
 
 		$scope.genres = null;
 		$rootScope.currentView = $scope.getViewIdFromUrl();
@@ -145,21 +145,11 @@ angular.module('Music').controller('GenresViewController', [
 			playQueueService.unsubscribeAll(this);
 		});
 
-		// Init happens either immediately (after making the loading animation visible)
-		// or once collection has been loaded
-		if (libraryService.genresLoaded()) {
-			$timeout(initView);
-		}
-
-		subscribe('genresLoaded', function () {
-			$timeout(initView);
-		});
-
-		function initView() {
+		libraryFactory.getGenres().then((genres) => {
+			$scope.genres = genres;
 			$scope.incrementalLoadLimit = 0;
-			$scope.genres = libraryService.getAllGenres();
 			$timeout(showMore);
-		}
+		});
 
 		/**
 		 * Increase number of shown genres asynchronously step-by-step until

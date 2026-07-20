@@ -12,13 +12,14 @@
 import * as angular from 'angular';
 import { MusicRootScope } from 'app/config/musicrootscope';
 import { IService } from 'restangular';
-import { Artist, Folder, LibraryService, Playlist } from 'app/services/libraryservice';
+import { Artist, Folder, Genre, LibraryService, Playlist } from 'app/services/libraryservice';
 
 angular.module('Music').factory('libraryFactory', ['Restangular', '$rootScope', 'libraryService', function (Restangular : IService, $rootScope : MusicRootScope, libraryService : LibraryService) {
 
 	let collectionPromise : angular.IPromise<Artist[]> | null = null;
 	let rootFolderPromise : angular.IPromise<Folder> | null = null;
 	let playlistsPromise : angular.IPromise<Playlist[]> | null = null;
+	let genresPromise : angular.IPromise<Genre[]> | null = null;
 
 	return {
 		getCollection() : angular.IPromise<Artist[]> {
@@ -46,6 +47,20 @@ angular.module('Music').factory('libraryFactory', ['Restangular', '$rootScope', 
 				});
 			}
 			return rootFolderPromise;
+		},
+
+		getGenres() : angular.IPromise<Genre[]> {
+			if (!genresPromise) {
+				const fetchGenresPromise = Restangular.all('genres').getList();
+
+				// the collection has to be set on the libraryService before the genres can be set
+				genresPromise = Promise.all([this.getCollection(), fetchGenresPromise]).then(([_collection, genres]) => {
+					libraryService.setGenres(genres);
+					$rootScope.$emit('genresLoaded');
+					return libraryService.getAllGenres();
+				});
+			}
+			return genresPromise;
 		},
 
 		getPlaylists() : angular.IPromise<Playlist[]> {
