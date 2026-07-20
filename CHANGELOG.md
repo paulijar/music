@@ -52,7 +52,7 @@
 ## 3.1.1 - 2026-07-16
 
 ### Fixed
-- Vulnerability [GHSA-frmc-frvc-h5p6](https://github.com/nc-music/oc-music/security/advisories/GHSA-frm)
+- Vulnerability [GHSA-frmc-frvc-h5p6](https://github.com/nc-music/oc-music/security/advisories/GHSA-frmc-frvc-h5p6)
 
 ## 3.1.0 - 2026-06-02
 
