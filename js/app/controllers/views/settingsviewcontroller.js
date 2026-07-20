@@ -23,7 +23,7 @@ angular.module('Music').controller('SettingsViewController', [
 
 		let savedExcludedPaths = [];
 
-		// $rootScope listeneres must be unsubscribed manually when the control is destroyed
+		// $rootScope listeners must be unsubscribed manually when the control is destroyed
 		let unsubFuncs = [];
 
 		function subscribe(event, handler) {
@@ -119,30 +119,30 @@ angular.module('Music').controller('SettingsViewController', [
 			}
 		};
 
-		let cancelSaveScanMetada = null;
+		let cancelSaveScanMetadata = null;
 		$scope.savingScanMetadata = 0;
 		$scope.$watch('settings.scanMetadata', function(enabled, previouslyEnabled) {
 			// send the new value to the server only when moving between valid states, not on first init
 			if (enabled !== undefined && previouslyEnabled !== undefined) {
 				// if there is already one save operation running, cancel that first
-				if (cancelSaveScanMetada !== null) {
-					cancelSaveScanMetada.resolve();
+				if (cancelSaveScanMetadata !== null) {
+					cancelSaveScanMetadata.resolve();
 				}
 
 				$scope.savingScanMetadata++;
-				cancelSaveScanMetada = $q.defer();
-				Restangular.all('settings/user/enable_scan_metadata').withHttpConfig({timeout: cancelSaveScanMetada.promise}).post({value: enabled}).then(
+				cancelSaveScanMetadata = $q.defer();
+				Restangular.all('settings/user/enable_scan_metadata').withHttpConfig({timeout: cancelSaveScanMetadata.promise}).post({value: enabled}).then(
 					function(_data) {
 						// success
 						$scope.savingScanMetadata--;
 						$scope.errorScanMetadata = false;
-						cancelSaveScanMetada = null;
+						cancelSaveScanMetadata = null;
 					},
 					function(error) {
 						// error handling
 						$scope.savingScanMetadata--;
 						$scope.errorScanMetadata = (error.xhrStatus != 'abort'); // aborting is not an error
-						cancelSaveScanMetada = null;
+						cancelSaveScanMetadata = null;
 					}
 				);
 			}

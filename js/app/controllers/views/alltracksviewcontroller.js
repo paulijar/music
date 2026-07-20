@@ -125,7 +125,7 @@ angular.module('Music').controller('AllTracksViewController', [
 			}
 		}
 
-		function trackAtIndexPreceedsIndexCharAt(trackIdx, charIdx) {
+		function trackAtIndexPrecedesIndexCharAt(trackIdx, charIdx) {
 			let name = _tracks[trackIdx].track.artist.sortName;
 			return (charIdx >= _indexChars.length
 				|| alphabetIndexingService.titlePrecedesIndexCharAt(name, charIdx));
@@ -138,7 +138,7 @@ angular.module('Music').controller('AllTracksViewController', [
 				charIdx < _indexChars.length && trackIdx < _tracks.length;
 				++charIdx)
 			{
-				if (trackAtIndexPreceedsIndexCharAt(trackIdx, charIdx + 1)) {
+				if (trackAtIndexPrecedesIndexCharAt(trackIdx, charIdx + 1)) {
 					// Track at trackIdx belongs to bucket of the char _indexChars[charIdx]
 
 					let bucket = null;
@@ -163,7 +163,7 @@ angular.module('Music').controller('AllTracksViewController', [
 						++trackIdx;
 					}
 					while (trackIdx < _tracks.length
-							&& trackAtIndexPreceedsIndexCharAt(trackIdx, charIdx + 1));
+							&& trackAtIndexPrecedesIndexCharAt(trackIdx, charIdx + 1));
 				}
 			}
 

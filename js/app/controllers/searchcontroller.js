@@ -91,7 +91,7 @@ function ($scope, $rootScope, libraryService, $timeout, gettextCatalog) {
 		} else if (view == '#/podcasts') {
 			matchingTracks = searchInPodcastsView(query);
 		} else if (view == '#/smartlist') {
-			matchingTracks = searchInSmartistView(query);
+			matchingTracks = searchInSmartlistView(query);
 		} else if (view.startsWith('#/playlist/')) {
 			matchingTracks = searchInPlaylistView(view.slice('#/playlist/'.length), query);
 		} else {
@@ -247,7 +247,7 @@ function ($scope, $rootScope, libraryService, $timeout, gettextCatalog) {
 		return matches;
 	}
 
-	function searchInSmartistView(query) {
+	function searchInSmartlistView(query) {
 		let matches = libraryService.searchTracksInSmartlist(query, MAX_MATCHES);
 		_(matches.result).each(function(track) {
 			$('li[data-track-id=' + track.id + ']').addClass('matched');
