@@ -14,7 +14,6 @@ angular.module('Music').controller('GenresViewController', [
 	function ($rootScope, $scope, playQueueService, libraryService, libraryFactory, $timeout) {
 
 		$scope.genres = null;
-		$rootScope.currentView = $scope.getViewIdFromUrl();
 
 		// When making the view visible, the genres are added incrementally step-by-step.
 		// The purpose of this is to keep the browser responsive even in case the view contains
@@ -158,7 +157,7 @@ angular.module('Music').controller('GenresViewController', [
 		 */
 		function showMore() {
 			// show more entries only if the view is not already (being) deactivated
-			if ($rootScope.currentView && $scope.$parent) {
+			if ($scope.$parent) {
 				$scope.incrementalLoadLimit += INCREMENTAL_LOAD_STEP;
 				if ($scope.incrementalLoadLimit < $scope.genres.length) {
 					$timeout(showMore);

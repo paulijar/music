@@ -91,7 +91,7 @@ angular.module('Music').controller('NavigationController', [
 		 */
 		document.addEventListener('keydown', (e) => {
 			const noSearchViews = ['#/settings', '#/search'];
-			if (!noSearchViews.includes($rootScope.currentView)
+			if (!noSearchViews.includes($scope.getCurrentViewId())
 				&& !$('#search-input').is(':focus')
 				&& !$('#unified-search__input').is(':focus')
 				&& e.ctrlKey && e.key === 'f')
@@ -159,7 +159,7 @@ angular.module('Music').controller('NavigationController', [
 					if (confirmed) {
 						playlistService.deletePlaylist(playlist).then(() => {
 							// if the currently shown view is the playlist being removed, navigate away from it
-							if ($rootScope.currentView == '#/playlist/' + playlist.id) {
+							if ($scope.getCurrentViewId() == '#/playlist/' + playlist.id) {
 								$scope.navigateTo('#/');
 							}
 						});
@@ -287,7 +287,7 @@ angular.module('Music').controller('NavigationController', [
 					}
 				};
 
-				if (destination == '#') {
+				if (destination == '#/') {
 					play('albums', libraryService.getTracksInAlbumOrder());
 				} else if (destination == '#/alltracks') {
 					play('alltracks', libraryService.getTracksInAlphaOrder());
@@ -373,7 +373,7 @@ angular.module('Music').controller('NavigationController', [
 		$scope.allowDrop = function(playlist, draggable) {
 			// Don't allow dragging a track from a playlist back to the same playlist
 			let isFromPlaylist = ('srcIndex' in draggable);
-			let targetIsCurrentPlaylist = ($rootScope.currentView == '#/playlist/' + playlist.id);
+			let targetIsCurrentPlaylist = ($scope.getCurrentViewId() == '#/playlist/' + playlist.id);
 			return !isFromPlaylist || !targetIsCurrentPlaylist;
 		};
 
@@ -465,11 +465,12 @@ angular.module('Music').controller('NavigationController', [
 			if (OCA.Music.Utils.parseBoolean($location.search().autoplay)) {
 				if (!$rootScope.playing) {
 					let playlist = null;
-					if ($rootScope.currentView.startsWith('#/playlist/')) {
-						let id = _.last($rootScope.currentView.split('/'));
+					const curView = $scope.getCurrentViewId();
+					if (curView.startsWith('#/playlist/')) {
+						let id = _.last(curView.split('/'));
 						playlist = libraryService.getPlaylist(id);
 					}
-					$scope.togglePlay($rootScope.currentView, playlist);
+					$scope.togglePlay(curView, playlist);
 				}
 			}
 			// ensure that the link to the current view is visible in the navigation pane, 

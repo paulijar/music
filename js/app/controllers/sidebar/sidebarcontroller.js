@@ -221,14 +221,14 @@ angular.module('Music').controller('SidebarController', [
 				$rootScope.$emit('scrollTo' + OCA.Music.Utils.capitalize(type), entity.id);
 			};
 
-			let destinationView = '#';
+			let destinationView = '#/';
 			if (type.startsWith('station')) {
 				destinationView = '#/radio';
 			} else if (type.startsWith('podcast')) {
 				destinationView = '#/podcasts';
 			}
 
-			if ($rootScope.currentView !== destinationView) {
+			if ($scope.getCurrentViewId() !== destinationView) {
 				$scope.navigateTo(destinationView, doScroll);
 			} else {
 				doScroll();

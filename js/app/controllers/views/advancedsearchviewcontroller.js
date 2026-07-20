@@ -12,8 +12,6 @@ angular.module('Music').controller('AdvancedSearchViewController', [
 	'$rootScope', '$scope', '$document', 'libraryService', 'playQueueService', '$timeout', 'Restangular', 'gettextCatalog',
 	function ($rootScope, $scope, $document, libraryService, playQueueService, $timeout, Restangular, gettextCatalog) {
 
-		$rootScope.currentView = $scope.getViewIdFromUrl();
-
 		// $rootScope listeners must be unsubscribed manually when the control is destroyed
 		let _unsubFuncs = [];
 

@@ -517,7 +517,7 @@ function ($scope, $rootScope, playQueueService, Audio, gettextCatalog, Restangul
 				}
 			};
 
-			if ($rootScope.currentView !== $rootScope.playingView) {
+			if ($scope.getCurrentViewId() !== $rootScope.playingView) {
 				$scope.navigateTo($rootScope.playingView, doScroll);
 			} else {
 				doScroll();

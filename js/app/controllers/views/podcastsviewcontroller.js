@@ -12,8 +12,6 @@ angular.module('Music').controller('PodcastsViewController', [
 	'$scope', '$rootScope', 'playQueueService', 'podcastService', 'libraryService', 'libraryFactory', '$timeout', 'gettextCatalog',
 	function ($scope, $rootScope, playQueueService, podcastService, libraryService, libraryFactory, $timeout, gettextCatalog) {
 
-		$rootScope.currentView = $scope.getViewIdFromUrl();
-
 		// $rootScope listeners must be unsubscribed manually when the control is destroyed
 		let unsubFuncs = [];
 
@@ -159,9 +157,12 @@ angular.module('Music').controller('PodcastsViewController', [
 
 		subscribe('resize', updateColumnLayout);
 
+		// alphabetNavigation and inViewObserver directives need to know if the view contents change
+		subscribe('podcastsChanged', () => $rootScope.$emit('viewContentChanged'));
+
 		libraryFactory.getPodcastChannels().then((channels) => {
 			// show content only if the view is not already (being) deactivated
-			if ($rootScope.currentView && $scope.$parent) {
+			if ($scope.$parent) {
 				$scope.channels = channels;
 				$rootScope.loading = false;
 				$timeout(() => $rootScope.$emit('viewActivated'));

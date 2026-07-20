@@ -14,8 +14,6 @@ angular.module('Music').controller('SettingsViewController', [
 	'$scope', '$rootScope', 'Restangular', '$q', '$timeout', 'gettextCatalog',
 	function ($scope, $rootScope, Restangular, $q, $timeout, gettextCatalog) {
 
-		$rootScope.currentView = $scope.getViewIdFromUrl();
-
 		$scope.issueTrackerUrl = 'https://github.com/nc-music/music/issues';
 		$scope.ampacheClientsUrl = 'https://github.com/nc-music/music/wiki/Ampache';
 		$scope.subsonicClientsUrl = 'https://github.com/nc-music/music/wiki/Subsonic';

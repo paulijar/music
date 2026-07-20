@@ -5,15 +5,13 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2023, 2024
+ * @copyright Pauli Järvinen 2023 - 2026
  */
 
 
 angular.module('Music').controller('SmartListViewController', [
 	'$rootScope', '$scope', 'playQueueService', 'libraryService', '$timeout',
 	function ($rootScope, $scope, playQueueService, libraryService, $timeout) {
-
-		$rootScope.currentView = $scope.getViewIdFromUrl();
 
 		$scope.tracks = null;
 

@@ -103,7 +103,7 @@ HtmlUtil::addWebpackStyle('app');
 				</div>
 			</div>
 
-			<img id="updateData" ng-show="updateAvailable && currentView!='#/settings'"
+			<img id="updateData" ng-show="updateAvailable && getCurrentViewId() != '#/settings'"
 				 class="svg clickable" src="<?php HtmlUtil::printSvgPath('reload') ?>" ng-click="update()"
 				 alt  ="{{ 'New music available. Click here to reload the music library.' | translate }}"
 				 title="{{ 'New music available. Click here to reload the music library.' | translate }}" >

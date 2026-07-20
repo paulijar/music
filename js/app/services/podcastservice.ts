@@ -29,7 +29,7 @@ function($rootScope : MusicRootScope, $timeout : ng.ITimeoutService, $q : ng.IQS
 							gettextCatalog.getString('Could not update the channel "{{ title }}" from the source', { title: channel.title }));
 				} else if (result.updated) {
 					libraryService.replacePodcastChannel(result.channel);
-					$timeout(() => $rootScope.$emit('viewContentChanged'));
+					$timeout(() => $rootScope.$emit('podcastsChanged'));
 				}
 				deferred.resolve(result);
 			},
@@ -99,9 +99,7 @@ function($rootScope : MusicRootScope, $timeout : ng.ITimeoutService, $q : ng.IQS
 				libraryService.addPodcastChannel(result);
 				OCA.Music.Dialogs.showNotification(
 					gettextCatalog.getString('Podcast channel "{{ title }}" added', { title: result.title }));
-				if ($rootScope.currentView === '#/podcasts') {
-					$timeout(() => $rootScope.$emit('viewContentChanged'));
-				}
+				$timeout(() => $rootScope.$emit('podcastsChanged'));
 				deferred.resolve();
 			},
 			(error) => {
@@ -297,7 +295,7 @@ function($rootScope : MusicRootScope, $timeout : ng.ITimeoutService, $q : ng.IQS
 							deferred.reject();
 						} else {
 							libraryService.removePodcastChannel(channel);
-							$timeout(() => $rootScope.$emit('viewContentChanged'));
+							$timeout(() => $rootScope.$emit('podcastsChanged'));
 							deferred.resolve();
 						}
 					},

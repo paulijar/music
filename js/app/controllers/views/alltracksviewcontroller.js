@@ -5,15 +5,13 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2018 - 2024
+ * @copyright Pauli Järvinen 2018 - 2026
  */
 
 
 angular.module('Music').controller('AllTracksViewController', [
 	'$rootScope', '$scope', 'playQueueService', 'libraryService', 'alphabetIndexingService', '$timeout',
 	function ($rootScope, $scope, playQueueService, libraryService, alphabetIndexingService, $timeout) {
-
-		$rootScope.currentView = $scope.getViewIdFromUrl();
 
 		let _tracks = null;
 		let _indexChars = alphabetIndexingService.indexChars();

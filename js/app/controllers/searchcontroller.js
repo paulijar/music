@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2020 - 2023
+ * @copyright Pauli Järvinen 2020 - 2026
  */
 
 /**
@@ -76,9 +76,9 @@ function ($scope, $rootScope, libraryService, $timeout, gettextCatalog) {
 		cleanUpPrevMatches();
 
 		let matchingTracks = null;
-		let view = $rootScope.currentView;
+		let view = $scope.getCurrentViewId();
 
-		if (view == '#') {
+		if (view == '#/') {
 			matchingTracks = searchInAlbumsView(query);
 		} else if (view == '#/folders') {
 			matchingTracks = searchInFoldersView(query);
@@ -266,7 +266,7 @@ function ($scope, $rootScope, libraryService, $timeout, gettextCatalog) {
 	}
 
 	function cleanUpPrevMatches() {
-		if ($rootScope.currentView === '#/folders' && !$scope.foldersFlatLayout) {
+		if ($scope.getCurrentViewId() === '#/folders' && !$scope.foldersFlatLayout) {
 			// folder view with tree layout is a special case
 			_(treeFolderMatches).each(folder => {folder.matched = false;});
 			treeFolderMatches = {};

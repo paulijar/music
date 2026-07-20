@@ -18,7 +18,6 @@ angular.module('Music').controller('PlaylistViewController', [
 		const INCREMENTAL_LOAD_STEP = 1000;
 		$scope.incrementalLoadLimit = INCREMENTAL_LOAD_STEP;
 		$scope.tracks = null;
-		$rootScope.currentView = $scope.getViewIdFromUrl();
 
 		// $rootScope listeners must be unsubscribed manually when the control is destroyed
 		let unsubFuncs = [];
@@ -162,12 +161,12 @@ angular.module('Music').controller('PlaylistViewController', [
 		});
 
 		function listIsPlaying() {
-			return ($rootScope.playingView === $rootScope.currentView);
+			return ($rootScope.playingView === $scope.getCurrentViewId());
 		}
 
 		function showMore() {
 			// show more entries only if the view is not already (being) deactivated
-			if ($rootScope.currentView && $scope.$parent) {
+			if ($scope.$parent) {
 				$scope.incrementalLoadLimit += INCREMENTAL_LOAD_STEP;
 				if ($scope.incrementalLoadLimit < $scope.tracks.length) {
 					$timeout(showMore);

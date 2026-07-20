@@ -12,11 +12,9 @@
 
 angular.module('Music').controller('AlbumsViewController', [
 	'$scope', '$rootScope', 'playQueueService', 'libraryService',
-	'Restangular', '$document', '$route', '$location', '$timeout', 'gettextCatalog',
+	'Restangular', '$route', '$location', '$timeout', 'gettextCatalog',
 	function ($scope, $rootScope, playQueueService, libraryService,
-			Restangular, $document, $route, $location, $timeout, gettextCatalog) {
-
-		$rootScope.currentView = '#';
+			Restangular, $route, $location, $timeout, gettextCatalog) {
 
 		// apply the layout mode stored by the MainController
 		$('#albums').toggleClass('compact', $scope.albumsCompactLayout);
@@ -288,7 +286,7 @@ angular.module('Music').controller('AlbumsViewController', [
 		 */
 		function showMore() {
 			// show more entries only if the view is not already (being) deactivated
-			if ($rootScope.currentView && $scope.$parent) {
+			if ($scope.$parent) {
 				$scope.incrementalLoadLimit += INCREMENTAL_LOAD_STEP;
 				if ($scope.incrementalLoadLimit < libraryService.getCollection().length) {
 					$timeout(showMore);

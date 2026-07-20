@@ -38,7 +38,7 @@ function ($rootScope, $scope, $document, $timeout, $window, libraryFactory,
 
 	playQueueService.subscribe('play', function(playingView) {
 		// assume that the play started from current view if no other view given
-		$rootScope.playingView = playingView || $rootScope.currentView;
+		$rootScope.playingView = playingView || $scope.getCurrentViewId();
 	});
 
 	playQueueService.subscribe('playlistEnded', function() {
@@ -52,7 +52,7 @@ function ($rootScope, $scope, $document, $timeout, $window, libraryFactory,
 		$timeout(() => $rootScope.$emit('popup-menu:close'));
 	});
 
-	$scope.getViewIdFromUrl = function() {
+	$scope.getCurrentViewId = function() {
 		return window.location.hash.split('?')[0];
 	};
 
@@ -114,9 +114,7 @@ function ($rootScope, $scope, $document, $timeout, $window, libraryFactory,
 	};
 
 	$scope.viewingLibrary = function() {
-		return $rootScope.currentView != '#/settings'
-			&& $rootScope.currentView != '#/radio'
-			&& $rootScope.currentView != '#/podcasts';
+		return !['#/settings', '#/radio', '#/podcasts'].includes($scope.getCurrentViewId());
 	};
 
 	$rootScope.$on('updateIgnoredArticles', function(_event, ignoredArticles) {
@@ -415,9 +413,8 @@ function ($rootScope, $scope, $document, $timeout, $window, libraryFactory,
 	let navigationDestination = null;
 	let afterNavigationCallback = null;
 	$scope.navigateTo = function(destination, callback = null) {
-		let curView = $rootScope.currentView;
+		let curView = $scope.getCurrentViewId();
 		if (curView != destination) {
-			$rootScope.currentView = null;
 			navigationDestination = destination;
 			afterNavigationCallback = callback;
 			$rootScope.loading = true;
@@ -443,7 +440,7 @@ function ($rootScope, $scope, $document, $timeout, $window, libraryFactory,
 		OCA.Music.Storage.set('albums_compact', useCompact.toString());
 
 		// also navigate to the Albums view if not already open
-		$scope.navigateTo('#');
+		$scope.navigateTo('#/');
 	};
 
 	// Flat/tree layout of the Folders view
