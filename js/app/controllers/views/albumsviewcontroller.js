@@ -11,10 +11,12 @@
  */
 
 angular.module('Music').controller('AlbumsViewController', [
-	'$scope', '$rootScope', 'playQueueService', 'libraryService',
+	'$scope', '$rootScope', 'playQueueService', 'libraryService', 'libraryFactory',
 	'Restangular', '$route', '$location', '$timeout', 'gettextCatalog',
-	function ($scope, $rootScope, playQueueService, libraryService,
+	function ($scope, $rootScope, playQueueService, libraryService, libraryFactory,
 			Restangular, $route, $location, $timeout, gettextCatalog) {
+
+		$scope.artists = null;
 
 		// apply the layout mode stored by the MainController
 		$('#albums').toggleClass('compact', $scope.albumsCompactLayout);
@@ -307,15 +309,9 @@ angular.module('Music').controller('AlbumsViewController', [
 			}
 		}
 
-		// Start making artists visible immediately if the artists are already loaded.
-		// Otherwise it happens on the 'collectionLoaded' event handler.
-		if (libraryService.collectionLoaded()) {
-			showMore();
-		}
-
-		subscribe('collectionLoaded', function() {
-			// Start the asynchronous process of making artists visible
-			$scope.incrementalLoadLimit = 0;
+		// Start making artists visible as soon as we get the collection
+		libraryFactory.getCollection().then((collection) => {
+			$scope.artists = collection;
 			showMore();
 		});
 

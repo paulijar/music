@@ -125,7 +125,6 @@ function ($rootScope, $scope, $document, $timeout, $window, libraryFactory,
 		$scope.updateAvailable = false;
 		$rootScope.loadingCollection = true;
 
-		$scope.artists = null; // the null-value tells the views that data is not yet available
 		libraryService.setFolders(null); // invalidate any out-dated folders
 		$rootScope.$emit('collectionUpdating');
 
@@ -135,9 +134,7 @@ function ($rootScope, $scope, $document, $timeout, $window, libraryFactory,
 		libraryFactory.getRootFolder();
 
 		// load the music collection
-		libraryFactory.getCollection().then(function(collection) {
-			$scope.artists = collection;
-
+		libraryFactory.getCollection().then((_collection) => {
 			// Load also the smart playlist once the collection is ready
 			$scope.reloadSmartList();
 
@@ -243,7 +240,7 @@ function ($rootScope, $scope, $document, $timeout, $window, libraryFactory,
 				// a) the first batch is ready
 				// b) the scanning process is completed.
 				// Otherwise the UI state is updated only when the user hits the 'update' button
-				if ($scope.updateAvailable && $scope.artists && ($scope.artists.length === 0 || !$scope.scanning)) {
+				if ($scope.updateAvailable && libraryService.collectionLoaded() && (libraryService.getTrackCount() === 0 || !$scope.scanning)) {
 					$scope.update();
 				}
 			}
