@@ -7,15 +7,13 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Morris Jobke 2013
- * @copyright Pauli Järvinen 2017 - 2025
+ * @copyright Pauli Järvinen 2017 - 2026
  */
 
 
 angular.module('Music').controller('PlaylistViewController', [
-	'$rootScope', '$scope', '$routeParams', 'playQueueService', 'libraryService',
-	'gettextCatalog', 'Restangular', '$timeout',
-	function ($rootScope, $scope, $routeParams, playQueueService, libraryService,
-			gettextCatalog, Restangular, $timeout) {
+	'$rootScope', '$scope', '$routeParams', 'playQueueService', 'libraryService', 'libraryFactory', 'gettextCatalog', 'Restangular', '$timeout',
+	function ($rootScope, $scope, $routeParams, playQueueService, libraryService, libraryFactory, gettextCatalog, Restangular, $timeout) {
 
 		const INCREMENTAL_LOAD_STEP = 1000;
 		$scope.incrementalLoadLimit = INCREMENTAL_LOAD_STEP;
@@ -154,11 +152,7 @@ angular.module('Music').controller('PlaylistViewController', [
 			}
 		});
 
-		// Init happens either immediately (after making the loading animation visible)
-		// or once both aritsts and playlists have been loaded
 		$timeout(initViewFromRoute);
-		subscribe('collectionLoaded', initViewFromRoute);
-		subscribe('playlistsLoaded', initViewFromRoute);
 
 		// Reload the view if the currently viewed playlist got updated (by import from file)
 		subscribe('playlistUpdated', function(event, playlistId) {
@@ -185,7 +179,7 @@ angular.module('Music').controller('PlaylistViewController', [
 		}
 
 		function initViewFromRoute() {
-			if (libraryService.collectionLoaded() && libraryService.playlistsLoaded()) {
+			libraryFactory.getPlaylists().then(() => {
 				if ($routeParams.playlistId) {
 					let playlist = libraryService.getPlaylist($routeParams.playlistId);
 					if (playlist) {
@@ -198,7 +192,7 @@ angular.module('Music').controller('PlaylistViewController', [
 					}
 				}
 				$timeout(showMore);
-			}
+			});
 		}
 
 		function showLess() {

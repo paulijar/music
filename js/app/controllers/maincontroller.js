@@ -131,20 +131,17 @@ function ($rootScope, $scope, $document, $timeout, $window, libraryFactory,
 		libraryService.setFolders(null); // invalidate any out-dated folders
 		$rootScope.$emit('collectionUpdating');
 
+		// Playlists, genres, and folders can be loaded in parallel with the collection
+		libraryFactory.getPlaylists();
+		libraryFactory.getGenres();
+		libraryFactory.getRootFolder();
+
 		// load the music collection
 		libraryFactory.getCollection().then(function(collection) {
 			$scope.artists = collection;
 
-			// Load playlists once the collection has been loaded
-			libraryFactory.getPlaylists().then(function(_playlists) {
-				$rootScope.$emit('playlistsLoaded');
-			});
-
 			// Load also the smart playlist once the collection is ready
 			$scope.reloadSmartList();
-
-			// Load also genres once the collection has been loaded
-			libraryFactory.getGenres();
 
 			// The "no content"/"click to scan"/"scanning" banner uses "collapsed" layout
 			// if there are any tracks already visible
