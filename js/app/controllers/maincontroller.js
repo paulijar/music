@@ -190,10 +190,7 @@ function ($rootScope, $scope, $document, $timeout, $window, libraryFactory,
 	};
 
 	$scope.updateRadio = function() {
-		Restangular.one('radio').get().then(function(radioStations) {
-			libraryService.setRadioStations(radioStations);
-			$rootScope.$emit('radioStationsLoaded');
-		});
+		libraryFactory.getRadioStations();
 	};
 
 	$scope.updatePodcasts = function() {

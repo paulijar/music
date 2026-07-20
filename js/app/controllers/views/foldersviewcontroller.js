@@ -157,7 +157,7 @@ angular.module('Music').controller('FoldersViewController', [
 			$scope.rootFolder = null;
 		});
 
-		libraryFactory.getRootFolder().then(() => $timeout(initView));
+		libraryFactory.getRootFolder().then(() => initView());
 
 		function initView() {
 			$scope.folders = libraryService.getAllFoldersWithTracks();

@@ -12,7 +12,7 @@
 import * as angular from 'angular';
 import { MusicRootScope } from 'app/config/musicrootscope';
 import { IService } from 'restangular';
-import { Artist, Folder, Genre, LibraryService, Playlist } from 'app/services/libraryservice';
+import { Artist, Folder, Genre, LibraryService, Playlist, PlaylistEntry, RadioStation } from 'app/services/libraryservice';
 
 angular.module('Music').factory('libraryFactory', ['Restangular', '$rootScope', 'libraryService', function (Restangular : IService, $rootScope : MusicRootScope, libraryService : LibraryService) {
 
@@ -20,6 +20,7 @@ angular.module('Music').factory('libraryFactory', ['Restangular', '$rootScope', 
 	let rootFolderPromise : angular.IPromise<Folder> | null = null;
 	let playlistsPromise : angular.IPromise<Playlist[]> | null = null;
 	let genresPromise : angular.IPromise<Genre[]> | null = null;
+	let radioStationsPromise : angular.IPromise<PlaylistEntry<RadioStation>[]> | null = null;
 
 	return {
 		getCollection() : angular.IPromise<Artist[]> {
@@ -74,6 +75,17 @@ angular.module('Music').factory('libraryFactory', ['Restangular', '$rootScope', 
 				});
 			}
 			return playlistsPromise;
+		},
+
+		getRadioStations() : angular.IPromise<PlaylistEntry<RadioStation>[]> {
+			if (!radioStationsPromise) {
+				radioStationsPromise = Restangular.all('radio').getList().then((radioStations) => {
+					libraryService.setRadioStations(radioStations);
+					$rootScope.$emit('radioStationsLoaded');
+					return libraryService.getAllRadioStations();
+				});
+			}
+			return radioStationsPromise;
 		}
 	};
 }]);

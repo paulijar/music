@@ -5,13 +5,13 @@
  * later. See the COPYING file.
  *
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
- * @copyright Pauli Järvinen 2020 - 2024
+ * @copyright Pauli Järvinen 2020 - 2026
  */
 
 
 angular.module('Music').controller('RadioViewController', [
-	'$rootScope', '$scope', 'playQueueService', 'libraryService', 'gettextCatalog', 'Restangular', '$timeout',
-	function ($rootScope, $scope, playQueueService, libraryService, gettextCatalog, Restangular, $timeout) {
+	'$rootScope', '$scope', 'playQueueService', 'libraryService', 'libraryFactory', 'gettextCatalog', 'Restangular', '$timeout',
+	function ($rootScope, $scope, playQueueService, libraryService, libraryFactory, gettextCatalog, Restangular, $timeout) {
 
 		const INCREMENTAL_LOAD_STEP = 1000;
 		$scope.incrementalLoadLimit = INCREMENTAL_LOAD_STEP;
@@ -63,9 +63,7 @@ angular.module('Music').controller('RadioViewController', [
 					}
 					// Fire an event to tell the alphabet navigation about the change. This must happen asynchronously
 					// to ensure that the alphabet navigation has up-to-date item count available when it handles the event.
-					$timeout(function() {
-						$rootScope.$emit('viewContentChanged');
-					});
+					$timeout(() => $rootScope.$emit('viewContentChanged'));
 				},
 				function (error) {
 					station.busy = false;
@@ -117,9 +115,7 @@ angular.module('Music').controller('RadioViewController', [
 
 				// Fire an event to tell the alphabet navigation about the change. This must happen asynchronously
 				// to ensure that the alphabet navigation has up-to-date item count available when it handles the event.
-				$timeout(function() {
-					$rootScope.$emit('viewContentChanged');
-				});
+				$timeout(() => $rootScope.$emit('viewContentChanged'));
 			}
 		});
 
@@ -138,15 +134,7 @@ angular.module('Music').controller('RadioViewController', [
 			return 'radio-station-' + $scope.stations[index].track.id;
 		};
 
-		// Init happens either immediately (after making the loading animation visible)
-		// or once the radio stations have been loaded
-		if (libraryService.radioStationsLoaded()) {
-			$timeout(initView);
-		}
-
-		subscribe('radioStationsLoaded', function () {
-			$timeout(initView);
-		});
+		libraryFactory.getRadioStations().then((_stations) => initView());
 
 		function initView() {
 			$scope.incrementalLoadLimit = 0;
