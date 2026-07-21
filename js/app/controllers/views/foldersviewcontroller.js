@@ -147,23 +147,25 @@ angular.module('Music').controller('FoldersViewController', [
 		});
 
 		$scope.$on('$destroy', () => {
-			_.each(unsubFuncs, function(func) { func(); });
+			_.each(unsubFuncs, (func) => func());
 			playQueueService.unsubscribeAll(this);
 		});
 
-		subscribe('collectionUpdating', function() {
+		subscribe('collectionUpdating', () => {
 			$scope.folders = null;
 			$scope.rootFolder = null;
+			initView();
 		});
 
-		libraryFactory.getRootFolder().then(() => initView());
-
 		function initView() {
-			$scope.folders = libraryService.getAllFoldersWithTracks();
-			$scope.rootFolder = libraryService.getRootFolder();
-			$scope.incrementalLoadLimit = 0;
-			makeContentVisible();
+			libraryFactory.getRootFolder().then(() => {
+				$scope.folders = libraryService.getAllFoldersWithTracks();
+				$scope.rootFolder = libraryService.getRootFolder();
+				$scope.incrementalLoadLimit = 0;
+				makeContentVisible();
+			});
 		}
+		initView();
 
 		function makeContentVisible() {
 			$rootScope.loading = true;

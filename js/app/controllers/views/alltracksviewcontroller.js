@@ -10,8 +10,8 @@
 
 
 angular.module('Music').controller('AllTracksViewController', [
-	'$rootScope', '$scope', 'playQueueService', 'libraryService', 'alphabetIndexingService', '$timeout',
-	function ($rootScope, $scope, playQueueService, libraryService, alphabetIndexingService, $timeout) {
+	'$rootScope', '$scope', 'playQueueService', 'libraryService', 'libraryFactory', 'alphabetIndexingService', '$timeout',
+	function ($rootScope, $scope, playQueueService, libraryService, libraryFactory, alphabetIndexingService, $timeout) {
 
 		let _tracks = null;
 		let _indexChars = alphabetIndexingService.indexChars();
@@ -103,27 +103,24 @@ angular.module('Music').controller('AllTracksViewController', [
 			}
 		});
 
-		// Init happens either immediately (after making the loading animation visible)
-		// or once artists have been loaded
-		$timeout(initView);
-
-		subscribe('collectionLoaded', function () {
+		subscribe('collectionUpdating', () => {
 			// Nullify any previous tracks to force tracklist directive recreation
 			_tracks = null;
 			$scope.trackBuckets = null;
-			$timeout(initView);
+			initView();
 		});
 
 		function initView() {
-			if (libraryService.collectionLoaded()) {
+			libraryFactory.getCollection().then(() => {
 				_tracks = libraryService.getTracksInAlphaOrder();
 				$scope.trackBuckets = createTrackBuckets();
 				$timeout(function() {
 					$rootScope.loading = false;
 					$rootScope.$emit('viewActivated');
 				});
-			}
+			});
 		}
+		initView();
 
 		function trackAtIndexPrecedesIndexCharAt(trackIdx, charIdx) {
 			let name = _tracks[trackIdx].track.artist.sortName;

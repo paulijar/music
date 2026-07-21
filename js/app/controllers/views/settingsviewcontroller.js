@@ -11,8 +11,8 @@
  */
 
 angular.module('Music').controller('SettingsViewController', [
-	'$scope', '$rootScope', 'Restangular', '$q', '$timeout', 'gettextCatalog', 'libraryService',
-	function ($scope, $rootScope, Restangular, $q, $timeout, gettextCatalog, libraryService) {
+	'$scope', '$rootScope', 'Restangular', '$q', '$timeout', 'gettextCatalog', 'libraryService', 'libraryFactory',
+	function ($scope, $rootScope, Restangular, $q, $timeout, gettextCatalog, libraryService, libraryFactory) {
 
 		$scope.issueTrackerUrl = 'https://github.com/nc-music/music/issues';
 		$scope.ampacheClientsUrl = 'https://github.com/nc-music/music/wiki/Ampache';
@@ -53,7 +53,8 @@ angular.module('Music').controller('SettingsViewController', [
 								if (data.success) {
 									$scope.errorPath = false;
 									$scope.settings.path = path;
-									parent.update();
+									parent.updateCollection();
+									parent.updateFilesToScan();
 								} else {
 									$scope.errorPath = true;
 								}
@@ -167,7 +168,8 @@ angular.module('Music').controller('SettingsViewController', [
 									function(data) {
 										if (data.success) {
 											parent.resetScanned();
-											parent.update();
+											parent.updateCollection();
+											parent.updateFilesToScan();
 										}
 										$scope.collectionResetOngoing = false;
 									},
@@ -199,13 +201,10 @@ angular.module('Music').controller('SettingsViewController', [
 					if (confirmed) {
 						$scope.radioResetOngoing = true;
 
-						// $scope.$parent may not be available any more in the callback in case
-						// the user has navigated to another view in the meantime
-						let parent = $scope.$parent;
 						Restangular.all('radio/reset').post().then(
 								function(data) {
 									if (data.success) {
-										parent.updateRadio();
+										libraryFactory.resetRadioStations();
 									}
 									$scope.radioResetOngoing = false;
 								},
@@ -229,13 +228,10 @@ angular.module('Music').controller('SettingsViewController', [
 					if (confirmed) {
 						$scope.podcastsResetOngoing = true;
 
-						// $scope.$parent may not be available any more in the callback in case
-						// the user has navigated to another view in the meantime
-						let parent = $scope.$parent;
 						Restangular.all('podcasts/reset').post().then(
 								function(data) {
 									if (data.success) {
-										parent.updatePodcasts();
+										libraryFactory.resetPodcasts();
 									}
 									$scope.podcastsResetOngoing = false;
 								},

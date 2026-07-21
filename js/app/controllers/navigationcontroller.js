@@ -19,9 +19,12 @@ angular.module('Music').controller('NavigationController', [
 
 		$rootScope.loading = true;
 
-		libraryFactory.getPlaylists().then((playlists) => {
-			$scope.playlists = playlists;
-		});
+		function init() {
+			libraryFactory.getPlaylists().then((playlists) => $scope.playlists = playlists);
+		}
+		init();
+
+		$rootScope.$on('collectionUpdating', init);
 
 		$scope.newPlaylistName = '';
 		$scope.newPlaylistTrackIds = [];

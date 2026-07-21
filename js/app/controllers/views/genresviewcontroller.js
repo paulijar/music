@@ -144,11 +144,17 @@ angular.module('Music').controller('GenresViewController', [
 			playQueueService.unsubscribeAll(this);
 		});
 
-		libraryFactory.getGenres().then((genres) => {
-			$scope.genres = genres;
-			$scope.incrementalLoadLimit = 0;
-			$timeout(showMore);
-		});
+		function initView() {
+			$scope.genres = null;
+			libraryFactory.getGenres().then((genres) => {
+				$scope.genres = genres;
+				$scope.incrementalLoadLimit = 0;
+				$timeout(showMore);
+			});
+		}
+		initView();
+
+		subscribe('collectionUpdating', initView);
 
 		/**
 		 * Increase number of shown genres asynchronously step-by-step until

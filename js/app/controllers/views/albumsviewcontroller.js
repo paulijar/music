@@ -310,10 +310,16 @@ angular.module('Music').controller('AlbumsViewController', [
 		}
 
 		// Start making artists visible as soon as we get the collection
-		libraryFactory.getCollection().then((collection) => {
-			$scope.artists = collection;
-			showMore();
-		});
+		function initView() {
+			$scope.incrementalLoadLimit = 0;
+			libraryFactory.getCollection().then((collection) => {
+				$scope.artists = collection;
+				showMore();
+			});
+		}
+		initView();
+
+		subscribe('collectionUpdating', initView);
 
 		subscribe('deactivateView', function() {
 			$timeout(() => $rootScope.$emit('viewDeactivated'));

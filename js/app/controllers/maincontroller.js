@@ -117,11 +117,11 @@ function ($rootScope, $scope, $document, $timeout, $window, libraryFactory,
 		return !['#/settings', '#/radio', '#/podcasts'].includes($scope.getCurrentViewId());
 	};
 
-	$scope.update = function() {
+	$scope.updateCollection = function() {
 		$scope.updateAvailable = false;
 		$rootScope.loadingCollection = true;
 
-		libraryService.setFolders(null); // invalidate any out-dated folders
+		libraryFactory.resetCollection();
 		$rootScope.$emit('collectionUpdating');
 
 		// Playlists, genres, and folders can be loaded in parallel with the collection
@@ -144,12 +144,6 @@ function ($rootScope, $scope, $document, $timeout, $window, libraryFactory,
 			}
 
 			$rootScope.loadingCollection = false;
-
-			// check the availability of unscanned files after the collection has been loaded,
-			// unless we are already in the middle of scanning (and intermediate results were just loaded)
-			if (!$scope.scanning) {
-				updateFilesToScan();
-			}
 		},
 		function(response) { // error handling
 			$rootScope.loadingCollection = false;
@@ -172,27 +166,13 @@ function ($rootScope, $scope, $document, $timeout, $window, libraryFactory,
 
 	};
 
-	$scope.updateRadio = function() {
-		libraryFactory.getRadioStations();
-	};
-
-	$scope.updatePodcasts = function() {
-		libraryFactory.getPodcastChannels();
-	};
-
-	// initial loading of artists and radio stations
-	$scope.update();
-	$scope.updateRadio();
-	$scope.updatePodcasts();
-	libraryFactory.updateFavorites();
-
 	const FILES_TO_SCAN_PER_STEP = 20;
 	let filesToScan = null;
 	$scope.unscannedFiles = null;
 	$scope.dirtyFiles = null;
 	$scope.obsoleteFiles = null;
 
-	function updateFilesToScan() {
+	$scope.updateFilesToScan = function() {
 		$scope.checkingUnscanned = true;
 		Restangular.one('scanstate').get().then(function(state) {
 			$scope.checkingUnscanned = false;
@@ -207,7 +187,7 @@ function ($rootScope, $scope, $document, $timeout, $window, libraryFactory,
 					gettextCatalog.getString('Failed to check for new audio files (error {{ code }}); check the server logs for details', {code: error.status})
 			);
 		});
-	}
+	};
 
 	function processNextScanStep() {
 		let sliceEnd = $scope.scanningScanned + FILES_TO_SCAN_PER_STEP;
@@ -230,14 +210,8 @@ function ($rootScope, $scope, $document, $timeout, $window, libraryFactory,
 					processNextScanStep();
 				} else {
 					$scope.scanning = false;
-				}
-
-				// Update the newly scanned tracks to UI automatically when
-				// a) the first batch is ready
-				// b) the scanning process is completed.
-				// Otherwise the UI state is updated only when the user hits the 'update' button
-				if ($scope.updateAvailable && libraryService.collectionLoaded() && (libraryService.getTrackCount() === 0 || !$scope.scanning)) {
-					$scope.update();
+					// Update the collection automatically once the scanning is completed. During the scanning, the user can also click the "update" button to update the collection.
+					$scope.updateCollection();
 				}
 			}
 		});
@@ -273,15 +247,13 @@ function ($rootScope, $scope, $document, $timeout, $window, libraryFactory,
 				if (confirmed) {
 					Restangular.all('removescanned').post({files: $scope.obsoleteFiles.join(',')}).then(_result => {
 						$scope.obsoleteFiles = null;
-						$scope.update();
+						$scope.updateCollection();
 					});
 				}
 			},
 			true
 		);
 	};
-
-	$scope.updateFilesToScan = updateFilesToScan; // exposed for child controllers
 
 	$scope.resetScanned = function() {
 		$scope.unscannedFiles = null;
@@ -558,6 +530,13 @@ function ($rootScope, $scope, $document, $timeout, $window, libraryFactory,
 	$scope.scanning = false;
 	$scope.scanningScanned = 0;
 	$scope.scanningTotal = 0;
+
+	// initial loading of the library data
+	$scope.updateCollection();
+	libraryFactory.getRadioStations();
+	libraryFactory.getPodcastChannels();
+	libraryFactory.updateFavorites();
+	$scope.updateFilesToScan();
 
 	$('#app').addClass('loaded');
 }]);

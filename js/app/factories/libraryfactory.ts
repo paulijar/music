@@ -109,5 +109,25 @@ angular.module('Music').factory('libraryFactory', ['Restangular', '$rootScope', 
 			);
 		},
 
+		resetCollection() : void {
+			collectionPromise = null;
+			rootFolderPromise = null;
+			playlistsPromise = null;
+			genresPromise = null;
+			libraryService.setCollection([]);
+			libraryService.setFolders(null);
+			libraryService.setPlaylists([]);
+			libraryService.setGenres(null);
+		},
+
+		resetRadioStations() : void {
+			radioStationsPromise = null;
+			libraryService.setRadioStations([]);
+		},
+
+		resetPodcasts() : void {
+			podcastChannelsPromise = null;
+			libraryService.setPodcasts([]);
+		}
 	};
 }]);
