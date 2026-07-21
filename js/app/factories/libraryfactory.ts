@@ -38,6 +38,10 @@ angular.module('Music').factory('libraryFactory', ['Restangular', '$rootScope', 
 			return collectionPromise;
 		},
 
+		getAllArtists() : angular.IPromise<Artist[]> {
+			return this.getCollection().then(() => libraryService.getAllArtists());
+		},
+
 		getRootFolder() : angular.IPromise<Folder> {
 			if (!rootFolderPromise) {
 				const fetchFoldersPromise = Restangular.all('folders').getList();
@@ -58,7 +62,6 @@ angular.module('Music').factory('libraryFactory', ['Restangular', '$rootScope', 
 				// the collection has to be set on the libraryService before the genres can be set
 				genresPromise = Promise.all([this.getCollection(), fetchGenresPromise]).then(([_collection, genres]) => {
 					libraryService.setGenres(genres);
-					$rootScope.$emit('genresLoaded');
 					return libraryService.getAllGenres();
 				});
 			}
@@ -82,7 +85,6 @@ angular.module('Music').factory('libraryFactory', ['Restangular', '$rootScope', 
 			if (!radioStationsPromise) {
 				radioStationsPromise = Restangular.all('radio').getList().then((radioStations) => {
 					libraryService.setRadioStations(radioStations);
-					$rootScope.$emit('radioStationsLoaded');
 					return libraryService.getAllRadioStations();
 				});
 			}
@@ -93,7 +95,6 @@ angular.module('Music').factory('libraryFactory', ['Restangular', '$rootScope', 
 			if (!podcastChannelsPromise) {
 				podcastChannelsPromise = Restangular.all('podcasts').getList().then((channels) => {
 					libraryService.setPodcasts(channels);
-					$rootScope.$emit('podcastsLoaded');
 					return libraryService.getAllPodcastChannels();
 				});
 			}
