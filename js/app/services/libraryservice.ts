@@ -12,6 +12,8 @@
 import * as ng from 'angular';
 import * as _ from 'lodash';
 
+declare var OCP : any;
+
 export interface Artist {
 	id : number;
 	name : string;
@@ -119,7 +121,7 @@ const DIACRITIC_REG_EXP = /[\u0300-\u036f]/g;
 
 
 export class LibraryService {
-	#ignoredArticles : string[] = [];
+	#ignoredArticles : string[] = OCP.InitialState.loadState('music', 'ignored_articles', []);
 	#collection : Artist[] = null;
 	#artistsIndex : { [id: number] : Artist } = {};
 	#albumsIndex : { [id: number] : Album } = {};

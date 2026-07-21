@@ -27,8 +27,6 @@ angular.module('Music').factory('libraryFactory', ['Restangular', '$rootScope', 
 		getCollection() : angular.IPromise<Artist[]> {
 			if (!collectionPromise) {
 				collectionPromise = Restangular.all('prepare_collection').post({}).then(async (reply) => {
-					$rootScope.$emit('newCoverArtToken', reply.cover_token);
-					libraryService.setIgnoredArticles(reply.ignored_articles);
 					const artists = await Restangular.all('collection').getList({ hash: reply.hash });
 					libraryService.setCollection(artists);
 					$rootScope.$emit('collectionLoaded');

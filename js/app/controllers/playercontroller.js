@@ -688,10 +688,7 @@ function ($scope, $rootScope, playQueueService, Audio, gettextCatalog, Restangul
 	* server, this looks like there's no logged in user. The token is used as an alternative means of
 	* authentication, which will provide access only to the cover art images.
 	*/
-	let coverArtToken = null;
-	$rootScope.$on('newCoverArtToken', function(_event, token) {
-		coverArtToken = token;
-	});
+	let coverArtToken = OCP.InitialState.loadState('music', 'cover_access_token');
 
 	/**
 	 * Media session API
