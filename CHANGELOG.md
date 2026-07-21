@@ -6,7 +6,8 @@
 - Possibility to configure the default volume with the config.php key `music.default_volume`
   [#109](https://github.com/nc-music/music/issues/109)
 - Possibility to disable extracting of various metadata tag types with the config.php keys `music.tag_enabled_id3v1`, `music.tag_enabled_id3v2`, `music.tag_enabled_lyrics3`, and `music.tag_enabled_ape`
-  * The ID3v1 tags are now disabled by default while the others are enabled
+  * The ID3v1 and Lyrics3 tags are now disabled by default while the others are enabled
+    [#143](https://github.com/nc-music/music/issues/143)
 - Composer and BPM support [#123](https://github.com/nc-music/music/pull/123):
   * Scan `composer` and `BPM` from the track metadata and store them in the database (rescan needed) @ineednousername
   * Subsonic API: Include OpenSubsonic properties `bpm`, `displayComposer`, and `contributors[role='composer']` in all song responses @ineednousername
