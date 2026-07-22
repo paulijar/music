@@ -34,6 +34,7 @@ class MusicApiControllerTest extends ControllerTestUtility {
 	private $lastfmService;
 	private $maintenance;
 	private $librarySettings;
+	private $session;
 	private $logger;
 
 	protected function setUp() : void {
@@ -70,6 +71,9 @@ class MusicApiControllerTest extends ControllerTestUtility {
 		$this->librarySettings = $this->getMockBuilder('\OCA\Music\Service\LibrarySettings')
 			->disableOriginalConstructor()
 			->getMock();
+		$this->session = $this->getMockBuilder('\OCP\ISession')
+			->disableOriginalConstructor()
+			->getMock();
 		$this->logger = $this->getMockBuilder('\OCA\Music\AppFramework\Core\Logger')
 			->disableOriginalConstructor()
 			->getMock();
@@ -87,6 +91,7 @@ class MusicApiControllerTest extends ControllerTestUtility {
 			$this->maintenance,
 			$this->librarySettings,
 			$this->userId,
+			$this->session,
 			$this->logger,
 			$this->createMock(IScrobbler::class)
 		);
