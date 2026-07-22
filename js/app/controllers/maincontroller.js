@@ -56,57 +56,6 @@ function ($rootScope, $scope, $document, $timeout, $window, libraryFactory,
 		return window.location.hash.split('?')[0];
 	};
 
-	$scope.trackCountText = function(playlist) {
-		let trackCount = playlist ? playlist.tracks.length : libraryService.getTrackCount();
-		return gettextCatalog.getPlural(trackCount, '{{ count }} track', '{{ count }} tracks', { count: trackCount });
-	};
-
-	$scope.smartListTrackCountText = function() {
-		var trackCount = libraryService.getSmartListTrackCount();
-		return gettextCatalog.getPlural(trackCount, '{{ count }} track', '{{ count }} tracks', { count: trackCount });
-	};
-
-	$scope.albumCountText = function() {
-		let albumCount = libraryService.getAlbumCount();
-		return gettextCatalog.getPlural(albumCount, '{{ count }} album', '{{ count }} albums', { count: albumCount });
-	};
-
-	$scope.folderCountText = function() {
-		if (libraryService.foldersLoaded()) {
-			let folderCount = libraryService.getAllFoldersWithTracks().length;
-			return gettextCatalog.getPlural(folderCount, '{{ count }} folder', '{{ count }} folders', { count: folderCount });
-		} else {
-			return '';
-		}
-	};
-
-	$scope.genresCountText = function() {
-		if (libraryService.genresLoaded()) {
-			let genreCount = libraryService.getAllGenres().length;
-			return gettextCatalog.getPlural(genreCount, '{{ count }} genre', '{{ count }} genres', { count: genreCount });
-		} else {
-			return '';
-		}
-	};
-
-	$scope.radioCountText = function() {
-		if (libraryService.radioStationsLoaded()) {
-			let stationCount = libraryService.getAllRadioStations().length;
-			return gettextCatalog.getPlural(stationCount, '{{ count }} station', '{{ count }} stations', { count: stationCount });
-		} else {
-			return '';
-		}
-	};
-
-	$scope.podcastsCountText = function() {
-		if (libraryService.podcastsLoaded()) {
-			let channelsCount = libraryService.getPodcastChannelsCount();
-			return gettextCatalog.getPlural(channelsCount, '{{ count }} channel', '{{ count }} channels', { count: channelsCount });
-		} else {
-			return '';
-		}
-	};
-
 	$scope.loadIndicatorVisible = function() {
 		let contentNotReady = ($rootScope.loadingCollection || $rootScope.searchInProgress || $scope.checkingUnscanned);
 		return $rootScope.loading

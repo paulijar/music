@@ -365,10 +365,15 @@ angular.module('Music').controller('AdvancedSearchViewController', [
 			playQueueService.publish('play', '#/playlist/' + playlistId);
 		};
 
+		function trackCountText(playlist) {
+			let trackCount = playlist.tracks.length;
+			return gettextCatalog.getPlural(trackCount, '{{ count }} track', '{{ count }} tracks', { count: trackCount });
+		}
+
 		$scope.getPlaylistData = function(listItem, index, _scope) {
 			return {
 				title: listItem.name,
-				title2: $scope.trackCountText(listItem),
+				title2: trackCountText(listItem),
 				tooltip: listItem.name,
 				number: index + 1,
 				id: listItem.id,
@@ -389,7 +394,7 @@ angular.module('Music').controller('AdvancedSearchViewController', [
 		$scope.getGenreData = function(listItem, index, _scope) {
 			return {
 				title: listItem.name || gettextCatalog.getString('(Unknown genre)'),
-				title2: $scope.trackCountText(listItem),
+				title2: trackCountText(listItem),
 				tooltip: listItem.name,
 				number: index + 1,
 				id: listItem.id,
