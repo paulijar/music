@@ -172,7 +172,7 @@ class Cache {
 			try {
 				$id = $this->add($userId, $key, '');
 			} catch (UniqueConstraintViolationException $e) {
-				// with a really bad luck, the item didn't exist an eyeblick ago but now it does
+				// with a really bad luck, the item didn't exist an eyeblink ago but now it does
 				$id = (int)$this->getId($userId, $key);
 			}
 		}

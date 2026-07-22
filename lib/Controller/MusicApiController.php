@@ -40,6 +40,7 @@ use OCP\AppFramework\Http\DataDisplayResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\IRequest;
+use OCP\ISession;
 
 class MusicApiController extends Controller {
 
@@ -57,6 +58,7 @@ class MusicApiController extends Controller {
 		private Maintenance $maintenance,
 		private LibrarySettings $librarySettings,
 		private ?string $userId, // null case should happen only when the user has already logged out
+		private ISession $session,
 		private Logger $logger,
 		private IScrobbler $scrobbler,
 	) {
@@ -79,7 +81,7 @@ class MusicApiController extends Controller {
 			$this->collectionService->getJson($this->user());
 			$hash = $this->collectionService->getCachedJsonHash($this->user());
 		}
-		$coverToken = $this->coverService->createAccessToken($this->user());
+		$coverToken = $this->coverService->getAccessToken($this->user(), $this->session);
 
 		return new JSONResponse([
 			'hash'             => $hash,
