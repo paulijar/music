@@ -24,6 +24,9 @@ function ($rootScope, $scope) {
 		minDragDistance: 100
 	});
 
+	let gestureEnabled = false;
+	let gestureSuspended = false; // drag event handling temporarily suspended
+
 	$scope.toggle = () => {
 		if (snapper.state().state == SNAPPER_OPEN) {
 			snapper.close();
@@ -38,8 +41,10 @@ function ($rootScope, $scope) {
 		if ($(window).width() >= 1024) {
 			snapper.close();
 			snapper.disable();
+			gestureEnabled = false;
 		} else {
 			snapper.enable();
+			gestureEnabled = true;
 		}
 	};
 
@@ -48,4 +53,20 @@ function ($rootScope, $scope) {
 	// initial call
 	toggleSnapperOnSize();
 
+	// The swipe detection of the snapper is disabled while dragging drag-and-droppable UI elements
+	$rootScope.$on('ANGULAR_DRAG_START', () => {
+		if (gestureEnabled) {
+			gestureSuspended = true;
+			snapper.disable();
+		}
+	});
+
+	$rootScope.$on('ANGULAR_DRAG_END', () => {
+		if (gestureSuspended) {
+			gestureSuspended = false;
+			if (gestureEnabled) {
+				snapper.enable();
+			}
+		}
+	});
 }]);
