@@ -36,7 +36,7 @@ HtmlUtil::addWebpackStyle('app');
 			</div>
 
 			<div id="controls-container">
-				<div id="app-navigation-toggle" ng-controller="SnapController" ng-click="toggle()" class="icon-menu"></div>
+				<div id="app-navigation-toggle" ng-controller="SnapController" ng-click="toggle()" ng-on-dragenter="itemDragToToggle()" class="icon-menu"></div>
 				<?php HtmlUtil::printPartial('controls'); ?>
 			</div>
 

@@ -69,7 +69,7 @@ angular.module('Music').controller('NavigationController', [
 			// because the field is not visible yet, it is shown by ng-show binding
 			// later during this digest loop.
 			$timeout(() => $('#search-input').trigger('focus'));
-			expandCollapsedNavigationPane();
+			$rootScope.$emit('openSnapper');
 		};
 
 		$scope.clearSearch = function() {
@@ -109,7 +109,7 @@ angular.module('Music').controller('NavigationController', [
 
 		$scope.showDetails = function(playlist) {
 			$rootScope.$emit('showPlaylistDetails', playlist.id);
-			$scope.collapseNavigationPaneOnMobile();
+			$rootScope.$emit('closeSnapper');
 		};
 
 		// Start renaming playlist
@@ -379,37 +379,6 @@ angular.module('Music').controller('NavigationController', [
 			let targetIsCurrentPlaylist = ($scope.getCurrentViewId() == '#/playlist/' + playlist.id);
 			return !isFromPlaylist || !targetIsCurrentPlaylist;
 		};
-
-		// Dragging an entity over the navigation toggle pops the navigation pane open.
-		// Subsequently, ending the drag closes the navigation pane.
-		// It occasionally happens (at least on Chrome) that the navigation toggle is not yet
-		// present when this controller is initialized. In those cases, the related logic
-		// is injected a bit later. See https://github.com/nc-music/oc-music/issues/1137.
-		OCA.Music.Utils.executeOnceRefAvailable(
-			() => document.getElementById('app-navigation-toggle'),
-			(navToggle) => {
-				let navOpenedByDrag = false;
-				navToggle.addEventListener('dragenter', () => {
-					if (!navOpenedByDrag) {
-						navOpenedByDrag = true;
-						expandCollapsedNavigationPane();
-					}
-				});
-				document.addEventListener('dragend', () => {
-					if (navOpenedByDrag) { 
-						navOpenedByDrag = false;
-						$scope.collapseNavigationPaneOnMobile();
-					}
-				});
-			}
-		);
-
-		function expandCollapsedNavigationPane() {
-			const $navToggle = $('#app-navigation-toggle');
-			if (!$scope.mobileNavigationPaneExpanded() && $navToggle.is(':visible')) {
-				$timeout(() => $navToggle.trigger('click'));
-			}
-		}
 
 		function trackIdsFromAlbum(albumId) {
 			let album = libraryService.getAlbum(albumId);

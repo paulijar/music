@@ -420,18 +420,8 @@ function ($rootScope, $scope, $document, $timeout, $window, libraryFactory,
 		$scope.navigateTo('#/folders');
 	};
 
-	$scope.mobileNavigationPaneExpanded = function() {
-		return $('body').hasClass('snapjs-left') || $('body').hasClass('snapjs-right');
-	};
-
 	$scope.collapseNavigationPaneOnMobile = function() {
-		if ($scope.mobileNavigationPaneExpanded()) {
-			$timeout(() => {
-				$rootScope.$emit('closeSnapper');
-				// Remove any active input focus to ensure that the focus is not left to an input field within the collapsed pane
-				$(document.activeElement).trigger('blur');
-			});
-		}
+		$timeout(() => $rootScope.$emit('closeSnapper'));
 	};
 
 	$rootScope.$on('viewDeactivated', function() {
