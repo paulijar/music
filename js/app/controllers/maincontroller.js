@@ -11,10 +11,10 @@
  */
 
 angular.module('Music').controller('MainController', [
-'$rootScope', '$scope', '$document', '$timeout', '$window', 'libraryFactory',
-'playQueueService', 'libraryService', 'inViewService', 'gettextCatalog', 'Restangular',
-function ($rootScope, $scope, $document, $timeout, $window, libraryFactory,
-		playQueueService, libraryService, inViewService, gettextCatalog, Restangular) {
+'$rootScope', '$scope', '$document', '$timeout', '$window',
+'libraryFactory', 'playQueueService', 'inViewService', 'gettextCatalog', 'Restangular',
+function ($rootScope, $scope, $document, $timeout, $window,
+		libraryFactory, playQueueService, inViewService, gettextCatalog, Restangular) {
 
 	gettextCatalog.currentLanguage = OC.getLanguage();
 
@@ -79,37 +79,18 @@ function ($rootScope, $scope, $document, $timeout, $window, libraryFactory,
 		libraryFactory.getSmartList();
 
 		// load the music collection
-		libraryFactory.getCollection().then((_collection) => {
+		libraryFactory.getCollection().then((collection) => {
 			// The "no content"/"click to scan"/"scanning" banner uses "collapsed" layout
 			// if there are any tracks already visible
-			let collapsiblePopups = $('#app-content .emptycontent:not(.no-collapse)');
-			if (libraryService.getTrackCount() > 0) {
+			const collapsiblePopups = $('#app-content .emptycontent:not(.no-collapse)');
+			if (collection.length > 0) {
 				collapsiblePopups.addClass('collapsed');
 			} else {
 				collapsiblePopups.removeClass('collapsed');
 			}
 
 			$rootScope.loadingCollection = false;
-		},
-		function(response) { // error handling
-			$rootScope.loadingCollection = false;
-
-			let reason = null;
-			switch (response.status) {
-			case 500:
-				reason = gettextCatalog.getString('Internal server error');
-				break;
-			case 504:
-				reason = gettextCatalog.getString('Timeout');
-				break;
-			default:
-				reason = response.status;
-				break;
-			}
-			const errMsg = gettextCatalog.getString('Failed to load the collection:');
-			OCA.Music.Dialogs.showNotification(errMsg + ' ' + reason);
 		});
-
 	};
 
 	const FILES_TO_SCAN_PER_STEP = 20;

@@ -12,11 +12,13 @@
 import * as angular from 'angular';
 import { MusicRootScope } from 'app/config/musicrootscope';
 import { IService } from 'restangular';
+import { gettextCatalog } from 'angular-gettext';
 import { Artist, Folder, Genre, LibraryService, Playlist, PlaylistEntry, PodcastChannel, RadioStation } from 'app/services/libraryservice';
 
 type SmartListParams = Record<string, string|number|boolean|null>;
 
-angular.module('Music').factory('libraryFactory', ['Restangular', '$rootScope', 'libraryService', function (Restangular : IService, $rootScope : MusicRootScope, libraryService : LibraryService) {
+angular.module('Music').factory('libraryFactory', ['Restangular', 'gettextCatalog', '$rootScope', 'libraryService',
+function (Restangular : IService, gettextCatalog : gettextCatalog, $rootScope : MusicRootScope, libraryService : LibraryService) {
 
 	let collectionPromise : angular.IPromise<Artist[]> | null = null;
 	let rootFolderPromise : angular.IPromise<Folder> | null = null;
@@ -30,11 +32,23 @@ angular.module('Music').factory('libraryFactory', ['Restangular', '$rootScope', 
 	return {
 		getCollection() : angular.IPromise<Artist[]> {
 			if (!collectionPromise) {
-				collectionPromise = Restangular.all('prepare_collection').post({}).then(async (reply) => {
-					const artists = await Restangular.all('collection').getList({ hash: reply.hash });
+				collectionPromise = Restangular.all('prepare_collection').post({}).then((reply) => {
+					return Restangular.all('collection').getList({ hash: reply.hash });
+				}).then((artists) => {
 					libraryService.setCollection(artists);
 					$rootScope.$emit('collectionLoaded');
 					return libraryService.getCollection();
+				}).catch((errorResponse) : Artist[] => {
+					const reason = {
+						401: gettextCatalog.getString('Not logged in'),
+						403: gettextCatalog.getString('Access denied'),
+						500: gettextCatalog.getString('Internal server error'),
+						504: gettextCatalog.getString('Timeout'),
+					}[errorResponse.status as string] ?? errorResponse.status;
+
+					const errMsg = gettextCatalog.getString('Failed to load the collection:');
+					OCA.Music.Dialogs.showNotification(errMsg + ' ' + reason);
+					return [];
 				});
 			}
 			return collectionPromise;
