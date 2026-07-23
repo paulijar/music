@@ -11,13 +11,12 @@
  */
 
 angular.module('Music').controller('MainController', [
-'$rootScope', '$scope', '$document', '$timeout', '$window', 'libraryFactory', 
+'$rootScope', '$scope', '$document', '$timeout', '$window', 'libraryFactory',
 'playQueueService', 'libraryService', 'inViewService', 'gettextCatalog', 'Restangular',
-function ($rootScope, $scope, $document, $timeout, $window, libraryFactory, 
+function ($rootScope, $scope, $document, $timeout, $window, libraryFactory,
 		playQueueService, libraryService, inViewService, gettextCatalog, Restangular) {
 
-	// retrieve language from backend - is set in ng-app HTML element
-	gettextCatalog.currentLanguage = $rootScope.lang;
+	gettextCatalog.currentLanguage = OC.getLanguage();
 
 	// Create a global rule to use themed icons for folders everywhere, the default icon-folder is not themed on NC 25 and later.
 	// It happens sometimes (at least on Chrome), that OC.MimeType is not yet present when we come here (see 

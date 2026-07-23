@@ -9,7 +9,7 @@ HtmlUtil::addWebpackStyle('app');
 ?>
 
 
-<div id="app" ng-app="Music" ng-strict-di ng-cloak ng-init="started = false; lang = '<?php HtmlUtil::p($_['lang']) ?>'">
+<div id="app" ng-app="Music" ng-strict-di ng-cloak ng-init="started = false">
 
 	<?php
 	HtmlUtil::printNgTemplate('views/albumsview');
