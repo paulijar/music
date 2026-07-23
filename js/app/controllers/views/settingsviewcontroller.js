@@ -321,8 +321,8 @@ angular.module('Music').controller('SettingsViewController', [
 			});
 		};
 
-		$rootScope.$on('viewActivated', function () {
-			$scope.settings.scrobblers.forEach(function (scrobbler) {
+		function setupScrobblerActions(scrobblers) {
+			scrobblers.forEach(function (scrobbler) {
 				scrobbler.generateScrobbleSession = function() {
 					window.open(scrobbler.tokenRequestUrl, '_blank', { popup: true });
 					const bc = new BroadcastChannel(scrobbler.identifier + '-scrobble-session-result');
@@ -343,13 +343,13 @@ angular.module('Music').controller('SettingsViewController', [
 						.then(function(data) {
 							if (data?.success === true) {
 								scrobbler.hasSession = false;
-								return;
+							} else {
+								errHandler(data.error);
 							}
-							errHandler(data.error);
 						}, errHandler);
 				};
 			});
-		});
+		}
 
 		$scope.copyToClipboard = function(elementId) {
 			let range = document.createRange();
@@ -373,6 +373,7 @@ angular.module('Music').controller('SettingsViewController', [
 				$rootScope.loading = false;
 				savedExcludedPaths = _.clone(value.excludedPaths);
 				$scope.ignoredArticles = value.ignoredArticles.join(' ');
+				setupScrobblerActions($scope.settings.scrobblers);
 				$rootScope.$emit('viewActivated');
 			});
 		});
