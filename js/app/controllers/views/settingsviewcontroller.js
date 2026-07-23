@@ -324,7 +324,7 @@ angular.module('Music').controller('SettingsViewController', [
 		function setupScrobblerActions(scrobblers) {
 			scrobblers.forEach(function (scrobbler) {
 				scrobbler.generateScrobbleSession = function() {
-					window.open(scrobbler.tokenRequestUrl, '_blank', { popup: true });
+					window.open(scrobbler.tokenRequestUrl, '_blank', 'popup,width=600,height=800');
 					const bc = new BroadcastChannel(scrobbler.identifier + '-scrobble-session-result');
 					bc.onmessage = function(e) {
 						$timeout(() => scrobbler.hasSession = e.data);
