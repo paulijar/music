@@ -201,7 +201,7 @@ class PlaylistBusinessLayer extends BusinessLayer {
 	 * @param int[] $composers Array of composer IDs
 	 * @param int|null $fromYear Earliest release year to include
 	 * @param int|null $toYear Latest release year to include
-	 * @param string|null $favorite One of: 'track', 'album', 'artists', 'track_album_artist', null
+	 * @param string|null $favorite One of: 'track', 'album', 'artist', 'track_album_artist', null
 	 * @param int $size Size of the playlist to generate, provided that there are enough matching tracks
 	 * @param string $userId the name of the user
 	 */

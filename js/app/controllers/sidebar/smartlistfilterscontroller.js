@@ -13,6 +13,8 @@ angular.module('Music').controller('SmartListFiltersController', [
 	'$scope', '$rootScope', '$timeout', 'libraryFactory', 'gettextCatalog',
 	function ($scope, $rootScope, $timeout, libraryFactory, gettextCatalog) {
 
+		$scope.smartListParams = null;
+		$scope.fieldsValid = false;
 		$scope.allGenres = null;
 		$scope.allArtists = null;
 
@@ -22,15 +24,13 @@ angular.module('Music').controller('SmartListFiltersController', [
 		$scope.artists = [];
 		$scope.composers = [];
 
-		$scope.$watch('smartListParams', () => {
-			if ($scope.smartListParams !== null) {
-				$scope.genres = $scope.smartListParams.genres?.split(',') ?? [];
-				$scope.artists = $scope.smartListParams.artists?.split(',') ?? [];
-				$scope.composers = $scope.smartListParams.composers?.split(',') ?? [];
-			}
+		libraryFactory.getSmartListParams().then((params) => {
+			$scope.smartListParams = params;
+			$scope.genres = params.genres?.split(',') ?? [];
+			$scope.artists = params.artists?.split(',') ?? [];
+			$scope.composers = params.composers?.split(',') ?? [];
+			$scope.fieldsValid = allFieldsValid();
 		});
-
-		$scope.fieldsValid = allFieldsValid();
 
 		$timeout(() => {
 			$('#filter-genres').chosen();
@@ -54,7 +54,8 @@ angular.module('Music').controller('SmartListFiltersController', [
 		});
 
 		function allFieldsValid() {
-			let valid = true;
+			let valid = ($scope.smartListParams !== null);
+
 			$('#smartlist-filters input[type=number]').each((_index, elem) =>
 				valid &&= elem.checkValidity()
 			);
@@ -71,7 +72,7 @@ angular.module('Music').controller('SmartListFiltersController', [
 				$scope.smartListParams.genres = $scope.genres.join(',');
 				$scope.smartListParams.artists = $scope.artists.join(',');
 				$scope.smartListParams.composers = $scope.composers.join(',');
-				$scope.reloadSmartList();
+				libraryFactory.reloadSmartList($scope.smartListParams);
 				// also navigate to the Smart Playlist view if not already open
 				$scope.navigateTo('#smartlist');
 			} else {

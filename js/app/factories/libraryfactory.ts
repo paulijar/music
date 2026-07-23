@@ -14,11 +14,15 @@ import { MusicRootScope } from 'app/config/musicrootscope';
 import { IService } from 'restangular';
 import { Artist, Folder, Genre, LibraryService, Playlist, PlaylistEntry, PodcastChannel, RadioStation } from 'app/services/libraryservice';
 
+type SmartListParams = Record<string, string|number|boolean|null>;
+
 angular.module('Music').factory('libraryFactory', ['Restangular', '$rootScope', 'libraryService', function (Restangular : IService, $rootScope : MusicRootScope, libraryService : LibraryService) {
 
 	let collectionPromise : angular.IPromise<Artist[]> | null = null;
 	let rootFolderPromise : angular.IPromise<Folder> | null = null;
 	let playlistsPromise : angular.IPromise<Playlist[]> | null = null;
+	let smartListPromise : angular.IPromise<Playlist> | null = null;
+	let smartListParams : SmartListParams | null = null;
 	let genresPromise : angular.IPromise<Genre[]> | null = null;
 	let radioStationsPromise : angular.IPromise<PlaylistEntry<RadioStation>[]> | null = null;
 	let podcastChannelsPromise : angular.IPromise<PodcastChannel[]> | null = null;
@@ -79,6 +83,35 @@ angular.module('Music').factory('libraryFactory', ['Restangular', '$rootScope', 
 			return playlistsPromise;
 		},
 
+		getSmartList() : angular.IPromise<Playlist> {
+			if (!smartListPromise) {
+				const genArgs = smartListParams ?? { useLatestParams: true };
+
+				const fetchSmartListPromise = Restangular.one('playlists/generate').get(genArgs);
+
+				smartListPromise = Promise.all([this.getCollection(), fetchSmartListPromise]).then(([_collection, smartList]) => {
+					libraryService.setSmartList(smartList);
+					smartListParams = smartList.params;
+					$rootScope.$emit('smartListLoaded');
+					return libraryService.getSmartList()!;
+				});
+			}
+			return smartListPromise;
+		},
+
+		reloadSmartList(params? : SmartListParams) : angular.IPromise<Playlist> {
+			if (params) {
+				smartListParams = params;
+			}
+			libraryService.setSmartList(null);
+			smartListPromise = null;
+			return this.getSmartList();
+		},
+
+		getSmartListParams() : angular.IPromise<SmartListParams> {
+			return this.getSmartList().then(() => smartListParams!);
+		},
+
 		getRadioStations() : angular.IPromise<PlaylistEntry<RadioStation>[]> {
 			if (!radioStationsPromise) {
 				radioStationsPromise = Restangular.all('radio').getList().then((radioStations) => {
@@ -112,10 +145,13 @@ angular.module('Music').factory('libraryFactory', ['Restangular', '$rootScope', 
 			collectionPromise = null;
 			rootFolderPromise = null;
 			playlistsPromise = null;
+			smartListPromise = null;
+			smartListParams = null;
 			genresPromise = null;
 			libraryService.setCollection([]);
 			libraryService.setFolders(null);
 			libraryService.setPlaylists([]);
+			libraryService.setSmartList(null);
 			libraryService.setGenres(null);
 		},
 

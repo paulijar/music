@@ -76,12 +76,10 @@ function ($rootScope, $scope, $document, $timeout, $window, libraryFactory,
 		libraryFactory.getPlaylists();
 		libraryFactory.getGenres();
 		libraryFactory.getRootFolder();
+		libraryFactory.getSmartList();
 
 		// load the music collection
 		libraryFactory.getCollection().then((_collection) => {
-			// Load also the smart playlist once the collection is ready
-			$scope.reloadSmartList();
-
 			// The "no content"/"click to scan"/"scanning" banner uses "collapsed" layout
 			// if there are any tracks already visible
 			let collapsiblePopups = $('#app-content .emptycontent:not(.no-collapse)');
@@ -208,25 +206,6 @@ function ($rootScope, $scope, $document, $timeout, $window, libraryFactory,
 		$scope.dirtyFiles = null;
 		$scope.obsoleteFiles = null;
 		filesToScan = null;
-		// Genre and artist IDs have got invalidated while resetting the library, drop any related filters
-		if ($scope.smartListParams !== null) {
-			$scope.smartListParams.genres = [];
-			$scope.smartListParams.artists = [];
-			$scope.smartListParams.composers = [];
-		}
-	};
-
-	$scope.smartListParams = null; // fetched from the server on the first list load
-	$scope.reloadSmartList = function() {
-		libraryService.setSmartList(null);
-
-		const genArgs = $scope.smartListParams ?? { useLatestParams: true };
-
-		Restangular.one('playlists/generate').get(genArgs).then((list) => {
-			libraryService.setSmartList(list);
-			$scope.smartListParams = list.params;
-			$rootScope.$emit('smartListLoaded');
-		});
 	};
 
 	function showDetails(entityType, id) {

@@ -311,7 +311,7 @@ angular.module('Music').controller('NavigationController', [
 		};
 
 		$scope.reloadSmartListView = function() {
-			$scope.reloadSmartList();
+			libraryFactory.reloadSmartList();
 
 			// also navigate to the Smart Playlist view if not already open
 			$scope.navigateTo('#smartlist');
