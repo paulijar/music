@@ -306,13 +306,23 @@ function ($rootScope, $scope, $document, $timeout, $window,
 	// Compact/normal layout of the Albums view
 	$scope.albumsCompactLayout = (OCA.Music.Storage.get('albums_compact') === 'true');
 	$scope.toggleAlbumsCompactLayout = function(useCompact = !$scope.albumsCompactLayout) {
-		$scope.albumsCompactLayout = useCompact;
-		$rootScope.$emit('albumsLayoutChanged');
+		if ($scope.getCurrentViewId() === '#/') {
+			// albums view already active, change the layout in place
+			$rootScope.loading = true;
+			$timeout(() => {
+				$scope.albumsCompactLayout = useCompact;
+				$timeout(() => {
+					$rootScope.loading = false;
+					$timeout(() => $rootScope.$emit('albumsLayoutChanged'));
+				});
+			});
+		} else {
+			// navigate to the albums view using the new layout
+			$scope.albumsCompactLayout = useCompact;
+			$scope.navigateTo('#/');
+		}
 
 		OCA.Music.Storage.set('albums_compact', useCompact.toString());
-
-		// also navigate to the Albums view if not already open
-		$scope.navigateTo('#/');
 	};
 
 	// Flat/tree layout of the Folders view
