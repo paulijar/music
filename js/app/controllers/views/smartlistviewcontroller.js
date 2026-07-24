@@ -13,6 +13,8 @@ angular.module('Music').controller('SmartListViewController', [
 	'$rootScope', '$scope', 'playQueueService', 'libraryService', '$timeout',
 	function ($rootScope, $scope, playQueueService, libraryService, $timeout) {
 
+		const THIS_VIEW_ID = $scope.getCurrentViewId();
+
 		$scope.tracks = null;
 
 		// $rootScope listeners must be unsubscribed manually when the control is destroyed
@@ -87,10 +89,7 @@ angular.module('Music').controller('SmartListViewController', [
 			const list = libraryService.getSmartList();
 			if (list !== null) {
 				$scope.tracks = list.tracks;
-				$timeout(() => {
-					$rootScope.loading = false;
-					$rootScope.$emit('viewActivated');
-				});
+				$timeout(() => $rootScope.$emit('viewActivated', THIS_VIEW_ID));
 			}
 		}
 	}

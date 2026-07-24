@@ -27,6 +27,7 @@ function ($rootScope, $scope, $document, $timeout, $window,
 		document.head.appendChild(folderStyle);
 	});
 
+	$rootScope.loading = true;
 	$rootScope.playing = false;
 	$rootScope.playingView = null;
 	$scope.currentTrack = null;
@@ -299,6 +300,23 @@ function ($rootScope, $scope, $document, $timeout, $window,
 		$scope.collapseNavigationPaneOnMobile();
 	};
 
+	$rootScope.$on('viewActivated', (_event, viewId) => {
+		if (viewId === $scope.getCurrentViewId()) {
+			$rootScope.loading = false;
+		}
+		// execute the callback after view activation if given
+		if (afterNavigationCallback !== null) {
+			$timeout(afterNavigationCallback);
+			afterNavigationCallback = null;
+		}
+	});
+
+	$rootScope.$on('viewBusy', (_event, viewId) => {
+		if (viewId === $scope.getCurrentViewId()) {
+			$rootScope.loading = true;
+		}
+	});
+
 	// Compact/normal layout of the Albums view
 	$scope.albumsCompactLayout = (OCA.Music.Storage.get('albums_compact') === 'true');
 	$scope.toggleAlbumsCompactLayout = function(useCompact = !$scope.albumsCompactLayout) {
@@ -308,8 +326,11 @@ function ($rootScope, $scope, $document, $timeout, $window,
 			$timeout(() => {
 				$scope.albumsCompactLayout = useCompact;
 				$timeout(() => {
-					$rootScope.loading = false;
-					$timeout(() => $rootScope.$emit('albumsLayoutChanged'));
+					// the active view could have changed by now...
+					if ($scope.getCurrentViewId() === '#/') {
+						$rootScope.loading = false;
+						$timeout(() => $rootScope.$emit('albumsLayoutChanged'));
+					}
 				});
 			});
 		} else {
@@ -330,7 +351,7 @@ function ($rootScope, $scope, $document, $timeout, $window,
 			$timeout(() => {
 				$scope.foldersFlatLayout = useFlat;
 				$rootScope.$emit('foldersLayoutChanged');
-				// foldersviewcontroller deactivates $rootScape.loading once it's ready
+				// foldersviewcontroller emits 'viewActivated' once it's ready
 			});
 		} else {
 			// navigate to the folders view using the new layout
@@ -344,14 +365,6 @@ function ($rootScope, $scope, $document, $timeout, $window,
 	$scope.collapseNavigationPaneOnMobile = function() {
 		$timeout(() => $rootScope.$emit('closeSnapper'));
 	};
-
-	$rootScope.$on('viewActivated', function() {
-		// execute the callback after view activation if any
-		if (afterNavigationCallback !== null) {
-			$timeout(afterNavigationCallback);
-			afterNavigationCallback = null;
-		}
-	});
 
 	// Test if element is at least partially within the view-port
 	function isElementInViewPort(el) {

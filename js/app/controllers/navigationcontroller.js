@@ -17,8 +17,6 @@ angular.module('Music').controller('NavigationController', [
 	function ($rootScope, $scope, $timeout, $location, gettextCatalog,
 			playQueueService, playlistService, playlistFileService, podcastService, libraryService, libraryFactory) {
 
-		$rootScope.loading = true;
-
 		function init() {
 			libraryFactory.getPlaylists().then((playlists) => $scope.playlists = playlists);
 		}

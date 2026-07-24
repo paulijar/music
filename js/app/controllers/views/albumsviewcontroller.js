@@ -16,6 +16,8 @@ angular.module('Music').controller('AlbumsViewController', [
 	function ($scope, $rootScope, playQueueService, libraryService, libraryFactory,
 			Restangular, $route, $location, $timeout, gettextCatalog) {
 
+		const THIS_VIEW_ID = $scope.getCurrentViewId();
+
 		$scope.artists = null;
 
 		// When making the view visible, the artists are added incrementally step-by-step.
@@ -290,8 +292,6 @@ angular.module('Music').controller('AlbumsViewController', [
 				if ($scope.incrementalLoadLimit < libraryService.getCollection().length) {
 					$timeout(showMore);
 				} else {
-					$rootScope.loading = false;
-
 					// Do not reinitialize the player state if it is already playing.
 					// This is the case when the user has started playing music while scanning is ongoing,
 					// and then hits the 'update' button. Reinitializing would stop and restart the playback.
@@ -301,7 +301,7 @@ angular.module('Music').controller('AlbumsViewController', [
 						updateHighlight(playQueueService.getCurrentPlaylistId());
 					}
 
-					$timeout(() => $rootScope.$emit('viewActivated'));
+					$timeout(() => $rootScope.$emit('viewActivated', THIS_VIEW_ID));
 				}
 			}
 		}

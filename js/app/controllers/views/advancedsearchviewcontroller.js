@@ -12,6 +12,8 @@ angular.module('Music').controller('AdvancedSearchViewController', [
 	'$rootScope', '$scope', '$document', 'libraryService', 'playQueueService', '$timeout', 'Restangular', 'gettextCatalog',
 	function ($rootScope, $scope, $document, libraryService, playQueueService, $timeout, Restangular, gettextCatalog) {
 
+		const THIS_VIEW_ID = $scope.getCurrentViewId();
+
 		// $rootScope listeners must be unsubscribed manually when the control is destroyed
 		let _unsubFuncs = [];
 
@@ -503,10 +505,7 @@ angular.module('Music').controller('AdvancedSearchViewController', [
 			}
 		});
 
-		$timeout(() => {
-			$rootScope.loading = false;
-			$rootScope.$emit('viewActivated');
-		});
+		$timeout(() => $rootScope.$emit('viewActivated', THIS_VIEW_ID));
 
 	}
 ]);

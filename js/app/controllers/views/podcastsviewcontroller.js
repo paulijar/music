@@ -12,6 +12,8 @@ angular.module('Music').controller('PodcastsViewController', [
 	'$scope', '$rootScope', 'playQueueService', 'podcastService', 'libraryService', 'libraryFactory', '$timeout', 'gettextCatalog',
 	function ($scope, $rootScope, playQueueService, podcastService, libraryService, libraryFactory, $timeout, gettextCatalog) {
 
+		const THIS_VIEW_ID = $scope.getCurrentViewId();
+
 		// $rootScope listeners must be unsubscribed manually when the control is destroyed
 		let unsubFuncs = [];
 
@@ -68,9 +70,9 @@ angular.module('Music').controller('PodcastsViewController', [
 
 		$scope.showAddPodcast = function() {
 			podcastService.showAddPodcastDialog().then(
-				() => $rootScope.loading = false, // success
-				() => $rootScope.loading = false, // failure
-				() => $rootScope.loading = true,  // adding actually started
+				() => $rootScope.$emit('viewActivated', THIS_VIEW_ID), // success
+				() => $rootScope.$emit('viewActivated', THIS_VIEW_ID), // failure
+				() => $rootScope.$emit('viewBusy', THIS_VIEW_ID),      // adding actually started
 			);
 		};
 
@@ -164,8 +166,7 @@ angular.module('Music').controller('PodcastsViewController', [
 			// show content only if the view is not already (being) deactivated
 			if ($scope.$parent) {
 				$scope.channels = channels;
-				$rootScope.loading = false;
-				$timeout(() => $rootScope.$emit('viewActivated'));
+				$timeout(() => $rootScope.$emit('viewActivated', THIS_VIEW_ID));
 			}
 		});
 	}

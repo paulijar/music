@@ -13,6 +13,8 @@ angular.module('Music').controller('FoldersViewController', [
 	'$rootScope', '$scope', '$timeout', 'playQueueService', 'libraryService', 'libraryFactory',
 	function ($rootScope, $scope, $timeout, playQueueService, libraryService, libraryFactory) {
 
+		const THIS_VIEW_ID = $scope.getCurrentViewId();
+
 		$scope.folders = null;
 		$scope.rootFolder = null;
 
@@ -193,9 +195,8 @@ angular.module('Music').controller('FoldersViewController', [
 		}
 
 		function onViewReady() {
-			$rootScope.loading = false;
 			updateHighlight(playQueueService.getCurrentPlaylistId());
-			$rootScope.$emit('viewActivated');
+			$rootScope.$emit('viewActivated', THIS_VIEW_ID);
 		}
 
 		subscribe('foldersLayoutChanged', makeContentVisible);

@@ -14,6 +14,8 @@ angular.module('Music').controller('SettingsViewController', [
 	'$scope', '$rootScope', 'Restangular', '$q', '$timeout', 'gettextCatalog', 'libraryService', 'libraryFactory',
 	function ($scope, $rootScope, Restangular, $q, $timeout, gettextCatalog, libraryService, libraryFactory) {
 
+		const THIS_VIEW_ID = $scope.getCurrentViewId();
+
 		$scope.issueTrackerUrl = 'https://github.com/nc-music/music/issues';
 		$scope.ampacheClientsUrl = 'https://github.com/nc-music/music/wiki/Ampache';
 		$scope.subsonicClientsUrl = 'https://github.com/nc-music/music/wiki/Subsonic';
@@ -373,11 +375,10 @@ angular.module('Music').controller('SettingsViewController', [
 		$timeout(function() {
 			Restangular.one('settings').get().then(function (value) {
 				$scope.settings = value;
-				$rootScope.loading = false;
 				savedExcludedPaths = _.clone(value.excludedPaths);
 				$scope.ignoredArticles = value.ignoredArticles.join(' ');
 				setupScrobblerActions($scope.settings.scrobblers);
-				$rootScope.$emit('viewActivated');
+				$rootScope.$emit('viewActivated', THIS_VIEW_ID);
 			});
 		});
 	}

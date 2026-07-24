@@ -13,6 +13,8 @@ angular.module('Music').controller('AllTracksViewController', [
 	'$rootScope', '$scope', 'playQueueService', 'libraryService', 'libraryFactory', 'alphabetIndexingService', '$timeout',
 	function ($rootScope, $scope, playQueueService, libraryService, libraryFactory, alphabetIndexingService, $timeout) {
 
+		const THIS_VIEW_ID = $scope.getCurrentViewId();
+
 		let _tracks = null;
 		let _indexChars = alphabetIndexingService.indexChars();
 
@@ -115,8 +117,7 @@ angular.module('Music').controller('AllTracksViewController', [
 				_tracks = libraryService.getTracksInAlphaOrder();
 				$scope.trackBuckets = createTrackBuckets();
 				$timeout(function() {
-					$rootScope.loading = false;
-					$rootScope.$emit('viewActivated');
+					$rootScope.$emit('viewActivated', THIS_VIEW_ID);
 				});
 			});
 		}

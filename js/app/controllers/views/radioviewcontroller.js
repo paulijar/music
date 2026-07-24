@@ -13,6 +13,8 @@ angular.module('Music').controller('RadioViewController', [
 	'$rootScope', '$scope', 'playQueueService', 'libraryService', 'libraryFactory', 'gettextCatalog', 'Restangular', '$timeout',
 	function ($rootScope, $scope, playQueueService, libraryService, libraryFactory, gettextCatalog, Restangular, $timeout) {
 
+		const THIS_VIEW_ID = $scope.getCurrentViewId();
+
 		const INCREMENTAL_LOAD_STEP = 1000;
 		$scope.incrementalLoadLimit = INCREMENTAL_LOAD_STEP;
 		$scope.stations = null;
@@ -153,8 +155,7 @@ angular.module('Music').controller('RadioViewController', [
 				if ($scope.incrementalLoadLimit < $scope.stations.length) {
 					$timeout(showMore);
 				} else {
-					$rootScope.loading = false;
-					$rootScope.$emit('viewActivated');
+					$rootScope.$emit('viewActivated', THIS_VIEW_ID);
 				}
 			}
 		}

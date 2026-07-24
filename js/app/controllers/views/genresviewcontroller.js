@@ -13,6 +13,8 @@ angular.module('Music').controller('GenresViewController', [
 	'$rootScope', '$scope', 'playQueueService', 'libraryService', 'libraryFactory', '$timeout',
 	function ($rootScope, $scope, playQueueService, libraryService, libraryFactory, $timeout) {
 
+		const THIS_VIEW_ID = $scope.getCurrentViewId();
+
 		$scope.genres = null;
 
 		// When making the view visible, the genres are added incrementally step-by-step.
@@ -168,9 +170,8 @@ angular.module('Music').controller('GenresViewController', [
 				if ($scope.incrementalLoadLimit < $scope.genres.length) {
 					$timeout(showMore);
 				} else {
-					$rootScope.loading = false;
 					updateHighlight(playQueueService.getCurrentPlaylistId());
-					$rootScope.$emit('viewActivated');
+					$rootScope.$emit('viewActivated', THIS_VIEW_ID);
 				}
 			}
 		}
