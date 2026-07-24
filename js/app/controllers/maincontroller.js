@@ -329,13 +329,21 @@ function ($rootScope, $scope, $document, $timeout, $window,
 	// Flat/tree layout of the Folders view
 	$scope.foldersFlatLayout = (OCA.Music.Storage.get('folders_flat') === 'true');
 	$scope.toggleFoldersFlatLayout = function(useFlat = !$scope.foldersFlatLayout) {
-		$scope.foldersFlatLayout = useFlat;
-		$rootScope.$emit('foldersLayoutChanged');
+		if ($scope.getCurrentViewId() === '#/folders') {
+			// folders view already active, change the layout in place
+			$rootScope.loading = true;
+			$timeout(() => {
+				$scope.foldersFlatLayout = useFlat;
+				$rootScope.$emit('foldersLayoutChanged');
+				// foldersviewcontroller deactivates $rootScape.loading once it's ready
+			});
+		} else {
+			// navigate to the folders view using the new layout
+			$scope.foldersFlatLayout = useFlat;
+			$scope.navigateTo('#/folders');
+		}
 
 		OCA.Music.Storage.set('folders_flat', useFlat.toString());
-
-		// also navigate to the Folders view if not already open
-		$scope.navigateTo('#/folders');
 	};
 
 	$scope.collapseNavigationPaneOnMobile = function() {

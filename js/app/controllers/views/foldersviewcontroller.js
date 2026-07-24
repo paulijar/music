@@ -161,18 +161,16 @@ angular.module('Music').controller('FoldersViewController', [
 			libraryFactory.getRootFolder().then(() => {
 				$scope.folders = libraryService.getAllFoldersWithTracks();
 				$scope.rootFolder = libraryService.getRootFolder();
-				$scope.incrementalLoadLimit = 0;
 				makeContentVisible();
 			});
 		}
 		initView();
 
 		function makeContentVisible() {
-			$rootScope.loading = true;
+			$scope.incrementalLoadLimit = 0;
 			if ($scope.foldersFlatLayout) {
 				$timeout(showMore);
 			} else {
-				$scope.incrementalLoadLimit = 0;
 				$timeout(onViewReady);
 			}
 		}
