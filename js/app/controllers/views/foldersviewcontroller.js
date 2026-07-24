@@ -19,7 +19,7 @@ angular.module('Music').controller('FoldersViewController', [
 		// When making the view visible, the folders are added incrementally step-by-step.
 		// The purpose of this is to keep the browser responsive even in case the view contains
 		// an enormous amount of folders (like several thousands).
-		const INCREMENTAL_LOAD_STEP = 100;
+		const INCREMENTAL_LOAD_STEP = 1000;
 		$scope.incrementalLoadLimit = 0;
 
 		// $rootScope listeners must be unsubscribed manually when the control is destroyed
