@@ -307,7 +307,6 @@ function ($rootScope, $scope, $document, $timeout, $window,
 	$scope.albumsCompactLayout = (OCA.Music.Storage.get('albums_compact') === 'true');
 	$scope.toggleAlbumsCompactLayout = function(useCompact = !$scope.albumsCompactLayout) {
 		$scope.albumsCompactLayout = useCompact;
-		$('#albums').toggleClass('compact', useCompact);
 		$rootScope.$emit('albumsLayoutChanged');
 
 		OCA.Music.Storage.set('albums_compact', useCompact.toString());

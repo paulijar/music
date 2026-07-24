@@ -18,9 +18,6 @@ angular.module('Music').controller('AlbumsViewController', [
 
 		$scope.artists = null;
 
-		// apply the layout mode stored by the MainController
-		$('#albums').toggleClass('compact', $scope.albumsCompactLayout);
-
 		// When making the view visible, the artists are added incrementally step-by-step.
 		// The purpose of this is to keep the browser responsive even in case the view contains
 		// an enormous amount of albums (like several thousands).
