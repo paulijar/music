@@ -317,9 +317,5 @@ angular.module('Music').controller('AlbumsViewController', [
 		initView();
 
 		subscribe('collectionUpdating', initView);
-
-		subscribe('deactivateView', function() {
-			$timeout(() => $rootScope.$emit('viewDeactivated'));
-		});
 	}
 ]);

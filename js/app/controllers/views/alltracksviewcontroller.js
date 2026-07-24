@@ -167,13 +167,5 @@ angular.module('Music').controller('AllTracksViewController', [
 			return buckets;
 		}
 
-		subscribe('deactivateView', function() {
-			// The small delay may help in bringing up the load indicator a bit faster
-			// on huge collections (tens of thousands of tracks)
-			$timeout(function() {
-				$rootScope.$emit('viewDeactivated');
-			}, 100);
-		});
-
 	}
 ]);

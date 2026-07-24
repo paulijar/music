@@ -168,9 +168,5 @@ angular.module('Music').controller('PodcastsViewController', [
 				$timeout(() => $rootScope.$emit('viewActivated'));
 			}
 		});
-
-		subscribe('deactivateView', function() {
-			$timeout(() => $rootScope.$emit('viewDeactivated'));
-		});
 	}
 ]);

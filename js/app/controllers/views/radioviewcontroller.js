@@ -158,20 +158,5 @@ angular.module('Music').controller('RadioViewController', [
 				}
 			}
 		}
-
-		function showLess() {
-			$scope.incrementalLoadLimit -= INCREMENTAL_LOAD_STEP;
-			if ($scope.incrementalLoadLimit > 0) {
-				$timeout(showLess);
-			} else {
-				$scope.incrementalLoadLimit = 0;
-				$rootScope.$emit('viewDeactivated');
-			}
-		}
-
-		subscribe('deactivateView', function() {
-			$timeout(showLess);
-		});
-
 	}
 ]);

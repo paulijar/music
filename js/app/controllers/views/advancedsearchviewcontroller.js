@@ -508,9 +508,5 @@ angular.module('Music').controller('AdvancedSearchViewController', [
 			$rootScope.$emit('viewActivated');
 		});
 
-		subscribe('deactivateView', () => {
-			$rootScope.$emit('viewDeactivated');
-		});
-
 	}
 ]);

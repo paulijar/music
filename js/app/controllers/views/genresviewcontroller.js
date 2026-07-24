@@ -174,11 +174,5 @@ angular.module('Music').controller('GenresViewController', [
 				}
 			}
 		}
-
-		subscribe('deactivateView', function() {
-			$timeout(function() {
-				$rootScope.$emit('viewDeactivated');
-			});
-		});
 	}
 ]);

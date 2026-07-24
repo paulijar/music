@@ -199,9 +199,5 @@ angular.module('Music').controller('FoldersViewController', [
 		}
 
 		subscribe('foldersLayoutChanged', makeContentVisible);
-
-		subscribe('deactivateView', function() {
-			$timeout(() => $rootScope.$emit('viewDeactivated'));
-		});
 	}
 ]);

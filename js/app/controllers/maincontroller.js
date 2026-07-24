@@ -292,13 +292,8 @@ function ($rootScope, $scope, $document, $timeout, $window,
 			navigationDestination = destination;
 			afterNavigationCallback = callback;
 			$rootScope.loading = true;
-			// Deactivate the current view. The view emits 'viewDeactivated' once that is done.
-			// In the abnormal special case of no active view, activate the new view immediately.
-			if (_.isString(curView)) {
-				$rootScope.$emit('deactivateView');
-			} else {
-				window.location.hash = navigationDestination;
-			}
+			$rootScope.$emit('deactivateView');
+			$timeout(() => window.location.hash = navigationDestination);
 		}
 
 		$scope.collapseNavigationPaneOnMobile();
@@ -349,11 +344,6 @@ function ($rootScope, $scope, $document, $timeout, $window,
 	$scope.collapseNavigationPaneOnMobile = function() {
 		$timeout(() => $rootScope.$emit('closeSnapper'));
 	};
-
-	$rootScope.$on('viewDeactivated', function() {
-		// carry on with the navigation once the previous view is deactivated
-		window.location.hash = navigationDestination;
-	});
 
 	$rootScope.$on('viewActivated', function() {
 		// execute the callback after view activation if any

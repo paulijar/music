@@ -23,6 +23,8 @@ angular.module('Music').controller('SettingsViewController', [
 
 		let savedExcludedPaths = [];
 
+		/*
+		Not needed for now
 		// $rootScope listeners must be unsubscribed manually when the control is destroyed
 		let unsubFuncs = [];
 
@@ -33,6 +35,7 @@ angular.module('Music').controller('SettingsViewController', [
 		$scope.$on('$destroy', function () {
 			_.each(unsubFuncs, function(func) { func(); });
 		});
+		*/
 
 		$scope.selectPath = function() {
 			OCA.Music.Dialogs.folderPicker(
@@ -377,10 +380,5 @@ angular.module('Music').controller('SettingsViewController', [
 				$rootScope.$emit('viewActivated');
 			});
 		});
-
-		subscribe('deactivateView', function() {
-			$rootScope.$emit('viewDeactivated');
-		});
-
 	}
 ]);

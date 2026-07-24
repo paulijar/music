@@ -93,10 +93,5 @@ angular.module('Music').controller('SmartListViewController', [
 				});
 			}
 		}
-
-		subscribe('deactivateView', () => {
-			$rootScope.$emit('viewDeactivated');
-		});
-
 	}
 ]);
