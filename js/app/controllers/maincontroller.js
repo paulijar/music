@@ -373,6 +373,12 @@ function ($rootScope, $scope, $document, $timeout, $window,
 	$rootScope.$on('resize', function(_event, appView) {
 		const appViewWidth = appView.outerWidth();
 
+		// For some reason, there may be resize events with 0-width during view switching.
+		// Reacting to those would cause UI flickering.
+		if (appViewWidth == 0) {
+			return;
+		}
+
 		// Adjust controls bar width to not overlap with the scroll bar.
 		// Subtract one pixel from the width because outerWidth() seems to
 		// return rounded integer value which may sometimes be slightly larger
