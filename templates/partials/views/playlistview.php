@@ -1,4 +1,4 @@
-<div id="playlist-view" class="view-container playlist-area" ng-show="!loading && !loadingCollection">
+<div id="playlist-view" class="view-container playlist-area" ng-show="!loading">
 	<h1>
 		<span ng-click="onHeaderClick()">
 			<span>{{ playlist.name }}</span>

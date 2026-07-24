@@ -55,8 +55,9 @@ function ($rootScope, $scope, $document, $timeout, $window,
 		return window.location.hash.split('?')[0];
 	};
 
+	let loadingCollection = true;
 	$scope.loadIndicatorVisible = function() {
-		let contentNotReady = ($rootScope.loadingCollection || $rootScope.searchInProgress || $scope.checkingUnscanned);
+		let contentNotReady = (loadingCollection || $rootScope.searchInProgress || $scope.checkingUnscanned);
 		return $rootScope.loading
 			|| (contentNotReady && $scope.viewingLibrary());
 	};
@@ -67,7 +68,7 @@ function ($rootScope, $scope, $document, $timeout, $window,
 
 	$scope.updateCollection = function() {
 		$scope.updateAvailable = false;
-		$rootScope.loadingCollection = true;
+		loadingCollection = true;
 
 		libraryFactory.resetCollection();
 		$rootScope.$emit('collectionUpdating');
@@ -89,7 +90,7 @@ function ($rootScope, $scope, $document, $timeout, $window,
 				collapsiblePopups.removeClass('collapsed');
 			}
 
-			$rootScope.loadingCollection = false;
+			loadingCollection = false;
 		});
 	};
 
