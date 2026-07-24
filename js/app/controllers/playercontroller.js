@@ -445,7 +445,7 @@ function ($scope, $rootScope, playQueueService, Audio, gettextCatalog, Restangul
 		$timeout(() => $scope.playPauseContextMenuVisible = true);
 	};
 	// hide the popup menu when the user clicks anywhere on the page
-	$document.click(function(_event) {
+	$document.on('click', function(_event) {
 		$timeout(() => $scope.playPauseContextMenuVisible = false);
 	});
 

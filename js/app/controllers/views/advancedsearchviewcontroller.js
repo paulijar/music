@@ -35,7 +35,7 @@ angular.module('Music').controller('AdvancedSearchViewController', [
 		};
 
 		// hide the results context menu when user clicks anywhere on the page
-		$document.click(function(_event) {
+		$document.on('click', (_event) => {
 			$timeout(() => $scope.showResultsMenu = false);
 		});
 
