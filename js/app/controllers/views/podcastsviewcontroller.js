@@ -14,17 +14,6 @@ angular.module('Music').controller('PodcastsViewController', [
 
 		const THIS_VIEW_ID = $scope.getCurrentViewId();
 
-		// $rootScope listeners must be unsubscribed manually when the control is destroyed
-		let unsubFuncs = [];
-
-		function subscribe(event, handler) {
-			unsubFuncs.push( $rootScope.$on(event, handler) );
-		}
-
-		$scope.$on('$destroy', () => {
-			_.each(unsubFuncs, function(func) { func(); });
-		});
-
 		// Wrap the supplied tracks as a playlist and pass it to the service for playing
 		function playEpisodes(listId, episodes) {
 			let playlist = _.map(episodes, (episode) => ({track: episode}));
@@ -117,14 +106,14 @@ angular.module('Music').controller('PodcastsViewController', [
 
 		playQueueService.subscribe('playlistChanged', $scope, (playlistId) => updateHighlight(playlistId));
 
-		subscribe('scrollToPodcastEpisode', function(_event, episodeId, animationTime = 500) {
+		$rootScope.subscribe('scrollToPodcastEpisode', $scope, (_event, episodeId, animationTime = 500) => {
 			let episode = libraryService.getPodcastEpisode(episodeId);
 			if (episode) {
 				$scope.$parent.scrollToItem('podcast-channel-' + episode.channel.id, animationTime);
 			}
 		});
 
-		subscribe('scrollToPodcastChannel', function(_event, channelId, animationTime = 500) {
+		$rootScope.subscribe('scrollToPodcastChannel', $scope, (_event, channelId, animationTime = 500) => {
 			$scope.$parent.scrollToItem('podcast-channel-' + channelId, animationTime);
 		});
 
@@ -152,7 +141,7 @@ angular.module('Music').controller('PodcastsViewController', [
 			}
 		}
 
-		subscribe('resize', updateColumnLayout);
+		$rootScope.subscribe('resize', $scope, updateColumnLayout);
 
 		// alphabetNavigation and inViewObserver directives need to know if the view contents change
 		podcastService.subscribe('podcastsChanged', $scope, () => $rootScope.$emit('viewContentChanged'));

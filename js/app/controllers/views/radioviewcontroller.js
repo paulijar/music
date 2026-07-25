@@ -19,17 +19,6 @@ angular.module('Music').controller('RadioViewController', [
 		$scope.incrementalLoadLimit = INCREMENTAL_LOAD_STEP;
 		$scope.stations = null;
 
-		// $rootScope listeners must be unsubscribed manually when the control is destroyed
-		let unsubFuncs = [];
-
-		function subscribe(event, handler) {
-			unsubFuncs.push( $rootScope.$on(event, handler) );
-		}
-
-		$scope.$on('$destroy', function() {
-			_.each(unsubFuncs, function(func) { func(); });
-		});
-
 		$scope.getCurrentStationIndex = function() {
 			return listIsPlaying() ? $scope.$parent.currentTrackIndex : null;
 		};
@@ -96,7 +85,7 @@ angular.module('Music').controller('RadioViewController', [
 			}
 		};
 
-		subscribe('scrollToStation', function(event, stationId) {
+		$rootScope.subscribe('scrollToStation', $scope, (_event, stationId) => {
 			if ($scope.$parent) {
 				$scope.$parent.scrollToItem('radio-station-' + stationId);
 			}

@@ -25,20 +25,6 @@ angular.module('Music').controller('SettingsViewController', [
 
 		let savedExcludedPaths = [];
 
-		/*
-		Not needed for now
-		// $rootScope listeners must be unsubscribed manually when the control is destroyed
-		let unsubFuncs = [];
-
-		function subscribe(event, handler) {
-			unsubFuncs.push( $rootScope.$on(event, handler) );
-		}
-
-		$scope.$on('$destroy', function () {
-			_.each(unsubFuncs, function(func) { func(); });
-		});
-		*/
-
 		$scope.selectPath = function() {
 			OCA.Music.Dialogs.folderPicker(
 				gettextCatalog.getString('Path to your music collection'),

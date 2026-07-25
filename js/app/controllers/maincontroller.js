@@ -27,10 +27,17 @@ function ($rootScope, $scope, $document, $timeout, $window,
 		document.head.appendChild(folderStyle);
 	});
 
+	// Wrapper for $rootScope.$on which provides automatic unsubscribing on scope destruction
+	$rootScope.subscribe = function(eventName, listenerScope, listener) {
+		const handle = $rootScope.$on(eventName, listener);
+		listenerScope.$on('$destroy', handle);
+	};
+
 	$rootScope.loading = true;
 	$rootScope.playing = false;
 	$rootScope.playingView = null;
 	$scope.currentTrack = null;
+
 	playQueueService.subscribe('trackChanged', $scope, (listEntry) => {
 		$scope.currentTrack = listEntry.track;
 		$scope.currentTrackIndex = playQueueService.getCurrentIndex();
@@ -292,7 +299,7 @@ function ($rootScope, $scope, $document, $timeout, $window,
 		$scope.collapseNavigationPaneOnMobile();
 	};
 
-	$rootScope.$on('viewActivated', (_event, viewId) => {
+	$rootScope.subscribe('viewActivated', $scope, (_event, viewId) => {
 		if (viewId === $scope.getCurrentViewId()) {
 			$rootScope.loading = false;
 		}
@@ -303,7 +310,7 @@ function ($rootScope, $scope, $document, $timeout, $window,
 		}
 	});
 
-	$rootScope.$on('viewBusy', (_event, viewId) => {
+	$rootScope.subscribe('viewBusy', $scope, (_event, viewId) => {
 		if (viewId === $scope.getCurrentViewId()) {
 			$rootScope.loading = true;
 		}
@@ -375,7 +382,7 @@ function ($rootScope, $scope, $document, $timeout, $window,
 		});
 	}
 
-	$rootScope.$on('resize', function(_event, appView) {
+	$rootScope.subscribe('resize', $scope, (_event, appView) => {
 		const appViewWidth = appView.outerWidth();
 
 		// For some reason, there may be resize events with 0-width during view switching.

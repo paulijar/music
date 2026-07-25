@@ -24,17 +24,6 @@ angular.module('Music').controller('AllTracksViewController', [
 		const BUCKET_MAX_SIZE = 100;
 		$scope.trackBuckets = null;
 
-		// $rootScope listeners must be unsubscribed manually when the control is destroyed
-		let _unsubFuncs = [];
-
-		function subscribe(event, handler) {
-			_unsubFuncs.push( $rootScope.$on(event, handler) );
-		}
-
-		$scope.$on('$destroy', function () {
-			_.each(_unsubFuncs, function(func) { func(); });
-		});
-
 		function play(startIndex = null) {
 			playQueueService.setPlaylist('alltracks', _tracks, startIndex);
 			playQueueService.publish('play');
@@ -98,7 +87,7 @@ angular.module('Music').controller('AllTracksViewController', [
 			}
 		}
 
-		subscribe('scrollToTrack', function(event, trackId) {
+		$rootScope.subscribe('scrollToTrack', $scope, (_event, trackId) => {
 			if ($scope.$parent) {
 				$rootScope.$emit('inViewObserver_revealElement', bucketElementForTrack(trackId));
 				$scope.$parent.scrollToItem('track-' + trackId);

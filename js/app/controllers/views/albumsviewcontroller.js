@@ -26,17 +26,6 @@ angular.module('Music').controller('AlbumsViewController', [
 		const INCREMENTAL_LOAD_STEP = 100;
 		$scope.incrementalLoadLimit = 0;
 
-		// $rootScope listeners must be unsubscribed manually when the control is destroyed
-		let unsubFuncs = [];
-
-		function subscribe(event, handler) {
-			unsubFuncs.push( $rootScope.$on(event, handler) );
-		}
-
-		$scope.$on('$destroy', () => {
-			_.each(unsubFuncs, function(func) { func(); });
-		});
-
 		// Prevent controller reload when the URL is updated with window.location.hash,
 		// unless the new location actually requires another controller.
 		// See http://stackoverflow.com/a/12429133/2104976
@@ -182,15 +171,15 @@ angular.module('Music').controller('AlbumsViewController', [
 			updateHighlight(playlistId);
 		});
 
-		subscribe('scrollToTrack', function(_event, trackId, animationTime /* optional */) {
+		$rootScope.subscribe('scrollToTrack', $scope, (_event, trackId, animationTime /* optional */) => {
 			scrollToAlbumOfTrack(trackId, animationTime);
 		});
 
-		subscribe('scrollToAlbum', function(_event, albumId, animationTime /* optional */) {
+		$rootScope.subscribe('scrollToAlbum', $scope, (_event, albumId, animationTime /* optional */) => {
 			$scope.$parent.scrollToItem('album-' + albumId, animationTime);
 		});
 
-		subscribe('scrollToArtist', function(_event, artistId, animationTime /* optional */) {
+		$rootScope.subscribe('scrollToArtist', $scope, (_event, artistId, animationTime /* optional */) => {
 			const elemId = 'artist-' + artistId;
 			if ($('#' + elemId).length) {
 				$scope.$parent.scrollToItem(elemId, animationTime);
@@ -238,8 +227,8 @@ angular.module('Music').controller('AlbumsViewController', [
 			}
 		}
 
-		subscribe('resize', updateColumnLayout);
-		subscribe('albumsLayoutChanged', updateColumnLayout);
+		$rootScope.subscribe('resize', $scope, updateColumnLayout);
+		$rootScope.subscribe('albumsLayoutChanged', $scope, updateColumnLayout);
 
 		function initializePlayerStateFromURL() {
 			let hashParts = window.location.hash.slice(1).split('/');

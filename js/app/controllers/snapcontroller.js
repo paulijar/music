@@ -52,8 +52,8 @@ function ($rootScope, $scope) {
 		}
 	};
 
-	$rootScope.$on('closeSnapper', close);
-	$rootScope.$on('openSnapper', open);
+	$rootScope.subscribe('closeSnapper', $scope, close);
+	$rootScope.subscribe('openSnapper', $scope, open);
 
 	// Dragging a song/album/etc. over the navigation toggle pops the navigation pane open.
 	// Subsequently, ending the drag closes the navigation pane.
@@ -88,14 +88,14 @@ function ($rootScope, $scope) {
 	toggleSnapperOnSize();
 
 	// The swipe detection of the snapper is disabled while dragging drag-and-droppable UI elements
-	$rootScope.$on('ANGULAR_DRAG_START', () => {
+	$rootScope.subscribe('ANGULAR_DRAG_START', $scope, () => {
 		if (enabled) {
 			gestureSuspended = true;
 			snapper.disable();
 		}
 	});
 
-	$rootScope.$on('ANGULAR_DRAG_END', () => {
+	$rootScope.subscribe('ANGULAR_DRAG_END', $scope, () => {
 		if (gestureSuspended) {
 			gestureSuspended = false;
 			if (enabled) {

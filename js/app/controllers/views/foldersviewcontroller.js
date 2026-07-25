@@ -24,13 +24,6 @@ angular.module('Music').controller('FoldersViewController', [
 		const INCREMENTAL_LOAD_STEP = 1000;
 		$scope.incrementalLoadLimit = 0;
 
-		// $rootScope listeners must be unsubscribed manually when the control is destroyed
-		let unsubFuncs = [];
-
-		function subscribe(event, handler) {
-			unsubFuncs.push( $rootScope.$on(event, handler) );
-		}
-
 		function playPlaylist(listId, tracks, startFromTrackId = undefined) {
 			let startIndex = null;
 			if (startFromTrackId !== undefined) {
@@ -130,7 +123,7 @@ angular.module('Music').controller('FoldersViewController', [
 
 		playQueueService.subscribe('playlistChanged', $scope, (playlistId) => updateHighlight(playlistId));
 
-		subscribe('scrollToTrack', function(_event, trackId) {
+		$rootScope.subscribe('scrollToTrack', $scope, (_event, trackId) => {
 			if ($scope.$parent) {
 				let elementId = 'track-' + trackId;
 				// If the track element is hidden (collapsed), scroll to the folder
@@ -142,10 +135,6 @@ angular.module('Music').controller('FoldersViewController', [
 				}
 				$scope.$parent.scrollToItem(elementId);
 			}
-		});
-
-		$scope.$on('$destroy', () => {
-			_.each(unsubFuncs, (func) => func());
 		});
 
 		libraryFactory.subscribe('collectionUpdating', $scope, () => {
@@ -194,6 +183,6 @@ angular.module('Music').controller('FoldersViewController', [
 			$rootScope.$emit('viewActivated', THIS_VIEW_ID);
 		}
 
-		subscribe('foldersLayoutChanged', makeContentVisible);
+		$rootScope.subscribe('foldersLayoutChanged', $scope, makeContentVisible);
 	}
 ]);

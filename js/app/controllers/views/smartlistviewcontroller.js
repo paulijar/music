@@ -17,17 +17,6 @@ angular.module('Music').controller('SmartListViewController', [
 
 		$scope.tracks = null;
 
-		// $rootScope listeners must be unsubscribed manually when the control is destroyed
-		let _unsubFuncs = [];
-
-		function subscribe(event, handler) {
-			_unsubFuncs.push( $rootScope.$on(event, handler) );
-		}
-
-		$scope.$on('$destroy', () => {
-			_.each(_unsubFuncs, (func) => func());
-		});
-
 		function play(startIndex = null) {
 			playQueueService.setPlaylist('smartlist', $scope.tracks, startIndex);
 			playQueueService.publish('play');
@@ -69,7 +58,7 @@ angular.module('Music').controller('SmartListViewController', [
 			return { track: trackId };
 		};
 
-		subscribe('scrollToTrack', function(_event, trackId) {
+		$rootScope.subscribe('scrollToTrack', $scope, (_event, trackId) => {
 			if ($scope.$parent) {
 				$scope.$parent.scrollToItem('track-' + trackId);
 			}

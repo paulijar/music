@@ -481,7 +481,7 @@ angular.module('Music').controller('NavigationController', [
 			playlistService.updatePlaylistTracks(playlist);
 		}
 
-		$rootScope.$on('viewActivated', function() {
+		$rootScope.subscribe('viewActivated', $scope, () => {
 			// start playing the current view if the 'autoplay' argument is present in the URL and has a truthy value
 			if (OCA.Music.Utils.parseBoolean($location.search().autoplay)) {
 				if (!$rootScope.playing) {

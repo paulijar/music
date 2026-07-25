@@ -135,17 +135,12 @@ function($rootScope, $timeout, alphabetIndexingService, libraryFactory) {
 
 			// Trigger resize on #app-view resize and player status changes.
 			// Trigger re-evaluation of available scroll targets when collection reloaded.
-			let unsubscribeFuncs = [
-				$rootScope.$on('resize', onResize),
-				$rootScope.$watch('started', onPlayerBarShownOrHidden),
-				$rootScope.$on('viewContentChanged', setUpTargets)
-			];
 			libraryFactory.subscribe('collectionLoaded', scope, setUpTargets);
+			$rootScope.subscribe('resize', scope, onResize);
+			$rootScope.subscribe('viewContentChanged', scope, setUpTargets);
 
-			// unsubscribe listeners when the scope is destroyed
-			scope.$on('$destroy', function () {
-				_.each(unsubscribeFuncs, function(func) { func(); });
-			});
+			const unsubscribeWatch = $rootScope.$watch('started', onPlayerBarShownOrHidden);
+			scope.$on('$destroy', unsubscribeWatch);
 		}
 	};
 }]);

@@ -21,17 +21,6 @@ angular.module('Music').controller('PlaylistViewController', [
 		$scope.incrementalLoadLimit = INCREMENTAL_LOAD_STEP;
 		$scope.tracks = null;
 
-		// $rootScope listeners must be unsubscribed manually when the control is destroyed
-		let unsubFuncs = [];
-
-		function subscribe(event, handler) {
-			unsubFuncs.push( $rootScope.$on(event, handler) );
-		}
-
-		$scope.$on('$destroy', function() {
-			_.each(unsubFuncs, function(func) { func(); });
-		});
-
 		$scope.getCurrentTrackIndex = function() {
 			return listIsPlaying() ? $scope.$parent.currentTrackIndex : null;
 		};
@@ -134,7 +123,7 @@ angular.module('Music').controller('PlaylistViewController', [
 			}
 		};
 
-		subscribe('scrollToTrack', function(event, trackId) {
+		$rootScope.subscribe('scrollToTrack', $scope, function(_event, trackId) {
 			if ($scope.$parent) {
 				let currentIdx = $scope.getCurrentTrackIndex();
 				let index;

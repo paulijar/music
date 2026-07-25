@@ -288,7 +288,7 @@ function ($scope, $rootScope, libraryService, $timeout, gettextCatalog) {
 		endProgress();
 	}
 
-	$rootScope.$on('deactivateView', function() {
+	$rootScope.subscribe('deactivateView', $scope, () => {
 		$rootScope.searchMode = false;
 		$scope.searchResultsOmitted = false;
 		$scope.noSearchResults = false;

@@ -23,13 +23,6 @@ angular.module('Music').controller('GenresViewController', [
 		const INCREMENTAL_LOAD_STEP = 1000;
 		$scope.incrementalLoadLimit = 0;
 
-		// $rootScope listeners must be unsubscribed manually when the control is destroyed
-		let unsubFuncs = [];
-
-		function subscribe(event, handler) {
-			unsubFuncs.push( $rootScope.$on(event, handler) );
-		}
-
 		function playPlaylist(listId, tracks, startFromTrackId = undefined) {
 			let startIndex = null;
 			if (startFromTrackId !== undefined) {
@@ -123,7 +116,7 @@ angular.module('Music').controller('GenresViewController', [
 
 		playQueueService.subscribe('playlistChanged', $scope, (playlistId) => updateHighlight(playlistId));
 
-		subscribe('scrollToTrack', function(_event, trackId) {
+		$rootScope.subscribe('scrollToTrack', $scope, (_event, trackId) => {
 			if ($scope.$parent) {
 				let elementId = 'track-' + trackId;
 				// If the track element is hidden (collapsed), scroll to the genre
@@ -135,10 +128,6 @@ angular.module('Music').controller('GenresViewController', [
 				}
 				$scope.$parent.scrollToItem(elementId);
 			}
-		});
-
-		$scope.$on('$destroy', () => {
-			_.each(unsubFuncs, function(func) { func(); });
 		});
 
 		function initView() {

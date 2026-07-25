@@ -14,17 +14,6 @@ angular.module('Music').controller('AdvancedSearchViewController', [
 
 		const THIS_VIEW_ID = $scope.getCurrentViewId();
 
-		// $rootScope listeners must be unsubscribed manually when the control is destroyed
-		let _unsubFuncs = [];
-
-		function subscribe(event, handler) {
-			_unsubFuncs.push( $rootScope.$on(event, handler) );
-		}
-
-		$scope.$on('$destroy', () => {
-			_.each(_unsubFuncs, (func) => func());
-		});
-
 		$scope.maxResults = '100';
 		$scope.order = 'name';
 		$scope.conjunction = 'and';
@@ -474,7 +463,7 @@ angular.module('Music').controller('AdvancedSearchViewController', [
 			};
 		};
 
-		subscribe('scrollToTrack', function(_event, trackId) {
+		$rootScope.subscribe('scrollToTrack', $scope, (_event, trackId) => {
 			if ($scope.$parent) {
 				if ($scope.results?.tracks.length) {
 					$scope.$parent.scrollToItem('track-' + trackId);
@@ -492,7 +481,7 @@ angular.module('Music').controller('AdvancedSearchViewController', [
 			}
 		});
 
-		subscribe('scrollToPodcastEpisode', function(_event, episodeId) {
+		$rootScope.subscribe('scrollToPodcastEpisode', $scope, (_event, episodeId) => {
 			if ($scope.$parent) {
 				if ($scope.results?.podcastEpisodes.length) {
 					$scope.$parent.scrollToItem('podcast-episode-' + episodeId);
