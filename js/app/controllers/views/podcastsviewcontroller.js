@@ -160,7 +160,7 @@ angular.module('Music').controller('PodcastsViewController', [
 		subscribe('resize', updateColumnLayout);
 
 		// alphabetNavigation and inViewObserver directives need to know if the view contents change
-		subscribe('podcastsChanged', () => $rootScope.$emit('viewContentChanged'));
+		podcastService.subscribe('podcastsChanged', $scope, () => $rootScope.$emit('viewContentChanged'));
 
 		libraryFactory.getPodcastChannels().then((channels) => {
 			// show content only if the view is not already (being) deactivated

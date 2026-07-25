@@ -29,7 +29,7 @@ function($rootScope : MusicRootScope, $timeout : ng.ITimeoutService, $q : ng.IQS
 							gettextCatalog.getString('Could not update the channel "{{ title }}" from the source', { title: channel.title }));
 				} else if (result.updated) {
 					libraryService.replacePodcastChannel(result.channel);
-					$timeout(() => $rootScope.$emit('podcastsChanged'));
+					$timeout(() => publish('podcastsChanged'));
 				}
 				deferred.resolve(result);
 			},
@@ -99,7 +99,7 @@ function($rootScope : MusicRootScope, $timeout : ng.ITimeoutService, $q : ng.IQS
 				libraryService.addPodcastChannel(result);
 				OCA.Music.Dialogs.showNotification(
 					gettextCatalog.getString('Podcast channel "{{ title }}" added', { title: result.title }));
-				$timeout(() => $rootScope.$emit('podcastsChanged'));
+				$timeout(() => publish('podcastsChanged'));
 				deferred.resolve();
 			},
 			(error) => {
@@ -121,8 +121,17 @@ function($rootScope : MusicRootScope, $timeout : ng.ITimeoutService, $q : ng.IQS
 		return deferred.promise;
 	}
 
+	function publish(eventName : string) : void {
+		$rootScope.$emit('PodcastService:' + eventName);
+	}
+
 	// Service API
 	return {
+
+		subscribe: function(eventName : string, listenerScope : ng.IScope, listener : (event: ng.IAngularEvent, ...args: any[]) => any) : void {
+			var handle = $rootScope.$on('PodcastService:' + eventName, listener);
+			listenerScope.$on('$destroy', handle);
+		},
 
 		// Show a popup dialog to add a new podcast channel from an RSS feed
 		showAddPodcastDialog() : ng.IPromise<any> {
@@ -295,7 +304,7 @@ function($rootScope : MusicRootScope, $timeout : ng.ITimeoutService, $q : ng.IQS
 							deferred.reject();
 						} else {
 							libraryService.removePodcastChannel(channel);
-							$timeout(() => $rootScope.$emit('podcastsChanged'));
+							$timeout(() => publish('podcastsChanged'));
 							deferred.resolve();
 						}
 					},
