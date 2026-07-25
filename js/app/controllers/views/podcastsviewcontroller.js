@@ -23,7 +23,7 @@ angular.module('Music').controller('PodcastsViewController', [
 
 		$scope.$on('$destroy', () => {
 			_.each(unsubFuncs, function(func) { func(); });
-			playQueueService.unsubscribeAll(this);
+			playQueueService.unsubscribeAll($scope);
 		});
 
 		// Wrap the supplied tracks as a playlist and pass it to the service for playing
@@ -114,13 +114,9 @@ angular.module('Music').controller('PodcastsViewController', [
 			return gettextCatalog.getString('Show all {{ count }} episodes…', { count: count });
 		};
 
-		playQueueService.subscribe('playlistEnded', function() {
-			updateHighlight(null);
-		}, this);
+		playQueueService.subscribe('playlistEnded', $scope, () => updateHighlight(null));
 
-		playQueueService.subscribe('playlistChanged', function(playlistId) {
-			updateHighlight(playlistId);
-		}, this);
+		playQueueService.subscribe('playlistChanged', $scope, (playlistId) => updateHighlight(playlistId));
 
 		subscribe('scrollToPodcastEpisode', function(_event, episodeId, animationTime = 500) {
 			let episode = libraryService.getPodcastEpisode(episodeId);

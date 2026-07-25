@@ -35,7 +35,7 @@ angular.module('Music').controller('AlbumsViewController', [
 
 		$scope.$on('$destroy', () => {
 			_.each(unsubFuncs, function(func) { func(); });
-			playQueueService.unsubscribeAll(this);
+			playQueueService.unsubscribeAll($scope);
 		});
 
 		// Prevent controller reload when the URL is updated with window.location.hash,
@@ -174,14 +174,14 @@ angular.module('Music').controller('AlbumsViewController', [
 			return att;
 		}
 
-		playQueueService.subscribe('playlistEnded', function() {
+		playQueueService.subscribe('playlistEnded', $scope, () => {
 			window.location.hash = '#/';
 			updateHighlight(null);
-		}, this);
+		});
 
-		playQueueService.subscribe('playlistChanged', function(playlistId) {
+		playQueueService.subscribe('playlistChanged', $scope, (playlistId) => {
 			updateHighlight(playlistId);
-		}, this);
+		});
 
 		subscribe('scrollToTrack', function(_event, trackId, animationTime /* optional */) {
 			scrollToAlbumOfTrack(trackId, animationTime);

@@ -119,13 +119,9 @@ angular.module('Music').controller('GenresViewController', [
 			return 'genre-' + $scope.genres[index].id;
 		};
 
-		playQueueService.subscribe('playlistEnded', function() {
-			updateHighlight(null);
-		}, this);
+		playQueueService.subscribe('playlistEnded', $scope, () => updateHighlight(null));
 
-		playQueueService.subscribe('playlistChanged', function(playlistId) {
-			updateHighlight(playlistId);
-		}, this);
+		playQueueService.subscribe('playlistChanged', $scope, (playlistId) => updateHighlight(playlistId));
 
 		subscribe('scrollToTrack', function(_event, trackId) {
 			if ($scope.$parent) {
@@ -143,7 +139,7 @@ angular.module('Music').controller('GenresViewController', [
 
 		$scope.$on('$destroy', () => {
 			_.each(unsubFuncs, function(func) { func(); });
-			playQueueService.unsubscribeAll(this);
+			playQueueService.unsubscribeAll($scope);
 		});
 
 		function initView() {

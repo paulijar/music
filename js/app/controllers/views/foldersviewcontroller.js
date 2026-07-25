@@ -126,13 +126,9 @@ angular.module('Music').controller('FoldersViewController', [
 			return 'folder-' + $scope.folders[index].id;
 		};
 
-		playQueueService.subscribe('playlistEnded', function() {
-			updateHighlight(null);
-		}, this);
+		playQueueService.subscribe('playlistEnded', $scope, () => updateHighlight(null));
 
-		playQueueService.subscribe('playlistChanged', function(playlistId) {
-			updateHighlight(playlistId);
-		}, this);
+		playQueueService.subscribe('playlistChanged', $scope, (playlistId) => updateHighlight(playlistId));
 
 		subscribe('scrollToTrack', function(_event, trackId) {
 			if ($scope.$parent) {
@@ -150,7 +146,7 @@ angular.module('Music').controller('FoldersViewController', [
 
 		$scope.$on('$destroy', () => {
 			_.each(unsubFuncs, (func) => func());
-			playQueueService.unsubscribeAll(this);
+			playQueueService.unsubscribeAll($scope);
 		});
 
 		libraryFactory.subscribe('collectionUpdating', $scope, () => {

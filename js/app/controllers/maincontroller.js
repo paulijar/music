@@ -31,17 +31,17 @@ function ($rootScope, $scope, $document, $timeout, $window,
 	$rootScope.playing = false;
 	$rootScope.playingView = null;
 	$scope.currentTrack = null;
-	playQueueService.subscribe('trackChanged', function(listEntry) {
+	playQueueService.subscribe('trackChanged', $scope, (listEntry) => {
 		$scope.currentTrack = listEntry.track;
 		$scope.currentTrackIndex = playQueueService.getCurrentIndex();
 	});
 
-	playQueueService.subscribe('play', function(playingView) {
+	playQueueService.subscribe('play', $scope, (playingView) => {
 		// assume that the play started from current view if no other view given
 		$rootScope.playingView = playingView || $scope.getCurrentViewId();
 	});
 
-	playQueueService.subscribe('playlistEnded', function() {
+	playQueueService.subscribe('playlistEnded', $scope, () => {
 		$rootScope.playingView = null;
 		$scope.currentTrack = null;
 		$scope.currentTrackIndex = -1;

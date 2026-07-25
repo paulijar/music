@@ -499,11 +499,11 @@ function ($scope, $rootScope, playQueueService, Audio, gettextCatalog, Restangul
 		}
 	};
 
-	playQueueService.subscribe('play', function(_playingView = null, startOffset = 0) {
+	playQueueService.subscribe('play', $scope, (_playingView = null, startOffset = 0) => {
 		$scope.next(startOffset); /* fetch track and start playing*/
 	});
 
-	playQueueService.subscribe('togglePlayback', $scope.togglePlayback);
+	playQueueService.subscribe('togglePlayback', $scope, $scope.togglePlayback);
 
 	$scope.scrollToCurrentTrack = function() {
 		if ($scope.currentTrack) {

@@ -112,7 +112,7 @@ export class MusicWidget {
 			}
 		}, 300);
 
-		this.#queue.subscribe('trackChanged', (track) => {
+		this.#queue.subscribe('trackChanged', this, (track) => {
 			this.#player.pause();
 			this.#debouncedPlayCurrent();
 
@@ -135,7 +135,7 @@ export class MusicWidget {
 			});
 		});
 
-		this.#queue.subscribe('playlistEnded', () => {
+		this.#queue.subscribe('playlistEnded', this, () => {
 			this.#progressAndOrder.hide();
 			this.#currentSongLabel.hide();
 			this.#controls.hide();
