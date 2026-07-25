@@ -163,7 +163,7 @@ angular.module('Music').controller('PlaylistViewController', [
 		});
 
 		// Reload the view if the collection is updated (e.g. by change of the library path)
-		subscribe('collectionUpdating', initViewFromRoute);
+		libraryFactory.subscribe('collectionUpdating', $scope, initViewFromRoute);
 
 		function listIsPlaying() {
 			return ($rootScope.playingView === $scope.getCurrentViewId());

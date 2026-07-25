@@ -105,7 +105,7 @@ angular.module('Music').controller('AllTracksViewController', [
 			}
 		});
 
-		subscribe('collectionUpdating', () => {
+		libraryFactory.subscribe('collectionUpdating', $scope, () => {
 			// Nullify any previous tracks to force tracklist directive recreation
 			_tracks = null;
 			$scope.trackBuckets = null;

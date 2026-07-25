@@ -22,7 +22,7 @@ angular.module('Music').controller('NavigationController', [
 		}
 		init();
 
-		$rootScope.$on('collectionUpdating', init);
+		libraryFactory.subscribe('collectionUpdating', $scope, init);
 
 		$scope.trackCountText = function(playlist) {
 			let trackCount = playlist ? playlist.tracks.length : libraryService.getTrackCount();

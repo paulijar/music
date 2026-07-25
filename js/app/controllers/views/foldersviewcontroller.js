@@ -153,7 +153,7 @@ angular.module('Music').controller('FoldersViewController', [
 			playQueueService.unsubscribeAll(this);
 		});
 
-		subscribe('collectionUpdating', () => {
+		libraryFactory.subscribe('collectionUpdating', $scope, () => {
 			$scope.folders = null;
 			$scope.rootFolder = null;
 			initView();

@@ -80,15 +80,6 @@ angular.module('Music').controller('SmartListFiltersController', [
 			}
 		};
 
-		// $rootScope listeners must be unsubscribed manually when the control is destroyed
-		let unsubFuncs = [];
-		function subscribe(event, handler) {
-			unsubFuncs.push( $rootScope.$on(event, handler) );
-		}
-		$scope.$on('$destroy', () => {
-			_.each(unsubFuncs, (func) => func());
-		});
-
 		function init() {
 			libraryFactory.getGenres().then((genres) => {
 				$scope.allGenres = genres;
@@ -103,6 +94,6 @@ angular.module('Music').controller('SmartListFiltersController', [
 		init();
 
 		// the artists and genres may be (re)loaded also after this controller has been initialized
-		subscribe('collectionUpdating', init);
+		libraryFactory.subscribe('collectionUpdating', $scope, init);
 	}
 ]);

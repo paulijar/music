@@ -316,6 +316,6 @@ angular.module('Music').controller('AlbumsViewController', [
 		}
 		initView();
 
-		subscribe('collectionUpdating', initView);
+		libraryFactory.subscribe('collectionUpdating', $scope, initView);
 	}
 ]);

@@ -69,7 +69,7 @@ function ($rootScope, $scope, $document, $timeout, $window,
 
 	$scope.updateCollection = () => libraryFactory.reloadCollection();
 
-	$rootScope.$on('collectionUpdating', () => {
+	libraryFactory.subscribe('collectionUpdating', $scope, () => {
 		$scope.updateAvailable = false;
 		loadingCollection = true;
 

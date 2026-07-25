@@ -156,7 +156,7 @@ angular.module('Music').controller('GenresViewController', [
 		}
 		initView();
 
-		subscribe('collectionUpdating', initView);
+		libraryFactory.subscribe('collectionUpdating', $scope, initView);
 
 		/**
 		 * Increase number of shown genres asynchronously step-by-step until

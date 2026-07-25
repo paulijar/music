@@ -9,7 +9,7 @@
  *
  */
 
-import * as angular from 'angular';
+import * as ng from 'angular';
 import { MusicRootScope } from 'app/config/musicrootscope';
 import { IService } from 'restangular';
 import { gettextCatalog } from 'angular-gettext';
@@ -17,17 +17,17 @@ import { Artist, Folder, Genre, LibraryService, Playlist, PlaylistEntry, Podcast
 
 type SmartListParams = Record<string, string|number|boolean|null>;
 
-angular.module('Music').factory('libraryFactory', ['Restangular', 'gettextCatalog', '$rootScope', 'libraryService',
+ng.module('Music').factory('libraryFactory', ['Restangular', 'gettextCatalog', '$rootScope', 'libraryService',
 function (Restangular : IService, gettextCatalog : gettextCatalog, $rootScope : MusicRootScope, libraryService : LibraryService) {
 
-	let collectionPromise : angular.IPromise<Artist[]> | null = null;
-	let rootFolderPromise : angular.IPromise<Folder> | null = null;
-	let playlistsPromise : angular.IPromise<Playlist[]> | null = null;
-	let smartListPromise : angular.IPromise<Playlist> | null = null;
+	let collectionPromise : ng.IPromise<Artist[]> | null = null;
+	let rootFolderPromise : ng.IPromise<Folder> | null = null;
+	let playlistsPromise : ng.IPromise<Playlist[]> | null = null;
+	let smartListPromise : ng.IPromise<Playlist> | null = null;
 	let smartListParams : SmartListParams | null = null;
-	let genresPromise : angular.IPromise<Genre[]> | null = null;
-	let radioStationsPromise : angular.IPromise<PlaylistEntry<RadioStation>[]> | null = null;
-	let podcastChannelsPromise : angular.IPromise<PodcastChannel[]> | null = null;
+	let genresPromise : ng.IPromise<Genre[]> | null = null;
+	let radioStationsPromise : ng.IPromise<PlaylistEntry<RadioStation>[]> | null = null;
+	let podcastChannelsPromise : ng.IPromise<PodcastChannel[]> | null = null;
 
 	function resetCollection() : void {
 		collectionPromise = null;
@@ -43,14 +43,24 @@ function (Restangular : IService, gettextCatalog : gettextCatalog, $rootScope : 
 		libraryService.setGenres(null);
 	}
 
+	function publish(eventName : string) : void {
+		$rootScope.$emit('libraryFactory:' + eventName);
+	}
+
+	// Factory API
 	return {
-		getCollection() : angular.IPromise<Artist[]> {
+		subscribe(eventName : string, listenerScope : ng.IScope, listener : (event: ng.IAngularEvent, ...args: any[]) => any) : void {
+			var handle = $rootScope.$on('libraryFactory:' + eventName, listener);
+			listenerScope.$on('$destroy', handle);
+		},
+
+		getCollection() : ng.IPromise<Artist[]> {
 			if (!collectionPromise) {
 				collectionPromise = Restangular.all('prepare_collection').post({}).then((reply) => {
 					return Restangular.all('collection').getList({ hash: reply.hash });
 				}).then((artists) => {
 					libraryService.setCollection(artists);
-					$rootScope.$emit('collectionLoaded');
+					publish('collectionLoaded');
 					return libraryService.getCollection();
 				}).catch((errorResponse) : Artist[] => {
 					const reason = {
@@ -64,12 +74,12 @@ function (Restangular : IService, gettextCatalog : gettextCatalog, $rootScope : 
 					OCA.Music.Dialogs.showNotification(errMsg + ' ' + reason);
 					return [];
 				});
-				$rootScope.$emit('collectionUpdating');
+				publish('collectionUpdating');
 			}
 			return collectionPromise;
 		},
 
-		reloadCollection() : angular.IPromise<Artist[]> {
+		reloadCollection() : ng.IPromise<Artist[]> {
 			resetCollection();
 
 			// Playlists, genres, folders, and smart list all depend on the collection and
@@ -82,11 +92,11 @@ function (Restangular : IService, gettextCatalog : gettextCatalog, $rootScope : 
 			return this.getCollection();
 		},
 
-		getAllArtists() : angular.IPromise<Artist[]> {
+		getAllArtists() : ng.IPromise<Artist[]> {
 			return this.getCollection().then(() => libraryService.getAllArtists());
 		},
 
-		getRootFolder() : angular.IPromise<Folder> {
+		getRootFolder() : ng.IPromise<Folder> {
 			if (!rootFolderPromise) {
 				const fetchFoldersPromise = Restangular.all('folders').getList();
 
@@ -99,7 +109,7 @@ function (Restangular : IService, gettextCatalog : gettextCatalog, $rootScope : 
 			return rootFolderPromise;
 		},
 
-		getGenres() : angular.IPromise<Genre[]> {
+		getGenres() : ng.IPromise<Genre[]> {
 			if (!genresPromise) {
 				const fetchGenresPromise = Restangular.all('genres').getList();
 
@@ -112,7 +122,7 @@ function (Restangular : IService, gettextCatalog : gettextCatalog, $rootScope : 
 			return genresPromise;
 		},
 
-		getPlaylists() : angular.IPromise<Playlist[]> {
+		getPlaylists() : ng.IPromise<Playlist[]> {
 			if (!playlistsPromise) {
 				const fetchPlaylistsPromise = Restangular.all('playlists').getList({type: 'music-app'});
 
@@ -125,7 +135,7 @@ function (Restangular : IService, gettextCatalog : gettextCatalog, $rootScope : 
 			return playlistsPromise;
 		},
 
-		getSmartList() : angular.IPromise<Playlist> {
+		getSmartList() : ng.IPromise<Playlist> {
 			if (!smartListPromise) {
 				const genArgs = smartListParams ?? { useLatestParams: true };
 
@@ -134,14 +144,14 @@ function (Restangular : IService, gettextCatalog : gettextCatalog, $rootScope : 
 				smartListPromise = Promise.all([this.getCollection(), fetchSmartListPromise]).then(([_collection, smartList]) => {
 					libraryService.setSmartList(smartList);
 					smartListParams = smartList.params;
-					$rootScope.$emit('smartListLoaded');
+					publish('smartListLoaded');
 					return libraryService.getSmartList()!;
 				});
 			}
 			return smartListPromise;
 		},
 
-		reloadSmartList(params? : SmartListParams) : angular.IPromise<Playlist> {
+		reloadSmartList(params? : SmartListParams) : ng.IPromise<Playlist> {
 			if (params) {
 				smartListParams = params;
 			}
@@ -150,11 +160,11 @@ function (Restangular : IService, gettextCatalog : gettextCatalog, $rootScope : 
 			return this.getSmartList();
 		},
 
-		getSmartListParams() : angular.IPromise<SmartListParams> {
+		getSmartListParams() : ng.IPromise<SmartListParams> {
 			return this.getSmartList().then(() => smartListParams!);
 		},
 
-		getRadioStations() : angular.IPromise<PlaylistEntry<RadioStation>[]> {
+		getRadioStations() : ng.IPromise<PlaylistEntry<RadioStation>[]> {
 			if (!radioStationsPromise) {
 				radioStationsPromise = Restangular.all('radio').getList().then((radioStations) => {
 					libraryService.setRadioStations(radioStations);
@@ -164,7 +174,7 @@ function (Restangular : IService, gettextCatalog : gettextCatalog, $rootScope : 
 			return radioStationsPromise;
 		},
 
-		getPodcastChannels() : angular.IPromise<PodcastChannel[]> {
+		getPodcastChannels() : ng.IPromise<PodcastChannel[]> {
 			if (!podcastChannelsPromise) {
 				podcastChannelsPromise = Restangular.all('podcasts').getList().then((channels) => {
 					libraryService.setPodcasts(channels);
@@ -174,7 +184,7 @@ function (Restangular : IService, gettextCatalog : gettextCatalog, $rootScope : 
 			return podcastChannelsPromise;
 		},
 
-		updateFavorites() : angular.IPromise<void> {
+		updateFavorites() : ng.IPromise<void> {
 			const fetchFavoritesPromise = Restangular.one('favorites').get();
 
 			// collection, playlists, and podcasts have to be loaded before favorites can be set, because favorites can contain items from all of those

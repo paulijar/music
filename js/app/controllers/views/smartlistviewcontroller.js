@@ -10,8 +10,8 @@
 
 
 angular.module('Music').controller('SmartListViewController', [
-	'$rootScope', '$scope', 'playQueueService', 'libraryService', '$timeout',
-	function ($rootScope, $scope, playQueueService, libraryService, $timeout) {
+	'$rootScope', '$scope', 'playQueueService', 'libraryService', 'libraryFactory', '$timeout',
+	function ($rootScope, $scope, playQueueService, libraryService, libraryFactory, $timeout) {
 
 		const THIS_VIEW_ID = $scope.getCurrentViewId();
 
@@ -79,7 +79,7 @@ angular.module('Music').controller('SmartListViewController', [
 		// or once artists have been loaded
 		$timeout(initView);
 
-		subscribe('smartListLoaded', function () {
+		libraryFactory.subscribe('smartListLoaded', $scope, () => {
 			// Nullify any previous tracks to force tracklist directive recreation
 			$scope.tracks = null;
 			$timeout(initView);
