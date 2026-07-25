@@ -67,20 +67,12 @@ function ($rootScope, $scope, $document, $timeout, $window,
 		return !['#/settings', '#/radio', '#/podcasts'].includes($scope.getCurrentViewId());
 	};
 
-	$scope.updateCollection = function() {
+	$scope.updateCollection = () => libraryFactory.reloadCollection();
+
+	$rootScope.$on('collectionUpdating', () => {
 		$scope.updateAvailable = false;
 		loadingCollection = true;
 
-		libraryFactory.resetCollection();
-		$rootScope.$emit('collectionUpdating');
-
-		// Playlists, genres, and folders can be loaded in parallel with the collection
-		libraryFactory.getPlaylists();
-		libraryFactory.getGenres();
-		libraryFactory.getRootFolder();
-		libraryFactory.getSmartList();
-
-		// load the music collection
 		libraryFactory.getCollection().then((collection) => {
 			// The "no content"/"click to scan"/"scanning" banner uses "collapsed" layout
 			// if there are any tracks already visible
@@ -93,7 +85,7 @@ function ($rootScope, $scope, $document, $timeout, $window,
 
 			loadingCollection = false;
 		});
-	};
+	});
 
 	const FILES_TO_SCAN_PER_STEP = 20;
 	let filesToScan = null;
@@ -140,7 +132,7 @@ function ($rootScope, $scope, $document, $timeout, $window,
 				} else {
 					$scope.scanning = false;
 					// Update the collection automatically once the scanning is completed. During the scanning, the user can also click the "update" button to update the collection.
-					$scope.updateCollection();
+					libraryFactory.reloadCollection();
 				}
 			}
 		});
@@ -176,7 +168,7 @@ function ($rootScope, $scope, $document, $timeout, $window,
 				if (confirmed) {
 					Restangular.all('removescanned').post({files: $scope.obsoleteFiles.join(',')}).then(_result => {
 						$scope.obsoleteFiles = null;
-						$scope.updateCollection();
+						libraryFactory.reloadCollection();
 					});
 				}
 			},
@@ -457,7 +449,7 @@ function ($rootScope, $scope, $document, $timeout, $window,
 	$scope.scanningTotal = 0;
 
 	// initial loading of the library data
-	$scope.updateCollection();
+	libraryFactory.reloadCollection();
 	libraryFactory.getRadioStations();
 	libraryFactory.getPodcastChannels();
 	libraryFactory.updateFavorites();

@@ -58,7 +58,7 @@ angular.module('Music').controller('SettingsViewController', [
 								if (data.success) {
 									$scope.errorPath = false;
 									$scope.settings.path = path;
-									parent.updateCollection();
+									libraryFactory.reloadCollection();
 									parent.updateFilesToScan();
 								} else {
 									$scope.errorPath = true;
@@ -173,7 +173,7 @@ angular.module('Music').controller('SettingsViewController', [
 									function(data) {
 										if (data.success) {
 											parent.resetScanned();
-											parent.updateCollection();
+											libraryFactory.reloadCollection();
 											parent.updateFilesToScan();
 										}
 										$scope.collectionResetOngoing = false;

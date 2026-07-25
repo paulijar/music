@@ -29,6 +29,20 @@ function (Restangular : IService, gettextCatalog : gettextCatalog, $rootScope : 
 	let radioStationsPromise : angular.IPromise<PlaylistEntry<RadioStation>[]> | null = null;
 	let podcastChannelsPromise : angular.IPromise<PodcastChannel[]> | null = null;
 
+	function resetCollection() : void {
+		collectionPromise = null;
+		rootFolderPromise = null;
+		playlistsPromise = null;
+		smartListPromise = null;
+		smartListParams = null;
+		genresPromise = null;
+		libraryService.setCollection([]);
+		libraryService.setFolders(null);
+		libraryService.setPlaylists([]);
+		libraryService.setSmartList(null);
+		libraryService.setGenres(null);
+	}
+
 	return {
 		getCollection() : angular.IPromise<Artist[]> {
 			if (!collectionPromise) {
@@ -50,8 +64,22 @@ function (Restangular : IService, gettextCatalog : gettextCatalog, $rootScope : 
 					OCA.Music.Dialogs.showNotification(errMsg + ' ' + reason);
 					return [];
 				});
+				$rootScope.$emit('collectionUpdating');
 			}
 			return collectionPromise;
+		},
+
+		reloadCollection() : angular.IPromise<Artist[]> {
+			resetCollection();
+
+			// Playlists, genres, folders, and smart list all depend on the collection and
+			// they are all loaded in parallel
+			this.getPlaylists();
+			this.getGenres();
+			this.getRootFolder();
+			this.getSmartList();
+
+			return this.getCollection();
 		},
 
 		getAllArtists() : angular.IPromise<Artist[]> {
@@ -153,20 +181,6 @@ function (Restangular : IService, gettextCatalog : gettextCatalog, $rootScope : 
 			return Promise.all([this.getCollection(), this.getPlaylists(), this.getPodcastChannels(), fetchFavoritesPromise]).then(
 				([_collection, _playlists, _podcastChannels, favorites]) => libraryService.setFavorites(favorites)
 			);
-		},
-
-		resetCollection() : void {
-			collectionPromise = null;
-			rootFolderPromise = null;
-			playlistsPromise = null;
-			smartListPromise = null;
-			smartListParams = null;
-			genresPromise = null;
-			libraryService.setCollection([]);
-			libraryService.setFolders(null);
-			libraryService.setPlaylists([]);
-			libraryService.setSmartList(null);
-			libraryService.setGenres(null);
 		},
 
 		resetRadioStations() : void {
