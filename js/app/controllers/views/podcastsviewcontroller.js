@@ -23,7 +23,6 @@ angular.module('Music').controller('PodcastsViewController', [
 
 		$scope.$on('$destroy', () => {
 			_.each(unsubFuncs, function(func) { func(); });
-			playQueueService.unsubscribeAll($scope);
 		});
 
 		// Wrap the supplied tracks as a playlist and pass it to the service for playing

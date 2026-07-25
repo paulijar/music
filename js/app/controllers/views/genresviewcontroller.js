@@ -139,7 +139,6 @@ angular.module('Music').controller('GenresViewController', [
 
 		$scope.$on('$destroy', () => {
 			_.each(unsubFuncs, function(func) { func(); });
-			playQueueService.unsubscribeAll($scope);
 		});
 
 		function initView() {

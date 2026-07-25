@@ -10,7 +10,6 @@
 
 import * as ng from 'angular';
 import { gettextCatalog } from 'angular-gettext';
-import { MusicRootScope } from 'app/config/musicrootscope';
 import { IService } from 'restangular';
 import { LibraryService, Playlist } from './libraryservice';
 

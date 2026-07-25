@@ -35,7 +35,6 @@ angular.module('Music').controller('AlbumsViewController', [
 
 		$scope.$on('$destroy', () => {
 			_.each(unsubFuncs, function(func) { func(); });
-			playQueueService.unsubscribeAll($scope);
 		});
 
 		// Prevent controller reload when the URL is updated with window.location.hash,

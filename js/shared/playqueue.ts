@@ -251,7 +251,7 @@ export class PlayQueue {
 		this.#eventDispatcher.on(name, listener, context);
 	}
 
-	unsubscribeAll(context : any) {
-		this.#eventDispatcher.off(null, null, context);
+	unsubscribe(name : string, context : any) {
+		this.#eventDispatcher.off(name, null, context);
 	}
 }

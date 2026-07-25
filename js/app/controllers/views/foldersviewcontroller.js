@@ -146,7 +146,6 @@ angular.module('Music').controller('FoldersViewController', [
 
 		$scope.$on('$destroy', () => {
 			_.each(unsubFuncs, (func) => func());
-			playQueueService.unsubscribeAll($scope);
 		});
 
 		libraryFactory.subscribe('collectionUpdating', $scope, () => {
