@@ -156,7 +156,7 @@ angular.module('Music').controller('PlaylistViewController', [
 		$timeout(initViewFromRoute);
 
 		// Reload the view if the currently viewed playlist got updated (by import from file)
-		subscribe('playlistUpdated', function(event, playlistId) {
+		libraryService.subscribe('playlistUpdated', $scope, (_event, playlistId) => {
 			if ($scope.playlist.id == playlistId) {
 				initViewFromRoute();
 			}

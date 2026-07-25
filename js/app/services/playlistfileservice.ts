@@ -15,10 +15,8 @@ import { IService } from 'restangular';
 import { LibraryService, Playlist } from './libraryservice';
 
 ng.module('Music').service('playlistFileService', [
-'$rootScope', '$q', 'libraryService', 'playlistService', 'gettextCatalog', 'Restangular',
-function(
-	$rootScope : MusicRootScope, $q : ng.IQService, libraryService : LibraryService, 
-	playlistService : any, gettextCatalog : gettextCatalog, Restangular : IService) {
+'$q', 'libraryService', 'playlistService', 'gettextCatalog', 'Restangular',
+function($q : ng.IQService, libraryService : LibraryService, playlistService : any, gettextCatalog : gettextCatalog, Restangular : IService) {
 
 	function queryOverwrite(path : string, onSelection : CallableFunction) {
 		const fileName = path.split('/').pop();
@@ -191,7 +189,6 @@ function(
 																			{ count: result.failed_count });
 							}
 							OCA.Music.Dialogs.showNotification(message);
-							$rootScope.$emit('playlistUpdated', playlist.id);
 							playlist.busy = false;
 							deferred.resolve(playlist);
 						},
@@ -250,7 +247,6 @@ function(
 																		{ count: result.failed_count });
 						}
 						OCA.Music.Dialogs.showNotification(message);
-						$rootScope.$emit('playlistUpdated', 'radio');
 						deferred.resolve();
 					},
 					function(_error) {

@@ -103,7 +103,7 @@ angular.module('Music').controller('RadioViewController', [
 		});
 
 		// Reload the view if the stations got updated (by import from file or renaming a station)
-		subscribe('playlistUpdated', function(event, playlistId, onlyReorder) {
+		libraryService.subscribe('playlistUpdated', $scope, (_event, playlistId, onlyReorder) => {
 			if (playlistId === 'radio') {
 				if (onlyReorder !== true) {
 					initView();
