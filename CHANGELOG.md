@@ -38,6 +38,8 @@
   * Show all values of multi-valued metadata tags
 - Attempt to restart the playing radio stream if it abruptly ends
   [nc-music#89](https://github.com/nc-music/music/issues/89)
+- Improved web UI view switching performance for huge libraries
+- Extensive internal refactoring on the web UI
 
 ### Fixed
 - HTTP redirection not working (e.g. on radio streams) when the `Location` header contains a relative URL
