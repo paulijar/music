@@ -49,6 +49,8 @@
 - Empty lines being hidden when viewing time-synced lyrics
 - Collapsible navigation pane (used on narrow screens) misbehaving when song/album/etc. dragged sideways and dropped anywhere else than the navigation pane
 - Dashboard widget not stopping the playback when "Next" button pressed on the last track of the queue
+- Web UI failing to load on NC33 if `OCA.Theming` not ready in time (systematically on Safari, randomly on Firefox and Chrome)
+  [#146](https://github.com/nc-music/music/issues/146)
 - Subsonic API:
   * Attribute `parent` misplaced in the response of `getMusicDirectory` when browsing by file system folders
   * Endpoints `savePlayQueue` and `savePlayQueueByIndex` not allowing an empty list to clear the queue
