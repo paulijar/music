@@ -63,9 +63,8 @@ function ($rootScope, $scope, $document, $timeout, $window, gettextCatalog, Rest
 		return window.location.hash.split('?')[0];
 	};
 
-	let loadingCollection = true;
 	$scope.loadIndicatorVisible = function() {
-		let contentNotReady = (loadingCollection || $rootScope.searchInProgress || $scope.checkingUnscanned);
+		let contentNotReady = ($rootScope.searchInProgress || $scope.checkingUnscanned);
 		return $rootScope.loading
 			|| (contentNotReady && $scope.viewingLibrary());
 	};
@@ -78,7 +77,10 @@ function ($rootScope, $scope, $document, $timeout, $window, gettextCatalog, Rest
 
 	libraryFactory.subscribe('collectionUpdating', $scope, () => {
 		$scope.updateAvailable = false;
-		loadingCollection = true;
+
+		if ($scope.viewingLibrary) {
+			$rootScope.loading = true;
+		}
 
 		libraryFactory.getCollection().then((collection) => {
 			// The "no content"/"click to scan"/"scanning" banner uses "collapsed" layout
@@ -89,8 +91,6 @@ function ($rootScope, $scope, $document, $timeout, $window, gettextCatalog, Rest
 			} else {
 				collapsiblePopups.removeClass('collapsed');
 			}
-
-			loadingCollection = false;
 		});
 	});
 
