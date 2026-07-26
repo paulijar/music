@@ -14,11 +14,12 @@ import { MusicRootScope } from 'app/config/musicrootscope';
 import { IService } from 'restangular';
 import { gettextCatalog } from 'angular-gettext';
 import { Artist, Folder, Genre, LibraryService, Playlist, PlaylistEntry, PodcastChannel, RadioStation } from 'app/services/libraryservice';
+import { IScanService } from 'app/services/scanservice';
 
 type SmartListParams = Record<string, string|number|boolean|null>;
 
-ng.module('Music').factory('libraryFactory', ['Restangular', 'gettextCatalog', '$rootScope', 'libraryService',
-function (Restangular : IService, gettextCatalog : gettextCatalog, $rootScope : MusicRootScope, libraryService : LibraryService) {
+ng.module('Music').factory('libraryFactory', ['Restangular', 'gettextCatalog', '$rootScope', 'libraryService', 'scanService',
+function (Restangular : IService, gettextCatalog : gettextCatalog, $rootScope : MusicRootScope, libraryService : LibraryService, scanService : IScanService) {
 
 	let collectionPromise : ng.IPromise<Artist[]> | null = null;
 	let rootFolderPromise : ng.IPromise<Folder> | null = null;
@@ -56,9 +57,18 @@ function (Restangular : IService, gettextCatalog : gettextCatalog, $rootScope : 
 
 		getCollection() : ng.IPromise<Artist[]> {
 			if (!collectionPromise) {
-				collectionPromise = Restangular.all('prepare_collection').post({}).then((reply) => {
-					return Restangular.all('collection').getList({ hash: reply.hash });
-				}).then((artists) => {
+				// During an ongoing scanning, using the `prepare_collection` would be pointless and
+				// waste of time and resources. By the time we would call GET `collection`, the server
+				// would likely have ditched the prepared collection anyway. And even if it hasn't, it
+				// would anyway be the next time we call `prepare_collection` and the client-side-cached
+				// collection could never by used.
+				const fetchCollectionPromise = scanService.isScanning()
+					? Restangular.all('collection').getList()
+					: Restangular.all('prepare_collection').post({}).then((reply) => {
+						return Restangular.all('collection').getList({ hash: reply.hash });
+					});
+
+				collectionPromise = fetchCollectionPromise.then((artists) => {
 					libraryService.setCollection(artists);
 					publish('collectionLoaded');
 					return libraryService.getCollection();
