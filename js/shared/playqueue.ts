@@ -93,6 +93,10 @@ export class PlayQueue {
 	 * -------------------------------
 	 */
 
+	isEmpty() : boolean {
+		return (this.#list === null);
+	}
+
 	getShuffle() : boolean {
 		return this.#shuffle;
 	}
