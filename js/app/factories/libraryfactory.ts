@@ -18,10 +18,11 @@ import { IScanService } from 'app/services/scanservice';
 
 type SmartListParams = Record<string, string|number|boolean|null>;
 
-ng.module('Music').factory('libraryFactory', ['Restangular', 'gettextCatalog', '$rootScope', 'libraryService', 'scanService',
-function (Restangular : IService, gettextCatalog : gettextCatalog, $rootScope : MusicRootScope, libraryService : LibraryService, scanService : IScanService) {
+ng.module('Music').factory('libraryFactory', ['Restangular', 'gettextCatalog', '$rootScope', '$q', 'libraryService', 'scanService',
+function (Restangular : IService, gettextCatalog : gettextCatalog, $rootScope : MusicRootScope, $q : ng.IQService, libraryService : LibraryService, scanService : IScanService) {
 
 	let collectionPromise : ng.IPromise<Artist[]> | null = null;
+	let deferredCollectionAbort : ng.IDeferred<void>|null = null;
 	let rootFolderPromise : ng.IPromise<Folder> | null = null;
 	let playlistsPromise : ng.IPromise<Playlist[]> | null = null;
 	let smartListPromise : ng.IPromise<Playlist> | null = null;
@@ -31,6 +32,11 @@ function (Restangular : IService, gettextCatalog : gettextCatalog, $rootScope : 
 	let podcastChannelsPromise : ng.IPromise<PodcastChannel[]> | null = null;
 
 	function resetCollection() : void {
+		if (deferredCollectionAbort !== null) {
+			deferredCollectionAbort.resolve();
+			deferredCollectionAbort = null;
+		}
+
 		collectionPromise = null;
 		rootFolderPromise = null;
 		playlistsPromise = null;
@@ -57,15 +63,18 @@ function (Restangular : IService, gettextCatalog : gettextCatalog, $rootScope : 
 
 		getCollection() : ng.IPromise<Artist[]> {
 			if (!collectionPromise) {
+				deferredCollectionAbort = $q.defer<void>();
+				const config = {timeout: deferredCollectionAbort.promise};
+
 				// During an ongoing scanning, using the `prepare_collection` would be pointless and
 				// waste of time and resources. By the time we would call GET `collection`, the server
 				// would likely have ditched the prepared collection anyway. And even if it hasn't, it
 				// would anyway be the next time we call `prepare_collection` and the client-side-cached
 				// collection could never by used.
 				const fetchCollectionPromise = scanService.isScanning()
-					? Restangular.all('collection').getList()
-					: Restangular.all('prepare_collection').post({}).then((reply) => {
-						return Restangular.all('collection').getList({ hash: reply.hash });
+					? Restangular.all('collection').withHttpConfig(config).getList()
+					: Restangular.all('prepare_collection').withHttpConfig(config).post({}).then((reply) => {
+						return Restangular.all('collection').withHttpConfig(config).getList({ hash: reply.hash });
 					});
 
 				collectionPromise = fetchCollectionPromise.then((artists) => {
@@ -73,17 +82,21 @@ function (Restangular : IService, gettextCatalog : gettextCatalog, $rootScope : 
 					publish('collectionLoaded');
 					return libraryService.getCollection();
 				}).catch((errorResponse) : Artist[] => {
-					const reason = {
-						401: gettextCatalog.getString('Not logged in'),
-						403: gettextCatalog.getString('Access denied'),
-						500: gettextCatalog.getString('Internal server error'),
-						504: gettextCatalog.getString('Timeout'),
-					}[errorResponse.status as string] ?? errorResponse.status;
+					if (errorResponse.status === -1) {
+						console.log('collection loading was aborted by user action');
+					} else {
+						const reason = {
+							401: gettextCatalog.getString('Not logged in'),
+							403: gettextCatalog.getString('Access denied'),
+							500: gettextCatalog.getString('Internal server error'),
+							504: gettextCatalog.getString('Timeout'),
+						}[errorResponse.status as string] ?? errorResponse.status;
 
-					const errMsg = gettextCatalog.getString('Failed to load the collection:');
-					OCA.Music.Dialogs.showNotification(errMsg + ' ' + reason);
+						const errMsg = gettextCatalog.getString('Failed to load the collection:');
+						OCA.Music.Dialogs.showNotification(errMsg + ' ' + reason);
+					}
 					return [];
-				});
+				}).finally(() => deferredCollectionAbort = null);
 				publish('collectionUpdating');
 			}
 			return collectionPromise;
@@ -111,7 +124,7 @@ function (Restangular : IService, gettextCatalog : gettextCatalog, $rootScope : 
 				const fetchFoldersPromise = Restangular.all('folders').getList();
 
 				// the collection has to be set on the libraryService before the folders can be set
-				rootFolderPromise = Promise.all([this.getCollection(), fetchFoldersPromise]).then(([_collection, folders]) => {
+				rootFolderPromise = $q.all([this.getCollection(), fetchFoldersPromise]).then(([_collection, folders]) => {
 					libraryService.setFolders(folders);
 					return libraryService.getRootFolder();
 				});
@@ -124,7 +137,7 @@ function (Restangular : IService, gettextCatalog : gettextCatalog, $rootScope : 
 				const fetchGenresPromise = Restangular.all('genres').getList();
 
 				// the collection has to be set on the libraryService before the genres can be set
-				genresPromise = Promise.all([this.getCollection(), fetchGenresPromise]).then(([_collection, genres]) => {
+				genresPromise = $q.all([this.getCollection(), fetchGenresPromise]).then(([_collection, genres]) => {
 					libraryService.setGenres(genres);
 					return libraryService.getAllGenres();
 				});
@@ -137,7 +150,7 @@ function (Restangular : IService, gettextCatalog : gettextCatalog, $rootScope : 
 				const fetchPlaylistsPromise = Restangular.all('playlists').getList({type: 'music-app'});
 
 				// the collection has to be set on the libraryService before the playlists can be set
-				playlistsPromise = Promise.all([this.getCollection(), fetchPlaylistsPromise]).then(([_collection, playlists]) => {
+				playlistsPromise = $q.all([this.getCollection(), fetchPlaylistsPromise]).then(([_collection, playlists]) => {
 					libraryService.setPlaylists(playlists);
 					return libraryService.getAllPlaylists();
 				});
@@ -151,7 +164,7 @@ function (Restangular : IService, gettextCatalog : gettextCatalog, $rootScope : 
 
 				const fetchSmartListPromise = Restangular.one('playlists/generate').get(genArgs);
 
-				smartListPromise = Promise.all([this.getCollection(), fetchSmartListPromise]).then(([_collection, smartList]) => {
+				smartListPromise = $q.all([this.getCollection(), fetchSmartListPromise]).then(([_collection, smartList]) => {
 					libraryService.setSmartList(smartList);
 					smartListParams = smartList.params;
 					publish('smartListLoaded');
@@ -198,7 +211,7 @@ function (Restangular : IService, gettextCatalog : gettextCatalog, $rootScope : 
 			const fetchFavoritesPromise = Restangular.one('favorites').get();
 
 			// collection, playlists, and podcasts have to be loaded before favorites can be set, because favorites can contain items from all of those
-			return Promise.all([this.getCollection(), this.getPlaylists(), this.getPodcastChannels(), fetchFavoritesPromise]).then(
+			return $q.all([this.getCollection(), this.getPlaylists(), this.getPodcastChannels(), fetchFavoritesPromise]).then(
 				([_collection, _playlists, _podcastChannels, favorites]) => libraryService.setFavorites(favorites)
 			);
 		},
