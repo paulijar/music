@@ -11,10 +11,10 @@
  */
 
 angular.module('Music').controller('MainController', [
-'$rootScope', '$scope', '$document', '$timeout', '$window',
-'libraryFactory', 'playQueueService', 'inViewService', 'gettextCatalog', 'Restangular',
-function ($rootScope, $scope, $document, $timeout, $window,
-		libraryFactory, playQueueService, inViewService, gettextCatalog, Restangular) {
+'$rootScope', '$scope', '$document', '$timeout', '$window', 'gettextCatalog', 'Restangular',
+'scanService', 'libraryFactory', 'playQueueService', 'inViewService',
+function ($rootScope, $scope, $document, $timeout, $window, gettextCatalog, Restangular,
+		scanService, libraryFactory, playQueueService, inViewService) {
 
 	gettextCatalog.currentLanguage = OC.getLanguage();
 
@@ -94,14 +94,21 @@ function ($rootScope, $scope, $document, $timeout, $window,
 		});
 	});
 
-	const FILES_TO_SCAN_PER_STEP = 20;
-	let filesToScan = null;
-	$scope.unscannedFiles = null;
-	$scope.dirtyFiles = null;
-	$scope.obsoleteFiles = null;
+	$scope.hideScanBar = function(event) {
+		event.stopPropagation();
+		// Acknowledge the scanning needs without taking any action. The page needs to be reloaded
+		// to check them again.
+		$scope.unscannedFiles = null;
+		$scope.dirtyFiles = null;
+		$scope.obsoleteFiles = null;
+	};
 
 	$scope.updateFilesToScan = function() {
+		$scope.unscannedFiles = null;
+		$scope.dirtyFiles = null;
+		$scope.obsoleteFiles = null;
 		$scope.checkingUnscanned = true;
+
 		Restangular.one('scanstate').get().then(function(state) {
 			$scope.checkingUnscanned = false;
 			$scope.unscannedFiles = state.unscannedFiles;
@@ -117,51 +124,33 @@ function ($rootScope, $scope, $document, $timeout, $window,
 		});
 	};
 
-	function processNextScanStep() {
-		let sliceEnd = $scope.scanningScanned + FILES_TO_SCAN_PER_STEP;
-		let filesForStep = filesToScan.slice($scope.scanningScanned, sliceEnd);
-		let params = {
-				files: filesForStep.join(','),
-				finalize: sliceEnd >= filesToScan.length
-		};
-		Restangular.all('scan').post(params).then(function(result) {
-			// Ignore the results if scanning has been cancelled while we
-			// were waiting for the result.
-			if ($scope.scanning) {
-				$scope.scanningScanned = sliceEnd;
-
-				if (result.filesScanned || result.albumCoversUpdated) {
-					$scope.updateAvailable = true;
-				}
-
-				if ($scope.scanningScanned < filesToScan.length) {
-					processNextScanStep();
-				} else {
-					$scope.scanning = false;
-					// Update the collection automatically once the scanning is completed. During the scanning, the user can also click the "update" button to update the collection.
-					libraryFactory.reloadCollection();
-				}
-			}
-		});
-	}
-
 	$scope.startScanning = function(fileIds) {
-		filesToScan = fileIds;
-		$scope.scanningScanned = 0;
-		$scope.scanningTotal = filesToScan.length;
+		scanService.scan(fileIds).then(
+			() => { // done
+				// Update the collection automatically. During the scanning, the user can also click the "update" button to update the collection.
+				$scope.scanning = false;
+				libraryFactory.reloadCollection();
+			},
+			(error) => {
+				$scope.scanning = false;
+				console.log('Scan aborted: ' + error);
+			},
+			(progress) => {
+				$scope.scanning = true;
+				$scope.scanningScanned = progress.scannedCount;
+				$scope.scanningTotal = progress.totalCount;
+				$scope.updateAvailable ||= (progress.scannedCount > 0);
+			}
+		);
 
 		if (fileIds === $scope.unscannedFiles) {
 			$scope.unscannedFiles = null;
 		} else if (fileIds === $scope.dirtyFiles) {
 			$scope.dirtyFiles = null;
 		}
-		$scope.scanning = true;
-		processNextScanStep();
 	};
 
-	$scope.stopScanning = function() {
-		$scope.scanning = false;
-	};
+	$scope.stopScanning = () => scanService.stopScan();
 
 	$scope.removeObsolete = function() {
 		const count = $scope.obsoleteFiles.length;
@@ -181,13 +170,6 @@ function ($rootScope, $scope, $document, $timeout, $window,
 			},
 			true
 		);
-	};
-
-	$scope.resetScanned = function() {
-		$scope.unscannedFiles = null;
-		$scope.dirtyFiles = null;
-		$scope.obsoleteFiles = null;
-		filesToScan = null;
 	};
 
 	function showDetails(entityType, id) {
@@ -248,15 +230,6 @@ function ($rootScope, $scope, $document, $timeout, $window,
 
 	$scope.hideSidebar = function() {
 		$rootScope.$emit('hideDetails');
-	};
-
-	$scope.hideScanBar = function(event) {
-		event.stopPropagation();
-		// Acknowledge the scanning needs without taking any action. The page needs to be reloaded
-		// to check them again.
-		$scope.unscannedFiles = null;
-		$scope.dirtyFiles = null;
-		$scope.obsoleteFiles = null;
 	};
 
 	function scrollOffset() {

@@ -26,21 +26,22 @@ angular.module('Music').controller('SettingsViewController', [
 		let savedExcludedPaths = [];
 
 		$scope.selectPath = function() {
+			// Store the parent reference before asynchronous actions;
+			// $scope.$parent may not be available any more in the callback in case
+			// the user has navigated to another view in the meantime.
+			const parent = $scope.$parent;
+
 			OCA.Music.Dialogs.folderPicker(
 				gettextCatalog.getString('Path to your music collection'),
-				function (path) {
+				(path) => {
 					if ($scope.settings.path !== path) {
 						$scope.pathChangeOngoing = true;
 
 						// Stop any ongoing scan if path got changed
-						$scope.$parent.stopScanning();
+						parent.stopScanning();
 
-						// Store the parent reference before posting the changed value to backend;
-						// $scope.$parent may not be available any more in the callback in case
-						// the user has navigated to another view in the meantime.
-						let parent = $scope.$parent;
 						Restangular.all('settings/user/path').post({value: path}).then(
-							function (data) {
+							(data) => {
 								if (data.success) {
 									$scope.errorPath = false;
 									$scope.settings.path = path;
@@ -51,15 +52,17 @@ angular.module('Music').controller('SettingsViewController', [
 								}
 								$scope.pathChangeOngoing = false;
 							},
-							function(_error) { // error handling
+							(_error) => { // error handling
 								$scope.pathChangeOngoing = false;
 								$scope.errorPath = true;
 							}
 						);
 					} else {
 						// Same path re-selected: check for unscanned/obsolete files without
-						// reloading the full collection.
-						$scope.$parent.updateFilesToScan();
+						// reloading the full collection, unless we are already scanning
+						if (!parent.scanning) {
+							parent.updateFilesToScan();
+						}
 					}
 				}
 			);
@@ -153,23 +156,22 @@ angular.module('Music').controller('SettingsViewController', [
 
 						// $scope.$parent may not be available any more in the callback in case
 						// the user has navigated to another view in the meantime
-						let parent = $scope.$parent;
-						let executeReset = function() {
+						const parent = $scope.$parent;
+						const executeReset = function() {
 							Restangular.all('resetscanned').post().then(
-									function(data) {
-										if (data.success) {
-											parent.resetScanned();
-											libraryFactory.reloadCollection();
-											parent.updateFilesToScan();
-										}
-										$scope.collectionResetOngoing = false;
-									},
-									function(error) { // error handling
-										$scope.collectionResetOngoing = false;
-										const errMsg = gettextCatalog.getString('Failed to reset the collection:');
-										OCA.Music.Dialogs.showNotification(errMsg + ' ' + error.status);
+								(data) => {
+									if (data.success) {
+										libraryFactory.reloadCollection();
+										parent.updateFilesToScan();
 									}
-								);
+									$scope.collectionResetOngoing = false;
+								},
+								(error) => { // error handling
+									$scope.collectionResetOngoing = false;
+									const errMsg = gettextCatalog.getString('Failed to reset the collection:');
+									OCA.Music.Dialogs.showNotification(errMsg + ' ' + error.status);
+								}
+							);
 						};
 
 						// Trigger the reset with a small delay. This is to tackle a small issue when
