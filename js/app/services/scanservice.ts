@@ -55,16 +55,17 @@ function($timeout : ng.ITimeoutService, $q : ng.IQService, Restangular : IServic
 		}
 
 		#processNextScanStep() : void {
-			const sliceEnd = this.#scannedCount + FILES_TO_SCAN_PER_STEP;
+			const totalCount = this.#fileIdsToScan.length;
+			const sliceEnd = Math.min(this.#scannedCount + FILES_TO_SCAN_PER_STEP, totalCount);
 			const filesForStep = this.#fileIdsToScan.slice(this.#scannedCount, sliceEnd);
 			const params = {
-					files: filesForStep.join(','),
-					finalize: sliceEnd >= this.#fileIdsToScan.length
+				files: filesForStep.join(','),
+				finalize: (filesForStep.length === 0)
 			};
 
 			this.#deferred!.notify({
 				scannedCount: this.#scannedCount,
-				totalCount: this.#fileIdsToScan.length
+				totalCount: totalCount
 			});
 
 			Restangular.all('scan').post(params).then((_result) => {
@@ -72,7 +73,7 @@ function($timeout : ng.ITimeoutService, $q : ng.IQService, Restangular : IServic
 				if (this.isScanning()) {
 					this.#scannedCount = sliceEnd;
 
-					if (this.#scannedCount < this.#fileIdsToScan.length) {
+					if (!params.finalize) {
 						this.#processNextScanStep();
 					} else if (this.#deferred !== null) {
 						this.#deferred.resolve();
