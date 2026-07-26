@@ -20,7 +20,7 @@ function($rootScope : MusicRootScope, $timeout : ng.ITimeoutService, $q : ng.IQS
 
 	// Private functions
 	function reloadChannel(channel : PodcastChannel) : ng.IPromise<any> {
-		let deferred = $q.defer();
+		let deferred = $q.defer<void>();
 
 		Restangular.one('podcasts', channel.id).all('update').post({prevHash: channel.hash}).then(
 			(result) => {
@@ -134,8 +134,8 @@ function($rootScope : MusicRootScope, $timeout : ng.ITimeoutService, $q : ng.IQS
 		},
 
 		// Show a popup dialog to add a new podcast channel from an RSS feed
-		showAddPodcastDialog() : ng.IPromise<any> {
-			const deferred = $q.defer();
+		showAddPodcastDialog() : ng.IPromise<void> {
+			const deferred = $q.defer<void>();
 
 			OC.dialogs.prompt(
 					gettextCatalog.getString('Add a new podcast channel from an RSS feed'),
@@ -160,8 +160,8 @@ function($rootScope : MusicRootScope, $timeout : ng.ITimeoutService, $q : ng.IQS
 		},
 
 		// Export podcast channels to an OPML file
-		exportToFile() : ng.IPromise<any> {
-			let deferred = $q.defer();
+		exportToFile() : ng.IPromise<void> {
+			let deferred = $q.defer<void>();
 
 			let selPath : string = null;
 
@@ -202,8 +202,8 @@ function($rootScope : MusicRootScope, $timeout : ng.ITimeoutService, $q : ng.IQS
 		},
 
 		// Import podcast channels from an OPML file
-		importFromFile() : ng.IPromise<any> {
-			let deferred = $q.defer();
+		importFromFile() : ng.IPromise<void> {
+			let deferred = $q.defer<void>();
 
 			OCA.Music.Dialogs.filePicker(
 				gettextCatalog.getString('Import podcast channels from the selected OPML file'),
@@ -239,7 +239,7 @@ function($rootScope : MusicRootScope, $timeout : ng.ITimeoutService, $q : ng.IQS
 		},
 
 		// Refresh the contents of the given podcast channel
-		reloadPodcastChannel(channel : PodcastChannel) : ng.IPromise<any> {
+		reloadPodcastChannel(channel : PodcastChannel) : ng.IPromise<void> {
 			return reloadChannel(channel).then((result) => {
 				if (result?.updated) {
 					OCA.Music.Dialogs.showNotification(
@@ -254,8 +254,8 @@ function($rootScope : MusicRootScope, $timeout : ng.ITimeoutService, $q : ng.IQS
 		},
 
 		// Refresh the contents of all the subscribed podcast channels
-		reloadAllPodcasts() : ng.IPromise<any> {
-			const deferred = $q.defer();
+		reloadAllPodcasts() : ng.IPromise<void> {
+			const deferred = $q.defer<void>();
 			const channels = libraryService.getAllPodcastChannels();
 			let index = 0;
 			let changeCount = 0;
@@ -291,8 +291,8 @@ function($rootScope : MusicRootScope, $timeout : ng.ITimeoutService, $q : ng.IQS
 		},
 
 		// Remove a single previously subscribed podcast channel
-		removePodcastChannel(channel : PodcastChannel) : ng.IPromise<any> {
-			const deferred = $q.defer();
+		removePodcastChannel(channel : PodcastChannel) : ng.IPromise<void> {
+			const deferred = $q.defer<void>();
 
 			const doDelete = function() {
 				deferred.notify('started');

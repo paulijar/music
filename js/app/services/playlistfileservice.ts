@@ -119,8 +119,8 @@ function($q : ng.IQService, libraryService : LibraryService, playlistService : a
 		},
 
 		// Export radio stations to file
-		exportRadio() : ng.IPromise<any> {
-			let deferred = $q.defer();
+		exportRadio() : ng.IPromise<void> {
+			let deferred = $q.defer<void>();
 
 			let selPath : string|null = null;
 
@@ -230,10 +230,10 @@ function($q : ng.IQService, libraryService : LibraryService, playlistService : a
 		},
 
 		// Import radio stations from a playlist file
-		importRadio: function() : ng.IPromise<any> {
-			let deferred = $q.defer();
+		importRadio: function() : ng.IPromise<void> {
+			let deferred = $q.defer<void>();
 
-			function onFileSelected(file : string) : ng.IPromise<any> {
+			function onFileSelected(file : string) : ng.IPromise<void> {
 				deferred.notify('started');
 
 				return Restangular.all('radio/import').post({filePath: file}).then(
