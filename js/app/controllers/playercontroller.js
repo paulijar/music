@@ -445,7 +445,7 @@ function ($scope, $rootScope, playQueueService, Audio, gettextCatalog, Restangul
 		$timeout(() => $scope.playPauseContextMenuVisible = true);
 	};
 	// hide the popup menu when the user clicks anywhere on the page
-	$document.click(function(_event) {
+	$document.on('click', function(_event) {
 		$timeout(() => $scope.playPauseContextMenuVisible = false);
 	});
 
@@ -499,11 +499,11 @@ function ($scope, $rootScope, playQueueService, Audio, gettextCatalog, Restangul
 		}
 	};
 
-	playQueueService.subscribe('play', function(_playingView = null, startOffset = 0) {
+	playQueueService.subscribe('play', $scope, (_playingView = null, startOffset = 0) => {
 		$scope.next(startOffset); /* fetch track and start playing*/
 	});
 
-	playQueueService.subscribe('togglePlayback', $scope.togglePlayback);
+	playQueueService.subscribe('togglePlayback', $scope, $scope.togglePlayback);
 
 	$scope.scrollToCurrentTrack = function() {
 		if ($scope.currentTrack) {
@@ -517,7 +517,7 @@ function ($scope, $rootScope, playQueueService, Audio, gettextCatalog, Restangul
 				}
 			};
 
-			if ($rootScope.currentView !== $rootScope.playingView) {
+			if ($scope.getCurrentViewId() !== $rootScope.playingView) {
 				$scope.navigateTo($rootScope.playingView, doScroll);
 			} else {
 				doScroll();
@@ -688,10 +688,7 @@ function ($scope, $rootScope, playQueueService, Audio, gettextCatalog, Restangul
 	* server, this looks like there's no logged in user. The token is used as an alternative means of
 	* authentication, which will provide access only to the cover art images.
 	*/
-	let coverArtToken = null;
-	$rootScope.$on('newCoverArtToken', function(_event, token) {
-		coverArtToken = token;
-	});
+	let coverArtToken = OCP.InitialState.loadState('music', 'cover_access_token');
 
 	/**
 	 * Media session API

@@ -22,7 +22,6 @@ use OCA\Music\Db\Maintenance;
 use OCA\Music\Http\ErrorResponse;
 use OCA\Music\Http\FileStreamResponse;
 use OCA\Music\Service\CollectionService;
-use OCA\Music\Service\CoverService;
 use OCA\Music\Service\DetailsService;
 use OCA\Music\Service\FileSystemService;
 use OCA\Music\Service\LastfmService;
@@ -40,7 +39,6 @@ use OCP\AppFramework\Http\DataDisplayResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\IRequest;
-use OCP\ISession;
 
 class MusicApiController extends Controller {
 
@@ -51,14 +49,12 @@ class MusicApiController extends Controller {
 		private GenreBusinessLayer $genreBusinessLayer,
 		private Scanner $scanner,
 		private CollectionService $collectionService,
-		private CoverService $coverService,
 		private DetailsService $detailsService,
 		private FileSystemService $fileSystemService,
 		private LastfmService $lastfmService,
 		private Maintenance $maintenance,
 		private LibrarySettings $librarySettings,
 		private ?string $userId, // null case should happen only when the user has already logged out
-		private ISession $session,
 		private Logger $logger,
 		private IScrobbler $scrobbler,
 	) {
@@ -81,12 +77,9 @@ class MusicApiController extends Controller {
 			$this->collectionService->getJson($this->user());
 			$hash = $this->collectionService->getCachedJsonHash($this->user());
 		}
-		$coverToken = $this->coverService->getAccessToken($this->user(), $this->session);
 
 		return new JSONResponse([
-			'hash'             => $hash,
-			'cover_token'      => $coverToken,
-			'ignored_articles' => $this->librarySettings->getIgnoredArticles($this->user())
+			'hash' => $hash,
 		]);
 	}
 
@@ -121,11 +114,7 @@ class MusicApiController extends Controller {
 	#[NoCSRFRequired]
 	public function genres() : JSONResponse {
 		$genres = $this->genreBusinessLayer->findAllWithTrackIds($this->user());
-		$unscanned = $this->trackBusinessLayer->findFilesWithoutScannedGenre($this->user());
-		return new JSONResponse([
-			'genres'    => \array_map(fn ($g) => $g->toApi(), $genres),
-			'unscanned' => $unscanned
-		]);
+		return new JSONResponse($genres);
 	}
 
 	#[NoAdminRequired]

@@ -188,16 +188,6 @@ class TrackBusinessLayer extends BusinessLayer implements IScrobbler {
 		return $this->mapper->getGenresByArtistId($artistId, $userId);
 	}
 
-	/**
-	 * Returns file IDs of the tracks which do not have genre scanned. This is not the same
-	 * thing as unknown genre, which is stored as empty string and means that the genre has
-	 * been scanned but was not found from the track metadata.
-	 * @return int[]
-	 */
-	public function findFilesWithoutScannedGenre(string $userId) : array {
-		return $this->mapper->findFilesWithoutScannedGenre($userId);
-	}
-
 	public function countByArtist(int $artistId) : int {
 		return $this->mapper->countByArtist($artistId);
 	}

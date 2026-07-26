@@ -537,23 +537,6 @@ class TrackMapper extends BaseMapper {
 	}
 
 	/**
-	 * Returns file IDs of the tracks which do not have genre scanned. This is not the same
-	 * thing as unknown genre, which means that the genre has been scanned but was not found
-	 * from the track metadata.
-	 * @return int[]
-	 */
-	public function findFilesWithoutScannedGenre(string $userId) : array {
-		$sql = 'SELECT `track`.`file_id` FROM `*PREFIX*music_tracks` `track`
-				INNER JOIN `*PREFIX*filecache` `file`
-				ON `track`.`file_id` = `file`.`fileid`
-				WHERE `genre_id` IS NULL and `user_id` = ?';
-		$result = $this->execute($sql, [$userId]);
-		$rows = $result->fetchAll(\PDO::FETCH_COLUMN);
-		$result->closeCursor();
-		return $rows;
-	}
-
-	/**
 	 * Update "last played" timestamp and increment the total play count of the track.
 	 * The DB row is updated *without* updating the `updated` column.
 	 * @return bool true if the track was found and updated, false otherwise

@@ -7,31 +7,19 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Morris Jobke 2013
- * @copyright Pauli Järvinen 2017 - 2025
+ * @copyright Pauli Järvinen 2017 - 2026
  */
 
 
 angular.module('Music').controller('PlaylistViewController', [
-	'$rootScope', '$scope', '$routeParams', 'playQueueService', 'libraryService',
-	'gettextCatalog', 'Restangular', '$timeout',
-	function ($rootScope, $scope, $routeParams, playQueueService, libraryService,
-			gettextCatalog, Restangular, $timeout) {
+	'$rootScope', '$scope', '$routeParams', 'playQueueService', 'libraryService', 'libraryFactory', 'gettextCatalog', 'Restangular', '$timeout',
+	function ($rootScope, $scope, $routeParams, playQueueService, libraryService, libraryFactory, gettextCatalog, Restangular, $timeout) {
+
+		const THIS_VIEW_ID = $scope.getCurrentViewId();
 
 		const INCREMENTAL_LOAD_STEP = 1000;
 		$scope.incrementalLoadLimit = INCREMENTAL_LOAD_STEP;
 		$scope.tracks = null;
-		$rootScope.currentView = $scope.getViewIdFromUrl();
-
-		// $rootScope listeners must be unsubscribed manually when the control is destroyed
-		let unsubFuncs = [];
-
-		function subscribe(event, handler) {
-			unsubFuncs.push( $rootScope.$on(event, handler) );
-		}
-
-		$scope.$on('$destroy', function() {
-			_.each(unsubFuncs, function(func) { func(); });
-		});
 
 		$scope.getCurrentTrackIndex = function() {
 			return listIsPlaying() ? $scope.$parent.currentTrackIndex : null;
@@ -135,7 +123,7 @@ angular.module('Music').controller('PlaylistViewController', [
 			}
 		};
 
-		subscribe('scrollToTrack', function(event, trackId) {
+		$rootScope.subscribe('scrollToTrack', $scope, function(_event, trackId) {
 			if ($scope.$parent) {
 				let currentIdx = $scope.getCurrentTrackIndex();
 				let index;
@@ -154,38 +142,37 @@ angular.module('Music').controller('PlaylistViewController', [
 			}
 		});
 
-		// Init happens either immediately (after making the loading animation visible)
-		// or once both aritsts and playlists have been loaded
 		$timeout(initViewFromRoute);
-		subscribe('collectionLoaded', initViewFromRoute);
-		subscribe('playlistsLoaded', initViewFromRoute);
 
 		// Reload the view if the currently viewed playlist got updated (by import from file)
-		subscribe('playlistUpdated', function(event, playlistId) {
+		libraryService.subscribe('playlistUpdated', $scope, (_event, playlistId) => {
 			if ($scope.playlist.id == playlistId) {
 				initViewFromRoute();
 			}
 		});
 
+		// Reload the view if the collection is updated (e.g. by change of the library path)
+		libraryFactory.subscribe('collectionUpdating', $scope, initViewFromRoute);
+
 		function listIsPlaying() {
-			return ($rootScope.playingView === $rootScope.currentView);
+			return ($rootScope.playingView === $scope.getCurrentViewId());
 		}
 
 		function showMore() {
 			// show more entries only if the view is not already (being) deactivated
-			if ($rootScope.currentView && $scope.$parent) {
+			if ($scope.$parent) {
 				$scope.incrementalLoadLimit += INCREMENTAL_LOAD_STEP;
 				if ($scope.incrementalLoadLimit < $scope.tracks.length) {
 					$timeout(showMore);
 				} else {
-					$rootScope.loading = false;
-					$rootScope.$emit('viewActivated');
+					$rootScope.$emit('viewActivated', THIS_VIEW_ID);
 				}
 			}
 		}
 
 		function initViewFromRoute() {
-			if (libraryService.collectionLoaded() && libraryService.playlistsLoaded()) {
+			$scope.tracks = null;
+			libraryFactory.getPlaylists().then(() => {
 				if ($routeParams.playlistId) {
 					let playlist = libraryService.getPlaylist($routeParams.playlistId);
 					if (playlist) {
@@ -198,22 +185,7 @@ angular.module('Music').controller('PlaylistViewController', [
 					}
 				}
 				$timeout(showMore);
-			}
+			});
 		}
-
-		function showLess() {
-			$scope.incrementalLoadLimit -= INCREMENTAL_LOAD_STEP;
-			if ($scope.incrementalLoadLimit > 0) {
-				$timeout(showLess);
-			} else {
-				$scope.incrementalLoadLimit = 0;
-				$rootScope.$emit('viewDeactivated');
-			}
-		}
-
-		subscribe('deactivateView', function() {
-			$timeout(showLess);
-		});
-
 	}
 ]);

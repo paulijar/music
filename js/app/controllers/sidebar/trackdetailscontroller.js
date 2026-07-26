@@ -81,7 +81,7 @@ angular.module('Music').controller('TrackDetailsController', [
 			}
 		});
 
-		$rootScope.$on('playerProgress', function(event, time) {
+		$rootScope.subscribe('playerProgress', $scope, (_event, time) => {
 			// check if we are viewing time-synced lyrics of the currently playing track
 			if ($scope.details && $scope.details.lyrics && $scope.details.lyrics.synced
 					&& $scope.$parent.currentTrack.id == $scope.track.id) {

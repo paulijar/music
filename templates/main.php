@@ -9,7 +9,7 @@ HtmlUtil::addWebpackStyle('app');
 ?>
 
 
-<div id="app" ng-app="Music" ng-strict-di ng-cloak ng-init="started = false; lang = '<?php HtmlUtil::p($_['lang']) ?>'">
+<div id="app" ng-app="Music" ng-strict-di ng-cloak ng-init="started = false">
 
 	<?php
 	HtmlUtil::printNgTemplate('views/albumsview');
@@ -36,7 +36,7 @@ HtmlUtil::addWebpackStyle('app');
 			</div>
 
 			<div id="controls-container">
-				<div id="app-navigation-toggle" ng-controller="SnapController" ng-click="toggle()" class="icon-menu"></div>
+				<div id="app-navigation-toggle" ng-controller="SnapController" ng-click="toggle()" ng-on-dragenter="itemDragToToggle()" class="icon-menu"></div>
 				<?php HtmlUtil::printPartial('controls'); ?>
 			</div>
 
@@ -103,8 +103,8 @@ HtmlUtil::addWebpackStyle('app');
 				</div>
 			</div>
 
-			<img id="updateData" ng-show="updateAvailable && currentView!='#/settings'"
-				 class="svg clickable" src="<?php HtmlUtil::printSvgPath('reload') ?>" ng-click="update()"
+			<img id="updateData" ng-show="updateAvailable && getCurrentViewId() != '#/settings'"
+				 class="svg clickable" src="<?php HtmlUtil::printSvgPath('reload') ?>" ng-click="updateCollection()"
 				 alt  ="{{ 'New music available. Click here to reload the music library.' | translate }}"
 				 title="{{ 'New music available. Click here to reload the music library.' | translate }}" >
 

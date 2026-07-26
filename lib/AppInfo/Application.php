@@ -25,6 +25,8 @@ use OCA\Music\Hooks\ShareHooks;
 use OCA\Music\Hooks\UserHooks;
 use OCA\Music\Middleware\AmpacheMiddleware;
 use OCA\Music\Middleware\SubsonicMiddleware;
+use OCA\Music\Service\CoverService;
+use OCA\Music\Service\LibrarySettings;
 use OCA\Music\Service\Scrobbling\AggregateScrobbler;
 use OCA\Music\Service\Scrobbling\ExternalScrobbler;
 use OCA\Music\Service\Scrobbling\IScrobbler;
@@ -36,6 +38,7 @@ use OCP\AppFramework\Services\IInitialState;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
 use OCP\IRequest;
+use OCP\ISession;
 use OCP\IURLGenerator;
 use OCP\Security\IContentSecurityPolicyManager;
 use OCP\Security\ICrypto;
@@ -64,6 +67,16 @@ class Application extends App implements IBootstrap {
 
 		$initialState = $this->get(IInitialState::class);
 		$initialState->provideInitialState('default_volume', $this->get(IConfig::class)->getSystemValue('music.default_volume', 50));
+
+		$userId = $this->get('userId');
+		if ($userId !== null) {
+			$libSettings = $this->get(LibrarySettings::class);
+			$coverService = $this->get(CoverService::class);
+			$session = $this->get(ISession::class);
+
+			$initialState->provideInitialState('ignored_articles', $libSettings->getIgnoredArticles($userId));
+			$initialState->provideInitialState('cover_access_token', $coverService->getAccessToken($userId, $session));
+		}
 	}
 
 	public function init() : void {
