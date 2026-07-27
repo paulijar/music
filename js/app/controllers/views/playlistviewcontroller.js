@@ -67,6 +67,8 @@ angular.module('Music').controller('PlaylistViewController', [
 			}
 		};
 
+		$scope.draggedIndex = -1;
+
 		$scope.getDraggable = function(index) {
 			$scope.draggedIndex = index;
 			let track = $scope.tracks[index].track;
@@ -75,6 +77,8 @@ angular.module('Music').controller('PlaylistViewController', [
 				srcIndex: index
 			};
 		};
+
+		$rootScope.subscribe('ANGULAR_DRAG_END', $scope, () => $scope.draggedIndex = -1);
 
 		$scope.reorderDrop = function(draggable, dstIndex) {
 			let listId = $scope.playlist.id;

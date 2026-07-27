@@ -5,7 +5,7 @@
 			<img class="play svg" alt="{{ 'Play' | translate }}" src="<?php \OCA\Music\Utility\HtmlUtil::printSvgPath('play-small') ?>"/>
 		</span>
 	</h1>
-	<ul class="track-list" ng-if="tracks" vs-repeat="{scrollParent: '#app-content', scrollMargin: 10000}">
+	<ul class="track-list" ng-if="tracks" vs-repeat="{scrollParent: '#app-content', scrollMargin: 3000}" vs-repeat-options="{latch: draggedIndex >= 0}">
 		<li ng-repeat="entry in tracks"
 			ng-init="song = entry.track"
 			id="{{ 'playlist-track-' + entry.index }}"
