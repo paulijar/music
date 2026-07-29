@@ -230,7 +230,7 @@ class AmpacheController extends ApiController {
 
 				$parameterExtractor = new RequestParameterExtractor($this->request, ['limit' => $limitFilter]);
 				try {
-					$parameterValues = $parameterExtractor->getParametersForMethod($this, $action);
+					$parameterValues = $parameterExtractor->getParametersForMethod($reflection);
 				} catch (RequestParameterExtractorException $ex) {
 					throw new AmpacheException($ex->getMessage(), 400);
 				}

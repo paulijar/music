@@ -170,7 +170,7 @@ class SubsonicController extends ApiController {
 			if (!empty($reflection->getAttributes(SubsonicAPI::class))) {
 				$parameterExtractor = new RequestParameterExtractor($this->request);
 				try {
-					$parameterValues = $parameterExtractor->getParametersForMethod($this, $method);
+					$parameterValues = $parameterExtractor->getParametersForMethod($reflection);
 				} catch (RequestParameterExtractorException $ex) {
 					return $this->subsonicErrorResponse(10, $ex->getMessage());
 				}
