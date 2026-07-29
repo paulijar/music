@@ -142,12 +142,26 @@ angular.module('Music').controller('PlaylistViewController', [
 				// Because of the virtualization, the target element might not exist in the DOM tree yet.
 				// Hence, we can't just scroll to the element but need to manually calculate, where that
 				// element should be. The vs-repeat directive will instantiate the element once we are there.
+
+				// While searching, the effective index within the visible items may differ from the original index
+				if ($rootScope.searchMode) {
+					for (let i = index; i >= 0; --i) {
+						if (!$scope.tracks[i].searchMatched) {
+							--index;
+						}
+					}
+				}
+
 				const itemHeight = $('.vs-repeat-repeated-element').outerHeight();
 				const offset = itemHeight * index + $('.track-list').position().top - $scope.scrollOffset();
 				const animationTime = 500;
 				OCA.Music.Utils.getScrollContainer().scrollTo(0, offset, animationTime);
 			}
 		});
+
+		$scope.entryNotHidden = function(entry) {
+			return !$rootScope.searchMode || entry.searchMatched;
+		};
 
 		$timeout(initViewFromRoute);
 

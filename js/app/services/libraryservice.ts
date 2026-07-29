@@ -834,11 +834,9 @@ export class LibraryService {
 		let tracks = _.map(this.#smartList.tracks, 'track');
 		return this.#search(tracks, ['title', 'artist.name'], query, maxResults);
 	}
-	searchTracksInPlaylist(playlistId : number, query : string, maxResults = Infinity) : SearchResult<Track> {
+	searchPlaylistEntries(playlistId : number, query : string, maxResults = Infinity) : SearchResult<PlaylistEntry<Track>> {
 		let entries = this.getPlaylist(playlistId)?.tracks || [];
-		let tracks = _.map(entries, 'track');
-		tracks = _.uniq(tracks);
-		return this.#search(tracks, ['title', 'artist.name'], query, maxResults);
+		return this.#search(entries, ['track.title', 'track.artist.name'], query, maxResults);
 	}
 	searchRadioStations(query : string, maxResults = Infinity) : SearchResult<RadioStation> {
 		let stations = _.map(this.#radioStations, 'track');

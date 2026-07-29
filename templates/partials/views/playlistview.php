@@ -6,7 +6,7 @@
 		</span>
 	</h1>
 	<ul class="track-list" ng-if="tracks" vs-repeat="{scrollParent: '#app-content', scrollMargin: 3000}" vs-repeat-options="{latch: draggedIndex >= 0}">
-		<li ng-repeat="entry in tracks"
+		<li ng-repeat="entry in tracks | filter:entryNotHidden"
 			ng-init="song = entry.track"
 			id="{{ 'playlist-track-' + entry.index }}"
 			data-track-id="{{ ::song.id }}"
