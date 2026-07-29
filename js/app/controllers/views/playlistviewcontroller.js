@@ -125,22 +125,27 @@ angular.module('Music').controller('PlaylistViewController', [
 			}
 		};
 
-		$rootScope.subscribe('scrollToTrack', $scope, function(_event, trackId) {
+		$rootScope.subscribe('scrollToTrack', $scope, (_event, trackId) => {
 			if ($scope.$parent) {
-				let currentIdx = $scope.getCurrentTrackIndex();
+				const currentIdx = $scope.getCurrentTrackIndex();
 				let index;
 
 				// There may be more than one playlist entry with the same track ID.
 				// Prefer to scroll to the currently playing entry if the requested
 				// track ID matches that. Otherwise scroll to the first match.
-				if (currentIdx &&  $scope.tracks[currentIdx].track.id == trackId) {
+				if (currentIdx !== null && $scope.tracks[currentIdx].track.id == trackId) {
 					index = currentIdx;
 				} else {
-					index = _.findIndex($scope.tracks, function(entry) {
-						return entry.track.id == trackId;
-					});
+					index = _.findIndex($scope.tracks, (entry) => entry.track.id == trackId);
 				}
-				$scope.$parent.scrollToItem('playlist-track-' + index);
+
+				// Because of the virtualization, the target element might not exist in the DOM tree yet.
+				// Hence, we can't just scroll to the element but need to manually calculate, where that
+				// element should be. The vs-repeat directive will instantiate the element once we are there.
+				const itemHeight = $('.vs-repeat-repeated-element').outerHeight();
+				const offset = itemHeight * index + $('.track-list').position().top - $scope.scrollOffset();
+				const animationTime = 500;
+				OCA.Music.Utils.getScrollContainer().scrollTo(0, offset, animationTime);
 			}
 		});
 
