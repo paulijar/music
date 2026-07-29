@@ -72,6 +72,10 @@ class AdvSearchRules {
 				$l10n->t('Playlist') => [
 					'playlist'      => $l10n->t('Playlist'),
 					'playlist_name' => $l10n->t('Playlist name'),
+				],
+				$l10n->t('MusicBrainz') => [
+					'mbid_song'      => $l10n->t('MusicBrainz recording id'),
+					'mbid_rel_track' => $l10n->t('MusicBrainz release track id'),
 				]
 			],
 			'album' => [
@@ -112,6 +116,10 @@ class AdvSearchRules {
 				$l10n->t('Playlist') => [
 					'playlist'      => $l10n->t('Playlist'),
 					'playlist_name' => $l10n->t('Playlist name'),
+				],
+				$l10n->t('MusicBrainz') => [
+					'mbid_song'      => $l10n->t('MusicBrainz recording id'),
+					'mbid_rel_track' => $l10n->t('MusicBrainz release track id'),
 				]
 			],
 			'artist' => [
@@ -149,6 +157,10 @@ class AdvSearchRules {
 				$l10n->t('Playlist') => [
 					'playlist'      => $l10n->t('Playlist'),
 					'playlist_name' => $l10n->t('Playlist name'),
+				],
+				$l10n->t('MusicBrainz') => [
+					'mbid_song'      => $l10n->t('MusicBrainz recording id'),
+					'mbid_rel_track' => $l10n->t('MusicBrainz release track id'),
 				]
 			],
 			'playlist' => [
