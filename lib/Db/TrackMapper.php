@@ -621,6 +621,7 @@ class TrackMapper extends BaseMapper {
 			'comment'           => "$conv(`comment`) $sqlOp $conv(?)",
 			'mbid_album'        => "$conv(`album`.`mbid`) $sqlOp $conv(?)",
 			'mbid_artist'       => "$conv(`artist`.`mbid`) $sqlOp $conv(?)",
+			'mbid_rel_track'    => "$conv(`mbid_rel_track`) $sqlOp $conv(?)"
 		];
 
 		// Add alias rules
