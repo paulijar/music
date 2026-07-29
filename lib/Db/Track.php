@@ -42,6 +42,8 @@ use OCP\IURLGenerator;
  * @method void setMimetype(string $mimetype)
  * @method ?string getMbid()
  * @method void setMbid(?string $mbid)
+ * @method ?string getMbidRelTrack()
+ * @method void setMbidRelTrack(?string $mbid)
  * @method ?string getStarred()
  * @method void setStarred(?string $timestamp)
  * @method int getRating()
@@ -81,7 +83,8 @@ class Track extends Entity {
 	public int $fileId = 0;
 	public ?int $bitrate = null;
 	public string $mimetype = '';
-	public ?string $mbid = null;
+	public ?string $mbid = null; // MusicBrainz Recording Id
+	public ?string $mbidRelTrack = null; // MusicBrainz Release Track Id
 	public ?string $starred = null;
 	public int $rating = 0;
 	public ?int $genreId = null;

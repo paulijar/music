@@ -12,7 +12,7 @@ use OCP\Migration\SimpleMigrationStep;
 /**
  * Migrate the DB schema to Music v3.2.0 level from the v2.1.0 level
  */
-class Version030200Date20260613233000 extends SimpleMigrationStep {
+class Version030200Date20260729204000 extends SimpleMigrationStep {
 
 	/**
 	 * @param IOutput $output
@@ -25,19 +25,25 @@ class Version030200Date20260613233000 extends SimpleMigrationStep {
 		$schema = $schemaClosure();
 
 		$tracks = $schema->getTable('music_tracks');
-		if (!$tracks->hasColumn('bpm')) {
-			$tracks->addColumn('bpm', 'integer', ['notnull' => false, 'unsigned' => true]);
-		}
-		if (!$tracks->hasColumn('composer_id')) {
-			$tracks->addColumn('composer_id', 'integer', ['notnull' => false, 'unsigned' => true]);
-		}
-		if (!$tracks->hasColumn('comment')) {
-			$tracks->addColumn('comment', 'text', ['notnull' => false]);
-		}
+
+		self::addColumnIfMissing($tracks, 'bpm', 'integer', ['notnull' => false, 'unsigned' => true]);
+		self::addColumnIfMissing($tracks, 'composer_id', 'integer', ['notnull' => false, 'unsigned' => true]);
+		self::addColumnIfMissing($tracks, 'comment', 'text', ['notnull' => false]);
+		self::addColumnIfMissing($tracks, 'mbid_rel_track', 'string', ['notnull' => false, 'length' => 36]);
+
 		if (!$tracks->hasIndex('music_tracks_composer_id_idx')) {
 			$tracks->addIndex(['composer_id'], 'music_tracks_composer_id_idx');
 		}
 
 		return $schema;
+	}
+
+	/**
+	 * @param \Doctrine\DBAL\Schema\Table $table
+	 */
+	private static function addColumnIfMissing($table, string $name, string $type, array $args) : void {
+		if (!$table->hasColumn($name)) {
+			$table->addColumn($name, $type, $args);
+		}
 	}
 }

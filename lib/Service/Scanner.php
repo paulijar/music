@@ -186,7 +186,7 @@ class Scanner extends PublicEmitter {
 		$track = $this->trackBusinessLayer->addOrUpdateTrack(
 				$meta['title'], $meta['trackNumber'], $meta['discNumber'], $meta['year'], $genre->getId(),
 				$artistId, $albumId, $fileId, $mimetype, $userId, $meta['length'], $meta['bitrate'],
-				$meta['bpm'], $composerId, $meta['comment']);
+				$meta['bpm'], $composerId, $meta['comment'], $meta['mb_recording_id'], $meta['mb_release_track_id']);
 
 		// if present, use the embedded album art as cover for the respective album
 		if (!empty($meta['picture'])) {
@@ -298,6 +298,10 @@ class Scanner extends PublicEmitter {
 		$meta['length'] = self::normalizeUnsigned($fileInfo['playtime_seconds'] ?? null);
 
 		$meta['bitrate'] = self::normalizeUnsigned($fileInfo['audio']['bitrate'] ?? null);
+
+		// MusicBrainz IDs
+		$meta['mb_recording_id'] = ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Recording Id', 'musicbrainz_trackid']);
+		$meta['mb_release_track_id'] = ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Release Track Id', 'musicbrainz_releasetrackid']);
 
 		return $meta;
 	}
