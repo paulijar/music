@@ -619,8 +619,8 @@ class TrackMapper extends BaseMapper {
 			'recent_played'     => "`*PREFIX*music_tracks`.`id` IN (SELECT * FROM (SELECT `id` FROM `*PREFIX*music_tracks` WHERE `user_id` = ? ORDER BY `last_played` DESC LIMIT $sqlOp) mysqlhack)",
 			'file'              => "$conv(`file`.`name`) $sqlOp $conv(?)",
 			'comment'           => "$conv(`comment`) $sqlOp $conv(?)",
-			'mbid_album'        => "`album`.`mbid` $sqlOp ?",
-			'mbid_artist'       => "`artist`.`mbid` $sqlOp ?"
+			'mbid_album'        => "$conv(`album`.`mbid`) $sqlOp $conv(?)",
+			'mbid_artist'       => "$conv(`artist`.`mbid`) $sqlOp $conv(?)",
 		];
 
 		// Add alias rules

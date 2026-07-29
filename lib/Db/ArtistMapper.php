@@ -255,8 +255,8 @@ class ArtistMapper extends BaseMapper {
 			'playlist_name' => "`*PREFIX*music_artists`.`id` IN (SELECT `artist_id` FROM `*PREFIX*music_tracks` `t` WHERE EXISTS (SELECT 1 from `*PREFIX*music_playlists` `p` WHERE $conv(`p`.`name`) $sqlOp $conv(?) AND `p`.`track_ids` LIKE " . $this->sqlConcat("'%|'", '`t`.`id`', "'|%'") . '))',
 			'file'          => "`*PREFIX*music_artists`.`id` IN (SELECT `artist_id` FROM `*PREFIX*music_tracks` `t` JOIN `*PREFIX*filecache` `f` ON `t`.`file_id` = `f`.`fileid` WHERE $conv(`f`.`name`) $sqlOp $conv(?))",
 			'recent_played' => "`*PREFIX*music_artists`.`id` IN (SELECT `artist_id` FROM (SELECT `artist_id`, MAX(`last_played`) FROM `*PREFIX*music_tracks` WHERE `user_id` = ? GROUP BY `artist_id` ORDER BY MAX(`last_played`) DESC LIMIT $sqlOp) mysqlhack)",
-			'mbid_song'     => "`*PREFIX*music_artists`.`id` IN (SELECT `artist_id` FROM `*PREFIX*music_tracks` `t` WHERE `t`.`mbid` $sqlOp ?)",
-			'mbid_album'    => "`*PREFIX*music_artists`.`id` IN (SELECT `album_artist_id` from `*PREFIX*music_albums` `al` WHERE `al`.`mbid` $sqlOp ?)",
+			'mbid_song'     => "`*PREFIX*music_artists`.`id` IN (SELECT `artist_id` FROM `*PREFIX*music_tracks` `t` WHERE $conv(`t`.`mbid`) $sqlOp $conv(?))",
+			'mbid_album'    => "`*PREFIX*music_artists`.`id` IN (SELECT `album_artist_id` from `*PREFIX*music_albums` `al` WHERE $conv(`al`.`mbid`) $sqlOp (?))",
 			'has_image'     => "`cover_file_id` $sqlOp" // operator "IS NULL" or "IS NOT NULL"
 		];
 

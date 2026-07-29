@@ -770,7 +770,7 @@ abstract class BaseMapper extends Mapper {
 			case 'rating':			return "`$table`.`rating` $sqlOp ?";
 			case 'added':			return "`$table`.`created` $sqlOp ?";
 			case 'updated':			return "`$table`.`updated` $sqlOp ?";
-			case 'mbid':			return "`$table`.`mbid` $sqlOp ?";
+			case 'mbid':			return "$conv(`$table`.`mbid`) $sqlOp $conv(?)";
 			case 'recent_added':	return "`$table`.`id` IN (SELECT * FROM (SELECT `id` FROM `$table` WHERE `user_id` = ? ORDER BY `created` DESC LIMIT $sqlOp) mysqlhack)";
 			case 'recent_updated':	return "`$table`.`id` IN (SELECT * FROM (SELECT `id` FROM `$table` WHERE `user_id` = ? ORDER BY `updated` DESC LIMIT $sqlOp) mysqlhack)";
 			default:				throw new \DomainException("Rule '$rule' not supported on this entity type");
