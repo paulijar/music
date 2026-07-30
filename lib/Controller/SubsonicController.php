@@ -1401,6 +1401,7 @@ class SubsonicController extends ApiController {
 			'sortName'      => $this->nameWithoutArticle($artist->getName()) ?? '', // OpenSubsonic
 			'mediaType'     => 'artist', // OpenSubsonic, only specified for the "old" API but we don't separate the APIs here
 			'roles'         => $artist->getRoles(), // OpenSubsonic
+			'musicBrainzId' => $artist->getMbid(), // OpenSubsonic
 		];
 
 		if (!empty($artist->getCoverFileId())) {
@@ -1457,6 +1458,7 @@ class SubsonicController extends ApiController {
 			'genre'         => \implode(', ', $genres) ?: null,
 			'genres'        => \array_map(fn ($name) => ['name' => $name], $genres), // OpenSubsonic
 			'sortName'      => $this->nameWithoutArticle($album->getName()) ?? '', // OpenSubsonic
+			'musicBrainzId' => $album->getMbid(), // OpenSubsonic
 		];
 	}
 

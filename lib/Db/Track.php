@@ -282,6 +282,7 @@ class Track extends Entity {
 			'mode'                  => null, // cbr/vbr
 			'rate'                  => null, // sample rate [Hz]
 			'comment'               => $this->getComment() ?: null,
+			'mbid'                  => $this->getMbid(),
 			'replaygain_album_gain' => null,
 			'replaygain_album_peak' => null,
 			'replaygain_track_gain' => null,
@@ -358,6 +359,7 @@ class Track extends Entity {
 			'playCount'       => $this->getPlayCount(),
 			'played'          => Util::formatZuluDateTime($this->getLastPlayed()) ?? '', // OpenSubsonic
 			'sortName'        => StringUtil::splitPrefixAndBasename($this->getTitle(), $ignoredArticles)['basename'], // OpenSubsonic
+			'musicBrainzId'   => $this->getMbid(), // OpenSubsonic
 		];
 	}
 
