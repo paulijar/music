@@ -620,6 +620,7 @@ class TrackMapper extends BaseMapper {
 			'file'              => "$conv(`file`.`name`) $sqlOp $conv(?)",
 			'comment'           => "$conv(`comment`) $sqlOp $conv(?)",
 			'mbid_album'        => "$conv(`album`.`mbid`) $sqlOp $conv(?)",
+			'mbid_album_group'  => "$conv(`album`.`mbid_group`) $sqlOp $conv(?)",
 			'mbid_artist'       => "$conv(`artist`.`mbid`) $sqlOp $conv(?)",
 			'mbid_rel_track'    => "$conv(`mbid_rel_track`) $sqlOp $conv(?)"
 		];
@@ -645,6 +646,7 @@ class TrackMapper extends BaseMapper {
 			'`*PREFIX*music_tracks`.`mbid`',
 			'`*PREFIX*music_tracks`.`mbid_rel_track`',
 			'`album`.`mbid`',
+			'`album`.`mbid_group`',
 			'`artist`.`mbid`',
 		];
 		$parts = \array_map(fn ($field) => "$conv($field) $sqlOp $conv(?)", $fields);

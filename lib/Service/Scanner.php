@@ -169,7 +169,7 @@ class Scanner extends PublicEmitter {
 		$albumArtistId = $albumArtist->getId();
 
 		// add/update album and get album entity
-		$album = $this->albumBusinessLayer->addOrUpdateAlbum($meta['album'], $albumArtistId, $userId);
+		$album = $this->albumBusinessLayer->addOrUpdateAlbum($meta['album'], $albumArtistId, $meta['mb_release_id'], $meta['mb_release_group_id'], $userId);
 		$albumId = $album->getId();
 
 		// add/update genre and get genre entity
@@ -314,6 +314,12 @@ class Scanner extends PublicEmitter {
 		);
 		$meta['mb_composer_id'] = self::normalizeMbid(
 			ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Composer Id', 'musicbrainz_composerid'])
+		);
+		$meta['mb_release_id'] = self::normalizeMbid(
+			ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Album Id', 'musicbrainz_albumid'])
+		);
+		$meta['mb_release_group_id'] = self::normalizeMbid(
+			ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Release Group Id', 'musicbrainz_releasegroupid'])
 		);
 
 		return $meta;

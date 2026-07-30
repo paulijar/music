@@ -316,22 +316,27 @@ class AlbumBusinessLayer extends BusinessLayer {
 
 	/**
 	 * Adds an album if it does not exist already or updates an existing album
-	 * @param string|null $name the name of the album
+	 * @param ?string $name the name of the album
 	 * @param integer $albumArtistId
+	 * @param ?string $mbid the MusicBrainz Release Id of the album
+	 * @param ?string $mbidGroup the MusicBrainz Release Group Id of the album
 	 * @param string $userId
 	 * @return Album The added/updated album
 	 */
-	public function addOrUpdateAlbum(?string $name, int $albumArtistId, string $userId) : Album {
+	public function addOrUpdateAlbum(?string $name, int $albumArtistId, ?string $mbid, ?string $mbidGroup, string $userId) : Album {
 		// Generate hash from the set of fields forming the album identity to prevent duplicates.
 		// The uniqueness of album name is evaluated in case-insensitive manner.
 		$lowerName = \mb_strtolower($name ?? '');
 		$hash = \hash('md5', "$lowerName|$albumArtistId");
 
-		return $this->cachedGet($userId, $hash, function () use ($name, $albumArtistId, $userId, $hash) {
+		// TODO: utilize the MBID to decide the identity of the album
+		return $this->cachedGet($userId, $hash, function () use ($name, $albumArtistId, $mbid, $mbidGroup, $userId, $hash) {
 			$album = new Album();
 			$album->setName(StringUtil::truncate($name, 256)); // some DB setups can't truncate automatically to column max size
 			$album->setUserId($userId);
 			$album->setAlbumArtistId($albumArtistId);
+			$album->setMbid($mbid);
+			$album->setMbidGroup($mbidGroup);
 			$album->setHash($hash);
 			return $this->mapper->updateOrInsert($album);
 		});
