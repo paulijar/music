@@ -161,11 +161,11 @@ class Scanner extends PublicEmitter {
 		$time2 = \hrtime(true);
 
 		// add/update artist and get artist entity
-		$artist = $this->artistBusinessLayer->addOrUpdateArtist($meta['artist'], $userId);
+		$artist = $this->artistBusinessLayer->addOrUpdateArtist($meta['artist'], $meta['mb_artist_id'], $userId);
 		$artistId = $artist->getId();
 
 		// add/update albumArtist and get artist entity
-		$albumArtist = $this->artistBusinessLayer->addOrUpdateArtist($meta['albumArtist'], $userId);
+		$albumArtist = $this->artistBusinessLayer->addOrUpdateArtist($meta['albumArtist'], $meta['mb_release_artist_id'], $userId);
 		$albumArtistId = $albumArtist->getId();
 
 		// add/update album and get album entity
@@ -178,7 +178,7 @@ class Scanner extends PublicEmitter {
 		// add/update composer artist and get artist entity (if composer metadata exists)
 		$composerId = null;
 		if (!empty($meta['composer'])) {
-			$composerArtist = $this->artistBusinessLayer->addOrUpdateArtist($meta['composer'], $userId);
+			$composerArtist = $this->artistBusinessLayer->addOrUpdateArtist($meta['composer'], $meta['mb_composer_id'], $userId);
 			$composerId = $composerArtist->getId();
 		}
 
@@ -302,6 +302,9 @@ class Scanner extends PublicEmitter {
 		// MusicBrainz IDs
 		$meta['mb_recording_id'] = ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Recording Id', 'musicbrainz_trackid']);
 		$meta['mb_release_track_id'] = ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Release Track Id', 'musicbrainz_releasetrackid']);
+		$meta['mb_artist_id'] = ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Artist Id', 'musicbrainz_artistid']);
+		$meta['mb_release_artist_id'] = ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Album Artist Id', 'musicbrainz_albumartistid']);
+		$meta['mb_composer_id'] = ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Composer Id', 'musicbrainz_composerid']);
 
 		return $meta;
 	}
