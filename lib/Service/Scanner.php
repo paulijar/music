@@ -300,11 +300,21 @@ class Scanner extends PublicEmitter {
 		$meta['bitrate'] = self::normalizeUnsigned($fileInfo['audio']['bitrate'] ?? null);
 
 		// MusicBrainz IDs
-		$meta['mb_recording_id'] = ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Recording Id', 'musicbrainz_trackid']);
-		$meta['mb_release_track_id'] = ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Release Track Id', 'musicbrainz_releasetrackid']);
-		$meta['mb_artist_id'] = ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Artist Id', 'musicbrainz_artistid']);
-		$meta['mb_release_artist_id'] = ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Album Artist Id', 'musicbrainz_albumartistid']);
-		$meta['mb_composer_id'] = ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Composer Id', 'musicbrainz_composerid']);
+		$meta['mb_recording_id'] = self::normalizeMbid(
+			ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Recording Id', 'musicbrainz_trackid'])
+		);
+		$meta['mb_release_track_id'] = self::normalizeMbid(
+			ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Release Track Id', 'musicbrainz_releasetrackid'])
+		);
+		$meta['mb_artist_id'] = self::normalizeMbid(
+			ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Artist Id', 'musicbrainz_artistid'])
+		);
+		$meta['mb_release_artist_id'] = self::normalizeMbid(
+			ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Album Artist Id', 'musicbrainz_albumartistid'])
+		);
+		$meta['mb_composer_id'] = self::normalizeMbid(
+			ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Composer Id', 'musicbrainz_composerid'])
+		);
 
 		return $meta;
 	}
@@ -848,6 +858,17 @@ class Scanner extends PublicEmitter {
 			$value = null;
 		}
 		return $value;
+	}
+
+	private static function normalizeMbid(?string $mbid) : ?string {
+		if (!empty($mbid)) {
+			$mbid = StringUtil::truncate(\trim($mbid), 36, ''); // valid MBID is always 36 characters but prepare for invalid data
+			$mbid = \mb_strtolower($mbid);
+		}
+		if (empty($mbid)) {
+			$mbid = null; // empty or whitespace-only string will get converted to null
+		}
+		return $mbid;
 	}
 
 	/**

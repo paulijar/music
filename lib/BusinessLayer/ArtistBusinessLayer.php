@@ -123,21 +123,13 @@ class ArtistBusinessLayer extends BusinessLayer {
 	/**
 	 * Adds an artist if it does not exist already or updates an existing artist
 	 * @param ?string $name the name of the artist
-	 * @param ?string $mbid the MusicBrainz Id of the artist
+	 * @param ?string $mbid the MusicBrainz Id of the artist (non-null values must be normalized to all lowercase, 1..36 ASCII chars)
 	 * @param string $userId the name of the user
 	 * @return Artist The added/updated artist
 	 */
 	public function addOrUpdateArtist(?string $name, ?string $mbid, string $userId) : Artist {
 		$name = StringUtil::truncate($name, 256); // some DB setups can't truncate automatically to column max size
 		$hash = \hash('md5', \mb_strtolower($name ?? ''));
-
-		if (!empty($mbid)) {
-			$mbid = StringUtil::truncate(\trim($mbid), 36); // valid MBID is always 36 characters but prepare for invalid data
-			$mbid = \mb_strtolower($mbid);
-		}
-		if (empty($mbid)) {
-			$mbid = null; // replace empty string by null
-		}
 
 		return $this->cachedGet($userId, $mbid ?? $hash, function () use ($name, $mbid, $hash, $userId) {
 			$artist = new Artist();
