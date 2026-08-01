@@ -35,7 +35,13 @@ class Version030200Date20260729204000 extends SimpleMigrationStep {
 		$artists = $schema->getTable('music_artists');
 		// replace unique index for user_id/hash with one for user_id/hash/mbid
 		self::dropObsoleteIndex($artists, 'user_id_hash_idx');
-		self::addUniqueIndexIfMissing($artists, 'user_id_hash_mbid_idx', ['user_id', 'hash', 'mbid']);
+		self::addUniqueIndexIfMissing($artists, 'user_hash_mbid_idx', ['user_id', 'hash', 'mbid']);
+
+		$albums = $schema->getTable('music_albums');
+		self::addColumnIfMissing($albums, 'album_artist_uncertain', 'boolean', ['notnull' => false]);
+		// replace unique index for user_id/hash with one for user_id/hash/album_artist_id/mbid (the hash will no longer involve album_artist_id)
+		self::dropObsoleteIndex($albums, 'ma_user_id_hash_idx');
+		self::addUniqueIndexIfMissing($albums, 'user_hash_artist_mbid_idx', ['user_id', 'hash', 'album_artist_id', 'mbid']);
 
 		return $schema;
 	}

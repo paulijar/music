@@ -9,7 +9,7 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Morris Jobke 2013, 2014
- * @copyright Pauli Järvinen 2016 - 2025
+ * @copyright Pauli Järvinen 2016 - 2026
  */
 
 namespace OCA\Music\Db;
@@ -26,7 +26,7 @@ use OCP\IDBConnection;
  */
 class AlbumMapper extends BaseMapper {
 	public function __construct(IDBConnection $db, IConfig $config) {
-		parent::__construct($db, $config, 'music_albums', Album::class, 'name', ['user_id', 'hash'], 'album_artist_id');
+		parent::__construct($db, $config, 'music_albums', Album::class, 'name', ['user_id', 'hash', 'album_artist_id', 'mbid'], 'album_artist_id');
 	}
 
 	/**
@@ -543,5 +543,21 @@ class AlbumMapper extends BaseMapper {
 		$condForRule['mbid_album'] = parent::advFormatSqlCondition('mbid', $sqlOp, $conv);
 
 		return $condForRule[$rule] ?? parent::advFormatSqlCondition($rule, $sqlOp, $conv);
+	}
+
+	/** @return array<array{id: int, album_artist_id: int, album_artist_uncertain: bool|int|null}> */
+	public function findIdsAndArtistsByHashAndMbid(string $hash, ?string $mbid, string $userId) : array {
+		$params = [$hash, $userId];
+		if ($mbid !== null) {
+			$params[] = $mbid;
+			$mbidCond = '`mbid` = ?';
+		} else {
+			$mbidCond = '`mbid` IS NULL';
+		}
+		$sql = "SELECT `id`, `album_artist_id`, `album_artist_uncertain` FROM `*PREFIX*music_albums` WHERE `hash` = ? AND `user_id` = ? AND $mbidCond";
+		$result = $this->execute($sql, $params);
+		$rows = $result->fetchAll();
+		$result->closeCursor();
+		return $rows;
 	}
 }

@@ -169,7 +169,8 @@ class Scanner extends PublicEmitter {
 		$albumArtistId = $albumArtist->getId();
 
 		// add/update album and get album entity
-		$album = $this->albumBusinessLayer->addOrUpdateAlbum($meta['album'], $albumArtistId, $meta['mb_release_id'], $meta['mb_release_group_id'], $userId);
+		$album = $this->albumBusinessLayer->addOrUpdateAlbum(
+			$meta['album'], $albumArtistId, $meta['album_artist_uncertain'] ?? false, $meta['mb_release_id'], $meta['mb_release_group_id'], $userId);
 		$albumId = $album->getId();
 
 		// add/update genre and get genre entity
@@ -231,6 +232,7 @@ class Scanner extends PublicEmitter {
 		// use artist and albumArtist as fallbacks for each other
 		if (!StringUtil::isNonEmptyString($meta['album_artist'])) {
 			$meta['album_artist'] = $meta['artist'];
+			$meta['album_artist_uncertain'] = true;
 		}
 
 		if (!StringUtil::isNonEmptyString($meta['artist'])) {
@@ -249,6 +251,9 @@ class Scanner extends PublicEmitter {
 
 			$meta['artist'] = $artistName;
 			$meta['album_artist'] = $artistName;
+			// Although the artist name is evaluated by a heuristic rule, it is not "uncertain" in the sense
+			// that we would want allow merging this album with another album with different artist name.
+			$meta['album_artist_uncertain'] = false;
 		}
 
 		// title

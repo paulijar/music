@@ -25,7 +25,7 @@ use OCP\IDBConnection;
  */
 class ArtistMapper extends BaseMapper {
 	public function __construct(IDBConnection $db, IConfig $config) {
-		parent::__construct($db, $config, 'music_artists', Artist::class, 'name', ['user_id', 'hash']);
+		parent::__construct($db, $config, 'music_artists', Artist::class, 'name', ['user_id', 'hash', 'mbid']);
 	}
 
 	/**
@@ -278,5 +278,39 @@ class ArtistMapper extends BaseMapper {
 		$rows = $result->fetchAll();
 		$result->closeCursor();
 		return $rows;
+	}
+
+	public const VARIOUS_ARTISTS_MBID = '89ad4ac3-39f7-470e-963a-56509c546377';
+
+	/**
+	 * Get ID of the artificial artist "Various Artists". The artist is created if not already present in the DB.
+	 * Note that a few bands actually named "Various Artists" have existed. The returned artist is not one of those
+	 * if this can be detected from the MBID.
+	 */
+	public function getVariousArtistsId(string $userId) : int {
+		$name = 'Various Artists';
+		$hash = \hash('md5', \mb_strtolower($name));
+
+		$nameMatches = $this->findIdsAndMbidsByHash($hash, $userId);
+		if ($mbidMatch = ArrayUtil::find($nameMatches, fn ($row) => $row['mbid'] === self::VARIOUS_ARTISTS_MBID)) {
+			// found the correct artist
+			return $mbidMatch['id'];
+		} else {
+			$artist = new Artist();
+			$artist->setName($name);
+			$artist->setUserId($userId);
+			$artist->setMbid(self::VARIOUS_ARTISTS_MBID);
+			$artist->setHash($hash);
+
+			if ($nullMbidMatch = ArrayUtil::find($nameMatches, fn ($row) => $row['mbid'] === null)) {
+				// found an artist with the same name but no MBID; update it to have the correct MBID
+				$artist->setId($nullMbidMatch['id']);
+				$artist = $this->update($artist);
+			} else {
+				// no artist with the same name; insert a new one
+				$artist = $this->insertOrUpdate($artist);
+			}
+			return $artist->getId();
+		}
 	}
 }

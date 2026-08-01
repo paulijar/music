@@ -257,7 +257,7 @@ class AlbumBusinessLayerTest extends \PHPUnit\Framework\TestCase {
 			->method('updateOrInsert')
 			->will($this->returnValue($this->albums[0]));
 
-		$album = $this->albumBusinessLayer->addOrUpdateAlbum($name, $artistId, null, null, $this->userId);
+		$album = $this->albumBusinessLayer->addOrUpdateAlbum($name, $artistId, false, null, null, $this->userId);
 		$this->assertEquals($this->albums[0], $album);
 	}
 
