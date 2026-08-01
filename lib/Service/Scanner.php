@@ -165,7 +165,7 @@ class Scanner extends PublicEmitter {
 		$artistId = $artist->getId();
 
 		// add/update albumArtist and get artist entity
-		$albumArtist = $this->artistBusinessLayer->addOrUpdateArtist($meta['albumArtist'], $meta['mb_release_artist_id'], $userId);
+		$albumArtist = $this->artistBusinessLayer->addOrUpdateArtist($meta['album_artist'], $meta['mb_release_artist_id'], $userId);
 		$albumArtistId = $albumArtist->getId();
 
 		// add/update album and get album entity
@@ -184,7 +184,7 @@ class Scanner extends PublicEmitter {
 
 		// add/update track and get track entity
 		$track = $this->trackBusinessLayer->addOrUpdateTrack(
-				$meta['title'], $meta['trackNumber'], $meta['discNumber'], $meta['year'], $genre->getId(),
+				$meta['title'], $meta['track_number'], $meta['disc_number'], $meta['year'], $genre->getId(),
 				$artistId, $albumId, $fileId, $mimetype, $userId, $meta['length'], $meta['bitrate'],
 				$meta['bpm'], $composerId, $meta['comment'], $meta['mb_recording_id'], $meta['mb_release_track_id']);
 
@@ -226,15 +226,15 @@ class Scanner extends PublicEmitter {
 
 		// Track artist and album artist
 		$meta['artist'] = ExtractorGetID3::getTag($fileInfo, 'artist');
-		$meta['albumArtist'] = ExtractorGetID3::getFirstOfTags($fileInfo, ['band', 'albumartist', 'album artist', 'album_artist']);
+		$meta['album_artist'] = ExtractorGetID3::getFirstOfTags($fileInfo, ['band', 'albumartist', 'album artist', 'album_artist']);
 
 		// use artist and albumArtist as fallbacks for each other
-		if (!StringUtil::isNonEmptyString($meta['albumArtist'])) {
-			$meta['albumArtist'] = $meta['artist'];
+		if (!StringUtil::isNonEmptyString($meta['album_artist'])) {
+			$meta['album_artist'] = $meta['artist'];
 		}
 
 		if (!StringUtil::isNonEmptyString($meta['artist'])) {
-			$meta['artist'] = $meta['albumArtist'];
+			$meta['artist'] = $meta['album_artist'];
 		}
 
 		if (!StringUtil::isNonEmptyString($meta['artist'])) {
@@ -248,7 +248,7 @@ class Scanner extends PublicEmitter {
 			}
 
 			$meta['artist'] = $artistName;
-			$meta['albumArtist'] = $artistName;
+			$meta['album_artist'] = $artistName;
 		}
 
 		// title
@@ -270,20 +270,19 @@ class Scanner extends PublicEmitter {
 		}
 
 		// track number
-		$meta['trackNumber'] = ExtractorGetID3::getFirstOfTags(
-			$fileInfo,
-			['track_number', 'tracknumber', 'track'],
-			$fieldsFromFileName['track_number']
+		$meta['track_number'] = self::normalizeOrdinal(
+			ExtractorGetID3::getFirstOfTags($fileInfo,['track_number', 'tracknumber', 'track'], $fieldsFromFileName['track_number'])
 		);
-		$meta['trackNumber'] = self::normalizeOrdinal($meta['trackNumber']);
 
 		// disc number
-		$meta['discNumber'] = ExtractorGetID3::getFirstOfTags($fileInfo, ['disc_number', 'discnumber', 'part_of_a_set'], '1');
-		$meta['discNumber'] = self::normalizeOrdinal($meta['discNumber']);
+		$meta['disc_number'] = self::normalizeOrdinal(
+			ExtractorGetID3::getFirstOfTags($fileInfo, ['disc_number', 'discnumber', 'part_of_a_set'], '1')
+		);
 
 		// year
-		$meta['year'] = ExtractorGetID3::getFirstOfTags($fileInfo, ['year', 'date', 'creation_date']);
-		$meta['year'] = self::normalizeYear($meta['year']);
+		$meta['year'] = self::normalizeYear(
+			ExtractorGetID3::getFirstOfTags($fileInfo, ['year', 'date', 'creation_date'])
+		);
 
 		$meta['genre'] = ExtractorGetID3::getTag($fileInfo, 'genre') ?: ''; // empty string used for "scanned but unknown"
 
