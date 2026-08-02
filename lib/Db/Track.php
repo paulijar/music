@@ -104,6 +104,7 @@ class Track extends Entity {
 
 	// the rest of the variables are injected separately when needed
 	private ?Album $album = null;
+	private ?Artist $artist = null;
 	private ?int $numberOnPlaylist = null;
 	private ?string $folderPath = null;
 	private ?string $lyrics = null;
@@ -134,6 +135,14 @@ class Track extends Entity {
 
 	public function setAlbum(?Album $album) : void {
 		$this->album = $album;
+	}
+
+	public function getArtist() : ?Artist {
+		return $this->artist;
+	}
+
+	public function setArtist(?Artist $artist) : void {
+		$this->artist = $artist;
 	}
 
 	public function getNumberOnPlaylist() : ?int {
@@ -208,12 +217,15 @@ class Track extends Entity {
 		];
 	}
 
-	public function toShivaApi(IURLGenerator $urlGenerator) : array {
+	/**
+	 * @param ?IL10N $l10n Passing null will prevent the "full tree" formatting even when $artist and/or $album are present.
+	 */
+	public function toShivaApi(IURLGenerator $urlGenerator, ?IL10N $l10n) : array {
 		return [
 			'title'   => $this->getTitle(),
 			'ordinal' => $this->getAdjustedTrackNumber(),
-			'artist'  => $this->getArtistWithUri($urlGenerator),
-			'album'   => $this->getAlbumWithUri($urlGenerator),
+			'artist'  => ($this->artist && $l10n) ? $this->artist->toShivaApi($urlGenerator, $l10n) : $this->getArtistWithUri($urlGenerator),
+			'album'   => ($this->album && $l10n) ? $this->album->toShivaApi($urlGenerator, $l10n) : $this->getAlbumWithUri($urlGenerator),
 			'length'  => $this->getLength(),
 			'files'   => [$this->getMimetype() => $urlGenerator->linkToRoute(
 				'music.musicApi.download',
