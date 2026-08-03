@@ -1813,6 +1813,7 @@ class AmpacheController extends ApiController {
 					'has_art'       => $album->getCoverFileId() !== null,
 					'flag'          => !empty($album->getStarred()),
 					'mbid'          => $album->getMbid(),
+					'mbid_group'    => $album->getMbidGroup(),
 					$genreKey       => \array_map(fn ($genre) => [
 						'id'    => (string)$genre->getId(),
 						'text'  => $genre->getNameString($this->l10n),
