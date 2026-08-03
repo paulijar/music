@@ -51,6 +51,7 @@
   [#45](https://github.com/nc-music/music/issues/45), [#55](https://github.com/nc-music/music/issues/55), [#98](https://github.com/nc-music/music/issues/98)
   * Library has to be rescanned for this change to take effect
   * To avoid merging albums with the same name, make sure the tracks have either `album artist` or `Music Brainz Release Id` metadata tag set
+- Drop obsolete column `disk` from the DB table `oc_music_albums` (the disk info was moved to `oc_music_tracks` in Music v0.13.1)
 
 ### Fixed
 - HTTP redirection not working (e.g. on radio streams) when the `Location` header contains a relative URL

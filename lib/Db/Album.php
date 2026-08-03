@@ -50,7 +50,6 @@ class Album extends Entity {
 	public ?string $starred = null;
 	public int $rating = 0;
 	public ?string $albumArtistName = null; // not from music_albums table but still part of the standard content
-	public ?int $disk = 0; // deprecated
 
 	// extra fields injected separately by AlbumBusinessLayer
 	/** @var ?int[] $years */
@@ -66,7 +65,6 @@ class Album extends Entity {
 	private ?array $tracks = null;
 
 	public function __construct() {
-		$this->addType('disk', 'int');
 		$this->addType('coverFileId', 'int');
 		$this->addType('albumArtistId', 'int');
 		$this->addType('albumArtistUncertain', 'bool');
