@@ -20,6 +20,11 @@
   * Track comment is stored to DB while scanning the library
   * The `comment` property is included in all song responses in the Subsonic and Ampache APIs
   * Advanced search can find tracks by comment
+- MBID support [#94](https://github.com/nc-music/music/issues/94), [#148](https://github.com/nc-music/music/issues/148)
+  * MusicBrainz IDs (Recording Id, Release Track Id, Release Id, Release Group Id, Artist Id, Release Artist Id) from file metadata are stored to DB when scanning the library
+  * Song/album/artist responses in the Subsonic API contain the `musicBrainzId` property and the resonses in Ampache API contain the `mbid` property
+  * Advanced search can find tracks/albums/artists by the MBID values
+  * Distinct artists with identical names can be separated by MBID. Distinct album versions with the same name from the same artist can be seprated by MBID.
 - Context menu with the "Import from file" action on the "New Playlist" navigation item
   [#80 (comment)](https://github.com/nc-music/music/issues/80#issuecomment-3725231400)
 
@@ -35,13 +40,17 @@
   * Collapse the more exotic tags by default and show them by clicking "Show more…"
   * Make all MusicBrainz Ids from the tags into links to the MusicBrainz site (like previously done with MbIds from Last.fm)
   * On tag names, abbreviate "musicbrainz" as "mb" to not truncate the more important parts of the name
-  * Show also MusicBrainz Recording Id stored in id3v2.4 tag `UFID` (MusicBrainz Picard uses this on mp3 files)
+  * Show also the MusicBrainz Recording Id stored in id3v2.4 tag `UFID` (MusicBrainz Picard uses this on mp3 files)
   * Show all values of multi-valued metadata tags
 - Attempt to restart the playing radio stream if it abruptly ends
   [nc-music#89](https://github.com/nc-music/music/issues/89)
 - Improved web UI view switching performance for huge libraries
 - Playlist view remains lightning fast even on insanely large playlists
 - Extensive internal refactoring on the web UI
+- In absence of the `album artist` tag, if there are tracks with the same `album` name but differing `artist` name, treat those tracks as one album from "Various Artists"
+  [#45](https://github.com/nc-music/music/issues/45), [#55](https://github.com/nc-music/music/issues/55), [#98](https://github.com/nc-music/music/issues/98)
+  * Library has to be rescanned for this change to take effect
+  * To avoid merging albums with the same name, make sure the tracks have either `album artist` or `Music Brainz Release Id` metadata tag set
 
 ### Fixed
 - HTTP redirection not working (e.g. on radio streams) when the `Location` header contains a relative URL
