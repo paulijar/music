@@ -42,6 +42,8 @@ use OCP\IURLGenerator;
  * @method void setMimetype(string $mimetype)
  * @method ?string getMbid()
  * @method void setMbid(?string $mbid)
+ * @method ?string getMbidRelTrack()
+ * @method void setMbidRelTrack(?string $mbid)
  * @method ?string getStarred()
  * @method void setStarred(?string $timestamp)
  * @method int getRating()
@@ -81,7 +83,8 @@ class Track extends Entity {
 	public int $fileId = 0;
 	public ?int $bitrate = null;
 	public string $mimetype = '';
-	public ?string $mbid = null;
+	public ?string $mbid = null; // MusicBrainz Recording Id
+	public ?string $mbidRelTrack = null; // MusicBrainz Release Track Id
 	public ?string $starred = null;
 	public int $rating = 0;
 	public ?int $genreId = null;
@@ -279,6 +282,7 @@ class Track extends Entity {
 			'mode'                  => null, // cbr/vbr
 			'rate'                  => null, // sample rate [Hz]
 			'comment'               => $this->getComment() ?: null,
+			'mbid'                  => $this->getMbid(),
 			'replaygain_album_gain' => null,
 			'replaygain_album_peak' => null,
 			'replaygain_track_gain' => null,
@@ -355,6 +359,7 @@ class Track extends Entity {
 			'playCount'       => $this->getPlayCount(),
 			'played'          => Util::formatZuluDateTime($this->getLastPlayed()) ?? '', // OpenSubsonic
 			'sortName'        => StringUtil::splitPrefixAndBasename($this->getTitle(), $ignoredArticles)['basename'], // OpenSubsonic
+			'musicBrainzId'   => $this->getMbid(), // OpenSubsonic
 		];
 	}
 

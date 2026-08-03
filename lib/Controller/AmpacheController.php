@@ -1751,6 +1751,7 @@ class AmpacheController extends ApiController {
 					'rating'        => $artist->getRating(),
 					'preciserating' => $artist->getRating(),
 					'flag'          => !empty($artist->getStarred()),
+					'mbid'          => $artist->getMbid(),
 					$genreKey       => \array_map(fn ($genreId) => [
 						'id'    => (string)$genreId,
 						'text'  => $genreMap[$genreId]->getNameString($this->l10n),
@@ -1811,6 +1812,7 @@ class AmpacheController extends ApiController {
 					'art'           => $this->createCoverUrl($album),
 					'has_art'       => $album->getCoverFileId() !== null,
 					'flag'          => !empty($album->getStarred()),
+					'mbid'          => $album->getMbid(),
 					$genreKey       => \array_map(fn ($genre) => [
 						'id'    => (string)$genre->getId(),
 						'text'  => $genre->getNameString($this->l10n),

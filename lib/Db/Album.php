@@ -9,7 +9,7 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @copyright Morris Jobke 2013, 2014
- * @copyright Pauli Järvinen 2017 - 2025
+ * @copyright Pauli Järvinen 2017 - 2026
  */
 
 namespace OCA\Music\Db;
@@ -29,6 +29,8 @@ use OCP\IURLGenerator;
  * @method void setCoverFileId(?int $coverFileId)
  * @method int getAlbumArtistId()
  * @method void setAlbumArtistId(int $albumArtistId)
+ * @method bool getAlbumArtistUncertain()
+ * @method void setAlbumArtistUncertain(bool $albumArtistUncertain)
  * @method string getHash()
  * @method void setHash(string $hash)
  * @method ?string getStarred()
@@ -43,6 +45,7 @@ class Album extends Entity {
 	public ?string $mbidGroup = null;
 	public ?int $coverFileId = null;
 	public ?int $albumArtistId = null;
+	public ?bool $albumArtistUncertain = null;
 	public string $hash = '';
 	public ?string $starred = null;
 	public int $rating = 0;
@@ -66,6 +69,7 @@ class Album extends Entity {
 		$this->addType('disk', 'int');
 		$this->addType('coverFileId', 'int');
 		$this->addType('albumArtistId', 'int');
+		$this->addType('albumArtistUncertain', 'bool');
 		$this->addType('rating', 'int');
 	}
 
