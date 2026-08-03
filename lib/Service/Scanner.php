@@ -21,6 +21,7 @@ use OCA\Music\BusinessLayer\ArtistBusinessLayer;
 use OCA\Music\BusinessLayer\GenreBusinessLayer;
 use OCA\Music\BusinessLayer\PlaylistBusinessLayer;
 use OCA\Music\BusinessLayer\TrackBusinessLayer;
+use OCA\Music\Db\ArtistMapper;
 use OCA\Music\Db\Cache;
 use OCA\Music\Db\Maintenance;
 use OCA\Music\Utility\ArrayUtil;
@@ -170,7 +171,8 @@ class Scanner extends PublicEmitter {
 
 		// add/update album and get album entity
 		$album = $this->albumBusinessLayer->addOrUpdateAlbum(
-			$meta['album'], $albumArtistId, $meta['album_artist_uncertain'] ?? false, $meta['mb_release_id'], $meta['mb_release_group_id'], $userId);
+			$meta['album'], $albumArtistId, $meta['album_artist_uncertain'] ?? false, $meta['compilation'],
+			$meta['mb_release_id'], $meta['mb_release_group_id'], $userId);
 		$albumId = $album->getId();
 
 		// add/update genre and get genre entity
@@ -225,14 +227,22 @@ class Scanner extends PublicEmitter {
 		$fileInfo = $analyzeFile ? $this->extractor->extract($file) : [];
 		$meta = [];
 
+		// Is the album a compilation? (i.e. various artists)
+		$meta['compilation'] = (int)ExtractorGetID3::getFirstOfTags($fileInfo, ['part_of_a_compilation', 'compilation']) !== 0;
+
 		// Track artist and album artist
 		$meta['artist'] = ExtractorGetID3::getTag($fileInfo, 'artist');
 		$meta['album_artist'] = ExtractorGetID3::getFirstOfTags($fileInfo, ['band', 'albumartist', 'album artist', 'album_artist']);
 
-		// use artist and albumArtist as fallbacks for each other
+		// use artist and albumArtist as fallbacks for each other (album tagged as compilation is a special case)
 		if (!StringUtil::isNonEmptyString($meta['album_artist'])) {
-			$meta['album_artist'] = $meta['artist'];
-			$meta['album_artist_uncertain'] = true;
+			if ($meta['compilation']) {
+				// if the album is a compilation, then default to setting the album artist as "Various Artists"
+				$meta['album_artist'] = 'Various Artists';
+			} else {
+				$meta['album_artist'] = $meta['artist'];
+				$meta['album_artist_uncertain'] = true;
+			}
 		}
 
 		if (!StringUtil::isNonEmptyString($meta['artist'])) {
@@ -325,6 +335,11 @@ class Scanner extends PublicEmitter {
 		$meta['mb_release_group_id'] = self::normalizeMbid(
 			ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Release Group Id', 'musicbrainz_releasegroupid'])
 		);
+
+		// default MusicBrainz Release Artist Id for compilation albums to the MusicBrainz Various Artists Id
+		if ($meta['compilation'] && empty($meta['mb_release_artist_id'])) {
+			$meta['mb_release_artist_id'] = ArtistMapper::VARIOUS_ARTISTS_MBID;
+		}
 
 		return $meta;
 	}

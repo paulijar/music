@@ -40,6 +40,7 @@ class Version030200Date20260803233000 extends SimpleMigrationStep {
 		$albums = $schema->getTable('music_albums');
 		self::dropObsoleteColumn($albums, 'disk'); // migrated to oc_music_tracks in v0.13.1 in year 2020
 		self::addColumnIfMissing($albums, 'album_artist_uncertain', 'boolean', ['notnull' => false]);
+		self::addColumnIfMissing($albums, 'compilation', 'boolean', ['notnull' => false]);
 		// replace unique index for user_id/hash with one for user_id/hash/album_artist_id/mbid (the hash will no longer involve album_artist_id)
 		self::dropObsoleteIndex($albums, 'ma_user_id_hash_idx');
 		self::addUniqueIndexIfMissing($albums, 'user_hash_artist_mbid_idx', ['user_id', 'hash', 'album_artist_id', 'mbid']);

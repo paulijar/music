@@ -1436,6 +1436,7 @@ class SubsonicController extends ApiController {
 		$result['name'] = $album->getNameString($this->l10n);
 		$result['songCount'] = $this->trackBusinessLayer->countByAlbum($album->getId());
 		$result['duration'] = $this->trackBusinessLayer->totalDurationOfAlbum($album->getId());
+		$result['isCompilation'] = $album->getCompilation(); // OpenSubsonic
 
 		return $result;
 	}

@@ -319,22 +319,24 @@ class AlbumBusinessLayer extends BusinessLayer {
 	 * @param ?string $name the name of the album
 	 * @param integer $albumArtistId ID of the album artist or best guess of it on incomplete metadata
 	 * @param bool $albumArtistUncertain True if @a $albumArtistId is not based on actual file metadata
+	 * @param bool $isCompilation value of the `compilation` metadata flag, indicating the album is a compilation of various artists
 	 * @param ?string $mbid the MusicBrainz Release Id of the album (non-null values normalized to all lowercase, 1..36 ASCII chars)
 	 * @param ?string $mbidGroup the MusicBrainz Release Group Id of the album
 	 * @param string $userId
 	 * @return Album The added/updated album
 	 */
-	public function addOrUpdateAlbum(?string $name, int $albumArtistId, bool $albumArtistUncertain, ?string $mbid, ?string $mbidGroup, string $userId) : Album {
+	public function addOrUpdateAlbum(?string $name, int $albumArtistId, bool $albumArtistUncertain, bool $isCompilation, ?string $mbid, ?string $mbidGroup, string $userId) : Album {
 		// The uniqueness of album name is evaluated in case-insensitive manner.
 		$lowerName = \mb_strtolower($name ?? '');
 		$hash = \hash('md5', "$lowerName");
 
-		return $this->cachedGet($userId, "$hash|$albumArtistId|$mbid", function () use ($name, $albumArtistId, $albumArtistUncertain, $mbid, $mbidGroup, $userId, $hash) {
+		return $this->cachedGet($userId, "$hash|$albumArtistId|$mbid", function () use ($name, $albumArtistId, $albumArtistUncertain, $isCompilation, $mbid, $mbidGroup, $userId, $hash) {
 			$album = new Album();
 			$album->setName(StringUtil::truncate($name, 256)); // some DB setups can't truncate automatically to column max size
 			$album->setUserId($userId);
 			$album->setAlbumArtistId($albumArtistId);
 			$album->setAlbumArtistUncertain($albumArtistUncertain);
+			$album->setCompilation($isCompilation);
 			$album->setMbid($mbid);
 			$album->setMbidGroup($mbidGroup);
 			$album->setHash($hash);

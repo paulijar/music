@@ -25,6 +25,9 @@
   * Song/album/artist responses in the Subsonic API contain the `musicBrainzId` property and the resonses in Ampache API contain the `mbid` property
   * Advanced search can find tracks/albums/artists by the MBID values
   * Distinct artists with identical names can be separated by MBID. Distinct album versions with the same name from the same artist can be seprated by MBID.
+- Compilation field support [#127](https://github.com/nc-music/music/issues/127)
+  * The `compilation` metadata tag is stored to the DB when scanning the library
+  * Subsonic API: Include OpenSubsonic property `isCompilation` in the AlbumID3 responses
 - Context menu with the "Import from file" action on the "New Playlist" navigation item
   [#80 (comment)](https://github.com/nc-music/music/issues/80#issuecomment-3725231400)
 

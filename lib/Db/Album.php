@@ -37,6 +37,8 @@ use OCP\IURLGenerator;
  * @method void setStarred(?string $timestamp)
  * @method int getRating()
  * @method void setRating(int $rating)
+ * @method bool getCompilation()
+ * @method void setCompilation(bool $compilation)
  * @method ?string getAlbumArtistName()
  */
 class Album extends Entity {
@@ -49,6 +51,7 @@ class Album extends Entity {
 	public string $hash = '';
 	public ?string $starred = null;
 	public int $rating = 0;
+	public bool $compilation = false;
 	public ?string $albumArtistName = null; // not from music_albums table but still part of the standard content
 
 	// extra fields injected separately by AlbumBusinessLayer
@@ -69,6 +72,7 @@ class Album extends Entity {
 		$this->addType('albumArtistId', 'int');
 		$this->addType('albumArtistUncertain', 'bool');
 		$this->addType('rating', 'int');
+		$this->addType('compilation', 'bool');
 	}
 
 	/**
