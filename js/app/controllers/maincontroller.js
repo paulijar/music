@@ -85,7 +85,7 @@ function ($rootScope, $scope, $document, $timeout, $window, gettextCatalog, Rest
 	libraryFactory.subscribe('collectionUpdating', $scope, () => {
 		$scope.updateAvailable = false;
 
-		if ($scope.viewingLibrary) {
+		if ($scope.viewingLibrary()) {
 			$rootScope.loading = true;
 		}
 
