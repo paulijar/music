@@ -22,7 +22,7 @@
  *
  */
 
-import $ from 'jquery'
+import { $ } from 'jquery'
 import md5 from 'blueimp-md5'
 
 /*

@@ -291,7 +291,7 @@ export class PlayerWrapper {
 		// this is not always the case with external streams. On the other hand, when
 		// playing a normal local file, the seeking may be requested before we have fetched
 		// the duration and that is fine.
-		let validDuration = $.isNumeric(this.#duration) && this.#duration > 0;
+		let validDuration = !isNaN(this.#duration) && isFinite(this.#duration) && this.#duration > 0;
 		return (this.#underlyingPlayer == 'html5' && (this.#urlType == 'local' || validDuration));
 	}
 
