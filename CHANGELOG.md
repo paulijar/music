@@ -1,10 +1,20 @@
+## [Unreleased]
+
+### Added
+
+### Changed
+
+### Fixed
+
 ## 3.2.1 - 2026-08-31
 
 ### Fixed
 - Administration settings view failing to load after update to Music v3.2.0
   [#159](https://github.com/nc-music/music/issues/159)
 
-### Added in v3.2.0
+## 3.2.0 - 2026-08-30
+
+### Added
 - Support for Nextcloud 35 (tested on rc2)
 - Admin settings UI to setup Last.fm API key and secret without editing `config.php` manually
   [#131](https://github.com/nc-music/music/pull/131) @mattwellss
@@ -59,7 +69,7 @@
     [#88](https://github.com/nc-music/music/issues/88) @lachlan-00
   * Play podcast streams through the server. The relay can be disabled for the API clients alone with the config.php key `music.relay_podcast_stream_on_api`.
 
-### Changed in v3.2.0
+### Changed
 - Ampache API: Reject the deprecated actions `tag`, `tags`, `tag_albums`, `tag_artists`, and `tag_songs` on API versions 5 and 6 like the original Ampache server does, answering with the error 4706 and, on version 6, the HTTP status 410. The actions still work on API version 4, and the renamed `genre` variants are unaffected
   [#154](https://github.com/nc-music/music/pull/154) @lachlan-00
 - Show some error details in the browser console when subscribing a podcast channel fails
@@ -86,7 +96,7 @@
   * To avoid merging albums with the same name, make sure the tracks have either `album artist` or `Music Brainz Release Id` metadata tag set
 - Drop obsolete column `disk` from the DB table `oc_music_albums` (the disk info was moved to `oc_music_tracks` in Music v0.13.1)
 
-### Fixed in v3.2.0
+### Fixed
 - Vulnerability [GHSA-7xgc-f6j5-h394](https://github.com/nc-music/oc-music/security/advisories/GHSA-7xgc-f6j5-h394)
 - HTTP status 500 on all the Ampache, Subsonic, and web UI endpoints accessing the file system in case the configured music folder no longer exists; the APIs now return a proper protocol error instead
   [#149](https://github.com/nc-music/music/pull/149) @lachlan-00
@@ -108,10 +118,6 @@
   * Attribute `parent` misplaced in the response of `getMusicDirectory` when browsing by file system folders
   * Endpoints `savePlayQueue` and `savePlayQueueByIndex` not allowing an empty list to clear the queue
   * JSON response of `getNowPlaying` containing a stray empty array within the `entry` array when nothing is playing
-
-## 3.2.0 - 2026-08-30
-
-Broken version replaced with v3.2.1
 
 ## 3.1.1 - 2026-07-16
 
