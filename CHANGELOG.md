@@ -5,6 +5,8 @@
 ### Changed
 
 ### Fixed
+- Unhandled exception breaking the Music UI when operating within the Nextcloud Desktop Workspace
+  [#162](https://github.com/nc-music/music/issues/162)
 
 ## 3.2.1 - 2026-08-31
 
