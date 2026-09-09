@@ -33,14 +33,21 @@ body#body-user.dark {
 	inset-inline-start: 300px;
 	inset-inline-end: 0px;
 	margin-inline-start: 0;
+	/* override generic width rule on Nextcloud Desktop which uses !important. See https://github.com/nc-music/music/issues/162 */
+	width: unset !important;
 }
 
 .app-music #app {
 	contain: content;
 }
 
+#app-content {
+	transition: 0.3s;
+}
+
 #app-content.with-app-sidebar {
-	margin-inline-end: 27%;
+	/* override generic margin rule on Nextcloud Desktop which uses !important. See https://github.com/nc-music/music/issues/162 */
+	margin-inline-end: 27% !important;
 }
 
 /* angular JS wrapper for main controller */

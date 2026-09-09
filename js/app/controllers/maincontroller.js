@@ -423,10 +423,11 @@ function ($rootScope, $scope, $document, $timeout, $window, gettextCatalog, Rest
 		const appContent = $('#app-content');
 		if (appContent.hasClass('with-app-sidebar')) {
 			let sidebarWidth = $('#app-sidebar').outerWidth();
-			let viewWidth = $('#header').outerWidth();
+			let viewPortWidth = $('#content').outerWidth();
 
-			if (sidebarWidth < 0.27 * viewWidth) {
-				appContent.css('margin-inline-end', sidebarWidth);
+			if (sidebarWidth < 0.27 * viewPortWidth) {
+				// A generic rule on Nextcloud Desktop uses !important, overriding it with jQuery needs some trickery
+				appContent.css('cssText', `margin-inline-end: ${sidebarWidth}px !important`);
 			} else {
 				appContent.css('margin-inline-end', '');
 			}
