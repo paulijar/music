@@ -137,6 +137,10 @@ class ExtractorGetID3 {
 				unset($metadata['comments']['text']);
 			}
 
+			if (isset($metadata['replay_gain'])) {
+				$metadata['comments']['replay_gain'] = $metadata['replay_gain'];
+			}
+
 			if (isset($metadata['error'])) {
 				foreach ($metadata['error'] as $error) {
 					$this->logger->debug('getID3 error occurred');

@@ -106,7 +106,9 @@ angular.module('Music').controller('TrackDetailsController', [
 
 		$scope.formatDetailValue = function(value, key=null) {
 			if (value instanceof Object) {
-				return Object.entries(value).map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join('; ') : v}`).join('<br/>');
+				return Object.entries(value)
+					.map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join('; ') : (v instanceof Object) ? JSON.stringify(v) : v}`)
+					.join('<br/>');
 			} else if (key == 'sample_rate') {
 				return (value/1000).toFixed(1) + ' kHz';
 			} else if (key == 'bitrate') {
@@ -174,7 +176,7 @@ angular.module('Music').controller('TrackDetailsController', [
 			default:
 				if (tag.key.match(/^musicbrainz.*id$/)) {
 					return 150;
-				} else if (tag.key.match(/^musicbrainz/)) {
+				} else if (tag.key.startsWith('musicbrainz')) {
 					return 149;
 				} else if (tag.key.startsWith('replaygain')) {
 					return 200;
