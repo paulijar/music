@@ -38,6 +38,7 @@ use OCA\Music\Http\FileResponse;
 use OCA\Music\Http\FileStreamResponse;
 use OCA\Music\Http\XmlResponse;
 use OCA\Music\Http\AudioTranscodeResponse;
+use OCA\Music\Http\ErrorResponse;
 use OCA\Music\Middleware\SubsonicException;
 use OCA\Music\Service\Ampache\AmpacheImageService;
 use OCA\Music\Service\CoverService;
@@ -55,6 +56,7 @@ use OCA\Music\Utility\Random;
 use OCA\Music\Utility\StringUtil;
 use OCA\Music\Utility\Util;
 use OCP\AppFramework\ApiController;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\CORS;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
@@ -1174,8 +1176,8 @@ class SubsonicController extends ApiController {
 			$maxBitrate !== null &&
 			$maxBitrate !== 0
 		) {
-			return $this->subsonicErrorResponse(
-				0,
+			return new ErrorResponse(
+				Http::STATUS_BAD_REQUEST,
 				"Cannot limit bitrate when requesting a lossless format",
 			);
 		}
@@ -1196,7 +1198,10 @@ class SubsonicController extends ApiController {
 				}
 				return new FileStreamResponse($file);
 			} else {
-				return $this->subsonicErrorResponse(70, "file not found");
+				return new ErrorResponse(
+					Http::STATUS_NOT_FOUND,
+					"file not found"
+				);
 			}
 		} elseif ($type === "podcast_episode") {
 			$episode = $this->podcastService->getEpisode(
@@ -1206,11 +1211,14 @@ class SubsonicController extends ApiController {
 			if ($episode instanceof PodcastEpisode) {
 				return new RedirectResponse($episode->getStreamUrl());
 			} else {
-				return $this->subsonicErrorResponse(70, "episode not found");
+				return new ErrorResponse(
+					Http::STATUS_NOT_FOUND,
+					"episode not found"
+				);
 			}
 		} else {
-			return $this->subsonicErrorResponse(
-				0,
+			return new ErrorResponse(
+				Http::STATUS_UNSUPPORTED_MEDIA_TYPE,
 				"id of type $type not supported",
 			);
 		}
