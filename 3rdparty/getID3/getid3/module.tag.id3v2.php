@@ -821,63 +821,54 @@ class getid3_id3v2 extends getid3_handler
 			// https://www.getid3.org/phpBB3/viewtopic.php?t=1369
 			// "this tag typically contains null terminated strings, which are associated in pairs"
 			// "there are users that use the tag incorrectly"
-			$IPLS_parts = array();
-			if (strpos($parsedFrame['data_raw'], "\x00") !== false) {
-				$IPLS_parts_unsorted = array();
-				if (((strlen($parsedFrame['data_raw']) % 2) == 0) && ((substr($parsedFrame['data_raw'], 0, 2) == "\xFF\xFE") || (substr($parsedFrame['data_raw'], 0, 2) == "\xFE\xFF"))) {
-					// UTF-16, be careful looking for null bytes since most 2-byte characters may contain one; you need to find twin null bytes, and on even padding
-					$thisILPS  = '';
-					for ($i = 0; $i < strlen($parsedFrame['data_raw']); $i += 2) {
-						$twobytes = substr($parsedFrame['data_raw'], $i, 2);
-						if ($twobytes === "\x00\x00") {
-							$IPLS_parts_unsorted[] = getid3_lib::iconv_fallback($parsedFrame['encoding'], $info['id3v2']['encoding'], $thisILPS);
-							$thisILPS  = '';
-						} else {
-							$thisILPS .= $twobytes;
-						}
-					}
-					if (strlen($thisILPS) > 2) { // 2-byte BOM
+			// This used to output the well-formed case in a multi-dimensional associative array and some badly formed cases in a flat array.
+			// Now all cases produce a flat output with alterating role/name pairs, enabling the same client-side handling as with TIPL and TMCL.
+			$IPLS_parts_unsorted = array();
+			if (((strlen($parsedFrame['data_raw']) % 2) == 0) && ((substr($parsedFrame['data_raw'], 0, 2) == "\xFF\xFE") || (substr($parsedFrame['data_raw'], 0, 2) == "\xFE\xFF"))) {
+				// UTF-16, be careful looking for null bytes since most 2-byte characters may contain one; you need to find twin null bytes, and on even padding
+				$thisILPS = '';
+				for ($i = 0; $i < strlen($parsedFrame['data_raw']); $i += 2) {
+					$twobytes = substr($parsedFrame['data_raw'], $i, 2);
+					if ($twobytes === "\x00\x00") {
 						$IPLS_parts_unsorted[] = getid3_lib::iconv_fallback($parsedFrame['encoding'], $info['id3v2']['encoding'], $thisILPS);
-					}
-				} else {
-					// ISO-8859-1 or UTF-8 or other single-byte-null character set
-					$IPLS_parts_unsorted = explode("\x00", $parsedFrame['data_raw']);
-				}
-				if (count($IPLS_parts_unsorted) == 1) {
-					// just a list of names, e.g. "Dino Baptiste, Jimmy Copley, John Gordon, Bernie Marsden, Sharon Watson"
-					foreach ($IPLS_parts_unsorted as $key => $value) {
-						$IPLS_parts_sorted = preg_split('#[;,\\r\\n\\t]#', $value);
-						$position = '';
-						foreach ($IPLS_parts_sorted as $person) {
-							$IPLS_parts[] = array('position'=>$position, 'person'=>$person);
-						}
-					}
-				} elseif ((count($IPLS_parts_unsorted) % 2) == 0) {
-					$position = '';
-					$person   = '';
-					foreach ($IPLS_parts_unsorted as $key => $value) {
-						if (($key % 2) == 0) {
-							$position = $value;
-						} else {
-							$person   = $value;
-							$IPLS_parts[] = array('position'=>$position, 'person'=>$person);
-							$position = '';
-							$person   = '';
-						}
-					}
-				} else {
-					foreach ($IPLS_parts_unsorted as $key => $value) {
-						$IPLS_parts[] = array($value);
+						$thisILPS = '';
+					} else {
+						$thisILPS .= $twobytes;
 					}
 				}
-
+				if (strlen($thisILPS) > 0) { // extract the last part if any, even if it's only a BOM with no text following
+					$IPLS_parts_unsorted[] = getid3_lib::iconv_fallback($parsedFrame['encoding'], $info['id3v2']['encoding'], $thisILPS);
+				}
 			} else {
-				$IPLS_parts = preg_split('#[;,\\r\\n\\t]#', $parsedFrame['data_raw']);
+				// ISO-8859-1 or UTF-8 or other single-byte-null character set
+				$IPLS_parts_unsorted = explode("\x00", $parsedFrame['data_raw']);
+				if (!empty($IPLS_parts_unsorted) && end($IPLS_parts_unsorted) === '') {
+					// there was a terminating null after the last part and explode appended an empty string; drop it
+					array_pop($IPLS_parts_unsorted);
+				}
+			}
+
+			$partsCount = count($IPLS_parts_unsorted);
+			if ($partsCount == 1) {
+				// Just a list of names, e.g. "Dino Baptiste, Jimmy Copley, John Gordon, Bernie Marsden, Sharon Watson".
+				// Reformat to the canonical form [role1, name1, role2, name2, ...].
+				$IPLS_parts_sorted = preg_split('#[;,\\r\\n\\t]#', $IPLS_parts_unsorted[0]);
+				$IPLS_parts = array();
+				foreach ($IPLS_parts_sorted as $person) {
+					$IPLS_parts[] = ''; // use an empty role in the output
+					$IPLS_parts[] = $person;
+				}
+			} else {
+				if ($partsCount > 1 && ($partsCount % 2) != 0) {
+					$this->warning("Odd number of IPLS parts ($partsCount) - expected even number of role/name pairs");
+					// let the client decide what to do with the malformed data
+				}
+				$IPLS_parts = $IPLS_parts_unsorted;
 			}
 			$parsedFrame['data'] = $IPLS_parts;
 
 			if (!empty($parsedFrame['framenameshort']) && !empty($parsedFrame['data'])) {
-				$info['id3v2']['comments'][$parsedFrame['framenameshort']][] = $parsedFrame['data'];
+				$info['id3v2']['comments'][$parsedFrame['framenameshort']] = $parsedFrame['data'];
 			}
 
 
