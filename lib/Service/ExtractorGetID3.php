@@ -121,12 +121,13 @@ class ExtractorGetID3 {
 			// GetID3 copies incorrectly the multi-valued id3v2 tags involved_people_list and musician_credits_list; these have a structure
 			// like [role1, name1, role2, name2, ...] where the order and possibly repeated roles and names are important but CopyTagsToComments
 			// discards any duplicates. Reorganize the lists into associative arrays using the original tags as source.
+			/*
 			if (isset($metadata['tags']['id3v2']['involved_people_list'])) {
 				$metadata['comments']['involved_people_list'] = self::parseId3ContributorList($metadata['tags']['id3v2']['involved_people_list']);
 			}
 			if (isset($metadata['tags']['id3v2']['musician_credits_list'])) {
 				$metadata['comments']['musician_credits_list'] = self::parseId3ContributorList($metadata['tags']['id3v2']['musician_credits_list']);
-			}
+			}*/
 
 			// GetID3 doesn't split up null-delimited strings inside ID3v2.4 TXXX frames to multiple values while it apparently does it on
 			// (at least some) other frames. Do that on our own and move the TXXX tags among the other tags from the `text` container.
