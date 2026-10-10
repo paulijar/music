@@ -11,6 +11,7 @@
   * The gap-fillers include also the new actions `song_tags`, `get_lyrics`, and `url_to_song`
 
 ### Changed
+- Update the GetID3 library to the development version 1.9.27-202609271935
 
 ### Fixed
 - Unhandled exception breaking the Music UI when operating within the Nextcloud Desktop Workspace
@@ -19,6 +20,8 @@
   [#172](https://github.com/nc-music/music/pull/172) @Bubu
 - Subsonic API: HTTP error 500 when trying to open an album containing no tracks
   [#169](https://github.com/nc-music/music/issues/169)
+- Metadata extraction failing for files containing the ID3v2.3 IPLS or ID3v2.2 IPL frame (since v3.2.0)
+  [#161](https://github.com/nc-music/music/pull/161)
 
 ## 3.2.1 - 2026-08-31
 

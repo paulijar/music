@@ -118,14 +118,14 @@ class ExtractorGetID3 {
 				}
 			}
 
-			// GetID3 copies incorrectly the multi-valued id3v2 tags involved_people_list and musician_credits_list; these have a structure
-			// like [role1, name1, role2, name2, ...] where the order and possibly repeated roles and names are important but CopyTagsToComments
-			// discards any duplicates. Reorganize the lists into associative arrays using the original tags as source.
-			if (isset($metadata['tags']['id3v2']['involved_people_list'])) {
-				$metadata['comments']['involved_people_list'] = self::parseId3ContributorList($metadata['tags']['id3v2']['involved_people_list']);
+			// GetID3 organizes the id3v2 tags involved_people_list and musician_credits_list into associative arrays but we morph these to
+			// slightly different structures. Natively, these tags are stored in the ID3v2.x spec as null-delimited strings in the form of
+			// [role1, name1, role2, name2, ...] but this is completely hidden by GetID3 since https://github.com/JamesHeinrich/getID3/pull/510.
+			if (isset($metadata['comments']['involved_people_list'])) {
+				$metadata['comments']['involved_people_list'] = self::parseId3ContributorList($metadata['comments']['involved_people_list'], 'contributor');
 			}
-			if (isset($metadata['tags']['id3v2']['musician_credits_list'])) {
-				$metadata['comments']['musician_credits_list'] = self::parseId3ContributorList($metadata['tags']['id3v2']['musician_credits_list']);
+			if (isset($metadata['comments']['musician_credits_list'])) {
+				$metadata['comments']['musician_credits_list'] = self::parseId3ContributorList($metadata['comments']['musician_credits_list'], 'performer');
 			}
 
 			// GetID3 doesn't split up null-delimited strings inside ID3v2.4 TXXX frames to multiple values while it apparently does it on
@@ -206,14 +206,14 @@ class ExtractorGetID3 {
 	}
 
 	/**
-	 * @param string[] $contributors E.g. ['role1', 'name1a', 'role1', 'name1b', 'role2', 'name2', ...]
+	 * @param array<array{position: string, person: string}> $contributors E.g. [['position' => 'role1', 'person' => 'name1a'], ['position' => 'role1', 'person' => 'name1b'], ['position' => 'role2', 'person' => 'name2'], ...]
 	 * @return array<string, string[]> E.g. ['role1' => ['name1a', 'name1b'], 'role2' => ['name2']]
 	 */
-	private static function parseId3ContributorList(array $contributors) : array {
+	private static function parseId3ContributorList(array $contributors, string $defaultRole) : array {
 		$result = [];
-		while (\count($contributors)) {
-			$role = \array_shift($contributors);
-			$name = \array_shift($contributors);
+		foreach ($contributors as $contributor) {
+			$role = $contributor['position'] ?: $defaultRole;
+			$name = $contributor['person'] ?: '';
 			$result[$role][] = $name;
 		}
 		return $result;
