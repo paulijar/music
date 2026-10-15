@@ -15,6 +15,7 @@
   * The gap-fillers include also the new actions `song_tags`, `get_lyrics`, and `url_to_song`
 
 ### Changed
+- Track details pane shows the replay gain data under the 'Technical' tab insted of the 'General' tab
 - Update the GetID3 library to the development version 1.9.27-202609271935
 
 ### Fixed
@@ -26,6 +27,8 @@
   [#169](https://github.com/nc-music/music/issues/169)
 - Metadata extraction failing for files containing the ID3v2.3 IPLS or ID3v2.2 IPL frame (since v3.2.0)
   [#161](https://github.com/nc-music/music/pull/161)
+- Replay gain not scanned from FLAC and OPUS files (or if given anywhere expect in ID3v2.4 TXXX frames) (rescan required)
+  [#167](https://github.com/nc-music/music/issues/167)
 
 ## 3.2.1 - 2026-08-31
 
