@@ -29,6 +29,8 @@
   [#161](https://github.com/nc-music/music/pull/161)
 - Replay gain not scanned from FLAC and OPUS files (or if given anywhere expect in ID3v2.4 TXXX frames) (rescan required)
   [#167](https://github.com/nc-music/music/issues/167)
+- Albums scanned and split incorrectly when a tacks contains more than one value for MusicBrainz Artist Id and/or MusicBrainz Album Artist Id.
+  [#165](https://github.com/nc-music/music/issues/165)
 
 ## 3.2.1 - 2026-08-31
 

@@ -330,7 +330,7 @@ class Scanner extends PublicEmitter {
 
 		$meta['sample_rate'] = self::normalizeUnsigned($fileInfo['audio']['sample_rate'] ?? null);
 
-		// MusicBrainz IDs
+		// MusicBrainz IDs (multivalued artist IDs are rejected while we have no proper multi-artist support)
 		$meta['mb_recording_id'] = self::normalizeMbid(
 			ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Recording Id', 'musicbrainz_trackid'])
 		);
@@ -338,13 +338,13 @@ class Scanner extends PublicEmitter {
 			ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Release Track Id', 'musicbrainz_releasetrackid'])
 		);
 		$meta['mb_artist_id'] = self::normalizeMbid(
-			ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Artist Id', 'musicbrainz_artistid'])
+			ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Artist Id', 'musicbrainz_artistid'], null, true)
 		);
 		$meta['mb_release_artist_id'] = self::normalizeMbid(
-			ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Album Artist Id', 'musicbrainz_albumartistid'])
+			ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Album Artist Id', 'musicbrainz_albumartistid'], null, true)
 		);
 		$meta['mb_composer_id'] = self::normalizeMbid(
-			ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Composer Id', 'musicbrainz_composerid'])
+			ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Composer Id', 'musicbrainz_composerid'], null, true)
 		);
 		$meta['mb_release_id'] = self::normalizeMbid(
 			ExtractorGetID3::getFirstOfTags($fileInfo, ['MusicBrainz Album Id', 'musicbrainz_albumid'])

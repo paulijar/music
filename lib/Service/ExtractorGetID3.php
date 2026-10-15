@@ -162,8 +162,13 @@ class ExtractorGetID3 {
 		return $pic;
 	}
 
-	public static function getTag(array $fileInfo, string $tag, bool $binaryValued = false) : string|int|array|null {
-		$value = $fileInfo['comments'][$tag][0] ?? null; // TODO: better handling for multi-valued tags
+	public static function getTag(array $fileInfo, string $tag, bool $binaryValued = false, bool $rejectMultivalued = false) : string|int|array|null {
+		// TODO: better handling for multi-valued tags
+		if ($rejectMultivalued && \count($fileInfo['comments'][$tag] ?? []) !== 1) {
+			$value = null;
+		} else {
+			$value = $fileInfo['comments'][$tag][0] ?? null;
+		}
 
 		if (\is_string($value) && !$binaryValued) {
 			// Ensure that the tag contains only valid utf-8 characters.
@@ -180,9 +185,9 @@ class ExtractorGetID3 {
 	/**
 	 * @param string[] $tags
 	 */
-	public static function getFirstOfTags(array $fileInfo, array $tags, string|array|null $defaultValue = null) : string|int|array|null {
+	public static function getFirstOfTags(array $fileInfo, array $tags, string|array|null $defaultValue = null, bool $rejectMultivalued = false) : string|int|array|null {
 		foreach ($tags as $tag) {
-			$value = self::getTag($fileInfo, $tag);
+			$value = self::getTag($fileInfo, $tag, false, $rejectMultivalued);
 			if ($value !== null && $value !== '') {
 				return $value;
 			}
