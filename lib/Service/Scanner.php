@@ -359,10 +359,10 @@ class Scanner extends PublicEmitter {
 		}
 
 		// Replay gain
-		$meta['replaygain_album_gain'] = self::normalizeFloat(ExtractorGetID3::getTag($fileInfo, 'replaygain_album_gain'));
-		$meta['replaygain_album_peak'] = self::normalizeFloat(ExtractorGetID3::getTag($fileInfo, 'replaygain_album_peak'));
-		$meta['replaygain_track_gain'] = self::normalizeFloat(ExtractorGetID3::getTag($fileInfo, 'replaygain_track_gain'));
-		$meta['replaygain_track_peak'] = self::normalizeFloat(ExtractorGetID3::getTag($fileInfo, 'replaygain_track_peak'));
+		$meta['replaygain_album_gain'] = self::normalizeFloat($fileInfo['replay_gain']['album']['adjustment'] ?? null);
+		$meta['replaygain_album_peak'] = self::normalizeFloat($fileInfo['replay_gain']['album']['peak'] ?? null);
+		$meta['replaygain_track_gain'] = self::normalizeFloat($fileInfo['replay_gain']['track']['adjustment'] ?? null);
+		$meta['replaygain_track_peak'] = self::normalizeFloat($fileInfo['replay_gain']['track']['peak'] ?? null);
 		$meta['r128_album_gain'] = self::normalizeFloat(ExtractorGetID3::getTag($fileInfo, 'r128_album_gain'));
 		$meta['r128_track_gain'] = self::normalizeFloat(ExtractorGetID3::getTag($fileInfo, 'r128_track_gain'));
 
