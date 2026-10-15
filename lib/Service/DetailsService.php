@@ -34,6 +34,14 @@ class DetailsService {
 			$picture = isset($comments['picture']) ? self::encodePictureTag($comments['picture'][0]) : null;
 			unset($comments['picture']);
 
+			// the raw replaygain_* tags from MP3 TXXX frames are not needed as the parsed replay_gain container carries the same information
+			unset(
+				$comments['replaygain_album_gain'],
+				$comments['replaygain_album_peak'],
+				$comments['replaygain_track_gain'],
+				$comments['replaygain_track_peak']
+			);
+
 			// cleanup strings from invalid characters
 			\array_walk_recursive($audio, [$this, 'sanitizeString']);
 			\array_walk_recursive($comments, [$this, 'sanitizeString']);
@@ -43,6 +51,10 @@ class DetailsService {
 				'tags'     => $comments,
 				'picture'  => $picture
 			];
+
+			if (isset($data['replay_gain'])) {
+				$result['replay_gain'] = $data['replay_gain'];
+			}
 
 			// 'streams' contains duplicate data
 			unset($result['fileinfo']['streams']);
