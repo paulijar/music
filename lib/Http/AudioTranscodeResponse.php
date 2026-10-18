@@ -28,6 +28,7 @@ final class AudioTranscodeResponse extends Response implements ICallbackResponse
 {
 	// Formats
 	public const MP3 = "mp3";
+	public const MP3_CAR = "mp3_car";
 	public const OGG = "ogg";
 	public const OPUS = "opus";
 	public const AAC = "aac";
@@ -60,6 +61,7 @@ final class AudioTranscodeResponse extends Response implements ICallbackResponse
 			self::AAC => $format,
 			self::M4A => $format,
 			self::MP3 => $format,
+			self::MP3_CAR => $format,
 			self::FLAC => $format,
 			default => $defaultFormat,
 		};
@@ -73,6 +75,7 @@ final class AudioTranscodeResponse extends Response implements ICallbackResponse
 			self::AAC => "audio/aac",
 			self::M4A => "audio/mp4",
 			self::MP3 => "audio/mpeg",
+			self::MP3_CAR => "audio/mpeg",
 			self::FLAC => "audio/flac",
 			default => null,
 		};
@@ -257,6 +260,15 @@ final class AudioTranscodeResponse extends Response implements ICallbackResponse
 			],
 			self::FLAC => ["flac", "flac", ["-compression_level", "5"]],
 			self::MP3 => ["libmp3lame", "mp3", []],
+			self::MP3_CAR => [
+				"libmp3lame",
+				"mp3",
+				[
+					"-af", "aresample=96000:resampler=soxr,volume=replaygain=track:replaygain_preamp=15dB:replaygain_noclip=0,alimiter=level=disabled,asidedata=mode=delete:type=REPLAYGAIN,aresample=48000:resampler:soxr",
+					"-metadata", "replaygain_*=",
+					"-meatadata", "r128_*=",
+				],
+			],
 			default => throw new \LogicException(
 				"Unsupported output format: {$this->outputFormat}",
 			),
