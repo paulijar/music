@@ -8,14 +8,14 @@
 - Subsonic API: Transcoding support in the `stream` endpoint
   [#163](https://github.com/nc-music/music/pull/163) @ipoupaille
   * Enabled by default if `ffmpeg` is available in the path
-  * To opt out, configure `'music.use_ffpmeg' => false`
-  * To use out-of-path ffmpeg, configure `'music.use_ffpmeg' => <path_to_ffmpeg_executable>`
-- Ampache API: Transcoding suppport on actions `stream` and `download` and a pile of small gap-fillers
+  * To opt out, configure `'music.use_ffmpeg' => false`
+  * To use out-of-path ffmpeg, configure `'music.use_ffmpeg' => <path_to_ffmpeg_executable>`
+- Ampache API: Transcoding support on actions `stream` and `download` and a pile of small gap-fillers
   [#176](https://github.com/nc-music/music/pull/176) @lachlan-00
   * The gap-fillers include also the new actions `song_tags`, `get_lyrics`, and `url_to_song`
 
 ### Changed
-- Track details pane shows the replay gain data under the 'Technical' tab insted of the 'General' tab
+- Track details pane shows the replay gain data under the 'Technical' tab instead of the 'General' tab
 - Update the GetID3 library to the development version 1.9.27-202609271935
 
 ### Fixed

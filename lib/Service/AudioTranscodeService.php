@@ -32,7 +32,7 @@ class AudioTranscodeService {
 			private Logger $logger,
 			IConfig $config,
 			IBinaryFinder $binaryFinder) {
-		$useFfmpeg = $config->getSystemValue('music.use_ffpmeg', true);
+		$useFfmpeg = $config->getSystemValue('music.use_ffmpeg', true);
 		if ($useFfmpeg === false) {
 			$this->ffmpegPath = false;
 		} elseif (\is_string($useFfmpeg)) {
