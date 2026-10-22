@@ -31,6 +31,8 @@
   [#167](https://github.com/nc-music/music/issues/167)
 - Albums scanned and split incorrectly when a tacks contains more than one value for MusicBrainz Artist Id and/or MusicBrainz Album Artist Id.
   [#165](https://github.com/nc-music/music/issues/165)
+- A few benign javascript errors emitting errors to the browser console
+  [#181](https://github.com/nc-music/music/issues/181)
 
 ## 3.2.1 - 2026-08-31
 
